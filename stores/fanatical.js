@@ -33,15 +33,12 @@ module.exports.check = async (client, savedData, saveData) => {
       timeout: 60000
     });
 
-    // Dajemy czas na lazy load
-    await page.waitForTimeout(3000);
+    // zamiast waitForTimeout
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
     const bundleLinks = await page.$$eval(
       "a[href*='/bundle/']",
-      links =>
-        links
-          .map(el => el.href)
-          .filter(link => link.includes("/bundle/"))
+      links => links.map(el => el.href)
     );
 
     console.log("Fanatical: znaleziono linków:", bundleLinks.length);
