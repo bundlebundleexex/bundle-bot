@@ -1,48 +1,27 @@
 {
-  "humble": "LOVE YOU TO DEATH BUNDLE",
-  "fanaticalBundles": [
-    "games",
-    "mystery-star-bundle",
-    "vip-mystery-bundle",
-    "teenage-mutant-ninja-turtles-splintered-fate-character-dlc-bundle",
-    "shojo-manga-by-robico-bundle",
-    "bloodshot-through-the-ages-comic-collection",
-    "sci-fi-and-fantasy-sound-forge-royalty-free-music-and-sfx-bundle",
-    "soundscape-realms-royalty-free-sfx-bundle",
-    "cloud-and-network-certification-elearning-bundle",
-    "total-tech-and-cybersecurity-masterclass-bundle",
-    "introduction-to-pathfinder-2nd-edition-rpg-bundle",
-    "all-new-game-sfx-bundle",
-    "monsters-and-mayhem-mega-rpg-bundle",
-    "bright-stars-and-dark-lands-comics-bundle",
-    "discover-new-world-manga-comics-bundle",
-    "casual-mystery-bundle",
-    "shooter-mystery-bundle",
-    "mystery-on-the-move-bundle",
-    "strategy-mystery-bundle",
-    "action-mystery-bundle",
-    "adventure-mystery-bundle",
-    "monsters-den-collection-bundle",
-    "safe-in-our-world-charity-bundle-2026"
-  ],
   "humbleBundles": [
     "LOVE YOU TO DEATH BUNDLE",
     "CARTRIDGE CHAOS",
     "FOCUS ENTERTAINMENT BUNDLE 2026",
+    "HUMBLE 15 TIME CAPSULE",
     "SCI-FI SHOOTERS 2.0",
     "BEAMDOG & OWLCAT: RPG MASTERS",
     "CALL OF THE WILD 9TH ANNIVERSARY",
     "OVERWHELMING POSITIVE GAMES BUNDLE",
-    "HUMBLE 15 TIME CAPSULE"
+    "MEGA MAN: CHARGED UP COLLECTION"
+  ],
+  "fanaticalBundles": [
+    "monsters-den-collection-bundle",
+    "safe-in-our-world-charity-bundle-2026"
   ],
   "indiegalaBundles": [
     "https://www.indiegala.com/bundle/pixel-traditions-bundle",
-    "https://www.indiegala.com/bundle/massive-music3-bundle",
     "https://www.indiegala.com/bundle/last-echoes-bundle",
+    "https://www.indiegala.com/bundle/massive-music3-bundle",
     "https://www.indiegala.com/bundle/hentai-pair-bundle"
   ],
   "digiphileCollections": [
-    "https://www.digiphile.co/collections/indie-boomer-shooters",
-    "https://www.digiphile.co/collections/boomer-shooter-blueprint"
+    "https://www.digiphile.co/collections/boomer-shooter-blueprint",
+    "https://www.digiphile.co/collections/indie-boomer-shooters"
   ]
 }

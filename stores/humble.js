@@ -4,71 +4,59 @@ const { EmbedBuilder } = require('discord.js');
 const CHANNEL_ID = process.env.CHANNEL_ID;
 const ROLE_ID = "1371122206670852146";
 
+function trim(text, max = 220) {
+    if (!text) return "Brak opisu.";
+    const clean = text.replace(/\s+/g, " ").trim();
+    return clean.length > max ? clean.substring(0, max) + "..." : clean;
+}
+
 module.exports.check = async (client, savedData, saveData) => {
     let browser;
 
     try {
-        console.log("🔎 Humble: sprawdzam listę bundle");
+        if (!savedData.humbleBundles) savedData.humbleBundles = [];
+
+        console.log("🔎 Humble: sprawdzam bundle + choice (homepage)");
 
         browser = await puppeteer.launch({
-            headless: true,
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage'
-            ]
+            headless: "new",
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
 
         const page = await browser.newPage();
+
+        /*
+        ==========================
+        🎪 HUMBLE BUNDLES
+        ==========================
+        */
 
         await page.goto('https://www.humblebundle.com/games', {
             waitUntil: 'networkidle2'
         });
 
-        await page.waitForSelector('a[href^="/games/"] img');
-
-        // 🔥 Pobieramy WSZYSTKIE bundle z siatki
-        const bundles = await page.$$eval(
-            'a[href^="/games/"]',
-            links => {
-                return links
-                    .filter(el => el.querySelector('img'))
-                    .map(el => ({
-                        title: el.innerText.trim().split('\n')[0],
-                        link: el.href
-                    }))
-                    .filter(b => b.title.length > 3);
-            }
+        const bundles = await page.$$eval('a[href^="/games/"]', links =>
+            links
+                .map(link => ({
+                    title: link.innerText.trim().split('\n')[0],
+                    link: link.href
+                }))
+                .filter(b => b.title.length > 3)
         );
-
-        if (!bundles.length) {
-            console.log("❌ Humble: brak bundle");
-            return;
-        }
-
-        if (!savedData.humbleBundles) {
-            savedData.humbleBundles = [];
-        }
 
         for (const bundle of bundles) {
 
-            if (savedData.humbleBundles.includes(bundle.title)) {
-                continue;
-            }
-
-            console.log("🔥 Nowy Humble:", bundle.title);
+            if (savedData.humbleBundles.includes(bundle.title)) continue;
 
             await page.goto(bundle.link, { waitUntil: 'networkidle2' });
 
             const data = await page.evaluate(() => {
 
                 const image =
-                    document.querySelector('meta[property="og:image"]')?.content || null;
+                    document.querySelector('meta[property="og:image"]')?.content;
 
                 const description =
-                    document.querySelector('meta[property="og:description"]')?.content ||
-                    document.querySelector('meta[name="description"]')?.content ||
-                    "";
+                    document.querySelector('meta[name="description"]')?.content;
 
                 const priceText = Array.from(document.querySelectorAll('*'))
                     .map(el => el.innerText)
@@ -85,47 +73,94 @@ module.exports.check = async (client, savedData, saveData) => {
             });
 
             savedData.humbleBundles.push(bundle.title);
-            savedData.humbleBundles =
-                [...new Set(savedData.humbleBundles)].slice(-50);
-
             saveData();
 
             const channel = await client.channels.fetch(CHANNEL_ID);
 
             const embed = new EmbedBuilder()
-                .setTitle(`🎪 ${bundle.title}`)
+                .setTitle(`🔥 ${bundle.title}`)
                 .setURL(bundle.link)
                 .setColor(0xE67E22)
+                .addFields({
+                    name: "💰 Cena minimalna",
+                    value: data.price || "Brak danych",
+                    inline: true
+                })
+                .setDescription(
+                    `──────────────\n${trim(data.description)}\n──────────────`
+                )
+                .setImage(data.image)
                 .setFooter({ text: "Humble Bundle 🎮" })
                 .setTimestamp();
 
-            let desc = "";
-
-            if (data.price) {
-                desc += `💰 Cena minimalna: **${data.price}**\n\n`;
-            }
-
-            if (data.description) {
-                desc += data.description.substring(0, 400);
-            }
-
-            embed.setDescription(desc);
-
-            if (data.image) {
-                embed.setImage(data.image);
-            }
-
             await channel.send({
-                content: `🎉 **NOWY HUMBLE BUNDLE!** <@&${ROLE_ID}>`,
+                content: `🔥 **NOWY HUMBLE BUNDLE!** <@&${ROLE_ID}>`,
                 embeds: [embed]
             });
-
-            console.log("🚀 Humble wysłany:", bundle.title);
         }
+
+        /*
+        ==========================
+        🎮 HUMBLE CHOICE (homepage)
+        ==========================
+        */
+
+        try {
+
+            const choicePage = await browser.newPage();
+            await choicePage.goto("https://www.humblebundle.com/", {
+                waitUntil: "networkidle2"
+            });
+
+            const choiceData = await choicePage.evaluate(() => {
+
+                const card = Array.from(document.querySelectorAll("a"))
+                    .find(a => a.innerText && a.innerText.includes("Choice"));
+
+                if (!card) return null;
+
+                const title = card.innerText.split("\n")[0].trim();
+                const link = card.href;
+
+                const image =
+                    card.querySelector("img")?.src ||
+                    document.querySelector('meta[property="og:image"]')?.content;
+
+                return { title, link, image };
+            });
+
+            if (choiceData && savedData.humbleChoice !== choiceData.title) {
+
+                savedData.humbleChoice = choiceData.title;
+                saveData();
+
+                const channel = await client.channels.fetch(CHANNEL_ID);
+
+                const embed = new EmbedBuilder()
+                    .setTitle(`🔥 ${choiceData.title}`)
+                    .setURL(choiceData.link)
+                    .setColor(0xF1C40F)
+                    .setDescription("Miesięczna edycja Humble Choice jest już dostępna!")
+                    .setImage(choiceData.image)
+                    .setFooter({ text: "Humble Choice 🎮" })
+                    .setTimestamp();
+
+                await channel.send({
+                    content: `🔥 **NOWY HUMBLE CHOICE!** <@&${ROLE_ID}>`,
+                    embeds: [embed]
+                });
+            }
+
+            await choicePage.close();
+
+        } catch (err) {
+            console.log("Choice error:", err.message);
+        }
+
+        await browser.close();
 
     } catch (err) {
         console.log("Humble error:", err.message);
-    } finally {
         if (browser) await browser.close();
     }
 };
