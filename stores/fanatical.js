@@ -14,16 +14,11 @@ module.exports.check = async (client, savedData, saveData) => {
   let browser;
 
   try {
-    console.log("🔎 Fanatical: pełne skanowanie");
+    console.log("🔎 Fanatical: pełne skanowanie (unikat)");
 
     browser = await puppeteer.launch({
       headless: "new",
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu"
-      ]
+      args: ["--no-sandbox","--disable-setuid-sandbox"]
     });
 
     const page = await browser.newPage();
@@ -33,51 +28,53 @@ module.exports.check = async (client, savedData, saveData) => {
       timeout: 60000
     });
 
-    // zamiast waitForTimeout
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise(r => setTimeout(r, 3000));
 
-    const bundleLinks = await page.$$eval(
+    const slugs = await page.$$eval(
       "a[href*='/bundle/']",
-      links => links.map(el => el.href)
+      links => {
+        return [...new Set(
+          links
+            .map(el => el.href.split("/bundle/")[1])
+            .filter(Boolean)
+        )];
+      }
     );
 
-    console.log("Fanatical: znaleziono linków:", bundleLinks.length);
+    console.log("Fanatical: znaleziono unikatowych slugów:", slugs.length);
 
-    const validBundles = bundleLinks
-      .map(link => link.split("/bundle/")[1])
-      .filter(slug => {
-        if (!slug) return false;
-        slug = slug.toLowerCase();
-        if (slug.includes("/")) return false;
-        if (["games", "books", "software"].includes(slug)) return false;
-        if (slug.includes("mystery")) return false;
-        if (slug.includes("dlc")) return false;
-        return true;
-      });
+    const validSlugs = slugs.filter(slug => {
+      slug = slug.toLowerCase();
+      if (slug.includes("/")) return false;
+      if (["games","books","software"].includes(slug)) return false;
+      if (slug.includes("mystery")) return false;
+      if (slug.includes("dlc")) return false;
+      return true;
+    });
 
     if (!savedData.fanaticalBundles) {
       savedData.fanaticalBundles = [];
     }
 
-    const newBundles = validBundles.filter(
+    const newSlugs = validSlugs.filter(
       slug => !savedData.fanaticalBundles.includes(slug)
     );
 
-    if (!newBundles.length) {
+    if (!newSlugs.length) {
       console.log("⏸ Fanatical: brak nowych bundle");
       await browser.close();
       return;
     }
 
-    console.log("🔥 Nowych bundle:", newBundles.length);
+    console.log("🔥 Nowych bundle:", newSlugs.length);
 
     const channel = await client.channels.fetch(CHANNEL_ID);
 
-    for (const slug of newBundles) {
+    for (const slug of newSlugs) {
 
-      const bundleUrl = `https://www.fanatical.com/en/bundle/${slug}`;
+      const url = `https://www.fanatical.com/en/bundle/${slug}`;
 
-      await page.goto(bundleUrl, {
+      await page.goto(url, {
         waitUntil: "networkidle2",
         timeout: 60000
       });
@@ -111,7 +108,7 @@ module.exports.check = async (client, savedData, saveData) => {
 
       const embed = new EmbedBuilder()
         .setTitle(`🔥 ${details.title}`)
-        .setURL(bundleUrl)
+        .setURL(url)
         .setColor(0x3498db)
         .setFooter({ text: "Fanatical Bundle 🎮" })
         .setTimestamp()
