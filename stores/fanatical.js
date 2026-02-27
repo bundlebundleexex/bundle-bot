@@ -4,11 +4,17 @@ const { EmbedBuilder } = require("discord.js");
 const CHANNEL_ID = process.env.CHANNEL_ID;
 const ROLE_ID = "1371122206670852146";
 
+function trim(text, max = 350) {
+  if (!text) return "";
+  const clean = text.replace(/\s+/g, " ").trim();
+  return clean.length > max ? clean.substring(0, max) + "..." : clean;
+}
+
 module.exports.check = async (client, savedData, saveData) => {
   let browser;
 
   try {
-    console.log("🔎 Fanatical: sprawdzam nowe bundle");
+    console.log("🔎 Fanatical: pełne skanowanie");
 
     browser = await puppeteer.launch({
       headless: "new",
@@ -27,122 +33,106 @@ module.exports.check = async (client, savedData, saveData) => {
       timeout: 60000
     });
 
-    await page.waitForSelector("a[href*='/bundle/'] img", {
-      timeout: 20000
-    });
+    // Dajemy czas na lazy load
+    await page.waitForTimeout(3000);
 
     const bundleLinks = await page.$$eval(
       "a[href*='/bundle/']",
       links =>
         links
-          .filter(el => el.querySelector("img"))
           .map(el => el.href)
+          .filter(link => link.includes("/bundle/"))
     );
 
-    const validBundles = bundleLinks.filter(link => {
-      const parts = link.split("/bundle/");
-      if (!parts[1]) return false;
+    console.log("Fanatical: znaleziono linków:", bundleLinks.length);
 
-      const slug = parts[1].toLowerCase();
-
-      if (slug.includes("/")) return false;
-      if (["", "games", "books", "software"].includes(slug)) return false;
-      if (slug.includes("mystery")) return false;
-      if (slug.includes("dlc")) return false;
-
-      return true;
-    });
-
-    if (!validBundles.length) {
-      await browser.close();
-      return;
-    }
+    const validBundles = bundleLinks
+      .map(link => link.split("/bundle/")[1])
+      .filter(slug => {
+        if (!slug) return false;
+        slug = slug.toLowerCase();
+        if (slug.includes("/")) return false;
+        if (["games", "books", "software"].includes(slug)) return false;
+        if (slug.includes("mystery")) return false;
+        if (slug.includes("dlc")) return false;
+        return true;
+      });
 
     if (!savedData.fanaticalBundles) {
       savedData.fanaticalBundles = [];
     }
 
-    let newBundleLink = null;
-    let newSlug = null;
+    const newBundles = validBundles.filter(
+      slug => !savedData.fanaticalBundles.includes(slug)
+    );
 
-    for (const link of validBundles) {
-      const slug = link.split("/bundle/")[1];
-      if (!savedData.fanaticalBundles.includes(slug)) {
-        newBundleLink = link;
-        newSlug = slug;
-        break;
-      }
-    }
-
-    if (!newBundleLink) {
+    if (!newBundles.length) {
       console.log("⏸ Fanatical: brak nowych bundle");
       await browser.close();
       return;
     }
 
-    console.log("🔥 Nowy Fanatical bundle:", newBundleLink);
-
-    await page.goto(newBundleLink, {
-      waitUntil: "networkidle2",
-      timeout: 60000
-    });
-
-    const details = await page.evaluate(() => {
-      const title =
-        document.querySelector("h1")?.innerText.trim() ||
-        "Fanatical Bundle";
-
-      const price =
-        document.querySelector("[data-testid='price']")?.innerText.trim() ||
-        document.querySelector(".price")?.innerText.trim() ||
-        null;
-
-      const image =
-        document.querySelector("meta[property='og:image']")?.content ||
-        null;
-
-      const description =
-        document.querySelector("meta[property='og:description']")?.content ||
-        "";
-
-      return { title, price, image, description };
-    });
-
-    savedData.fanaticalBundles.push(newSlug);
-    savedData.fanaticalBundles =
-      [...new Set(savedData.fanaticalBundles)].slice(-50);
-
-    saveData();
-
-    await browser.close();
+    console.log("🔥 Nowych bundle:", newBundles.length);
 
     const channel = await client.channels.fetch(CHANNEL_ID);
 
-    const embed = new EmbedBuilder()
-      .setTitle(`🔥 ${details.title}`)
-      .setURL(newBundleLink)
-      .setColor(0x3498db)
-      .setFooter({ text: "Fanatical Bundle 🎮" })
-      .setTimestamp();
+    for (const slug of newBundles) {
 
-    let desc = "";
+      const bundleUrl = `https://www.fanatical.com/en/bundle/${slug}`;
 
-    if (details.price) {
-      desc += `💰 Cena od: **${details.price}**\n\n`;
+      await page.goto(bundleUrl, {
+        waitUntil: "networkidle2",
+        timeout: 60000
+      });
+
+      const details = await page.evaluate(() => {
+        const title =
+          document.querySelector("h1")?.innerText.trim() ||
+          "Fanatical Bundle";
+
+        const price =
+          document.querySelector("[data-testid='price']")?.innerText.trim() ||
+          document.querySelector(".price")?.innerText.trim() ||
+          null;
+
+        const image =
+          document.querySelector("meta[property='og:image']")?.content ||
+          null;
+
+        const description =
+          document.querySelector("meta[property='og:description']")?.content ||
+          "";
+
+        return { title, price, image, description };
+      });
+
+      savedData.fanaticalBundles.push(slug);
+      savedData.fanaticalBundles =
+        [...new Set(savedData.fanaticalBundles)].slice(-100);
+
+      saveData();
+
+      const embed = new EmbedBuilder()
+        .setTitle(`🔥 ${details.title}`)
+        .setURL(bundleUrl)
+        .setColor(0x3498db)
+        .setFooter({ text: "Fanatical Bundle 🎮" })
+        .setTimestamp()
+        .setDescription(
+          `💰 Cena od: **${details.price || "Brak danych"}**\n\n${trim(details.description)}`
+        );
+
+      if (details.image) embed.setImage(details.image);
+
+      await channel.send({
+        content: `🔥 **NOWY FANATICAL BUNDLE!** <@&${ROLE_ID}>`,
+        embeds: [embed],
+      });
+
+      console.log("✔ Wysłano:", slug);
     }
 
-    desc += details.description.substring(0, 400);
-
-    embed.setDescription(desc);
-
-    if (details.image) {
-      embed.setImage(details.image);
-    }
-
-    await channel.send({
-      content: `🔥 **NOWY FANATICAL BUNDLE!** <@&${ROLE_ID}>`,
-      embeds: [embed],
-    });
+    await browser.close();
 
   } catch (err) {
     console.log("🔥 Fanatical error:", err.message);
