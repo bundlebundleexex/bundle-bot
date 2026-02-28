@@ -1,86 +1,122 @@
-require('dotenv').config();
-const { Client, GatewayIntentBits } = require('discord.js');
-const fs = require('fs');
+require("dotenv").config();
+const { Client, GatewayIntentBits } = require("discord.js");
+const fs = require("fs");
+const path = require("path");
 
-const humble = require('./stores/humble');
-const fanatical = require('./stores/fanatical');
-const gmg = require('./stores/gmg');
-const indiegala = require('./stores/indiegala');
-const digiphile = require('./stores/digiphile');
+const humble = require("./stores/humble");
+const fanatical = require("./stores/fanatical");
+const gmg = require("./stores/gmg");
+const indiegala = require("./stores/indiegala");
+const digiphile = require("./stores/digiphile");
 
 const client = new Client({
-    intents: [GatewayIntentBits.Guilds]
+  intents: [GatewayIntentBits.Guilds]
 });
 
-const CHECK_INTERVAL = 30 * 60 * 1000; // 🔥 30 minut
+// 🔥 CO 10 MINUT
+const CHECK_INTERVAL = 10 * 60 * 1000;
+
+// 🔥 Railway volume path (jeśli masz volume)
+const DATA_PATH = fs.existsSync("/data")
+  ? "/data/data.json"
+  : path.join(__dirname, "data.json");
 
 let savedData = {};
+let isRunning = false;
 
-// 🔐 Bezpieczne ładowanie data.json
+// ==========================
+// 📂 LOAD / SAVE DATA
+// ==========================
+
 function loadData() {
-    if (fs.existsSync('data.json')) {
-        try {
-            const raw = fs.readFileSync('data.json', 'utf8');
-            savedData = JSON.parse(raw);
-        } catch (err) {
-            console.log("⚠️ data.json uszkodzony – resetuję");
-            savedData = {};
-            saveData();
-        }
-    } else {
-        saveData();
+  if (fs.existsSync(DATA_PATH)) {
+    try {
+      savedData = JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
+    } catch {
+      console.log("⚠️ data.json uszkodzony — resetuję");
+      savedData = {};
     }
+  }
+
+  savedData.humbleBundles ??= [];
+  savedData.humbleChoice ??= null;
+  savedData.fanaticalBundles ??= [];
+  savedData.gmgBundles ??= [];
+  savedData.indiegalaBundles ??= [];
+  savedData.digiphileCollections ??= [];
+
+  saveData();
 }
 
 function saveData() {
-    fs.writeFileSync('data.json', JSON.stringify(savedData, null, 2));
+  fs.writeFileSync(DATA_PATH, JSON.stringify(savedData, null, 2));
 }
 
-// 🔥 Główna funkcja sprawdzająca
+// ==========================
+// 🔎 CHECKS
+// ==========================
+
 async function runChecks() {
-    console.log("🔎 Sprawdzam bundle...");
+  if (isRunning) {
+    console.log("⏳ Poprzednie sprawdzanie jeszcze trwa...");
+    return;
+  }
 
-    try {
-        await humble.check(client, savedData, saveData);
-    } catch (err) {
-        console.log("❌ Humble error:", err.message);
-    }
+  isRunning = true;
 
-    try {
-        await fanatical.check(client, savedData, saveData);
-    } catch (err) {
-        console.log("❌ Fanatical error:", err.message);
-    }
+  console.log(
+    `\n🔎 START sprawdzania bundle - ${new Date().toLocaleString()}`
+  );
 
-    try {
-        await gmg.check(client, savedData, saveData);
-    } catch (err) {
-        console.log("❌ GMG error:", err.message);
-    }
+  try { await humble.check(client, savedData, saveData); }
+  catch (e) { console.log("❌ Humble:", e.message); }
 
-    try {
-        await indiegala.check(client, savedData, saveData);
-    } catch (err) {
-        console.log("❌ IndieGala error:", err.message);
-    }
+  try { await fanatical.check(client, savedData, saveData); }
+  catch (e) { console.log("❌ Fanatical:", e.message); }
 
-    try {
-        await digiphile.check(client, savedData, saveData);
-    } catch (err) {
-        console.log("❌ Digiphile error:", err.message);
-    }
+  try { await gmg.check(client, savedData, saveData); }
+  catch (e) { console.log("❌ GMG:", e.message); }
 
-    console.log("✅ Sprawdzanie zakończone\n");
+  try { await indiegala.check(client, savedData, saveData); }
+  catch (e) { console.log("❌ IndieGala:", e.message); }
+
+  try { await digiphile.check(client, savedData, saveData); }
+  catch (e) { console.log("❌ Digiphile:", e.message); }
+
+  console.log("✅ Sprawdzanie zakończone");
+  isRunning = false;
 }
 
-client.once('clientReady', async () => {
-    console.log(`🤖 Zalogowano jako ${client.user.tag}`);
+// ==========================
+// 🤖 BOT READY
+// ==========================
 
-    loadData();
+client.once("clientReady", async () => {
+  console.log(`🤖 Zalogowano jako ${client.user.tag}`);
 
-    await runChecks();
+  loadData();
 
-    setInterval(runChecks, CHECK_INTERVAL);
+  // pierwszy check od razu
+  await runChecks();
+
+  // potem co 10 minut
+  setInterval(runChecks, CHECK_INTERVAL);
+
+  console.log("⏱️ Ustawiono sprawdzanie co 10 minut");
 });
+
+// ==========================
+// 🚨 Crash Protection
+// ==========================
+
+process.on("unhandledRejection", (err) => {
+  console.error("❌ Unhandled promise rejection:", err);
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("❌ Uncaught exception:", err);
+});
+
+// ==========================
 
 client.login(process.env.TOKEN);
