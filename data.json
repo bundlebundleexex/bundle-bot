@@ -1,43 +1,41 @@
 {
   "humbleBundles": [
-    "LOVE YOU TO DEATH BUNDLE",
-    "MEGA MAN: CHARGED UP COLLECTION",
-    "CARTRIDGE CHAOS",
-    "FOCUS ENTERTAINMENT BUNDLE 2026",
-    "HUMBLE 15 TIME CAPSULE",
-    "SCI-FI SHOOTERS 2.0",
-    "BEAMDOG & OWLCAT: RPG MASTERS",
-    "CALL OF THE WILD 9TH ANNIVERSARY",
-    "OVERWHELMING POSITIVE GAMES BUNDLE"
+    "https://www.humblebundle.com/games/love-you-to-death-bundle",
+    "https://www.humblebundle.com/games/mega-man-charged-up-collection",
+    "https://www.humblebundle.com/games/cartridge-chaos",
+    "https://www.humblebundle.com/games/focus-entertainment-bundle-2026",
+    "https://www.humblebundle.com/games/humble-15-time-capsule",
+    "https://www.humblebundle.com/games/scifi-shooters-bundle-2026",
+    "https://www.humblebundle.com/games/beamdog-owlcat-rpg-masters-2026",
+    "https://www.humblebundle.com/games/call-wild-9th-anniversary",
+    "https://www.humblebundle.com/games/overwhelming-positive-games-bundle"
   ],
-  "humbleChoice": "Choice",
   "fanaticalBundles": [
-    "monsters-den-collection-bundle",
-    "business-certification-bundle",
-    "capcom-favorites-build-your-own-bundle",
     "prestige-collection-build-your-own-bundle",
-    "build-your-own-play-on-the-go-bundle",
+    "capcom-favorites-build-your-own-bundle",
     "build-your-own-killer-bundle",
     "fanatical-favorites-build-your-own-bundle",
-    "build-your-own-craft-and-build-bundle",
-    "build-your-own-3d-platformer-bundle",
-    "build-your-own-infinity-vr-collection",
-    "platinum-collection-build-your-own-bundle",
+    "build-your-own-play-on-the-go-bundle",
     "build-your-own-fight-to-survive-bundle",
+    "build-your-own-infinity-vr-collection",
+    "build-your-own-3d-platformer-bundle",
+    "platinum-collection-build-your-own-bundle",
+    "build-your-own-craft-and-build-bundle",
+    "build-your-own-bedlam-bundle",
     "build-your-own-very-positive-bundle",
     "build-your-own-romance-bundle",
-    "build-your-own-bedlam-bundle",
-    "safe-in-our-world-charity-bundle-2026"
+    "monsters-den-collection-bundle"
   ],
   "gmgBundles": [],
   "indiegalaBundles": [
     "https://www.indiegala.com/bundle/pixel-traditions-bundle",
-    "https://www.indiegala.com/bundle/hentai-pair-bundle",
     "https://www.indiegala.com/bundle/last-echoes-bundle",
-    "https://www.indiegala.com/bundle/massive-music3-bundle"
+    "https://www.indiegala.com/bundle/massive-music3-bundle",
+    "https://www.indiegala.com/bundle/hentai-pair-bundle"
   ],
   "digiphileCollections": [
     "https://www.digiphile.co/collections/boomer-shooter-blueprint",
     "https://www.digiphile.co/collections/indie-boomer-shooters"
-  ]
+  ],
+  "humbleChoice": "february_2026_choice"
 }
