@@ -1,120 +1,117 @@
-const puppeteer = require("puppeteer");
+const axios = require("axios");
+const cheerio = require("cheerio");
 const { EmbedBuilder } = require("discord.js");
 
 const CHANNEL_ID = process.env.CHANNEL_ID;
 const ROLE_ID = "1371122206670852146";
 
+function trim(text, max = 600) {
+  if (!text) return "";
+  return text.length > max ? text.substring(0, max) + "..." : text;
+}
+
 module.exports.check = async (client, savedData, saveData) => {
-  let browser;
-
   try {
-    console.log("🔎 IndieGala: sprawdzam listę bundle...");
+    console.log("🔎 IndieGala: sprawdzam HTML...");
 
-    browser = await puppeteer.launch({
-      headless: "new",
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu"
-      ]
-    });
-
-    const page = await browser.newPage();
-
-    await page.goto("https://www.indiegala.com/bundles", {
-      waitUntil: "networkidle2",
-      timeout: 60000
-    });
-
-    // ⬇️ Poczekaj aż załadują się linki
-    await page.waitForSelector("a[href*='/bundle/']", { timeout: 20000 });
-
-    // 🔥 Pobieramy wszystkie linki do bundle
-    const bundleLinks = await page.$$eval(
-      "a[href*='/bundle/']",
-      els =>
-        els
-          .map(el => ({
-            link: el.href,
-            title: el.innerText.trim()
-          }))
-          // filtrujemy tylko unikalne i realne produkty
-          .filter(b => b.title && b.title.length > 3 && b.link.includes("/bundle/"))
+    const { data: html } = await axios.get(
+      "https://www.indiegala.com/bundles",
+      {
+        headers: { "User-Agent": "Mozilla/5.0" },
+        timeout: 20000
+      }
     );
 
-    if (!bundleLinks.length) {
-      console.log("❌ IndieGala: brak bundle w DOM");
-      await browser.close();
+    const $ = cheerio.load(html);
+
+    const bundles = [];
+
+    $("a[href*='/bundle/']").each((_, el) => {
+      const href = $(el).attr("href");
+      const title = $(el).text().trim();
+
+      if (href && title.length > 3) {
+        bundles.push({
+          title,
+          link: href.startsWith("http")
+            ? href
+            : `https://www.indiegala.com${href}`
+        });
+      }
+    });
+
+    const uniqueBundles = [
+      ...new Map(bundles.map(b => [b.link, b])).values()
+    ];
+
+    if (!uniqueBundles.length) {
+      console.log("❌ IndieGala: brak bundle w HTML");
       return;
     }
 
-    console.log(`✨ IndieGala: znaleziono ${bundleLinks.length} linków`);
+    console.log(`✨ IndieGala: znaleziono ${uniqueBundles.length} bundle`);
 
-    if (!savedData.indiegalaBundles) savedData.indiegalaBundles = [];
+    if (!savedData.indiegalaBundles)
+      savedData.indiegalaBundles = [];
 
-    for (const b of bundleLinks) {
-      if (savedData.indiegalaBundles.includes(b.link)) continue;
+    const channel = await client.channels.fetch(CHANNEL_ID);
 
-      console.log("🔥 Nowy IndieGala bundle:", b.title);
+    for (const bundle of uniqueBundles) {
+      if (savedData.indiegalaBundles.includes(bundle.link))
+        continue;
 
-      // Wejdź w stronę konkretnego bundle
-      await page.goto(b.link, {
-        waitUntil: "networkidle2",
-        timeout: 60000
+      console.log("🔥 Nowy IndieGala bundle:", bundle.title);
+
+      // Pobierz stronę konkretnego bundle
+      const { data: bundleHtml } = await axios.get(bundle.link, {
+        headers: { "User-Agent": "Mozilla/5.0" },
+        timeout: 20000
       });
 
-      const data = await page.evaluate(() => {
-        const desc =
-          document.querySelector("meta[property='og:description']")?.content ||
-          "";
-        const price =
-          document.body.innerText.match(/\$\d+(\.\d+)?/)?.[0] ||
-          null;
-        const image =
-          document.querySelector("meta[property='og:image']")?.content ||
-          null;
+      const $$ = cheerio.load(bundleHtml);
 
-        return { desc, price, image };
-      });
+      const description =
+        $$("meta[property='og:description']").attr("content") ||
+        "Sprawdź stronę bundle.";
 
-      // 🛠 Zapisujemy historię
-      savedData.indiegalaBundles.push(b.link);
+      const image =
+        $$("meta[property='og:image']").attr("content") ||
+        null;
+
+      // Próba wykrycia ceny
+      const bodyText = $$.text();
+      const priceMatch = bodyText.match(/\$\d+(\.\d+)?/);
+      const price = priceMatch ? priceMatch[0] : "Check page";
+
+      // Zapisz jako wysłany
+      savedData.indiegalaBundles.push(bundle.link);
       savedData.indiegalaBundles = [
         ...new Set(savedData.indiegalaBundles)
       ].slice(-100);
+
       saveData();
 
-      // 📨 wysyłamy embed
-      const channel = await client.channels.fetch(CHANNEL_ID);
-
       const embed = new EmbedBuilder()
-        .setTitle(`🎁 ${b.title}`)
-        .setURL(b.link)
+        .setTitle(`🎁 ${bundle.title}`)
+        .setURL(bundle.link)
         .setColor(0x9b59b6)
+        .setDescription(
+          `💰 Cena: **${price}**\n\n${trim(description)}`
+        )
         .setFooter({ text: "IndieGala Bundle 🎮" })
         .setTimestamp();
 
-      let descString = "";
-
-      if (data.price) descString += `💰 Cena: **${data.price}**\n\n`;
-      descString += data.desc.substring(0, 600);
-
-      embed.setDescription(descString);
-
-      if (data.image) embed.setImage(data.image);
+      if (image) embed.setImage(image);
 
       await channel.send({
         content: `🎉 **NOWY INDIEGALA BUNDLE!** <@&${ROLE_ID}>`,
         embeds: [embed]
       });
 
-      console.log("🚀 IndieGala wysłany:", b.title);
+      console.log("🚀 IndieGala wysłany:", bundle.title);
     }
 
-    await browser.close();
   } catch (err) {
     console.log("🔥 IndieGala error:", err.message);
-    if (browser) await browser.close();
   }
 };

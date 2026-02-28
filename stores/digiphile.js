@@ -1,118 +1,122 @@
-const puppeteer = require("puppeteer");
+const axios = require("axios");
+const cheerio = require("cheerio");
 const { EmbedBuilder } = require("discord.js");
 
 const CHANNEL_ID = process.env.CHANNEL_ID;
 const ROLE_ID = "1371122206670852146";
 
 module.exports.check = async (client, savedData, saveData) => {
-  let browser;
-
   try {
-    console.log("🔎 Digiphile: sprawdzam kolekcje...");
+    console.log("🔎 Digiphile: sprawdzam kolekcje (deep check)...");
 
-    browser = await puppeteer.launch({
-      headless: "new",
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu"
-      ]
+    const { data: html } = await axios.get(
+      "https://www.digiphile.co/collections",
+      {
+        headers: { "User-Agent": "Mozilla/5.0" },
+        timeout: 20000
+      }
+    );
+
+    const $ = cheerio.load(html);
+
+    const links = [];
+
+    // 🔥 zbieramy tylko Steam Game Collection
+    $("a[href^='/collections/']").each((_, el) => {
+      const link = $(el).attr("href");
+      const text = $(el).text();
+
+      if (!link?.startsWith("/collections/")) return;
+      if (!text.includes("Steam Game Collection")) return;
+
+      links.push(`https://www.digiphile.co${link}`);
     });
 
-    const page = await browser.newPage();
+    const uniqueLinks = [...new Set(links)];
 
-    await page.goto("https://www.digiphile.co/collections", {
-      waitUntil: "networkidle2",
-      timeout: 60000
-    });
+    console.log(`🔗 Znaleziono ${uniqueLinks.length} linków do sprawdzenia`);
 
-    await new Promise(r => setTimeout(r, 5000));
-
-    // 🔥 Pobierz wszystkie aktywne kolekcje
-    const collections = await page.evaluate(() => {
-
-      const cards = Array.from(document.querySelectorAll("a"));
-
-      return cards
-        .filter(a =>
-          a.innerText.includes("Get Collection Now") &&
-          !a.innerText.includes("Ended")
-        )
-        .map(a => {
-          const title =
-            a.querySelector("h3, h2, div")?.innerText?.trim() ||
-            a.innerText.split("Get Collection Now")[0].trim();
-
-          const priceMatch = a.innerText.match(/\$\d+/);
-          const price = priceMatch ? priceMatch[0] : null;
-
-          const image =
-            a.querySelector("img")?.src || null;
-
-          return {
-            title,
-            link: a.href,
-            price,
-            image
-          };
-        })
-        .filter(c => c.title && c.link);
-    });
-
-    if (!collections.length) {
-      console.log("❌ Digiphile: brak aktywnych kolekcji");
-      await browser.close();
-      return;
-    }
-
-    console.log(`✨ Digiphile: znaleziono ${collections.length} aktywnych`);
-
-    if (!savedData.digiphileCollections) {
+    if (!savedData.digiphileCollections)
       savedData.digiphileCollections = [];
-    }
 
-    for (const c of collections) {
+    const channel = await client.channels.fetch(CHANNEL_ID);
 
-      if (savedData.digiphileCollections.includes(c.link)) continue;
+    for (const url of uniqueLinks) {
 
-      console.log("🔥 Nowa kolekcja Digiphile:", c.title);
+      // 🔥 sprawdzamy stronę konkretnej kolekcji
+      const { data: pageHtml } = await axios.get(url, {
+        headers: { "User-Agent": "Mozilla/5.0" },
+        timeout: 20000
+      });
 
-      savedData.digiphileCollections.push(c.link);
+      const pageText = pageHtml;
+
+      // ❌ jeśli zakończona → pomijamy
+      if (
+        pageText.includes("Collection Ended") ||
+        pageText.includes("This collection has ended")
+      ) {
+        console.log("⛔ Pominięta zakończona:", url);
+        continue;
+      }
+
+      if (savedData.digiphileCollections.includes(url))
+        continue;
+
+      const $$ = cheerio.load(pageHtml);
+
+      const title =
+        $$("h1").first().text().trim() || "Nowa kolekcja";
+
+      // 🔥 POPRAWNE WYCIĄGANIE CENY
+      let price = null;
+
+      const startingMatch = pageText.match(/Starting at\s*\$(\d+)/i);
+      if (startingMatch) {
+        price = `$${startingMatch[1]}`;
+      } else {
+        const allPrices = [...pageText.matchAll(/\$(\d+)/g)]
+          .map(m => parseInt(m[1]))
+          .filter(n => n > 1);
+
+        if (allPrices.length) {
+          price = `$${Math.min(...allPrices)}`;
+        }
+      }
+
+      const image =
+        $$("meta[property='og:image']").attr("content") || null;
+
+      console.log("🔥 Nowa AKTYWNA kolekcja:", title);
+
+      savedData.digiphileCollections.push(url);
       savedData.digiphileCollections =
         [...new Set(savedData.digiphileCollections)].slice(-100);
 
       saveData();
 
-      const channel = await client.channels.fetch(CHANNEL_ID);
-
       const embed = new EmbedBuilder()
-        .setTitle(`🎮 ${c.title}`)
-        .setURL(c.link)
+        .setTitle(`🎮 ${title}`)
+        .setURL(url)
         .setColor(0x3498DB)
-        .setFooter({ text: "Digiphile Collection 🎮" })
+        .setFooter({ text: "Digiphile Steam Collection 🎮" })
         .setTimestamp();
 
-      let desc = "";
+      if (price)
+        embed.setDescription(`💰 Cena od: **${price}**`);
 
-      if (c.price) desc += `💰 Cena od: **${c.price}**\n\n`;
-
-      embed.setDescription(desc || "Nowa kolekcja dostępna na Digiphile!");
-
-      if (c.image) embed.setImage(c.image);
+      if (image)
+        embed.setImage(image);
 
       await channel.send({
         content: `🔥 **NOWA KOLEKCJA DIGIPHILE!** <@&${ROLE_ID}>`,
         embeds: [embed]
       });
 
-      console.log("🚀 Digiphile wysłana:", c.title);
+      console.log("🚀 Wysłano:", title);
     }
-
-    await browser.close();
 
   } catch (err) {
     console.log("🔥 Digiphile error:", err.message);
-    if (browser) await browser.close();
   }
 };
