@@ -10,6 +10,20 @@ function trim(text, max = 300) {
   return clean.length > max ? clean.substring(0, max) + "..." : clean;
 }
 
+function buildFanaticalUrl(bundle) {
+  const slug = bundle.slug.toLowerCase();
+
+  // 🔥 Pick & Mix detection
+  if (
+    slug.startsWith("build-your-own") ||
+    bundle.name?.toLowerCase().includes("build your own")
+  ) {
+    return `https://www.fanatical.com/en/pick-and-mix/${slug}`;
+  }
+
+  return `https://www.fanatical.com/en/bundle/${slug}`;
+}
+
 module.exports.check = async (client, savedData, saveData) => {
   try {
     console.log("🔎 Fanatical: algolia bundles API");
@@ -18,9 +32,8 @@ module.exports.check = async (client, savedData, saveData) => {
       "https://www.fanatical.com/api/algolia/bundles?altRank=false",
       {
         headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-          "Accept": "application/json, text/plain, */*",
-          "Accept-Language": "en-US,en;q=0.9",
+          "User-Agent": "Mozilla/5.0",
+          "Accept": "application/json",
           "Referer": "https://www.fanatical.com/en/bundle/games",
           "Origin": "https://www.fanatical.com"
         },
@@ -42,26 +55,30 @@ module.exports.check = async (client, savedData, saveData) => {
     for (const bundle of data) {
       if (!bundle?.slug) continue;
 
-      // 🔥 tylko prawdziwe bundle
+      // tylko prawdziwe bundle
       if (bundle.display_type !== "bundle") continue;
 
-      // 🔥 pomijamy mystery
+      // pomijamy mystery
       if (bundle.mystery) continue;
 
       const slug = bundle.slug.toLowerCase();
 
       if (savedData.fanaticalBundles.includes(slug)) continue;
 
-      const url = `https://www.fanatical.com/en/bundle/${slug}`;
+      const url = buildFanaticalUrl(bundle);
 
       console.log("🔥 Nowy bundle:", slug);
+      console.log("🔗 URL:", url);
 
-      // minimalna cena z pierwszego tieru
+      // minimalna cena
       let price = "Check page";
       if (bundle.bundle_tiers?.length) {
         const tier = bundle.bundle_tiers[0];
+
         if (tier.price?.EUR) {
           price = `€${tier.price.EUR}`;
+        } else if (tier.price?.USD) {
+          price = `$${tier.price.USD}`;
         }
       }
 
@@ -70,6 +87,8 @@ module.exports.check = async (client, savedData, saveData) => {
         : null;
 
       savedData.fanaticalBundles.push(slug);
+      savedData.fanaticalBundles =
+        [...new Set(savedData.fanaticalBundles)].slice(-100);
       saveData();
 
       const embed = new EmbedBuilder()
