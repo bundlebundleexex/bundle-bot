@@ -3,39 +3,42 @@
     "https://www.humblebundle.com/games/love-you-to-death-bundle",
     "https://www.humblebundle.com/games/mega-man-charged-up-collection",
     "https://www.humblebundle.com/games/cartridge-chaos",
-    "https://www.humblebundle.com/games/overwhelming-positive-games-bundle",
     "https://www.humblebundle.com/games/focus-entertainment-bundle-2026",
     "https://www.humblebundle.com/games/humble-15-time-capsule",
-    "https://www.humblebundle.com/games/scifi-shooters-bundle-2026",
     "https://www.humblebundle.com/games/beamdog-owlcat-rpg-masters-2026",
-    "https://www.humblebundle.com/games/call-wild-9th-anniversary"
+    "https://www.humblebundle.com/games/call-wild-9th-anniversary",
+    "https://www.humblebundle.com/games/overwhelming-positive-games-bundle"
   ],
+  "humbleChoice": "march_2026_choice",
   "fanaticalBundles": [
+    "platinum-collection-build-your-own-bundle",
+    "build-your-own-rpg-and-strategy-bundle",
     "prestige-collection-build-your-own-bundle",
+    "build-your-own-arcade-and-shooter-bundle",
     "capcom-favorites-build-your-own-bundle",
+    "build-your-own-story-rich-bundle",
+    "fanatical-favorites-build-your-own-bundle",
     "build-your-own-play-on-the-go-bundle",
     "build-your-own-killer-bundle",
-    "build-your-own-infinity-vr-collection",
-    "fanatical-favorites-build-your-own-bundle",
-    "platinum-collection-build-your-own-bundle",
     "build-your-own-3d-platformer-bundle",
     "build-your-own-craft-and-build-bundle",
-    "build-your-own-very-positive-bundle",
-    "build-your-own-romance-bundle",
     "build-your-own-bedlam-bundle",
-    "build-your-own-story-rich-bundle",
+    "build-your-own-infinity-vr-collection",
+    "build-your-own-romance-bundle",
     "monsters-den-collection-bundle"
   ],
-  "gmgBundles": [],
+  "gmgBundles": [
+    "https://www.greenmangamingbundles.com/bundles/better-together-co-op-fun"
+  ],
   "indiegalaBundles": [
+    "https://www.indiegala.com/bundle/skautfold-saga-bundle",
+    "https://www.indiegala.com/bundle/hentai-pair-bundle",
     "https://www.indiegala.com/bundle/pixel-traditions-bundle",
     "https://www.indiegala.com/bundle/last-echoes-bundle",
-    "https://www.indiegala.com/bundle/massive-music3-bundle",
-    "https://www.indiegala.com/bundle/hentai-pair-bundle"
+    "https://www.indiegala.com/bundle/massive-music3-bundle"
   ],
   "digiphileCollections": [
     "https://www.digiphile.co/collections/boomer-shooter-blueprint",
     "https://www.digiphile.co/collections/indie-boomer-shooters"
-  ],
-  "humbleChoice": "february_2026_choice"
+  ]
 }

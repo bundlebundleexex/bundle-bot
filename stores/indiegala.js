@@ -3,7 +3,7 @@ const cheerio = require("cheerio");
 const { EmbedBuilder } = require("discord.js");
 
 const CHANNEL_ID = process.env.CHANNEL_ID;
-const ROLE_ID = "1371122206670852146";
+// ROLE_ID już niepotrzebne, bo nie pingujemy
 
 function trim(text, max = 600) {
   if (!text) return "";
@@ -51,18 +51,17 @@ module.exports.check = async (client, savedData, saveData) => {
 
     console.log(`✨ IndieGala: znaleziono ${uniqueBundles.length} bundle`);
 
-    if (!savedData.indiegalaBundles)
-      savedData.indiegalaBundles = [];
+    savedData.indiegalaBundles ??= [];
 
     const channel = await client.channels.fetch(CHANNEL_ID);
 
     for (const bundle of uniqueBundles) {
+
       if (savedData.indiegalaBundles.includes(bundle.link))
         continue;
 
       console.log("🔥 Nowy IndieGala bundle:", bundle.title);
 
-      // Pobierz stronę konkretnego bundle
       const { data: bundleHtml } = await axios.get(bundle.link, {
         headers: { "User-Agent": "Mozilla/5.0" },
         timeout: 20000
@@ -78,16 +77,13 @@ module.exports.check = async (client, savedData, saveData) => {
         $$("meta[property='og:image']").attr("content") ||
         null;
 
-      // Próba wykrycia ceny
       const bodyText = $$.text();
       const priceMatch = bodyText.match(/\$\d+(\.\d+)?/);
       const price = priceMatch ? priceMatch[0] : "Check page";
 
-      // Zapisz jako wysłany
       savedData.indiegalaBundles.push(bundle.link);
-      savedData.indiegalaBundles = [
-        ...new Set(savedData.indiegalaBundles)
-      ].slice(-100);
+      savedData.indiegalaBundles =
+        [...new Set(savedData.indiegalaBundles)].slice(-100);
 
       saveData();
 
@@ -95,16 +91,14 @@ module.exports.check = async (client, savedData, saveData) => {
         .setTitle(`🎁 ${bundle.title}`)
         .setURL(bundle.link)
         .setColor(0x9b59b6)
-        .setDescription(
-          `💰 Cena: **${price}**\n\n${trim(description)}`
-        )
+        .setDescription(`💰 Cena: **${price}**\n\n${trim(description)}`)
         .setFooter({ text: "IndieGala Bundle 🎮" })
         .setTimestamp();
 
       if (image) embed.setImage(image);
 
       await channel.send({
-        content: `🎉 **NOWY INDIEGALA BUNDLE!** <@&${ROLE_ID}>`,
+        content: `🎉 **NOWY INDIEGALA BUNDLE!**`,
         embeds: [embed]
       });
 
