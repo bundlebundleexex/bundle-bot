@@ -1,6 +1,7 @@
 {
   "humbleBundles": [
     "https://www.humblebundle.com/games/love-you-to-death-bundle",
+    "https://www.humblebundle.com/games/best-boomer-shooters-5-penta-boom",
     "https://www.humblebundle.com/games/mega-man-charged-up-collection",
     "https://www.humblebundle.com/games/cartridge-chaos",
     "https://www.humblebundle.com/games/focus-entertainment-bundle-2026",
@@ -11,19 +12,18 @@
   ],
   "humbleChoice": "march_2026_choice",
   "fanaticalBundles": [
-    "platinum-collection-build-your-own-bundle",
-    "build-your-own-rpg-and-strategy-bundle",
     "prestige-collection-build-your-own-bundle",
-    "build-your-own-arcade-and-shooter-bundle",
+    "build-your-own-craft-and-build-bundle",
     "capcom-favorites-build-your-own-bundle",
+    "platinum-collection-build-your-own-bundle",
     "build-your-own-story-rich-bundle",
+    "build-your-own-rpg-and-strategy-bundle",
+    "build-your-own-infinity-vr-collection",
+    "build-your-own-arcade-and-shooter-bundle",
+    "build-your-own-killer-bundle",
     "fanatical-favorites-build-your-own-bundle",
     "build-your-own-play-on-the-go-bundle",
-    "build-your-own-killer-bundle",
     "build-your-own-3d-platformer-bundle",
-    "build-your-own-craft-and-build-bundle",
-    "build-your-own-bedlam-bundle",
-    "build-your-own-infinity-vr-collection",
     "build-your-own-romance-bundle",
     "monsters-den-collection-bundle"
   ],
@@ -32,13 +32,18 @@
   ],
   "indiegalaBundles": [
     "https://www.indiegala.com/bundle/skautfold-saga-bundle",
-    "https://www.indiegala.com/bundle/hentai-pair-bundle",
     "https://www.indiegala.com/bundle/pixel-traditions-bundle",
     "https://www.indiegala.com/bundle/last-echoes-bundle",
-    "https://www.indiegala.com/bundle/massive-music3-bundle"
+    "https://www.indiegala.com/bundle/massive-music3-bundle",
+    "https://www.indiegala.com/bundle/hentai-pair-bundle"
   ],
   "digiphileCollections": [
     "https://www.digiphile.co/collections/boomer-shooter-blueprint",
-    "https://www.digiphile.co/collections/indie-boomer-shooters"
+    "https://www.digiphile.co/collections/indie-boomer-shooters",
+    "https://www.digiphile.co/collections/planet-coaster-free-game-plus"
+  ],
+  "epicGames": [
+    "14bd618815aa43209a3613e5bc2c2274",
+    "0c9ceba4cc60473f97510ab2514a4b6e"
   ]
 }

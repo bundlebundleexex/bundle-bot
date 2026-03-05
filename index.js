@@ -8,15 +8,16 @@ const fanatical = require("./stores/fanatical");
 const gmg = require("./stores/gmg");
 const indiegala = require("./stores/indiegala");
 const digiphile = require("./stores/digiphile");
+const epic = require("./stores/epic");
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 });
 
-// 🔥 CO 10 MINUT
+// co 10 minut
 const CHECK_INTERVAL = 10 * 60 * 1000;
 
-// 🔥 Railway volume path (jeśli masz volume)
+// Railway volume path
 const DATA_PATH = fs.existsSync("/data")
   ? "/data/data.json"
   : path.join(__dirname, "data.json");
@@ -25,7 +26,7 @@ let savedData = {};
 let isRunning = false;
 
 // ==========================
-// 📂 LOAD / SAVE DATA
+// LOAD / SAVE DATA
 // ==========================
 
 function loadData() {
@@ -44,6 +45,7 @@ function loadData() {
   savedData.gmgBundles ??= [];
   savedData.indiegalaBundles ??= [];
   savedData.digiphileCollections ??= [];
+  savedData.epicGames ??= [];
 
   saveData();
 }
@@ -53,10 +55,11 @@ function saveData() {
 }
 
 // ==========================
-// 🔎 CHECKS
+// CHECKS
 // ==========================
 
 async function runChecks() {
+
   if (isRunning) {
     console.log("⏳ Poprzednie sprawdzanie jeszcze trwa...");
     return;
@@ -64,49 +67,71 @@ async function runChecks() {
 
   isRunning = true;
 
-  console.log(
-    `\n🔎 START sprawdzania bundle - ${new Date().toLocaleString()}`
-  );
+  console.log(`\n🔎 START sprawdzania bundle - ${new Date().toLocaleString()}`);
 
-  try { await humble.check(client, savedData, saveData); }
-  catch (e) { console.log("❌ Humble:", e.message); }
+  try {
+    await humble.check(client, savedData, saveData);
+  } catch (e) {
+    console.log("❌ Humble:", e.message);
+  }
 
-  try { await fanatical.check(client, savedData, saveData); }
-  catch (e) { console.log("❌ Fanatical:", e.message); }
+  try {
+    await fanatical.check(client, savedData, saveData);
+  } catch (e) {
+    console.log("❌ Fanatical:", e.message);
+  }
 
-  try { await gmg.check(client, savedData, saveData); }
-  catch (e) { console.log("❌ GMG:", e.message); }
+  try {
+    await gmg.check(client, savedData, saveData);
+  } catch (e) {
+    console.log("❌ GMG:", e.message);
+  }
 
-  try { await indiegala.check(client, savedData, saveData); }
-  catch (e) { console.log("❌ IndieGala:", e.message); }
+  try {
+    await indiegala.check(client, savedData, saveData);
+  } catch (e) {
+    console.log("❌ IndieGala:", e.message);
+  }
 
-  try { await digiphile.check(client, savedData, saveData); }
-  catch (e) { console.log("❌ Digiphile:", e.message); }
+  try {
+    await digiphile.check(client, savedData, saveData);
+  } catch (e) {
+    console.log("❌ Digiphile:", e.message);
+  }
+
+  // ⭐ EPIC CHECK
+  try {
+    console.log("Epic: sprawdzam gry -100%...");
+    await epic.check(client, savedData, saveData);
+  } catch (e) {
+    console.log("❌ Epic:", e.message);
+  }
 
   console.log("✅ Sprawdzanie zakończone");
+
   isRunning = false;
 }
 
 // ==========================
-// 🤖 BOT READY
+// BOT READY
 // ==========================
 
 client.once("clientReady", async () => {
+
   console.log(`🤖 Zalogowano jako ${client.user.tag}`);
 
   loadData();
 
-  // pierwszy check od razu
   await runChecks();
 
-  // potem co 10 minut
   setInterval(runChecks, CHECK_INTERVAL);
 
   console.log("⏱️ Ustawiono sprawdzanie co 10 minut");
+
 });
 
 // ==========================
-// 🚨 Crash Protection
+// CRASH PROTECTION
 // ==========================
 
 process.on("unhandledRejection", (err) => {
