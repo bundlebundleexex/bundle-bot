@@ -4,29 +4,20 @@ const { EmbedBuilder } = require("discord.js");
 const CHANNEL_ID = process.env.CHANNEL_ID;
 const ROLE_ID = "1371122206670852146";
 
-function trim(text, max = 300) {
-  if (!text) return "";
-  const clean = text.replace(/\s+/g, " ").trim();
-  return clean.length > max ? clean.substring(0, max) + "..." : clean;
-}
+function buildUrl(bundle) {
 
-function buildFanaticalUrl(bundle) {
-  const slug = bundle.slug.toLowerCase();
-
-  // 🔥 Pick & Mix detection
-  if (
-    slug.startsWith("build-your-own") ||
-    bundle.name?.toLowerCase().includes("build your own")
-  ) {
-    return `https://www.fanatical.com/en/pick-and-mix/${slug}`;
+  if (bundle.type === "pick-and-mix") {
+    return `https://www.fanatical.com/en/pick-and-mix/${bundle.slug}`;
   }
 
-  return `https://www.fanatical.com/en/bundle/${slug}`;
+  return `https://www.fanatical.com/en/bundle/${bundle.slug}`;
 }
 
 module.exports.check = async (client, savedData, saveData) => {
+
   try {
-    console.log("🔎 Fanatical: algolia bundles API");
+
+    console.log("🔎 Fanatical: sprawdzam Algolia API...");
 
     const { data } = await axios.get(
       "https://www.fanatical.com/api/algolia/bundles?altRank=false",
@@ -35,61 +26,51 @@ module.exports.check = async (client, savedData, saveData) => {
           "User-Agent": "Mozilla/5.0",
           "Accept": "application/json",
           "Referer": "https://www.fanatical.com/en/bundle/games",
-          "Origin": "https://www.fanatical.com"
+          "Origin": "https://www.fanatical.com",
+          "sec-fetch-site": "same-origin",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-dest": "empty"
         },
         timeout: 20000
       }
     );
 
     if (!Array.isArray(data)) {
-      console.log("❌ Nieprawidłowa odpowiedź API");
+      console.log("❌ Fanatical: nieprawidłowa odpowiedź API");
       return;
     }
 
-    if (!savedData.fanaticalBundles) {
-      savedData.fanaticalBundles = [];
-    }
+    savedData.fanaticalBundles ??= [];
 
     const channel = await client.channels.fetch(CHANNEL_ID);
 
+    console.log("📦 Bundle znalezione:", data.length);
+
     for (const bundle of data) {
-      if (!bundle?.slug) continue;
 
-      // tylko prawdziwe bundle
+      if (!bundle.slug) continue;
       if (bundle.display_type !== "bundle") continue;
-
-      // pomijamy mystery
       if (bundle.mystery) continue;
 
-      const slug = bundle.slug.toLowerCase();
+      const slug = bundle.slug;
 
-      if (savedData.fanaticalBundles.includes(slug)) continue;
+      if (savedData.fanaticalBundles.includes(slug))
+        continue;
 
-      const url = buildFanaticalUrl(bundle);
+      const url = buildUrl(bundle);
 
       console.log("🔥 Nowy bundle:", slug);
-      console.log("🔗 URL:", url);
 
-      // minimalna cena
       let price = "Check page";
-      if (bundle.bundle_tiers?.length) {
-        const tier = bundle.bundle_tiers[0];
 
-        if (tier.price?.EUR) {
-          price = `€${tier.price.EUR}`;
-        } else if (tier.price?.USD) {
-          price = `$${tier.price.USD}`;
-        }
-      }
+      if (bundle.price?.EUR)
+        price = `€${bundle.price.EUR}`;
+      else if (bundle.price?.USD)
+        price = `$${bundle.price.USD}`;
 
       const image = bundle.cover
         ? `https://fanatical.imgix.net/product/original/${bundle.cover}`
         : null;
-
-      savedData.fanaticalBundles.push(slug);
-      savedData.fanaticalBundles =
-        [...new Set(savedData.fanaticalBundles)].slice(-100);
-      saveData();
 
       const embed = new EmbedBuilder()
         .setTitle(`🔥 ${bundle.name}`)
@@ -106,10 +87,22 @@ module.exports.check = async (client, savedData, saveData) => {
         embeds: [embed]
       });
 
+      savedData.fanaticalBundles.push(slug);
+      savedData.fanaticalBundles =
+        [...new Set(savedData.fanaticalBundles)].slice(-100);
+
+      saveData();
+
       console.log("✔ Wysłano:", slug);
+
     }
 
-  } catch (err) {
-    console.log("❌ Fanatical error:", err.response?.status || err.message);
   }
+
+  catch (err) {
+
+    console.log("❌ Fanatical error:", err.response?.status || err.message);
+
+  }
+
 };

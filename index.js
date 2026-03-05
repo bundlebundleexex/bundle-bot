@@ -17,7 +17,6 @@ const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 });
 
-// co ile sprawdzamy
 const CHECK_INTERVAL = 10 * 60 * 1000;
 
 // railway volume path
@@ -35,13 +34,16 @@ let isRunning = false;
 function loadData() {
 
   if (fs.existsSync(DATA_PATH)) {
+
     try {
       savedData = JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
     }
+
     catch {
       console.log("⚠️ data.json uszkodzony — resetuję");
       savedData = {};
     }
+
   }
 
   savedData.humbleBundles ??= [];
@@ -56,14 +58,35 @@ function loadData() {
   savedData.ggdeals ??= [];
 
   saveData();
+
 }
 
 function saveData() {
+
   fs.writeFileSync(DATA_PATH, JSON.stringify(savedData, null, 2));
+
 }
 
 // ==========================
-// CHECK STORES
+// STORE LIST
+// ==========================
+
+const STORES = [
+
+  { name: "Humble", fn: humble.check },
+  { name: "Fanatical", fn: fanatical.check },
+  { name: "GMG", fn: gmg.check },
+  { name: "IndieGala", fn: indiegala.check },
+  { name: "Digiphile", fn: digiphile.check },
+  { name: "Epic", fn: epic.check },
+  { name: "GOG", fn: gog.check },
+  { name: "Steam", fn: steam.check },
+  { name: "GG.DEALS", fn: ggdeals.check }
+
+];
+
+// ==========================
+// RUN CHECKS
 // ==========================
 
 async function runChecks() {
@@ -77,36 +100,26 @@ async function runChecks() {
 
   console.log(`\n🔎 START sprawdzania - ${new Date().toLocaleString()}`);
 
-  try { await humble.check(client, savedData, saveData); }
-  catch (e) { console.log("❌ Humble:", e.message); }
+  for (const store of STORES) {
 
-  try { await fanatical.check(client, savedData, saveData); }
-  catch (e) { console.log("❌ Fanatical:", e.message); }
+    try {
 
-  try { await gmg.check(client, savedData, saveData); }
-  catch (e) { console.log("❌ GMG:", e.message); }
+      await store.fn(client, savedData, saveData);
 
-  try { await indiegala.check(client, savedData, saveData); }
-  catch (e) { console.log("❌ IndieGala:", e.message); }
+    }
 
-  try { await digiphile.check(client, savedData, saveData); }
-  catch (e) { console.log("❌ Digiphile:", e.message); }
+    catch (err) {
 
-  try { await epic.check(client, savedData, saveData); }
-  catch (e) { console.log("❌ Epic:", e.message); }
+      console.log(`❌ ${store.name}:`, err.message);
 
-  try { await gog.check(client, savedData, saveData); }
-  catch (e) { console.log("❌ GOG:", e.message); }
+    }
 
-  try { await steam.check(client, savedData, saveData); }
-  catch (e) { console.log("❌ Steam:", e.message); }
-
-  try { await ggdeals.check(client, savedData, saveData); }
-  catch (e) { console.log("❌ GG.DEALS:", e.message); }
+  }
 
   console.log("✅ Sprawdzanie zakończone");
 
   isRunning = false;
+
 }
 
 // ==========================
@@ -124,6 +137,7 @@ client.once("clientReady", async () => {
   setInterval(runChecks, CHECK_INTERVAL);
 
   console.log("⏱️ Sprawdzanie ustawione co 10 minut");
+
 });
 
 // ==========================
@@ -131,11 +145,15 @@ client.once("clientReady", async () => {
 // ==========================
 
 process.on("unhandledRejection", err => {
+
   console.error("❌ Unhandled promise rejection:", err);
+
 });
 
 process.on("uncaughtException", err => {
+
   console.error("❌ Uncaught exception:", err);
+
 });
 
 // ==========================
