@@ -9,15 +9,15 @@ const gmg = require("./stores/gmg");
 const indiegala = require("./stores/indiegala");
 const digiphile = require("./stores/digiphile");
 const epic = require("./stores/epic");
+const gog = require("./stores/gog");
+const steam = require("./stores/steam");
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 });
 
-// co 10 minut
 const CHECK_INTERVAL = 10 * 60 * 1000;
 
-// Railway volume path
 const DATA_PATH = fs.existsSync("/data")
   ? "/data/data.json"
   : path.join(__dirname, "data.json");
@@ -26,17 +26,21 @@ let savedData = {};
 let isRunning = false;
 
 // ==========================
-// LOAD / SAVE DATA
+// LOAD DATA
 // ==========================
 
 function loadData() {
+
   if (fs.existsSync(DATA_PATH)) {
+
     try {
       savedData = JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
-    } catch {
+    }
+    catch {
       console.log("⚠️ data.json uszkodzony — resetuję");
       savedData = {};
     }
+
   }
 
   savedData.humbleBundles ??= [];
@@ -46,6 +50,8 @@ function loadData() {
   savedData.indiegalaBundles ??= [];
   savedData.digiphileCollections ??= [];
   savedData.epicGames ??= [];
+  savedData.gogGames ??= [];
+  savedData.steamGames ??= [];
 
   saveData();
 }
@@ -67,45 +73,31 @@ async function runChecks() {
 
   isRunning = true;
 
-  console.log(`\n🔎 START sprawdzania bundle - ${new Date().toLocaleString()}`);
+  console.log(`\n🔎 START sprawdzania - ${new Date().toLocaleString()}`);
 
-  try {
-    await humble.check(client, savedData, saveData);
-  } catch (e) {
-    console.log("❌ Humble:", e.message);
-  }
+  try { await humble.check(client, savedData, saveData); }
+  catch (e) { console.log("❌ Humble:", e.message); }
 
-  try {
-    await fanatical.check(client, savedData, saveData);
-  } catch (e) {
-    console.log("❌ Fanatical:", e.message);
-  }
+  try { await fanatical.check(client, savedData, saveData); }
+  catch (e) { console.log("❌ Fanatical:", e.message); }
 
-  try {
-    await gmg.check(client, savedData, saveData);
-  } catch (e) {
-    console.log("❌ GMG:", e.message);
-  }
+  try { await gmg.check(client, savedData, saveData); }
+  catch (e) { console.log("❌ GMG:", e.message); }
 
-  try {
-    await indiegala.check(client, savedData, saveData);
-  } catch (e) {
-    console.log("❌ IndieGala:", e.message);
-  }
+  try { await indiegala.check(client, savedData, saveData); }
+  catch (e) { console.log("❌ IndieGala:", e.message); }
 
-  try {
-    await digiphile.check(client, savedData, saveData);
-  } catch (e) {
-    console.log("❌ Digiphile:", e.message);
-  }
+  try { await digiphile.check(client, savedData, saveData); }
+  catch (e) { console.log("❌ Digiphile:", e.message); }
 
-  // ⭐ EPIC CHECK
-  try {
-    console.log("Epic: sprawdzam gry -100%...");
-    await epic.check(client, savedData, saveData);
-  } catch (e) {
-    console.log("❌ Epic:", e.message);
-  }
+  try { await epic.check(client, savedData, saveData); }
+  catch (e) { console.log("❌ Epic:", e.message); }
+
+  try { await gog.check(client, savedData, saveData); }
+  catch (e) { console.log("❌ GOG:", e.message); }
+
+  try { await steam.check(client, savedData, saveData); }
+  catch (e) { console.log("❌ Steam:", e.message); }
 
   console.log("✅ Sprawdzanie zakończone");
 
@@ -126,22 +118,17 @@ client.once("clientReady", async () => {
 
   setInterval(runChecks, CHECK_INTERVAL);
 
-  console.log("⏱️ Ustawiono sprawdzanie co 10 minut");
-
+  console.log("⏱️ Sprawdzanie co 10 minut");
 });
 
 // ==========================
-// CRASH PROTECTION
-// ==========================
 
-process.on("unhandledRejection", (err) => {
-  console.error("❌ Unhandled promise rejection:", err);
+process.on("unhandledRejection", err => {
+  console.error("❌ Unhandled rejection:", err);
 });
 
-process.on("uncaughtException", (err) => {
+process.on("uncaughtException", err => {
   console.error("❌ Uncaught exception:", err);
 });
-
-// ==========================
 
 client.login(process.env.TOKEN);
