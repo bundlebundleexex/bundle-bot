@@ -11,13 +11,16 @@ const digiphile = require("./stores/digiphile");
 const epic = require("./stores/epic");
 const gog = require("./stores/gog");
 const steam = require("./stores/steam");
+const ggdeals = require("./stores/ggdeals");
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 });
 
+// co ile sprawdzamy
 const CHECK_INTERVAL = 10 * 60 * 1000;
 
+// railway volume path
 const DATA_PATH = fs.existsSync("/data")
   ? "/data/data.json"
   : path.join(__dirname, "data.json");
@@ -32,7 +35,6 @@ let isRunning = false;
 function loadData() {
 
   if (fs.existsSync(DATA_PATH)) {
-
     try {
       savedData = JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
     }
@@ -40,7 +42,6 @@ function loadData() {
       console.log("⚠️ data.json uszkodzony — resetuję");
       savedData = {};
     }
-
   }
 
   savedData.humbleBundles ??= [];
@@ -52,6 +53,7 @@ function loadData() {
   savedData.epicGames ??= [];
   savedData.gogGames ??= [];
   savedData.steamGames ??= [];
+  savedData.ggdeals ??= [];
 
   saveData();
 }
@@ -61,7 +63,7 @@ function saveData() {
 }
 
 // ==========================
-// CHECKS
+// CHECK STORES
 // ==========================
 
 async function runChecks() {
@@ -99,6 +101,9 @@ async function runChecks() {
   try { await steam.check(client, savedData, saveData); }
   catch (e) { console.log("❌ Steam:", e.message); }
 
+  try { await ggdeals.check(client, savedData, saveData); }
+  catch (e) { console.log("❌ GG.DEALS:", e.message); }
+
   console.log("✅ Sprawdzanie zakończone");
 
   isRunning = false;
@@ -118,17 +123,21 @@ client.once("clientReady", async () => {
 
   setInterval(runChecks, CHECK_INTERVAL);
 
-  console.log("⏱️ Sprawdzanie co 10 minut");
+  console.log("⏱️ Sprawdzanie ustawione co 10 minut");
 });
 
 // ==========================
+// ERROR PROTECTION
+// ==========================
 
 process.on("unhandledRejection", err => {
-  console.error("❌ Unhandled rejection:", err);
+  console.error("❌ Unhandled promise rejection:", err);
 });
 
 process.on("uncaughtException", err => {
   console.error("❌ Uncaught exception:", err);
 });
+
+// ==========================
 
 client.login(process.env.TOKEN);
