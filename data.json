@@ -8,7 +8,10 @@
     "https://www.humblebundle.com/games/humble-15-time-capsule",
     "https://www.humblebundle.com/games/beamdog-owlcat-rpg-masters-2026",
     "https://www.humblebundle.com/games/call-wild-9th-anniversary",
-    "https://www.humblebundle.com/games/overwhelming-positive-games-bundle"
+    "https://www.humblebundle.com/games/overwhelming-positive-games-bundle",
+    "https://www.humblebundle.com/games/alister-alliance-bundle",
+    "https://www.humblebundle.com/games/games-done-quick-frost-fatales-2026",
+    "https://www.humblebundle.com/games/mix-spring-showcase-games-around-world"
   ],
   "humbleChoice": "march_2026_choice",
   "fanaticalBundles": [
@@ -25,7 +28,9 @@
     "build-your-own-3d-platformer-bundle",
     "build-your-own-craft-and-build-bundle",
     "build-your-own-romance-bundle",
-    "monsters-den-collection-bundle"
+    "monsters-den-collection-bundle",
+    "batman-arkham-collection",
+    "neurovoider-deluxe-edition"
   ],
   "gmgBundles": [
     "https://www.greenmangamingbundles.com/bundles/better-together-co-op-fun"
@@ -44,7 +49,9 @@
   ],
   "epicGames": [
     "14bd618815aa43209a3613e5bc2c2274",
-    "0c9ceba4cc60473f97510ab2514a4b6e"
+    "0c9ceba4cc60473f97510ab2514a4b6e",
+    "a9748abde1c94b66aae5250bb9fc5503",
+    "68d9f0e261464ba284e10418d98532ea"
   ],
   "gogGames": [
     "1741902035",
@@ -60,6 +67,8 @@
     "1466114922",
     "1535217367"
   ],
-  "steamGames": [],
+  "steamGames": [
+    "214340"
+  ],
   "ggdeals": []
 }
