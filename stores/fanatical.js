@@ -5,52 +5,54 @@ const CHANNEL_ID = process.env.CHANNEL_ID;
 const ROLE_ID = "1371122206670852146";
 
 function buildUrl(bundle) {
-
   if (bundle.type === "pick-and-mix") {
     return `https://www.fanatical.com/en/pick-and-mix/${bundle.slug}`;
   }
-
   return `https://www.fanatical.com/en/bundle/${bundle.slug}`;
 }
 
 module.exports.check = async (client, savedData, saveData) => {
-
   try {
-
-    console.log("🔎 Fanatical: sprawdzam Algolia API...");
+    console.log("🔎 Fanatical: CLEAN SCAN");
 
     const { data } = await axios.get(
       "https://www.fanatical.com/api/algolia/bundles?altRank=false",
       {
         headers: {
           "User-Agent": "Mozilla/5.0",
-          "Accept": "application/json",
           "Referer": "https://www.fanatical.com/en/bundle/games",
-          "Origin": "https://www.fanatical.com",
-          "sec-fetch-site": "same-origin",
-          "sec-fetch-mode": "cors",
-          "sec-fetch-dest": "empty"
+          "Origin": "https://www.fanatical.com"
         },
         timeout: 20000
       }
     );
 
     if (!Array.isArray(data)) {
-      console.log("❌ Fanatical: nieprawidłowa odpowiedź API");
+      console.log("❌ Fanatical: zła odpowiedź API");
       return;
     }
 
     savedData.fanaticalBundles ??= [];
-
     const channel = await client.channels.fetch(CHANNEL_ID);
-
-    console.log("📦 Bundle znalezione:", data.length);
 
     for (const bundle of data) {
 
       if (!bundle.slug) continue;
-      if (bundle.display_type !== "bundle") continue;
+
+      // ❌ SKIP MYSTERY
       if (bundle.mystery) continue;
+
+      // ❌ TYLKO GRY (NAJWAŻNIEJSZE)
+      const isGameBundle =
+        bundle.display_type === "bundle" &&
+        bundle.drm?.includes("steam");
+
+      // ❌ LUB PICK&MIX (TEŻ GRY)
+      const isPickMix =
+        bundle.type === "pick-and-mix" &&
+        bundle.drm?.includes("steam");
+
+      if (!isGameBundle && !isPickMix) continue;
 
       const slug = bundle.slug;
 
@@ -59,14 +61,11 @@ module.exports.check = async (client, savedData, saveData) => {
 
       const url = buildUrl(bundle);
 
-      console.log("🔥 Nowy bundle:", slug);
+      console.log("🔥 NOWY:", slug);
 
       let price = "Check page";
-
-      if (bundle.price?.EUR)
-        price = `€${bundle.price.EUR}`;
-      else if (bundle.price?.USD)
-        price = `$${bundle.price.USD}`;
+      if (bundle.price?.EUR) price = `€${bundle.price.EUR}`;
+      else if (bundle.price?.USD) price = `$${bundle.price.USD}`;
 
       const image = bundle.cover
         ? `https://fanatical.imgix.net/product/original/${bundle.cover}`
@@ -75,15 +74,19 @@ module.exports.check = async (client, savedData, saveData) => {
       const embed = new EmbedBuilder()
         .setTitle(`🔥 ${bundle.name}`)
         .setURL(url)
-        .setColor(0x2ecc71)
+        .setColor(isPickMix ? 0xf39c12 : 0x2ecc71)
         .setDescription(`💰 **Cena od:** ${price}`)
-        .setFooter({ text: "Fanatical Game Bundle 🎮" })
+        .setFooter({
+          text: isPickMix
+            ? "Fanatical Build Your Own Bundle 🧩"
+            : "Fanatical Game Bundle 🎮"
+        })
         .setTimestamp();
 
       if (image) embed.setImage(image);
 
       await channel.send({
-        content: `🔥 **NOWY FANATICAL GAME BUNDLE!** <@&${ROLE_ID}>`,
+        content: `🔥 **NOWY FANATICAL BUNDLE!** <@&${ROLE_ID}>`,
         embeds: [embed]
       });
 
@@ -94,15 +97,9 @@ module.exports.check = async (client, savedData, saveData) => {
       saveData();
 
       console.log("✔ Wysłano:", slug);
-
     }
 
-  }
-
-  catch (err) {
-
+  } catch (err) {
     console.log("❌ Fanatical error:", err.response?.status || err.message);
-
   }
-
 };
