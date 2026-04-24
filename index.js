@@ -32,18 +32,13 @@ let isRunning = false;
 // ==========================
 
 function loadData() {
-
   if (fs.existsSync(DATA_PATH)) {
-
     try {
       savedData = JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
-    }
-
-    catch {
+    } catch {
       console.log("⚠️ data.json uszkodzony — resetuję");
       savedData = {};
     }
-
   }
 
   savedData.humbleBundles ??= [];
@@ -58,13 +53,10 @@ function loadData() {
   savedData.ggdeals ??= [];
 
   saveData();
-
 }
 
 function saveData() {
-
   fs.writeFileSync(DATA_PATH, JSON.stringify(savedData, null, 2));
-
 }
 
 // ==========================
@@ -72,7 +64,6 @@ function saveData() {
 // ==========================
 
 const STORES = [
-
   { name: "Humble", fn: humble.check },
   { name: "Fanatical", fn: fanatical.check },
   { name: "GMG", fn: gmg.check },
@@ -82,7 +73,6 @@ const STORES = [
   { name: "GOG", fn: gog.check },
   { name: "Steam", fn: steam.check },
   { name: "GG.DEALS", fn: ggdeals.check }
-
 ];
 
 // ==========================
@@ -90,7 +80,6 @@ const STORES = [
 // ==========================
 
 async function runChecks() {
-
   if (isRunning) {
     console.log("⏳ Poprzednie sprawdzanie jeszcze trwa...");
     return;
@@ -101,25 +90,16 @@ async function runChecks() {
   console.log(`\n🔎 START sprawdzania - ${new Date().toLocaleString()}`);
 
   for (const store of STORES) {
-
     try {
-
       await store.fn(client, savedData, saveData);
-
-    }
-
-    catch (err) {
-
+    } catch (err) {
       console.log(`❌ ${store.name}:`, err.message);
-
     }
-
   }
 
   console.log("✅ Sprawdzanie zakończone");
 
   isRunning = false;
-
 }
 
 // ==========================
@@ -127,7 +107,6 @@ async function runChecks() {
 // ==========================
 
 client.once("clientReady", async () => {
-
   console.log(`🤖 Zalogowano jako ${client.user.tag}`);
 
   loadData();
@@ -137,7 +116,6 @@ client.once("clientReady", async () => {
   setInterval(runChecks, CHECK_INTERVAL);
 
   console.log("⏱️ Sprawdzanie ustawione co 10 minut");
-
 });
 
 // ==========================
@@ -145,15 +123,11 @@ client.once("clientReady", async () => {
 // ==========================
 
 process.on("unhandledRejection", err => {
-
   console.error("❌ Unhandled promise rejection:", err);
-
 });
 
 process.on("uncaughtException", err => {
-
   console.error("❌ Uncaught exception:", err);
-
 });
 
 // ==========================

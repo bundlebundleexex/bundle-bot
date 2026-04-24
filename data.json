@@ -20,9 +20,21 @@
     "https://www.humblebundle.com/games/checkmate-chess-games-collection",
     "https://www.humblebundle.com/games/multiplayer-madness-2026",
     "https://www.humblebundle.com/games/humble-heroines-echoes-voids-and-visions",
-    "https://www.humblebundle.com/games/metro-mania-planes-trains-and-automobiles"
+    "https://www.humblebundle.com/games/metro-mania-planes-trains-and-automobiles",
+    "https://www.humblebundle.com/games/tower-defense-2",
+    "https://www.humblebundle.com/games/your-move-turn-based-games",
+    "https://www.humblebundle.com/games/vr-kiwi-bundle",
+    "https://www.humblebundle.com/games/destiny-2-expansions-bundle-2026",
+    "https://www.humblebundle.com/games/sovereign-sandbox-bundle",
+    "https://www.humblebundle.com/games/speak-to-manager",
+    "https://www.humblebundle.com/games/sharp-shooters-bundle",
+    "https://www.humblebundle.com/games/train-sim-world-6-first-class-ticket-bundle",
+    "https://www.humblebundle.com/games/humble-15-for-15-april-2026",
+    "https://www.humblebundle.com/games/15-golden-tales-bundle",
+    "https://www.humblebundle.com/games/2k-tactics-tycoons",
+    "https://www.humblebundle.com/games/mecha-mania"
   ],
-  "humbleChoice": "march_2026_choice",
+  "humbleChoice": "april_2026_choice",
   "fanaticalBundles": [
     "build-your-own-wholesome-collection",
     "platinum-collection-build-your-own-bundle",
@@ -38,12 +50,25 @@
     "build-your-own-spring-bundle",
     "build-your-own-arcade-and-shooter-bundle",
     "build-your-own-rpg-and-strategy-bundle",
-    "monsters-den-collection-bundle"
+    "monsters-den-collection-bundle",
+    "build-your-own-legendary-bundle",
+    "build-your-own-gamersky-all-stars-bundle",
+    "build-your-own-titanium-collection",
+    "build-your-own-bento-bundle",
+    "build-your-own-survival-horror-bundle",
+    "build-your-own-tactical-triple-pack",
+    "whale-and-dolphin-conservation-charity-bundle",
+    "build-your-own-exodus-bundle",
+    "batman-arkham-collection",
+    "neurovoider-deluxe-edition"
   ],
   "gmgBundles": [
     "https://www.greenmangamingbundles.com/bundles/better-together-co-op-fun",
     "https://www.greenmangamingbundles.com/bundles/team17-collection",
-    "https://www.greenmangamingbundles.com/bundles/build-rule-conquer-bundle"
+    "https://www.greenmangamingbundles.com/bundles/build-rule-conquer-bundle",
+    "https://www.greenmangamingbundles.com/bundles/ovani-presents-the-legendary-launch-bundle",
+    "https://www.greenmangamingbundles.com/bundles/make-your-own-games-with-gamedevtv",
+    "https://www.greenmangamingbundles.com/bundles/nacon-collection"
   ],
   "indiegalaBundles": [
     "https://www.indiegala.com/bundle/skautfold-saga-bundle",
@@ -53,7 +78,10 @@
     "https://www.indiegala.com/bundle/hentai-pair-bundle",
     "https://www.indiegala.com/bundle/epic-valley-bundle",
     "https://www.indiegala.com/bundle/superhero2-tales-bundle",
-    "https://www.indiegala.com/bundle/geeks-and-chicks-bundle"
+    "https://www.indiegala.com/bundle/geeks-and-chicks-bundle",
+    "https://www.indiegala.com/bundle/silly-heroes-tales-bundle",
+    "https://www.indiegala.com/bundle/pixel-traditions2-bundle",
+    "https://www.indiegala.com/bundle/flirty-elf-bundle"
   ],
   "digiphileCollections": [
     "https://www.digiphile.co/collections/boomer-shooter-blueprint",
@@ -61,16 +89,8 @@
     "https://www.digiphile.co/collections/planet-coaster-free-game-plus"
   ],
   "epicGames": [
-    "14bd618815aa43209a3613e5bc2c2274",
-    "0c9ceba4cc60473f97510ab2514a4b6e",
-    "a9748abde1c94b66aae5250bb9fc5503",
-    "68d9f0e261464ba284e10418d98532ea",
-    "921e40c4c69f4d728914ca2a4f0aa407",
-    "be5600439b434624802764f704755cde",
-    "8f80897c0b6e4e678fed08da169d44be",
-    "f967cff9761c4198b4e972cfd71e40d7",
-    "c6479f31043943d0b1710cc5983f53c6",
-    "9f67865fcf0749a58f4d35827473266f"
+    "9e7d6a034aaf450dacda4b51695d113a",
+    "doomblade-afdf9a"
   ],
   "gogGames": [
     "1741902035",
@@ -87,7 +107,9 @@
     "1535217367"
   ],
   "steamGames": [
-    "214340"
+    "214340",
+    "3277530",
+    "4277070"
   ],
   "ggdeals": []
 }
