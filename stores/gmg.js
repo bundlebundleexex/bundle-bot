@@ -27,15 +27,11 @@ module.exports.check = async (client, savedData, saveData) => {
       .map((i, el) => $(el).attr("href"))
       .get();
 
-    // 🔥 usuwamy duplikaty
     links = [...new Set(links)];
 
     console.log("🔗 GMG znalezione:", links.length);
 
-    if (!links.length) {
-      console.log("❌ GMG: brak bundle");
-      return;
-    }
+    if (!links.length) return;
 
     const channel = await client.channels.fetch(CHANNEL_ID);
 
@@ -43,7 +39,6 @@ module.exports.check = async (client, savedData, saveData) => {
 
     for (let url of links) {
 
-      // 🔧 normalizacja URL (usuwa końcowy /)
       url = url.replace(/\/$/, "");
 
       if (savedData.gmgBundles.includes(url)) {
@@ -59,13 +54,13 @@ module.exports.check = async (client, savedData, saveData) => {
 
       const bodyText = $$("body").text();
 
-      // 🔥 pomijamy zakończone bundle
+      // ❌ expired
       if (
         bodyText.includes("Expired") ||
         bodyText.includes("Offer ended") ||
         bodyText.includes("ENDED")
       ) {
-        console.log("⛔ Pominięty expired:", url);
+        console.log("⛔ Expired:", url);
         continue;
       }
 
@@ -81,9 +76,115 @@ module.exports.check = async (client, savedData, saveData) => {
         $$("meta[property='og:image']").attr("content") ||
         null;
 
+      // =========================
+      // 🔥 FILTR FINALNY
+      // =========================
+
+      const fullText = (title + " " + description + " " + bodyText).toLowerCase();
+
+      // 🎧 AUDIO / ASSETY
+      const HARD_BLOCK = [
+        "royalty-free",
+        "sound effects",
+        "sfx",
+        "audio pack",
+        "music pack",
+        "audio library",
+        "sound library"
+      ];
+
+      // 🧰 SOFTWARE / TOOLS
+      const SOFT_BLOCK = [
+        "creator",
+        "studio",
+        "tool",
+        "tools",
+        "editor",
+        "editing",
+        "resource"
+      ];
+
+      // 🎓 EDUKACJA / KURSY
+      const EDUCATION_BLOCK = [
+        "course",
+        "courses",
+        "learn",
+        "learning",
+        "training",
+        "tutorial",
+        "academy",
+        "masterclass",
+        "lessons"
+      ];
+
+      // 🧠 GAME DEV (Unity itd.)
+      const DEV_KEYWORDS = [
+        "unity",
+        "unreal",
+        "blender",
+        "godot",
+        "game dev",
+        "game development"
+      ];
+
+      // 🎮 SYGNAŁY GIER
+      const GAME_HINTS = [
+        "steam",
+        "game",
+        "games",
+        "dlc",
+        "pc",
+        "key",
+        "keys"
+      ];
+
+      const hasGame = GAME_HINTS.some(w => fullText.includes(w));
+      const hasHard = HARD_BLOCK.some(w => fullText.includes(w));
+      const hasSoft = SOFT_BLOCK.some(w => fullText.includes(w));
+      const hasEdu = EDUCATION_BLOCK.some(w => fullText.includes(w));
+      const hasDev = DEV_KEYWORDS.some(w => fullText.includes(w));
+
+      // ❌ AUDIO / ASSET
+      if (hasHard) {
+        console.log("🚫 Asset bundle:", title);
+        continue;
+      }
+
+      // ❌ AUDIO fallback
+      if (
+        (fullText.includes("music") ||
+         fullText.includes("audio") ||
+         fullText.includes("sound")) &&
+        !hasGame
+      ) {
+        console.log("🚫 Audio bundle:", title);
+        continue;
+      }
+
+      // ❌ EDUKACJA
+      if (hasEdu && !hasGame) {
+        console.log("🚫 Education bundle:", title);
+        continue;
+      }
+
+      // ❌ GAMEDEV (kursy + unity itd.)
+      if (hasDev && hasEdu) {
+        console.log("🚫 GameDev bundle:", title);
+        continue;
+      }
+
+      // ❌ SOFTWARE (tylko jeśli brak gier)
+      if (hasSoft && !hasGame) {
+        console.log("🚫 Software bundle:", title);
+        continue;
+      }
+
+      // =========================
+      // ✅ PRZECHODZI (GRY)
+      // =========================
+
       console.log("🔥 GMG aktywny bundle:", title);
 
-      // zapisujemy żeby nie wysłało drugi raz
       savedData.gmgBundles.push(url);
       saveData();
 
@@ -103,12 +204,9 @@ module.exports.check = async (client, savedData, saveData) => {
       });
 
       console.log("🚀 GMG wysłany");
-
     }
 
   } catch (err) {
-
     console.log("🔥 GMG error:", err.message);
-
   }
 };
