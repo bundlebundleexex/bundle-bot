@@ -9,7 +9,10 @@ const gmg = require("./stores/gmg");
 const indiegala = require("./stores/indiegala");
 const digiphile = require("./stores/digiphile");
 const epic = require("./stores/epic");
-const epicDeals = require("./stores/epicDeals");
+
+// FIX Linux/Railway
+const epicDeals = require("./stores/epicdeals");
+
 const freeDeals = require("./stores/freeDeals");
 const gog = require("./stores/gog");
 const steam = require("./stores/steam");
@@ -17,15 +20,13 @@ const amazon = require("./stores/amazon");
 const ggdeals = require("./stores/ggdeals");
 const deals0 = require("./stores/deals0");
 
-console.log("AMAZON IMPORT:", amazon);
-
 const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 });
 
 const CHECK_INTERVAL = 10 * 60 * 1000;
 
-// railway volume path
+// Railway volume path
 const DATA_PATH = fs.existsSync("/data")
   ? "/data/data.json"
   : path.join(__dirname, "data.json");
@@ -79,17 +80,13 @@ const STORES = [
   { name: "GMG", fn: gmg.check },
   { name: "IndieGala", fn: indiegala.check },
   { name: "Digiphile", fn: digiphile.check },
-
   { name: "Deals0", fn: deals0.check },
-
   { name: "Epic", fn: epic.check },
   { name: "EpicDeals", fn: epicDeals.check },
   { name: "FreeDeals", fn: freeDeals.check },
   { name: "GOG", fn: gog.check },
   { name: "Steam", fn: steam.check },
-
   { name: "Amazon", fn: amazon.check },
-
   { name: "GG.DEALS", fn: ggdeals.check }
 ];
 
