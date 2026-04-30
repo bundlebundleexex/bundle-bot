@@ -9,10 +9,15 @@ const gmg = require("./stores/gmg");
 const indiegala = require("./stores/indiegala");
 const digiphile = require("./stores/digiphile");
 const epic = require("./stores/epic");
-const epicDeals = require("./stores/epicDeals"); // <-- NOWE
+const epicDeals = require("./stores/epicDeals");
+const freeDeals = require("./stores/freeDeals");
 const gog = require("./stores/gog");
 const steam = require("./stores/steam");
+const amazon = require("./stores/amazon");
 const ggdeals = require("./stores/ggdeals");
+const deals0 = require("./stores/deals0");
+
+console.log("AMAZON IMPORT:", amazon);
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds]
@@ -49,10 +54,13 @@ function loadData() {
   savedData.indiegalaBundles ??= [];
   savedData.digiphileCollections ??= [];
   savedData.epicGames ??= [];
-  savedData.epicDeals ??= []; // <-- NOWE
+  savedData.epicDeals ??= [];
+  savedData.freeDeals ??= [];
   savedData.gogGames ??= [];
   savedData.steamGames ??= [];
+  savedData.amazon ??= [];
   savedData.ggdeals ??= [];
+  savedData.deals0 ??= [];
 
   saveData();
 }
@@ -71,10 +79,17 @@ const STORES = [
   { name: "GMG", fn: gmg.check },
   { name: "IndieGala", fn: indiegala.check },
   { name: "Digiphile", fn: digiphile.check },
+
+  { name: "Deals0", fn: deals0.check },
+
   { name: "Epic", fn: epic.check },
-  { name: "EpicDeals", fn: epicDeals.check }, // <-- POPRAWIONE
+  { name: "EpicDeals", fn: epicDeals.check },
+  { name: "FreeDeals", fn: freeDeals.check },
   { name: "GOG", fn: gog.check },
   { name: "Steam", fn: steam.check },
+
+  { name: "Amazon", fn: amazon.check },
+
   { name: "GG.DEALS", fn: ggdeals.check }
 ];
 
