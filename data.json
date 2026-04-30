@@ -32,7 +32,10 @@
     "https://www.humblebundle.com/games/humble-15-for-15-april-2026",
     "https://www.humblebundle.com/games/15-golden-tales-bundle",
     "https://www.humblebundle.com/games/2k-tactics-tycoons",
-    "https://www.humblebundle.com/games/mecha-mania"
+    "https://www.humblebundle.com/games/mecha-mania",
+    "https://www.humblebundle.com/games/dead-rising-shop-til-you-drop-bundle",
+    "https://www.humblebundle.com/games/playism-publisher-bundle-2026",
+    "https://www.humblebundle.com/games/fore-golf-games-bundle-games"
   ],
   "humbleChoice": "april_2026_choice",
   "fanaticalBundles": [
@@ -60,7 +63,10 @@
     "whale-and-dolphin-conservation-charity-bundle",
     "build-your-own-exodus-bundle",
     "batman-arkham-collection",
-    "neurovoider-deluxe-edition"
+    "neurovoider-deluxe-edition",
+    "build-your-own-capcom-masters-bundle",
+    "build-your-own-fantasy-worlds-bundle",
+    "build-your-own-adrenaline-bundle"
   ],
   "gmgBundles": [
     "https://www.greenmangamingbundles.com/bundles/nacon-collection"
@@ -76,16 +82,19 @@
     "https://www.indiegala.com/bundle/geeks-and-chicks-bundle",
     "https://www.indiegala.com/bundle/silly-heroes-tales-bundle",
     "https://www.indiegala.com/bundle/pixel-traditions2-bundle",
-    "https://www.indiegala.com/bundle/flirty-elf-bundle"
+    "https://www.indiegala.com/bundle/flirty-elf-bundle",
+    "https://www.indiegala.com/bundle/princess-and-blade-bundle"
   ],
   "digiphileCollections": [
     "https://www.digiphile.co/collections/boomer-shooter-blueprint",
     "https://www.digiphile.co/collections/indie-boomer-shooters",
-    "https://www.digiphile.co/collections/planet-coaster-free-game-plus"
+    "https://www.digiphile.co/collections/planet-coaster-free-game-plus",
+    "https://www.digiphile.co/collections/landfall-aggro-crab-showcase"
   ],
   "epicGames": [
     "9e7d6a034aaf450dacda4b51695d113a",
-    "doomblade-afdf9a"
+    "doomblade-afdf9a",
+    "oddsparks-58440c_2026-04-30T15:00:00.000Z_2026-05-07T15:00:00.000Z"
   ],
   "gogGames": [
     "1741902035",
@@ -106,5 +115,8 @@
     "3277530",
     "4277070"
   ],
-  "ggdeals": []
+  "ggdeals": [],
+  "epicDeals": [
+    "3402"
+  ]
 }

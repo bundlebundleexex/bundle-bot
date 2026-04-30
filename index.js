@@ -9,6 +9,7 @@ const gmg = require("./stores/gmg");
 const indiegala = require("./stores/indiegala");
 const digiphile = require("./stores/digiphile");
 const epic = require("./stores/epic");
+const epicDeals = require("./stores/epicDeals"); // <-- NOWE
 const gog = require("./stores/gog");
 const steam = require("./stores/steam");
 const ggdeals = require("./stores/ggdeals");
@@ -48,6 +49,7 @@ function loadData() {
   savedData.indiegalaBundles ??= [];
   savedData.digiphileCollections ??= [];
   savedData.epicGames ??= [];
+  savedData.epicDeals ??= []; // <-- NOWE
   savedData.gogGames ??= [];
   savedData.steamGames ??= [];
   savedData.ggdeals ??= [];
@@ -70,6 +72,7 @@ const STORES = [
   { name: "IndieGala", fn: indiegala.check },
   { name: "Digiphile", fn: digiphile.check },
   { name: "Epic", fn: epic.check },
+  { name: "EpicDeals", fn: epicDeals.check }, // <-- POPRAWIONE
   { name: "GOG", fn: gog.check },
   { name: "Steam", fn: steam.check },
   { name: "GG.DEALS", fn: ggdeals.check }

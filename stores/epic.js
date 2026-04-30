@@ -19,88 +19,142 @@ function formatDate(dateString) {
 function getHoursLeft(dateString) {
   if (!dateString) return null;
 
-  const end = new Date(dateString);
-  const now = new Date();
+  const diff = new Date(dateString) - new Date();
+  const hours = Math.floor(diff / (1000 * 60 * 60));
 
-  const hours = Math.floor((end - now) / (1000 * 60 * 60));
-  return hours > 0 ? hours : 0;
+  return Math.max(0, hours);
+}
+
+function getSlug(game) {
+  return (
+    game.catalogNs?.mappings?.[0]?.pageSlug ||
+    game.productSlug?.replace("/home", "") ||
+    game.urlSlug ||
+    null
+  );
+}
+
+function hasBlockedCategory(game) {
+  const categories = (game.categories || []).map(c => c.path.toLowerCase());
+
+  // dodatki / mody / inne śmieci
+  if (categories.some(c => c.startsWith("addons"))) return true;
+  if (categories.some(c => c.includes("mods"))) return true;
+
+  return false;
+}
+
+function looksLikeTool(game) {
+  const text = JSON.stringify(game.customAttributes || []).toLowerCase();
+
+  return (
+    text.includes("creator") ||
+    text.includes("tool") ||
+    text.includes("editor") ||
+    text.includes("kit")
+  );
 }
 
 module.exports.check = async (client, savedData, saveData) => {
-
-  console.log("🟣 Epic: sprawdzam darmowe gry (PC)...");
-
   try {
+    console.log("🟣 Epic: sprawdzam darmowe gry...");
+
     const res = await axios.get(
-      "https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions"
+      "https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions",
+      {
+        headers: {
+          "User-Agent": "Mozilla/5.0"
+        },
+        timeout: 30000
+      }
     );
 
     const elements =
-      res.data.data.Catalog.searchStore.elements;
+      res.data?.data?.Catalog?.searchStore?.elements || [];
 
     const channel = await client.channels.fetch(CHANNEL_ID);
 
-    for (const game of elements) {
+    savedData.epicGames ??= [];
 
+    for (const game of elements) {
       // tylko pełne gry
       if (game.offerType !== "BASE_GAME") continue;
+
+      // wytnij dodatki / mody
+      if (hasBlockedCategory(game)) continue;
+
+      // creator kit / tools
+      if (looksLikeTool(game)) continue;
 
       const price = game.price?.totalPrice;
       if (!price) continue;
 
-      // pomiń F2P
-      if (price.originalPrice === 0) continue;
+      // permanent free → skip
+      if (price.originalPrice <= 0) continue;
 
-      // tylko darmowe
+      // nie darmowe → skip
       if (price.discountPrice !== 0) continue;
 
-      const slug =
-        game.catalogNs?.mappings?.[0]?.pageSlug ||
-        game.productSlug ||
-        game.urlSlug;
+      // aktywne promo
+      const promos =
+        game.promotions?.promotionalOffers?.flatMap(
+          p => p.promotionalOffers || []
+        ) || [];
 
-      if (!slug) {
-        console.log("⛔ brak sluga:", game.title);
+      if (!promos.length) continue;
+
+      const now = new Date();
+
+      const activePromo = promos.find(p => {
+        const start = new Date(p.startDate);
+        const end = new Date(p.endDate);
+
+        return now >= start && now < end;
+      });
+
+      if (!activePromo) continue;
+
+      const slug = getSlug(game);
+      if (!slug) continue;
+
+      // unikalny giveaway
+      const promoId =
+        `${slug}_${activePromo.startDate}_${activePromo.endDate}`;
+
+      if (savedData.epicGames.includes(promoId)) {
         continue;
       }
 
-      // deduplikacja po slug
-      if (savedData.epicGames.includes(slug)) continue;
-
-      const title = game.title;
-
       const image =
         game.keyImages?.find(i => i.type === "OfferImageWide")?.url ||
-        game.keyImages?.[0]?.url;
+        game.keyImages?.[0]?.url ||
+        null;
 
-      const link = `https://store.epicgames.com/pl/p/${slug}`;
-
-      const promo =
-        game.promotions?.promotionalOffers?.[0]?.promotionalOffers?.[0];
-
-      const endDate = promo?.endDate;
+      const endDate = activePromo.endDate;
       const hoursLeft = getHoursLeft(endDate);
 
       const embed = new EmbedBuilder()
-        .setTitle(title)
-        .setURL(link)
-        .setImage(image)
+        .setTitle(game.title)
+        .setURL(`https://store.epicgames.com/pl/p/${slug}`)
         .setColor("#2f3136")
         .setFooter({ text: "Epic Games" })
         .setDescription(
-          `🖥️ **PC**\n🎁 Do odebrania: ${formatDate(endDate)}${
-            hoursLeft !== null ? `\n⏳ Zostało: ${hoursLeft}h` : ""
+          `🖥️ **PC**\n⌛ **Gratis do:** ${formatDate(endDate)}${
+            hoursLeft !== null ? `\n⏳ **Zostało:** ${hoursLeft}h` : ""
           }`
-        );
+        )
+        .setTimestamp();
+
+      if (image) embed.setImage(image);
 
       await channel.send({
         content: `<@&${ROLE_ID}>`,
         embeds: [embed]
       });
 
-      console.log("🎮 Epic wysłano:", title);
+      console.log("🎮 Epic wysłano:", game.title);
 
-      savedData.epicGames.push(slug);
+      savedData.epicGames.push(promoId);
       saveData();
     }
 
