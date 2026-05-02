@@ -1,5 +1,6 @@
-const axios = require("axios");
+const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
+const axios = require("axios");
 const {
   EmbedBuilder,
   ActionRowBuilder,
@@ -10,119 +11,181 @@ const {
 const CHANNEL_ID = "1479078345382559804";
 const ROLE_ID = "1371121790046437448";
 
-module.exports.check = async (client, savedData, saveData) => {
+// stałe F2P do ignorowania
+const PERMA_F2P = new Set([
+  "730",      // CS2
+  "570",      // Dota 2
+  "440",      // TF2
+  "578080",   // PUBG
+  "1172470"   // Apex
+]);
+
+async function fetchSteamDBFree() {
+  const browser = await puppeteer.launch({
+    headless: "new",
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu",
+      "--no-zygote",
+      "--single-process"
+    ]
+  });
 
   try {
+    const page = await browser.newPage();
 
-    console.log("🟦 Steam: sprawdzam darmowe gry...");
+    await page.setRequestInterception(true);
+    page.on("request", (req) => {
+      const type = req.resourceType();
 
-    const { data: html } = await axios.get(
-      "https://store.steampowered.com/search/?specials=1&maxprice=free&hidef2p=1",
-      {
-        headers: { "User-Agent": "Mozilla/5.0" }
+      if (
+        type === "image" ||
+        type === "media" ||
+        type === "font" ||
+        type === "stylesheet"
+      ) {
+        req.abort();
+      } else {
+        req.continue();
       }
+    });
+
+    await page.setUserAgent(
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/136 Safari/537.36"
     );
 
+    await page.goto("https://steamdb.info/upcoming/free/", {
+      waitUntil: "domcontentloaded",
+      timeout: 60000
+    });
+
+    await page.waitForSelector("body");
+
+    const html = await page.content();
     const $ = cheerio.load(html);
 
-    if (!savedData.steamGames)
-      savedData.steamGames = [];
+    const games = [];
+    const seen = new Set();
+
+    $("a[href*='/app/']").each((_, el) => {
+      const href = $(el).attr("href") || "";
+      const match = href.match(/\/app\/(\d+)\//);
+      if (!match) return;
+
+      const appid = match[1];
+      if (seen.has(appid)) return;
+      if (PERMA_F2P.has(appid)) return;
+
+      const name = $(el).text().trim();
+      if (!name || name.length < 2) return;
+
+      const areaText =
+        $(el).closest("tr").text() ||
+        $(el).parent().parent().text() ||
+        $(el).parent().text() ||
+        "";
+
+      // tylko Free to Keep
+      if (!/Free to Keep/i.test(areaText)) return;
+
+      seen.add(appid);
+
+      games.push({
+        appid,
+        name,
+        url: `https://store.steampowered.com/app/${appid}/`
+      });
+    });
+
+    return games;
+  } finally {
+    await browser.close();
+  }
+}
+
+async function fetchSteamDetails(appid) {
+  const { data } = await axios.get(
+    "https://store.steampowered.com/api/appdetails",
+    {
+      params: {
+        appids: appid,
+        cc: "us",
+        l: "en"
+      },
+      timeout: 20000,
+      headers: {
+        "User-Agent": "Mozilla/5.0"
+      }
+    }
+  );
+
+  return data?.[appid];
+}
+
+module.exports.check = async (client, savedData, saveData) => {
+  try {
+    console.log("🟦 SteamDB (browser): checking...");
+    savedData.steamGames ??= [];
 
     const channel = await client.channels.fetch(CHANNEL_ID);
 
-    const games = [];
+    const list = await fetchSteamDBFree();
+    console.log(`📦 found: ${list.length}`);
 
-    $(".search_result_row").each((_, el) => {
+    let sent = 0;
 
-      const discount = $(el)
-        .find(".discount_pct")
-        .text()
-        .trim();
+    for (const item of list) {
+      try {
+        if (savedData.steamGames.includes(item.appid)) continue;
 
-      if (discount !== "-100%")
-        return;
+        const app = await fetchSteamDetails(item.appid);
+        if (!app?.success || !app.data) continue;
 
-      const appid = $(el).attr("data-ds-appid");
-      const title = $(el).find(".title").text().trim();
+        const game = app.data;
 
-      if (!appid)
-        return;
+        const embed = new EmbedBuilder()
+          .setColor(0x00c853)
+          .setTitle(`🎮 ${game.name}`)
+          .setURL(item.url)
+          .setDescription(
+            "🔥 **NOWA DARMÓWKA NA STEAM!**\n\n✅ **Free to Keep**\n📌 **Dodaj do konta — zostaje na zawsze**"
+          )
+          .setThumbnail(game.capsule_image || null)
+          .setImage(game.header_image || null)
+          .setFooter({ text: "BundleBot • Steam Giveaway" })
+          .setTimestamp();
 
-      games.push({ appid, title });
+        const row = new ActionRowBuilder().addComponents(
+          new ButtonBuilder()
+            .setLabel("🎮 Odbierz na Steam")
+            .setStyle(ButtonStyle.Link)
+            .setURL(item.url)
+        );
 
-    });
+        await channel.send({
+          content: `🚨 **NOWA DARMOWA GRA NA STEAM!** <@&${ROLE_ID}>`,
+          embeds: [embed],
+          components: [row]
+        });
 
-    console.log("🎮 Darmowe gry Steam:", games.length);
+        savedData.steamGames.push(item.appid);
+        savedData.steamGames =
+          [...new Set(savedData.steamGames)].slice(-1000);
 
-    for (const game of games) {
+        saveData();
+        sent++;
 
-      if (savedData.steamGames.includes(game.appid))
-        continue;
-
-      const { data } = await axios.get(
-        `https://store.steampowered.com/api/appdetails?appids=${game.appid}&cc=us&l=en`,
-        {
-          headers: { "User-Agent": "Mozilla/5.0" }
-        }
-      );
-
-      const info = data[game.appid]?.data;
-
-      if (!info?.price_overview)
-        continue;
-
-      const url = `https://store.steampowered.com/app/${game.appid}`;
-
-      const embed = new EmbedBuilder()
-        .setColor(0x1b2838)
-        .setTitle(info.name)
-        .setURL(url)
-        .setDescription(
-          "🎮 **DARMOWA GRA DO ODEBRANIA!!**"
-        )
-        .setImage(info.header_image)
-        .setFooter({
-          text: "Steam Free Game 🎮"
-        })
-        .setTimestamp();
-
-      const row = new ActionRowBuilder().addComponents(
-
-        new ButtonBuilder()
-          .setLabel("Open in browser")
-          .setStyle(ButtonStyle.Link)
-          .setURL(url),
-
-        new ButtonBuilder()
-          .setLabel("Open in Steam client")
-          .setStyle(ButtonStyle.Link)
-          .setURL(url)
-
-      );
-
-      await channel.send({
-        content: ` **🎮NOWA DARMOWA GRA NA STEAM!** <@&${ROLE_ID}>`,
-        embeds: [embed],
-        components: [row]
-      });
-
-      console.log("✔ Wysłano:", info.name);
-
-      savedData.steamGames.push(game.appid);
-
-      savedData.steamGames =
-        [...new Set(savedData.steamGames)].slice(-200);
-
-      saveData();
-
+        console.log(`✔ Sent: ${game.name}`);
+      } catch (e) {
+        console.log("Steam item error:", e.message);
+      }
     }
 
-  }
-
-  catch (err) {
-
+    if (!sent) console.log("⏸ nic nowego");
+    else console.log(`✅ wysłano ${sent}`);
+  } catch (err) {
     console.log("❌ Steam error:", err.message);
-
   }
-
 };

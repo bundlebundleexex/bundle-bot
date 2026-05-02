@@ -1,108 +1,50 @@
 {
   "humbleBundles": [
-    "https://www.humblebundle.com/games/love-you-to-death-bundle",
-    "https://www.humblebundle.com/games/best-boomer-shooters-5-penta-boom",
-    "https://www.humblebundle.com/games/mega-man-charged-up-collection",
-    "https://www.humblebundle.com/games/cartridge-chaos",
-    "https://www.humblebundle.com/games/focus-entertainment-bundle-2026",
-    "https://www.humblebundle.com/games/humble-15-time-capsule",
-    "https://www.humblebundle.com/games/beamdog-owlcat-rpg-masters-2026",
-    "https://www.humblebundle.com/games/call-wild-9th-anniversary",
-    "https://www.humblebundle.com/games/overwhelming-positive-games-bundle",
-    "https://www.humblebundle.com/games/alister-alliance-bundle",
-    "https://www.humblebundle.com/games/games-done-quick-frost-fatales-2026",
-    "https://www.humblebundle.com/games/mix-spring-showcase-games-around-world",
-    "https://www.humblebundle.com/games/strategic-minds-collection",
-    "https://www.humblebundle.com/games/best-of-humble-fight-4-your-friends",
-    "https://www.humblebundle.com/games/sekai-project-2026",
-    "https://www.humblebundle.com/games/metroidvania-mayhem-bundle",
-    "https://www.humblebundle.com/games/humble-15-for-15-spring-2026",
-    "https://www.humblebundle.com/games/checkmate-chess-games-collection",
-    "https://www.humblebundle.com/games/multiplayer-madness-2026",
-    "https://www.humblebundle.com/games/humble-heroines-echoes-voids-and-visions",
-    "https://www.humblebundle.com/games/metro-mania-planes-trains-and-automobiles",
+    "https://www.humblebundle.com/games/destiny-2-expansions-bundle-2026",
+    "https://www.humblebundle.com/games/mexican-entertainment-system-bundle",
+    "https://www.humblebundle.com/games/playism-publisher-bundle-2026",
+    "https://www.humblebundle.com/games/mecha-mania",
     "https://www.humblebundle.com/games/tower-defense-2",
+    "https://www.humblebundle.com/games/speak-to-manager",
+    "https://www.humblebundle.com/games/dead-rising-shop-til-you-drop-bundle",
+    "https://www.humblebundle.com/games/fore-golf-games-bundle-games",
+    "https://www.humblebundle.com/games/sovereign-sandbox-bundle",
     "https://www.humblebundle.com/games/your-move-turn-based-games",
     "https://www.humblebundle.com/games/vr-kiwi-bundle",
-    "https://www.humblebundle.com/games/destiny-2-expansions-bundle-2026",
-    "https://www.humblebundle.com/games/sovereign-sandbox-bundle",
-    "https://www.humblebundle.com/games/speak-to-manager",
     "https://www.humblebundle.com/games/sharp-shooters-bundle",
     "https://www.humblebundle.com/games/train-sim-world-6-first-class-ticket-bundle",
-    "https://www.humblebundle.com/games/humble-15-for-15-april-2026",
-    "https://www.humblebundle.com/games/15-golden-tales-bundle",
-    "https://www.humblebundle.com/games/2k-tactics-tycoons",
-    "https://www.humblebundle.com/games/mecha-mania",
-    "https://www.humblebundle.com/games/dead-rising-shop-til-you-drop-bundle",
-    "https://www.humblebundle.com/games/playism-publisher-bundle-2026",
-    "https://www.humblebundle.com/games/fore-golf-games-bundle-games"
+    "https://www.humblebundle.com/games/humble-15-for-15-april-2026"
   ],
   "humbleChoice": "april_2026_choice",
   "fanaticalBundles": [
-    "build-your-own-wholesome-collection",
     "platinum-collection-build-your-own-bundle",
-    "prestige-collection-build-your-own-bundle",
-    "war-commander-bundle",
-    "fanatical-favorites-build-your-own-bundle",
-    "build-your-own-very-positive-bundle",
-    "build-your-own-cute-and-cozy-bundle",
-    "build-your-own-killer-bundle",
-    "build-your-own-story-rich-bundle",
-    "build-your-own-play-on-the-go-bundle",
-    "build-your-own-play-on-the-go-bundle-march-2026",
-    "build-your-own-spring-bundle",
-    "build-your-own-arcade-and-shooter-bundle",
-    "build-your-own-rpg-and-strategy-bundle",
-    "monsters-den-collection-bundle",
-    "build-your-own-legendary-bundle",
-    "build-your-own-gamersky-all-stars-bundle",
-    "build-your-own-titanium-collection",
-    "build-your-own-bento-bundle",
-    "build-your-own-survival-horror-bundle",
-    "build-your-own-tactical-triple-pack",
-    "whale-and-dolphin-conservation-charity-bundle",
-    "build-your-own-exodus-bundle",
-    "batman-arkham-collection",
-    "neurovoider-deluxe-edition",
     "build-your-own-capcom-masters-bundle",
+    "build-your-own-legendary-bundle",
     "build-your-own-fantasy-worlds-bundle",
-    "build-your-own-adrenaline-bundle"
+    "build-your-own-bento-bundle",
+    "build-your-own-wholesome-collection",
+    "build-your-own-gamersky-all-stars-bundle",
+    "build-your-own-adrenaline-bundle",
+    "build-your-own-survival-horror-bundle",
+    "build-your-own-exodus-bundle",
+    "build-your-own-bethesda-bundle-gog-edition",
+    "build-your-own-tactical-triple-pack",
+    "build-your-own-titanium-collection",
+    "monsters-den-collection-bundle"
   ],
-  "gmgBundles": [
-    "https://www.greenmangamingbundles.com/bundles/nacon-collection"
-  ],
+  "gmgBundles": [],
   "indiegalaBundles": [
-    "https://www.indiegala.com/bundle/skautfold-saga-bundle",
-    "https://www.indiegala.com/bundle/pixel-traditions-bundle",
-    "https://www.indiegala.com/bundle/last-echoes-bundle",
-    "https://www.indiegala.com/bundle/massive-music3-bundle",
-    "https://www.indiegala.com/bundle/hentai-pair-bundle",
-    "https://www.indiegala.com/bundle/epic-valley-bundle",
-    "https://www.indiegala.com/bundle/superhero2-tales-bundle",
-    "https://www.indiegala.com/bundle/geeks-and-chicks-bundle",
+    "https://www.indiegala.com/bundle/princess-and-blade-bundle",
     "https://www.indiegala.com/bundle/silly-heroes-tales-bundle",
     "https://www.indiegala.com/bundle/pixel-traditions2-bundle",
-    "https://www.indiegala.com/bundle/flirty-elf-bundle",
-    "https://www.indiegala.com/bundle/princess-and-blade-bundle"
+    "https://www.indiegala.com/bundle/flirty-elf-bundle"
   ],
   "digiphileCollections": [
-    "https://www.digiphile.co/collections/boomer-shooter-blueprint",
-    "https://www.digiphile.co/collections/indie-boomer-shooters",
-    "https://www.digiphile.co/collections/planet-coaster-free-game-plus",
     "https://www.digiphile.co/collections/landfall-aggro-crab-showcase"
   ],
   "epicGames": [
-    "9e7d6a034aaf450dacda4b51695d113a",
-    "doomblade-afdf9a",
     "oddsparks-58440c_2026-04-30T15:00:00.000Z_2026-05-07T15:00:00.000Z"
   ],
-  "gogGames": [],
-  "steamGames": [
-    "214340",
-    "3277530",
-    "4277070"
-  ],
-  "ggdeals": [],
   "epicDeals": [
     "3402"
   ],
@@ -112,7 +54,11 @@
     "3611",
     "3613"
   ],
-  "deals0": [],
+  "gogGames": [],
+  "steamGames": [
+    "3550490",
+    "934690"
+  ],
   "amazon": [
     {
       "title": "The Pale Beyond",
@@ -194,5 +140,25 @@
       "url": "https://luna.amazon.com/claims/neo-cab-gog/dp/amzn1.pg.item.e2868d3e-ca75-4dd1-93ce-ef343e126305?g=s&ingress=amzn&ref_=SM_NeoCab_S01_FGWP_CRWN",
       "store": "Amazon Prime"
     }
-  ]
+  ],
+  "ggdeals": [
+    {
+      "title": "Multiple Views Objects",
+      "link": "https://isthereanydeal.com/game/multiple-views-objects/info/",
+      "price": "9.19 PLN",
+      "shop": "Steam",
+      "discount": 90,
+      "tag": "💀 Historical Low"
+    },
+    {
+      "title": "迷你地产",
+      "link": "https://isthereanydeal.com/game/mi-ni-de-chan/info/",
+      "price": "4.43 PLN",
+      "shop": "Steam",
+      "discount": 88,
+      "tag": "💀 Historical Low"
+    }
+  ],
+  "deals0": [],
+  "lastCheckedSteamPackageId": 1634348
 }

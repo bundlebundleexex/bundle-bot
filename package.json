@@ -17,6 +17,7 @@
     "dotenv": "^17.3.1",
     "node-cron": "^4.2.1",
     "playwright": "^1.59.1",
+    "puppeteer": "^24.42.0",
     "rss-parser": "^3.13.0"
   },
   "repository": {
