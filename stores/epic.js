@@ -19,10 +19,8 @@ function formatDate(dateString) {
 function getHoursLeft(dateString) {
   if (!dateString) return null;
 
-  const diff = new Date(dateString) - new Date();
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-
-  return Math.max(0, hours);
+  const diff = new Date(dateString) - Date.now();
+  return Math.max(0, Math.floor(diff / 3600000));
 }
 
 function getSlug(game) {
@@ -35,17 +33,18 @@ function getSlug(game) {
 }
 
 function hasBlockedCategory(game) {
-  const categories = (game.categories || []).map(c => c.path.toLowerCase());
+  const categories =
+    (game.categories || []).map(c => c.path.toLowerCase());
 
-  // dodatki / mody / inne śmieci
-  if (categories.some(c => c.startsWith("addons"))) return true;
-  if (categories.some(c => c.includes("mods"))) return true;
-
-  return false;
+  return categories.some(c =>
+    c.startsWith("addons") || c.includes("mods")
+  );
 }
 
 function looksLikeTool(game) {
-  const text = JSON.stringify(game.customAttributes || []).toLowerCase();
+  const text = JSON.stringify(
+    game.customAttributes || []
+  ).toLowerCase();
 
   return (
     text.includes("creator") ||
@@ -72,38 +71,27 @@ module.exports.check = async (client, savedData, saveData) => {
     const elements =
       res.data?.data?.Catalog?.searchStore?.elements || [];
 
-    const channel = await client.channels.fetch(CHANNEL_ID);
-
     savedData.epicGames ??= [];
+    const known = new Set(savedData.epicGames);
+
+    const fresh = [];
+    const now = new Date();
 
     for (const game of elements) {
-      // tylko pełne gry
       if (game.offerType !== "BASE_GAME") continue;
-
-      // wytnij dodatki / mody
       if (hasBlockedCategory(game)) continue;
-
-      // creator kit / tools
       if (looksLikeTool(game)) continue;
 
       const price = game.price?.totalPrice;
       if (!price) continue;
 
-      // permanent free → skip
       if (price.originalPrice <= 0) continue;
-
-      // nie darmowe → skip
       if (price.discountPrice !== 0) continue;
 
-      // aktywne promo
       const promos =
         game.promotions?.promotionalOffers?.flatMap(
           p => p.promotionalOffers || []
         ) || [];
-
-      if (!promos.length) continue;
-
-      const now = new Date();
 
       const activePromo = promos.find(p => {
         const start = new Date(p.startDate);
@@ -117,21 +105,37 @@ module.exports.check = async (client, savedData, saveData) => {
       const slug = getSlug(game);
       if (!slug) continue;
 
-      // unikalny giveaway
       const promoId =
         `${slug}_${activePromo.startDate}_${activePromo.endDate}`;
 
-      if (savedData.epicGames.includes(promoId)) {
-        continue;
-      }
+      if (known.has(promoId)) continue;
+
+      fresh.push({
+        game,
+        slug,
+        promoId,
+        activePromo
+      });
+    }
+
+    if (!fresh.length) {
+      console.log("⏸ Epic: bez zmian");
+      return;
+    }
+
+    const channel = await client.channels.fetch(CHANNEL_ID);
+
+    for (const item of fresh) {
+      const { game, slug, promoId, activePromo } = item;
 
       const image =
-        game.keyImages?.find(i => i.type === "OfferImageWide")?.url ||
+        game.keyImages?.find(
+          i => i.type === "OfferImageWide"
+        )?.url ||
         game.keyImages?.[0]?.url ||
         null;
 
-      const endDate = activePromo.endDate;
-      const hoursLeft = getHoursLeft(endDate);
+      const hoursLeft = getHoursLeft(activePromo.endDate);
 
       const embed = new EmbedBuilder()
         .setTitle(game.title)
@@ -139,13 +143,18 @@ module.exports.check = async (client, savedData, saveData) => {
         .setColor("#2f3136")
         .setFooter({ text: "Epic Games" })
         .setDescription(
-          `🖥️ **PC**\n⌛ **Gratis do:** ${formatDate(endDate)}${
-            hoursLeft !== null ? `\n⏳ **Zostało:** ${hoursLeft}h` : ""
-          }`
+          `🖥️ **PC**
+⌛ **Gratis do:** ${formatDate(activePromo.endDate)}${
+  hoursLeft !== null
+    ? `\n⏳ **Zostało:** ${hoursLeft}h`
+    : ""
+}`
         )
         .setTimestamp();
 
-      if (image) embed.setImage(image);
+      if (image) {
+        embed.setImage(image);
+      }
 
       await channel.send({
         content: `<@&${ROLE_ID}>`,
@@ -155,11 +164,14 @@ module.exports.check = async (client, savedData, saveData) => {
       console.log("🎮 Epic wysłano:", game.title);
 
       savedData.epicGames.push(promoId);
-      saveData();
     }
 
-    console.log("✅ Epic sprawdzony");
+    savedData.epicGames =
+      [...new Set(savedData.epicGames)].slice(-500);
 
+    saveData();
+
+    console.log("✅ Epic sprawdzony");
   } catch (err) {
     console.log("❌ Epic error:", err.message);
   }

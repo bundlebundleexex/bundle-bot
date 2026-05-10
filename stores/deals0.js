@@ -7,12 +7,33 @@ async function check(client, savedData, saveData) {
 
   try {
     browser = await chromium.launch({
-      headless: true
+      headless: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--no-zygote"
+      ]
     });
 
     const page = await browser.newPage({
       userAgent:
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147 Safari/537.36"
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
+    });
+
+    await page.route("**/*", route => {
+      const type = route.request().resourceType();
+
+      if (
+        type === "image" ||
+        type === "media" ||
+        type === "font"
+      ) {
+        route.abort();
+      } else {
+        route.continue();
+      }
     });
 
     await page.goto("https://gg.deals/deals/", {
@@ -20,59 +41,56 @@ async function check(client, savedData, saveData) {
       timeout: 60000
     });
 
-    await page.waitForTimeout(5000);
+    await page.waitForSelector(".game-item", {
+      timeout: 15000
+    });
 
     const deals = await page.$$eval(".game-item", cards =>
-      cards
-        .map(card => {
-          const html = card.innerHTML;
-          const text = (card.textContent || "")
-            .replace(/\s+/g, " ")
-            .trim();
+      cards.map(card => {
+        const html = card.innerHTML;
+        const text = (card.textContent || "")
+          .replace(/\s+/g, " ")
+          .trim()
+          .toLowerCase();
 
-          let store = null;
+        let store = null;
 
-          // tylko sklepy których szukamy
-          if (html.includes("svg-drm-ea")) {
-            store = "EA App";
-          } else if (html.includes("svg-drm-microsoft-store")) {
-            store = "Microsoft / Xbox";
-          } else if (html.includes("svg-drm-ubisoft-connect")) {
-            store = "Ubisoft Connect";
-          } else if (html.includes("svg-drm-amazon")) {
-            store = "Amazon Games";
-          } else {
-            return null;
-          }
+        if (html.includes("svg-drm-ea")) {
+          store = "EA App";
+        } else if (html.includes("svg-drm-microsoft-store")) {
+          store = "Microsoft / Xbox";
+        } else if (html.includes("svg-drm-ubisoft-connect")) {
+          store = "Ubisoft Connect";
+        } else if (html.includes("svg-drm-amazon")) {
+          store = "Amazon Games";
+        }
 
-          // tylko 100% free
-          const isFree =
-            text.includes("-100%") &&
-            text.toLowerCase().includes("free");
+        if (!store) return null;
 
-          if (!isFree) return null;
+        const isFree =
+          text.includes("-100%") &&
+          text.includes("free");
 
-          const title =
-            card.querySelector(".game-info-title.title")
-              ?.textContent
-              ?.trim() || null;
+        if (!isFree) return null;
 
-          if (!title) return null;
+        const title =
+          card.querySelector(".game-info-title.title")
+            ?.textContent
+            ?.trim();
 
-          return {
-            store,
-            title
-          };
-        })
-        .filter(Boolean)
+        if (!title) return null;
+
+        return { store, title };
+      }).filter(Boolean)
     );
 
-    // dedupe
     const seen = new Set();
 
     const unique = deals.filter(item => {
       const key = `${item.store}|${item.title}`;
+
       if (seen.has(key)) return false;
+
       seen.add(key);
       return true;
     });
@@ -89,8 +107,12 @@ async function check(client, savedData, saveData) {
     console.log("❌ deals0:", err.message);
   } finally {
     if (browser) {
-      await browser.close();
+      try {
+        await browser.close();
+      } catch {}
     }
+
+    global.gc?.();
   }
 }
 

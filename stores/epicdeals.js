@@ -19,14 +19,13 @@ function formatDate(dateString) {
 function getHoursLeft(dateString) {
   if (!dateString) return null;
 
-  const diff = new Date(dateString) - new Date();
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-
-  return Math.max(0, hours);
+  const diff = new Date(dateString) - Date.now();
+  return Math.max(0, Math.floor(diff / 3600000));
 }
 
 function isBlockedOffer(game) {
-  const text = `${game.title} ${game.description || ""}`.toLowerCase();
+  const text =
+    `${game.title || ""} ${game.description || ""}`.toLowerCase();
 
   const blocked = [
     "dlc",
@@ -57,29 +56,24 @@ module.exports.check = async (client, savedData, saveData) => {
   try {
     console.log("🟡 EpicDeals: sprawdzam dodatkowe giveawaye...");
 
-    // GamerPower
-    const gamerPowerRes = await axios.get(
-      "https://www.gamerpower.com/api/filter?platform=epic-games-store",
-      {
-        headers: {
-          "User-Agent": "Mozilla/5.0"
-        },
-        timeout: 20000
-      }
-    );
+    const [gamerPowerRes, epicRes] = await Promise.all([
+      axios.get(
+        "https://www.gamerpower.com/api/filter?platform=epic-games-store",
+        {
+          headers: { "User-Agent": "Mozilla/5.0" },
+          timeout: 20000
+        }
+      ),
+      axios.get(
+        "https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions",
+        {
+          headers: { "User-Agent": "Mozilla/5.0" },
+          timeout: 20000
+        }
+      )
+    ]);
 
     const items = gamerPowerRes.data || [];
-
-    // Oficjalne weekly freebies
-    const epicRes = await axios.get(
-      "https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions",
-      {
-        headers: {
-          "User-Agent": "Mozilla/5.0"
-        },
-        timeout: 20000
-      }
-    );
 
     const weeklyTitles = new Set(
       (epicRes.data?.data?.Catalog?.searchStore?.elements || [])
@@ -88,56 +82,59 @@ module.exports.check = async (client, savedData, saveData) => {
     );
 
     savedData.epicDeals ??= [];
+    const known = new Set(savedData.epicDeals);
 
-    const channel = await client.channels.fetch(CHANNEL_ID);
+    const fresh = [];
 
     for (const game of items) {
-      // tylko aktywne
       if (game.status !== "Active") continue;
-
-      // tylko gry
       if (game.type !== "Game") continue;
+      if (isBlockedOffer(game)) continue;
 
-      // odfiltruj DLC / packi / beta / dodatki
-      if (isBlockedOffer(game)) {
-        console.log("⛔ Pomijam non-game:", game.title);
-        continue;
-      }
-
-      // oczyść tytuł
-      const cleanTitle = game.title
+      const cleanTitle = (game.title || "")
         .replace(/\(Epic Games\)/gi, "")
         .replace(/Giveaway/gi, "")
         .trim();
 
-      // pomijamy weekly freebies
-      if (weeklyTitles.has(cleanTitle.toLowerCase())) {
-        console.log("⏭ Pomijam weekly:", cleanTitle);
-        continue;
-      }
+      if (!cleanTitle) continue;
+      if (weeklyTitles.has(cleanTitle.toLowerCase())) continue;
 
-      // dedupe
       const giveawayId = String(game.id);
 
-      if (savedData.epicDeals.includes(giveawayId)) {
-        continue;
-      }
+      if (known.has(giveawayId)) continue;
 
+      fresh.push({
+        ...game,
+        cleanTitle,
+        giveawayId
+      });
+    }
+
+    if (!fresh.length) {
+      console.log("⏸ EpicDeals: bez zmian");
+      return;
+    }
+
+    const channel = await client.channels.fetch(CHANNEL_ID);
+
+    for (const game of fresh) {
       const hoursLeft = getHoursLeft(game.end_date);
 
+      const desc = (game.description || "").slice(0, 220);
+
       const embed = new EmbedBuilder()
-        .setTitle(cleanTitle)
+        .setTitle(game.cleanTitle)
         .setURL(game.open_giveaway || game.gamerpower_url)
         .setColor("#2f3136")
         .setFooter({ text: "Epic Games Deals" })
         .setDescription(
-          `🖥️ **PC**\n🎁 **Wartość:** ${game.worth}\n⌛ **Gratis do:** ${formatDate(
-            game.end_date
-          )}${
-            hoursLeft !== null
-              ? `\n⏳ **Zostało:** ${hoursLeft}h`
-              : ""
-          }\n\n${game.description.slice(0, 220)}...`
+          `🖥️ **PC**
+🎁 **Wartość:** ${game.worth}
+⌛ **Gratis do:** ${formatDate(game.end_date)}${
+  hoursLeft !== null ? `\n⏳ **Zostało:** ${hoursLeft}h` : ""
+}
+
+${desc}${game.description ? "..." : ""}`
         )
         .setTimestamp();
 
@@ -150,14 +147,17 @@ module.exports.check = async (client, savedData, saveData) => {
         embeds: [embed]
       });
 
-      console.log("🎮 EpicDeals wysłano:", cleanTitle);
+      console.log("🎮 EpicDeals wysłano:", game.cleanTitle);
 
-      savedData.epicDeals.push(giveawayId);
-      saveData();
+      savedData.epicDeals.push(game.giveawayId);
     }
 
-    console.log("✅ EpicDeals sprawdzony");
+    savedData.epicDeals =
+      [...new Set(savedData.epicDeals)].slice(-500);
 
+    saveData();
+
+    console.log("✅ EpicDeals sprawdzony");
   } catch (err) {
     console.log(
       "❌ EpicDeals error:",
