@@ -1,4 +1,4 @@
-const puppeteer = require("puppeteer");
+const { chromium } = require("playwright");
 const cheerio = require("cheerio");
 const axios = require("axios");
 const {
@@ -11,7 +11,6 @@ const {
 const CHANNEL_ID = "1479078345382559804";
 const ROLE_ID = "1371121790046437448";
 
-// stałe F2P do ignorowania
 const PERMA_F2P = new Set([
   "730",      // CS2
   "570",      // Dota 2
@@ -21,24 +20,27 @@ const PERMA_F2P = new Set([
 ]);
 
 async function fetchSteamDBFree() {
-  const browser = await puppeteer.launch({
-    headless: "new",
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu",
-      "--no-zygote",
-      "--single-process"
-    ]
-  });
+  let browser;
 
   try {
-    const page = await browser.newPage();
+    browser = await chromium.launch({
+      headless: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--no-zygote"
+      ]
+    });
 
-    await page.setRequestInterception(true);
-    page.on("request", (req) => {
-      const type = req.resourceType();
+    const page = await browser.newPage({
+      userAgent:
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
+    });
+
+    await page.route("**/*", route => {
+      const type = route.request().resourceType();
 
       if (
         type === "image" ||
@@ -46,15 +48,11 @@ async function fetchSteamDBFree() {
         type === "font" ||
         type === "stylesheet"
       ) {
-        req.abort();
+        route.abort();
       } else {
-        req.continue();
+        route.continue();
       }
     });
-
-    await page.setUserAgent(
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/136 Safari/537.36"
-    );
 
     await page.goto("https://steamdb.info/upcoming/free/", {
       waitUntil: "domcontentloaded",
@@ -87,7 +85,6 @@ async function fetchSteamDBFree() {
         $(el).parent().text() ||
         "";
 
-      // tylko Free to Keep
       if (!/Free to Keep/i.test(areaText)) return;
 
       seen.add(appid);
@@ -101,7 +98,13 @@ async function fetchSteamDBFree() {
 
     return games;
   } finally {
-    await browser.close();
+    if (browser) {
+      try {
+        await browser.close();
+      } catch {}
+    }
+
+    global.gc?.();
   }
 }
 
@@ -126,7 +129,7 @@ async function fetchSteamDetails(appid) {
 
 module.exports.check = async (client, savedData, saveData) => {
   try {
-    console.log("🟦 SteamDB (browser): checking...");
+    console.log("🟦 SteamDB (Playwright): checking...");
     savedData.steamGames ??= [];
 
     const channel = await client.channels.fetch(CHANNEL_ID);

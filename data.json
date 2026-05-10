@@ -13,9 +13,12 @@
     "https://www.humblebundle.com/games/vr-kiwi-bundle",
     "https://www.humblebundle.com/games/sharp-shooters-bundle",
     "https://www.humblebundle.com/games/train-sim-world-6-first-class-ticket-bundle",
-    "https://www.humblebundle.com/games/humble-15-for-15-april-2026"
+    "https://www.humblebundle.com/games/humble-15-for-15-april-2026",
+    "https://www.humblebundle.com/games/creature-feature-bundle",
+    "https://www.humblebundle.com/games/heavenly-bullets",
+    "https://www.humblebundle.com/games/ticket-to-ride-all-aboard-collection"
   ],
-  "humbleChoice": "april_2026_choice",
+  "humbleChoice": "may_2026_choice",
   "fanaticalBundles": [
     "platinum-collection-build-your-own-bundle",
     "build-your-own-capcom-masters-bundle",
@@ -30,24 +33,28 @@
     "build-your-own-bethesda-bundle-gog-edition",
     "build-your-own-tactical-triple-pack",
     "build-your-own-titanium-collection",
-    "monsters-den-collection-bundle"
+    "monsters-den-collection-bundle",
+    "build-your-own-killer-bundle",
+    "build-your-own-special-editions-bundle",
+    "build-your-own-arcane-bundle"
   ],
   "gmgBundles": [],
   "indiegalaBundles": [
     "https://www.indiegala.com/bundle/princess-and-blade-bundle",
     "https://www.indiegala.com/bundle/silly-heroes-tales-bundle",
     "https://www.indiegala.com/bundle/pixel-traditions2-bundle",
-    "https://www.indiegala.com/bundle/flirty-elf-bundle"
+    "https://www.indiegala.com/bundle/flirty-elf-bundle",
+    "https://www.indiegala.com/bundle/wild-rage-bundle"
   ],
   "digiphileCollections": [
     "https://www.digiphile.co/collections/landfall-aggro-crab-showcase"
   ],
   "epicGames": [
-    "oddsparks-58440c_2026-04-30T15:00:00.000Z_2026-05-07T15:00:00.000Z"
+    "oddsparks-58440c_2026-04-30T15:00:00.000Z_2026-05-07T15:00:00.000Z",
+    "arranger-a-rolepuzzling-adventure-dbfde7_2026-05-07T15:00:00.000Z_2026-05-14T15:00:00.000Z",
+    "trash-goblin-cd5fd7_2026-05-07T15:00:00.000Z_2026-05-14T15:00:00.000Z"
   ],
-  "epicDeals": [
-    "3402"
-  ],
+  "epicDeals": [],
   "freeDeals": [
     "3614",
     "3612",
@@ -56,109 +63,83 @@
   ],
   "gogGames": [],
   "steamGames": [
-    "3550490",
-    "934690"
+    "3353830"
   ],
   "amazon": [
     {
+      "title": "Neo Cab",
+      "url": "https://luna.amazon.com/claims/neo-cab-gog/dp/amzn1.pg.item.e2868d3e-ca75-4dd1-93ce-ef343e126305?g=s&ingress=amzn&ref_=SM_NeoCab_S01_FGWP_CRWN"
+    },
+    {
       "title": "The Pale Beyond",
-      "url": "https://luna.amazon.com/claims/the-pale-beyond-gog/dp/amzn1.pg.item.7791491d-6134-4109-b285-1b7f1b79f07a?g=s&ingress=amzn&ref_=SM_ThePaleBeyond_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
+      "url": "https://luna.amazon.com/claims/the-pale-beyond-gog/dp/amzn1.pg.item.7791491d-6134-4109-b285-1b7f1b79f07a?g=s&ingress=amzn&ref_=SM_ThePaleBeyond_S01_FGWP_CRWN"
     },
     {
       "title": "Monster Harvest",
-      "url": "https://luna.amazon.com/claims/monster-harvest-epic/dp/amzn1.pg.item.299d6ca2-9dfa-4e26-b865-cca0d7117a3a?g=s&ingress=amzn&ref_=SM_MonsterHarvest_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
+      "url": "https://luna.amazon.com/claims/monster-harvest-epic/dp/amzn1.pg.item.299d6ca2-9dfa-4e26-b865-cca0d7117a3a?g=s&ingress=amzn&ref_=SM_MonsterHarvest_S01_FGWP_CRWN"
     },
     {
       "title": "Snake Core",
-      "url": "https://luna.amazon.com/claims/snake-core-gog/dp/amzn1.pg.item.8dae30db-2cb3-4de1-99c4-9a1ce8700286?g=s&ingress=amzn&ref_=SM_SnakeCore_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
+      "url": "https://luna.amazon.com/claims/snake-core-gog/dp/amzn1.pg.item.8dae30db-2cb3-4de1-99c4-9a1ce8700286?g=s&ingress=amzn&ref_=SM_SnakeCore_S01_FGWP_CRWN"
     },
     {
       "title": "Detective Agency: Gray Tie - CE",
-      "url": "https://luna.amazon.com/claims/detective-agency-gray-tie-ce-legacy/dp/amzn1.pg.item.190edc63-f7f7-4a70-addc-7d56a0ca7efd?g=s&ingress=amzn&ref_=SM_DetectiveAgencyGrayTieCE_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
+      "url": "https://luna.amazon.com/claims/detective-agency-gray-tie-ce-legacy/dp/amzn1.pg.item.190edc63-f7f7-4a70-addc-7d56a0ca7efd?g=s&ingress=amzn&ref_=SM_DetectiveAgencyGrayTieCE_S01_FGWP_CRWN"
     },
     {
       "title": "A Rat's Quest - The Way Back Home",
-      "url": "https://luna.amazon.com/claims/a-rats-quest-the-way-back-home-epic/dp/amzn1.pg.item.34210f82-0bf5-4aa6-860e-87640c1caf50?g=s&ingress=amzn&ref_=SM_ARatsQuestTheWayBackHome_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
+      "url": "https://luna.amazon.com/claims/a-rats-quest-the-way-back-home-epic/dp/amzn1.pg.item.34210f82-0bf5-4aa6-860e-87640c1caf50?g=s&ingress=amzn&ref_=SM_ARatsQuestTheWayBackHome_S01_FGWP_CRWN"
     },
     {
       "title": "King of Retail",
-      "url": "https://luna.amazon.com/claims/king-of-retail-gog/dp/amzn1.pg.item.36296c26-8f00-4a21-987a-8dc131220c5a?g=s&ingress=amzn&ref_=SM_KingofRetail_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
+      "url": "https://luna.amazon.com/claims/king-of-retail-gog/dp/amzn1.pg.item.36296c26-8f00-4a21-987a-8dc131220c5a?g=s&ingress=amzn&ref_=SM_KingofRetail_S01_FGWP_CRWN"
     },
     {
       "title": "XCOM: Enemy Unknown Complete Pack",
-      "url": "https://luna.amazon.com/claims/xcom-enemy-unknown-complete-pack-gog/dp/amzn1.pg.item.3674d591-5127-4b22-9cf4-16b42e63bc40?g=s&ingress=amzn&ref_=SM_XCOMEnemyUnknownCompletePack_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
-    },
-    {
-      "title": "Total War: PHARAOH DYNASTIES",
-      "url": "https://luna.amazon.com/claims/total-war-pharaoh-dynasties-epic/dp/amzn1.pg.item.3537f41b-c6e5-4d7b-a3c9-683253ce433f?g=s&ingress=amzn&ref_=SM_TotalWarPHARAOHDYNASTIES_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
+      "url": "https://luna.amazon.com/claims/xcom-enemy-unknown-complete-pack-gog/dp/amzn1.pg.item.3674d591-5127-4b22-9cf4-16b42e63bc40?g=s&ingress=amzn&ref_=SM_XCOMEnemyUnknownCompletePack_S01_FGWP_CRWN"
     },
     {
       "title": "Deep Sky Derelicts",
-      "url": "https://luna.amazon.com/claims/deep-sky-derelicts-aga/dp/amzn1.pg.item.2bee44d2-9560-4916-a052-6a41cd434318?g=s&ingress=amzn&ref_=SM_DeepSkyDerelicts_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
+      "url": "https://luna.amazon.com/claims/deep-sky-derelicts-aga/dp/amzn1.pg.item.2bee44d2-9560-4916-a052-6a41cd434318?g=s&ingress=amzn&ref_=SM_DeepSkyDerelicts_S01_FGWP_CRWN"
     },
     {
       "title": "Rebel Galaxy",
-      "url": "https://luna.amazon.com/claims/rebel-galaxy-gog/dp/amzn1.pg.item.e1e1ec5b-0df4-4091-9c63-ede5a86cb9ed?g=s&ingress=amzn&ref_=SM_RebelGalaxy_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
+      "url": "https://luna.amazon.com/claims/rebel-galaxy-gog/dp/amzn1.pg.item.e1e1ec5b-0df4-4091-9c63-ede5a86cb9ed?g=s&ingress=amzn&ref_=SM_RebelGalaxy_S01_FGWP_CRWN"
     },
     {
       "title": "Sir Questionnaire",
-      "url": "https://luna.amazon.com/claims/sir-questionnaire-gog/dp/amzn1.pg.item.6dd1d038-96ea-4b01-af91-64731bfa55ef?g=s&ingress=amzn&ref_=SM_SirQuestionnaire_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
+      "url": "https://luna.amazon.com/claims/sir-questionnaire-gog/dp/amzn1.pg.item.6dd1d038-96ea-4b01-af91-64731bfa55ef?g=s&ingress=amzn&ref_=SM_SirQuestionnaire_S01_FGWP_CRWN"
     },
     {
       "title": "Tiny Tina's Assault on Dragon Keep: A Wonderlands One-shot",
-      "url": "https://luna.amazon.com/claims/tiny-tinas-assault-on-dragon-keep-a-wonderlands-one-shot-epic/dp/amzn1.pg.item.59929a8c-55be-4c60-9ffb-546ec4293e4c?g=s&ingress=amzn&ref_=SM_TinyTinasAssaultonDragonKeepAWonderlandsOneshot_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
+      "url": "https://luna.amazon.com/claims/tiny-tinas-assault-on-dragon-keep-a-wonderlands-one-shot-epic/dp/amzn1.pg.item.59929a8c-55be-4c60-9ffb-546ec4293e4c?g=s&ingress=amzn&ref_=SM_TinyTinasAssaultonDragonKeepAWonderlandsOneshot_S01_FGWP_CRWN"
+    },
+    {
+      "title": "Mafia II: Definitive Edition",
+      "url": "https://luna.amazon.com/claims/mafia-ii-definitive-edition-gog/dp/amzn1.pg.item.e604b1c9-c80d-48fb-8f08-db31ce376bb7?g=s&ingress=amzn&ref_=SM_MafiaIIDefinitiveEdition_S02_FGWP_CRWN"
+    },
+    {
+      "title": "Fruitbus",
+      "url": "https://luna.amazon.com/claims/fruitbus-gog/dp/amzn1.pg.item.8c20e953-fecb-47ba-9824-89c72c69e7eb?g=s&ingress=amzn&ref_=SM_Fruitbus_S01_FGWP_CRWN"
     },
     {
       "title": "KinnikuNeko: SUPER MUSCLE CAT",
-      "url": "https://luna.amazon.com/claims/kinnikuneko-super-muscle-cat-epic/dp/amzn1.pg.item.1ddb7652-affd-420e-a2af-9b0a2ba70ac1?g=s&ingress=amzn&ref_=SM_KinnikuNekoSUPERMUSCLECAT_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
+      "url": "https://luna.amazon.com/claims/kinnikuneko-super-muscle-cat-epic/dp/amzn1.pg.item.1ddb7652-affd-420e-a2af-9b0a2ba70ac1?g=s&ingress=amzn&ref_=SM_KinnikuNekoSUPERMUSCLECAT_S01_FGWP_CRWN"
     },
     {
       "title": "Pinball Spire",
-      "url": "https://luna.amazon.com/claims/pinball-spire-gog/dp/amzn1.pg.item.76919ab0-9718-4c3d-9433-9484478f32b0?g=s&ingress=amzn&ref_=SM_PinballSpire_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
+      "url": "https://luna.amazon.com/claims/pinball-spire-gog/dp/amzn1.pg.item.76919ab0-9718-4c3d-9433-9484478f32b0?g=s&ingress=amzn&ref_=SM_PinballSpire_S01_FGWP_CRWN"
     },
     {
       "title": "Fantasy General",
-      "url": "https://luna.amazon.com/claims/fantasy-general-gog/dp/amzn1.pg.item.9d4ded3f-a772-485b-8fb8-0868631044fb?g=s&ingress=amzn&ref_=SM_FantasyGeneral_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
+      "url": "https://luna.amazon.com/claims/fantasy-general-gog/dp/amzn1.pg.item.9d4ded3f-a772-485b-8fb8-0868631044fb?g=s&ingress=amzn&ref_=SM_FantasyGeneral_S01_FGWP_CRWN"
     },
     {
-      "title": "Neo Cab",
-      "url": "https://luna.amazon.com/claims/neo-cab-gog/dp/amzn1.pg.item.e2868d3e-ca75-4dd1-93ce-ef343e126305?g=s&ingress=amzn&ref_=SM_NeoCab_S01_FGWP_CRWN",
-      "store": "Amazon Prime"
-    }
-  ],
-  "ggdeals": [
-    {
-      "title": "Multiple Views Objects",
-      "link": "https://isthereanydeal.com/game/multiple-views-objects/info/",
-      "price": "9.19 PLN",
-      "shop": "Steam",
-      "discount": 90,
-      "tag": "💀 Historical Low"
-    },
-    {
-      "title": "迷你地产",
-      "link": "https://isthereanydeal.com/game/mi-ni-de-chan/info/",
-      "price": "4.43 PLN",
-      "shop": "Steam",
-      "discount": 88,
-      "tag": "💀 Historical Low"
+      "title": "Meganoid",
+      "url": "https://luna.amazon.com/claims/meganoid-gog/dp/amzn1.pg.item.593601a3-507c-4235-befd-a62df5d73eed?g=s&ingress=amzn&ref_=SM_Meganoid_S01_FGWP_CRWN"
     }
   ],
   "deals0": [],
-  "lastCheckedSteamPackageId": 1634348
+  "lastCheckedSteamPackageId": 1634348,
+  "ggdeals": []
 }

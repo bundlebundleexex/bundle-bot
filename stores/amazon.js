@@ -16,7 +16,14 @@ async function check(client, savedData, saveData) {
 
   try {
     browser = await chromium.launch({
-      headless: true
+      headless: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--no-zygote"
+      ]
     });
 
     const page = await browser.newPage({
@@ -29,34 +36,73 @@ async function check(client, savedData, saveData) {
       timeout: 60000
     });
 
-    await page.waitForTimeout(5000);
+    // lazy load
+    for (let i = 0; i < 6; i++) {
+      await page.mouse.wheel(0, 2500);
+      await page.waitForTimeout(1200);
+    }
 
     const games = await page.evaluate(() => {
       const found = [];
       const seen = new Set();
 
-      const links = [...document.querySelectorAll("a[href]")];
+      const links = [
+        ...document.querySelectorAll("a[href*='/claims/']")
+      ];
+
+      const blacklist = [
+        "claim",
+        "odbierz",
+        "pobierz",
+        "play",
+        "graj",
+        "included with prime",
+        "prime gaming",
+        "cookie",
+        "cookies",
+        "plikach cookie",
+        "powiadomienie",
+        "notification"
+      ];
 
       for (const a of links) {
-        const text = a.innerText?.trim();
         const href = a.href;
+        const text = a.innerText?.trim();
 
-        if (!text || !href) continue;
-        if (!href.includes("/claims/")) continue;
-        if (!text.includes("Odbierz grę")) continue;
-        if (text === "Odbierz grę") continue;
+        if (!href || !text) continue;
 
-        const title = text.split("\n")[0].trim();
+        const slug = href
+          .split("/claims/")[1]
+          ?.split(/[?#]/)[0];
+
+        if (!slug) continue;
+        if (seen.has(slug)) continue;
+
+        const lines = text
+          .split("\n")
+          .map(x => x.trim())
+          .filter(Boolean);
+
+        const title = lines.find(line => {
+          const lower = line.toLowerCase();
+
+          if (line.length < 3) return false;
+          if (line.length > 80) return false;
+
+          if (blacklist.some(word => lower.includes(word))) {
+            return false;
+          }
+
+          return true;
+        });
 
         if (!title) continue;
-        if (seen.has(title)) continue;
 
-        seen.add(title);
+        seen.add(slug);
 
         found.push({
           title,
-          url: href,
-          store: "Amazon Prime"
+          url: href
         });
       }
 
@@ -64,31 +110,48 @@ async function check(client, savedData, saveData) {
     });
 
     const old = savedData.amazon || [];
-    const oldTitles = new Set(old.map(x => x.title));
 
-    const fresh = games.filter(x => !oldTitles.has(x.title));
+    const oldKeys = new Set(
+      old.map(x =>
+        x.url?.split("/claims/")[1]?.split(/[?#]/)[0]
+      )
+    );
+
+    const fresh = games.filter(game => {
+      const slug = game.url
+        .split("/claims/")[1]
+        ?.split(/[?#]/)[0];
+
+      return slug && !oldKeys.has(slug);
+    });
 
     if (fresh.length > 0) {
       const channel = await client.channels.fetch(CHANNEL_ID);
 
       for (const game of fresh) {
         let image = null;
+        let claimPage = null;
 
         try {
-          const claimPage = await browser.newPage();
+          claimPage = await browser.newPage();
 
           await claimPage.goto(game.url, {
             waitUntil: "domcontentloaded",
-            timeout: 60000
+            timeout: 30000
           });
 
           image = await claimPage
-            .$eval('meta[property="og:image"]', el => el.content)
+            .locator('meta[property="og:image"]')
+            .getAttribute("content")
             .catch(() => null);
-
-          await claimPage.close();
         } catch {
           image = null;
+        } finally {
+          if (claimPage) {
+            try {
+              await claimPage.close();
+            } catch {}
+          }
         }
 
         const embed = new EmbedBuilder()
@@ -135,8 +198,12 @@ async function check(client, savedData, saveData) {
     console.log("❌ Amazon:", err.message);
   } finally {
     if (browser) {
-      await browser.close();
+      try {
+        await browser.close();
+      } catch {}
     }
+
+    global.gc?.();
   }
 }
 
