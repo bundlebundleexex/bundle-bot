@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const { Client, GatewayIntentBits } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
@@ -9,10 +10,7 @@ const gmg = require("./stores/gmg");
 const indiegala = require("./stores/indiegala");
 const digiphile = require("./stores/digiphile");
 const epic = require("./stores/epic");
-
-// FIX Linux/Railway
 const epicDeals = require("./stores/epicdeals");
-
 const freeDeals = require("./stores/freeDeals");
 const gog = require("./stores/gog");
 const steam = require("./stores/steam");
@@ -26,7 +24,10 @@ const client = new Client({
 
 const CHECK_INTERVAL = 10 * 60 * 1000;
 
-// Railway volume path
+// ==========================
+// DATA PATH
+// ==========================
+
 const DATA_PATH = fs.existsSync("/data")
   ? "/data/data.json"
   : path.join(__dirname, "data.json");
@@ -35,15 +36,20 @@ let savedData = {};
 let isRunning = false;
 
 // ==========================
-// LOAD DATA
+// LOAD / SAVE
 // ==========================
 
 function loadData() {
   if (fs.existsSync(DATA_PATH)) {
     try {
-      savedData = JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
+      savedData = JSON.parse(
+        fs.readFileSync(DATA_PATH, "utf8")
+      );
     } catch {
-      console.log("⚠️ data.json uszkodzony — resetuję");
+      console.log(
+        "⚠️ data.json uszkodzony — resetuję"
+      );
+
       savedData = {};
     }
   }
@@ -67,11 +73,18 @@ function loadData() {
 }
 
 function saveData() {
-  fs.writeFileSync(DATA_PATH, JSON.stringify(savedData, null, 2));
+  try {
+    fs.writeFileSync(
+      DATA_PATH,
+      JSON.stringify(savedData, null, 2)
+    );
+  } catch (err) {
+    console.log("❌ saveData:", err.message);
+  }
 }
 
 // ==========================
-// STORE LIST
+// STORES
 // ==========================
 
 const STORES = [
@@ -87,7 +100,12 @@ const STORES = [
   { name: "GOG", fn: gog.check },
   { name: "Steam", fn: steam.check },
   { name: "Amazon", fn: amazon.check },
-  { name: "GG.DEALS", fn: ggdeals.check }
+
+  // placeholder
+  {
+    name: "GG.DEALS",
+    fn: async () => {}
+  }
 ];
 
 // ==========================
@@ -96,33 +114,51 @@ const STORES = [
 
 async function runChecks() {
   if (isRunning) {
-    console.log("⏳ Poprzednie sprawdzanie jeszcze trwa...");
+    console.log(
+      "⏳ Poprzednie sprawdzanie jeszcze trwa..."
+    );
+
     return;
   }
 
   isRunning = true;
 
-  console.log(`\n🔎 START sprawdzania - ${new Date().toLocaleString()}`);
+  try {
+    console.log(
+      `\n🔎 START sprawdzania - ${new Date().toLocaleString()}`
+    );
 
-  for (const store of STORES) {
-    try {
-      await store.fn(client, savedData, saveData);
-    } catch (err) {
-      console.log(`❌ ${store.name}:`, err.message);
+    for (const store of STORES) {
+      try {
+        await store.fn(
+          client,
+          savedData,
+          saveData
+        );
+      } catch (err) {
+        console.log(
+          `❌ ${store.name}:`,
+          err.message
+        );
+      }
     }
+
+    console.log("✅ Sprawdzanie zakończone");
+  } finally {
+    isRunning = false;
+
+    global.gc?.();
   }
-
-  console.log("✅ Sprawdzanie zakończone");
-
-  isRunning = false;
 }
 
 // ==========================
-// BOT READY
+// READY
 // ==========================
 
 client.once("clientReady", async () => {
-  console.log(`🤖 Zalogowano jako ${client.user.tag}`);
+  console.log(
+    `🤖 Zalogowano jako ${client.user.tag}`
+  );
 
   loadData();
 
@@ -130,19 +166,27 @@ client.once("clientReady", async () => {
 
   setInterval(runChecks, CHECK_INTERVAL);
 
-  console.log("⏱️ Sprawdzanie ustawione co 10 minut");
+  console.log(
+    "⏱️ Sprawdzanie ustawione co 10 minut"
+  );
 });
 
 // ==========================
-// ERROR PROTECTION
+// ERROR HANDLING
 // ==========================
 
 process.on("unhandledRejection", err => {
-  console.error("❌ Unhandled promise rejection:", err);
+  console.error(
+    "❌ Unhandled promise rejection:",
+    err
+  );
 });
 
 process.on("uncaughtException", err => {
-  console.error("❌ Uncaught exception:", err);
+  console.error(
+    "❌ Uncaught exception:",
+    err
+  );
 });
 
 // ==========================
