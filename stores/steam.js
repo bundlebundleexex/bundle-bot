@@ -21,7 +21,8 @@ const PERMA_F2P = new Set([
 ]);
 
 async function fetchSteamDBFree() {
-  let browser;
+  let browser = null;
+  let page = null;
 
   try {
     browser = await puppeteer.launch({
@@ -36,7 +37,7 @@ async function fetchSteamDBFree() {
       ]
     });
 
-    const page = await browser.newPage();
+    page = await browser.newPage();
 
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
@@ -63,22 +64,39 @@ async function fetchSteamDBFree() {
       "https://steamdb.info/upcoming/free/",
       {
         waitUntil: "domcontentloaded",
-        timeout: 25000
+        timeout: 20000
       }
     );
 
     await Promise.race([
-      page.waitForSelector("body"),
+      page.waitForSelector("body", {
+        timeout: 10000
+      }),
 
       new Promise((_, reject) =>
-        setTimeout(
-          () => reject(new Error("Steam timeout")),
-          15000
-        )
+        setTimeout(() => {
+          reject(
+            new Error("Steam selector timeout")
+          );
+        }, 12000)
       )
     ]);
 
-    const html = await page.content();
+    const html = await Promise.race([
+      page.content(),
+
+      new Promise((_, reject) =>
+        setTimeout(() => {
+          reject(
+            new Error("Steam content timeout")
+          );
+        }, 12000)
+      )
+    ]);
+
+    if (!html || html.length < 1000) {
+      throw new Error("SteamDB empty HTML");
+    }
 
     const $ = cheerio.load(html);
 
@@ -86,44 +104,62 @@ async function fetchSteamDBFree() {
     const seen = new Set();
 
     $("a[href*='/app/']").each((_, el) => {
-      const href = $(el).attr("href") || "";
+      try {
+        const href =
+          $(el).attr("href") || "";
 
-      const match = href.match(
-        /\/app\/(\d+)\//
-      );
+        const match = href.match(
+          /\/app\/(\d+)\//
+        );
 
-      if (!match) return;
+        if (!match) return;
 
-      const appid = match[1];
+        const appid = match[1];
 
-      if (seen.has(appid)) return;
-      if (PERMA_F2P.has(appid)) return;
+        if (seen.has(appid)) return;
 
-      const name = $(el).text().trim();
+        if (PERMA_F2P.has(appid)) {
+          return;
+        }
 
-      if (!name || name.length < 2) return;
+        const name = $(el)
+          .text()
+          .trim();
 
-      const areaText =
-        $(el).closest("tr").text() ||
-        $(el).parent().parent().text() ||
-        $(el).parent().text() ||
-        "";
+        if (!name || name.length < 2) {
+          return;
+        }
 
-      if (!/Free to Keep/i.test(areaText)) {
-        return;
-      }
+        const areaText =
+          $(el).closest("tr").text() ||
+          $(el).parent().parent().text() ||
+          $(el).parent().text() ||
+          "";
 
-      seen.add(appid);
+        if (
+          !/Free to Keep/i.test(areaText)
+        ) {
+          return;
+        }
 
-      games.push({
-        appid,
-        name,
-        url: `https://store.steampowered.com/app/${appid}/`
-      });
+        seen.add(appid);
+
+        games.push({
+          appid,
+          name,
+          url: `https://store.steampowered.com/app/${appid}/`
+        });
+      } catch {}
     });
 
     return games;
   } finally {
+    if (page) {
+      try {
+        await page.close();
+      } catch {}
+    }
+
     if (browser) {
       try {
         await browser.close();
@@ -134,7 +170,9 @@ async function fetchSteamDBFree() {
   }
 }
 
-async function fetchSteamDetails(appid) {
+async function fetchSteamDetails(
+  appid
+) {
   try {
     const { data } = await axios.get(
       "https://store.steampowered.com/api/appdetails",
@@ -145,7 +183,7 @@ async function fetchSteamDetails(appid) {
           l: "en"
         },
 
-        timeout: 12000,
+        timeout: 10000,
 
         headers: {
           "User-Agent": "Mozilla/5.0"
@@ -153,7 +191,7 @@ async function fetchSteamDetails(appid) {
       }
     );
 
-    return data?.[appid];
+    return data?.[appid] || null;
   } catch {
     return null;
   }
@@ -180,8 +218,19 @@ module.exports.check = async (
         CHANNEL_ID
       );
 
-    const list =
-      await fetchSteamDBFree();
+    const list = await Promise.race([
+      fetchSteamDBFree(),
+
+      new Promise((_, reject) =>
+        setTimeout(() => {
+          reject(
+            new Error(
+              "SteamDB hard timeout"
+            )
+          );
+        }, 30000)
+      )
+    ]);
 
     console.log(
       `📦 found: ${list.length}`
