@@ -217,4 +217,4 @@ async function check(client, savedData, saveData) {
   }
 }
 
-module.exports = { check };s
+module.exports = { check };
