@@ -1,4 +1,4 @@
-const { chromium } = require("playwright");
+const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 const axios = require("axios");
 const {
@@ -12,35 +12,39 @@ const CHANNEL_ID = "1479078345382559804";
 const ROLE_ID = "1371121790046437448";
 
 const PERMA_F2P = new Set([
-  "730",      // CS2
-  "570",      // Dota 2
-  "440",      // TF2
-  "578080",   // PUBG
-  "1172470"   // Apex
+  "730",
+  "570",
+  "440",
+  "578080",
+  "1172470"
 ]);
 
 async function fetchSteamDBFree() {
   let browser;
 
   try {
-    browser = await chromium.launch({
-      headless: true,
+    browser = await puppeteer.launch({
+      headless: "new",
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
         "--disable-gpu",
-        "--no-zygote"
+        "--no-zygote",
+        "--single-process"
       ]
     });
 
-    const page = await browser.newPage({
-      userAgent:
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
-    });
+    const page = await browser.newPage();
 
-    await page.route("**/*", route => {
-      const type = route.request().resourceType();
+    await page.setUserAgent(
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
+    );
+
+    await page.setRequestInterception(true);
+
+    page.on("request", req => {
+      const type = req.resourceType();
 
       if (
         type === "image" ||
@@ -48,9 +52,9 @@ async function fetchSteamDBFree() {
         type === "font" ||
         type === "stylesheet"
       ) {
-        route.abort();
+        req.abort();
       } else {
-        route.continue();
+        req.continue();
       }
     });
 
@@ -70,13 +74,16 @@ async function fetchSteamDBFree() {
     $("a[href*='/app/']").each((_, el) => {
       const href = $(el).attr("href") || "";
       const match = href.match(/\/app\/(\d+)\//);
+
       if (!match) return;
 
       const appid = match[1];
+
       if (seen.has(appid)) return;
       if (PERMA_F2P.has(appid)) return;
 
       const name = $(el).text().trim();
+
       if (!name || name.length < 2) return;
 
       const areaText =
@@ -129,21 +136,26 @@ async function fetchSteamDetails(appid) {
 
 module.exports.check = async (client, savedData, saveData) => {
   try {
-    console.log("🟦 SteamDB (Playwright): checking...");
+    console.log("🟦 SteamDB (Puppeteer): checking...");
+
     savedData.steamGames ??= [];
 
     const channel = await client.channels.fetch(CHANNEL_ID);
 
     const list = await fetchSteamDBFree();
+
     console.log(`📦 found: ${list.length}`);
 
     let sent = 0;
 
     for (const item of list) {
       try {
-        if (savedData.steamGames.includes(item.appid)) continue;
+        if (savedData.steamGames.includes(item.appid)) {
+          continue;
+        }
 
         const app = await fetchSteamDetails(item.appid);
+
         if (!app?.success || !app.data) continue;
 
         const game = app.data;
@@ -157,7 +169,9 @@ module.exports.check = async (client, savedData, saveData) => {
           )
           .setThumbnail(game.capsule_image || null)
           .setImage(game.header_image || null)
-          .setFooter({ text: "BundleBot • Steam Giveaway" })
+          .setFooter({
+            text: "BundleBot • Steam Giveaway"
+          })
           .setTimestamp();
 
         const row = new ActionRowBuilder().addComponents(
@@ -174,10 +188,12 @@ module.exports.check = async (client, savedData, saveData) => {
         });
 
         savedData.steamGames.push(item.appid);
+
         savedData.steamGames =
           [...new Set(savedData.steamGames)].slice(-1000);
 
         saveData();
+
         sent++;
 
         console.log(`✔ Sent: ${game.name}`);
@@ -186,8 +202,11 @@ module.exports.check = async (client, savedData, saveData) => {
       }
     }
 
-    if (!sent) console.log("⏸ nic nowego");
-    else console.log(`✅ wysłano ${sent}`);
+    if (!sent) {
+      console.log("⏸ nic nowego");
+    } else {
+      console.log(`✅ wysłano ${sent}`);
+    }
   } catch (err) {
     console.log("❌ Steam error:", err.message);
   }

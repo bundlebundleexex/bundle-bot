@@ -1,4 +1,4 @@
-const { chromium } = require("playwright");
+const puppeteer = require("puppeteer");
 
 async function check(client, savedData, saveData) {
   console.log("🧪 deals0: scanning freebies...");
@@ -6,33 +6,37 @@ async function check(client, savedData, saveData) {
   let browser;
 
   try {
-    browser = await chromium.launch({
-      headless: true,
+    browser = await puppeteer.launch({
+      headless: "new",
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
         "--disable-gpu",
-        "--no-zygote"
+        "--no-zygote",
+        "--single-process"
       ]
     });
 
-    const page = await browser.newPage({
-      userAgent:
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
-    });
+    const page = await browser.newPage();
 
-    await page.route("**/*", route => {
-      const type = route.request().resourceType();
+    await page.setUserAgent(
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
+    );
+
+    await page.setRequestInterception(true);
+
+    page.on("request", req => {
+      const type = req.resourceType();
 
       if (
         type === "image" ||
         type === "media" ||
         type === "font"
       ) {
-        route.abort();
+        req.abort();
       } else {
-        route.continue();
+        req.continue();
       }
     });
 
@@ -46,42 +50,51 @@ async function check(client, savedData, saveData) {
     });
 
     const deals = await page.$$eval(".game-item", cards =>
-      cards.map(card => {
-        const html = card.innerHTML;
-        const text = (card.textContent || "")
-          .replace(/\s+/g, " ")
-          .trim()
-          .toLowerCase();
+      cards
+        .map(card => {
+          const html = card.innerHTML;
 
-        let store = null;
+          const text = (card.textContent || "")
+            .replace(/\s+/g, " ")
+            .trim()
+            .toLowerCase();
 
-        if (html.includes("svg-drm-ea")) {
-          store = "EA App";
-        } else if (html.includes("svg-drm-microsoft-store")) {
-          store = "Microsoft / Xbox";
-        } else if (html.includes("svg-drm-ubisoft-connect")) {
-          store = "Ubisoft Connect";
-        } else if (html.includes("svg-drm-amazon")) {
-          store = "Amazon Games";
-        }
+          let store = null;
 
-        if (!store) return null;
+          if (html.includes("svg-drm-ea")) {
+            store = "EA App";
+          } else if (
+            html.includes("svg-drm-microsoft-store")
+          ) {
+            store = "Microsoft / Xbox";
+          } else if (
+            html.includes("svg-drm-ubisoft-connect")
+          ) {
+            store = "Ubisoft Connect";
+          } else if (html.includes("svg-drm-amazon")) {
+            store = "Amazon Games";
+          }
 
-        const isFree =
-          text.includes("-100%") &&
-          text.includes("free");
+          if (!store) return null;
 
-        if (!isFree) return null;
+          const isFree =
+            text.includes("-100%") &&
+            text.includes("free");
 
-        const title =
-          card.querySelector(".game-info-title.title")
-            ?.textContent
-            ?.trim();
+          if (!isFree) return null;
 
-        if (!title) return null;
+          const title = card
+            .querySelector(".game-info-title.title")
+            ?.textContent?.trim();
 
-        return { store, title };
-      }).filter(Boolean)
+          if (!title) return null;
+
+          return {
+            store,
+            title
+          };
+        })
+        .filter(Boolean)
     );
 
     const seen = new Set();
@@ -92,6 +105,7 @@ async function check(client, savedData, saveData) {
       if (seen.has(key)) return false;
 
       seen.add(key);
+
       return true;
     });
 
@@ -100,6 +114,7 @@ async function check(client, savedData, saveData) {
     console.log("============================");
 
     savedData.deals0 = unique;
+
     saveData();
 
     console.log(`✅ deals0: ${unique.length}`);

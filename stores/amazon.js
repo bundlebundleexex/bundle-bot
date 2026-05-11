@@ -1,4 +1,4 @@
-const { chromium } = require("playwright");
+const puppeteer = require("puppeteer");
 const {
   EmbedBuilder,
   ActionRowBuilder,
@@ -15,21 +15,23 @@ async function check(client, savedData, saveData) {
   let browser;
 
   try {
-    browser = await chromium.launch({
-      headless: true,
+    browser = await puppeteer.launch({
+      headless: "new",
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
         "--disable-gpu",
-        "--no-zygote"
+        "--no-zygote",
+        "--single-process"
       ]
     });
 
-    const page = await browser.newPage({
-      userAgent:
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
-    });
+    const page = await browser.newPage();
+
+    await page.setUserAgent(
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
+    );
 
     await page.goto("https://gaming.amazon.com/home", {
       waitUntil: "domcontentloaded",
@@ -38,8 +40,11 @@ async function check(client, savedData, saveData) {
 
     // lazy load
     for (let i = 0; i < 6; i++) {
-      await page.mouse.wheel(0, 2500);
-      await page.waitForTimeout(1200);
+      await page.evaluate(() => {
+        window.scrollBy(0, 2500);
+      });
+
+      await new Promise(r => setTimeout(r, 1200));
     }
 
     const games = await page.evaluate(() => {
@@ -140,10 +145,13 @@ async function check(client, savedData, saveData) {
             timeout: 30000
           });
 
-          image = await claimPage
-            .locator('meta[property="og:image"]')
-            .getAttribute("content")
-            .catch(() => null);
+          image = await claimPage.evaluate(() => {
+            return (
+              document
+                .querySelector('meta[property="og:image"]')
+                ?.getAttribute("content") || null
+            );
+          });
         } catch {
           image = null;
         } finally {
@@ -161,7 +169,9 @@ async function check(client, savedData, saveData) {
           })
           .setTitle(`🎮 ${game.title}`)
           .setURL(game.url)
-          .setDescription("🔥 **Nowa darmowa gra do odebrania**")
+          .setDescription(
+            "🔥 **Nowa darmowa gra do odebrania**"
+          )
           .setFooter({
             text: "Amazon Prime Freebie"
           })
@@ -207,4 +217,4 @@ async function check(client, savedData, saveData) {
   }
 }
 
-module.exports = { check };
+module.exports = { check };s
