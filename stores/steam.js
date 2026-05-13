@@ -74,7 +74,7 @@ async function fetchSteamDBFree() {
   try {
     browser =
       await puppeteer.launch({
-        headless: "new",
+        headless: true,
 
         args: [
           "--no-sandbox",
@@ -87,8 +87,6 @@ async function fetchSteamDBFree() {
 
           "--no-zygote",
 
-          // ❌ removed single-process
-
           "--disable-extensions",
 
           "--disable-background-networking",
@@ -99,9 +97,7 @@ async function fetchSteamDBFree() {
 
           "--disable-sync",
 
-          "--mute-audio",
-
-          "--disable-features=site-per-process"
+          "--mute-audio"
         ]
       });
 
@@ -156,7 +152,7 @@ async function fetchSteamDBFree() {
       setTimeout(r, 2000)
     );
 
-    // dużo stabilniejsze niż page.content()
+    // stabilniejsze niż page.content()
     const html =
       await page.evaluate(
         () =>
@@ -263,7 +259,12 @@ async function fetchSteamDBFree() {
 
     if (browser) {
       try {
+        const proc =
+          browser.process();
+
         await browser.close();
+
+        proc?.kill("SIGKILL");
       } catch {}
     }
 

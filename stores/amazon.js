@@ -33,7 +33,7 @@ async function check(
   try {
     browser =
       await puppeteer.launch({
-        headless: "new",
+        headless: true,
 
         args: [
           "--no-sandbox",
@@ -46,9 +46,6 @@ async function check(
 
           "--no-zygote",
 
-          // ❌ removed single-process
-          // powodował detached frames
-
           "--disable-extensions",
 
           "--disable-background-networking",
@@ -59,10 +56,7 @@ async function check(
 
           "--disable-sync",
 
-          "--mute-audio",
-
-          // stabilniejsze chromium
-          "--disable-features=site-per-process"
+          "--mute-audio"
         ]
       });
 
@@ -77,7 +71,7 @@ async function check(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
     );
 
-    // ❌ bez request interception
+    // bez request interception
     // Amazon źle działa z interception
 
     await page.goto(
@@ -385,7 +379,12 @@ async function check(
 
     if (browser) {
       try {
+        const proc =
+          browser.process();
+
         await browser.close();
+
+        proc?.kill("SIGKILL");
       } catch {}
     }
 
