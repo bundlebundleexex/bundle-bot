@@ -5,6 +5,7 @@ const { Client, GatewayIntentBits } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
 
+// stores
 const humble = require("./stores/humble");
 const fanatical = require("./stores/fanatical");
 const gmg = require("./stores/gmg");
@@ -21,20 +22,27 @@ const steam = require("./stores/steam");
 const amazon = require("./stores/amazon");
 const deals0 = require("./stores/deals0");
 
+// browser manager
 const {
   restartBrowser
 } = require("./browser");
+
+// ==========================
+// CLIENT
+// ==========================
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 });
 
+// ==========================
+// CONFIG
+// ==========================
+
 const CHECK_INTERVAL =
   10 * 60 * 1000;
 
-// ==========================
-// DATA PATH
-// ==========================
+const STORE_DELAY = 1500;
 
 const DATA_PATH =
   fs.existsSync("/data")
@@ -44,9 +52,23 @@ const DATA_PATH =
         "data.json"
       );
 
+// ==========================
+// STATE
+// ==========================
+
 let savedData = {};
 
 let isRunning = false;
+
+// ==========================
+// HELPERS
+// ==========================
+
+function sleep(ms) {
+  return new Promise(resolve =>
+    setTimeout(resolve, ms)
+  );
+}
 
 // ==========================
 // LOAD / SAVE
@@ -71,6 +93,7 @@ function loadData() {
   }
 
   savedData.humbleBundles ??= [];
+
   savedData.humbleChoice ??= null;
 
   savedData.fanaticalBundles ??= [];
@@ -197,28 +220,70 @@ async function runChecks() {
 
   isRunning = true;
 
+  const startedAt = Date.now();
+
   try {
     console.log(
       `\n🔎 START sprawdzania - ${new Date().toLocaleString()}`
     );
 
     for (const store of STORES) {
+      const storeStart =
+        Date.now();
+
       try {
-        await store.fn(
-          client,
-          savedData,
-          saveData
-        );
+        await Promise.race([
+          store.fn(
+            client,
+            savedData,
+            saveData
+          ),
+
+          new Promise(
+            (_, reject) =>
+              setTimeout(() => {
+                reject(
+                  new Error(
+                    "Store timeout"
+                  )
+                );
+              }, 90000)
+          )
+        ]);
       } catch (err) {
         console.log(
           `❌ ${store.name}:`,
           err.message
         );
       }
+
+      const duration =
+        (
+          (Date.now() -
+            storeStart) /
+          1000
+        ).toFixed(1);
+
+      console.log(
+        `⏱ ${store.name}: ${duration}s`
+      );
+
+      // mała przerwa
+      await sleep(STORE_DELAY);
+
+      // cleanup hint
+      global.gc?.();
     }
 
+    const total =
+      (
+        (Date.now() -
+          startedAt) /
+        1000
+      ).toFixed(1);
+
     console.log(
-      "✅ Sprawdzanie zakończone"
+      `✅ Sprawdzanie zakończone (${total}s)`
     );
   } finally {
     isRunning = false;
@@ -241,14 +306,16 @@ client.once(
 
     loadData();
 
+    // first run
     await runChecks();
 
+    // cyclic checks
     setInterval(
       runChecks,
       CHECK_INTERVAL
     );
 
-    // restart browser co 6h
+    // browser restart co 6h
     setInterval(
       async () => {
         try {
@@ -302,6 +369,8 @@ process.on(
   }
 );
 
+// ==========================
+// LOGIN
 // ==========================
 
 client.login(
