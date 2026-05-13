@@ -1,149 +1,213 @@
-const { getBrowser } = require("../browser");
+const puppeteer = require("puppeteer");
 
-async function check(client, savedData, saveData) {
-  console.log("🧪 deals0: scanning freebies...");
+async function check(
+  client,
+  savedData,
+  saveData
+) {
+  console.log(
+    "🧪 deals0: scanning freebies..."
+  );
+
+  let browser = null;
 
   let page = null;
 
   try {
-    const browser = await getBrowser();
+    browser =
+      await puppeteer.launch({
+        headless: "new",
 
-    page = await browser.newPage();
+        args: [
+          "--no-sandbox",
 
-    page.setDefaultNavigationTimeout(15000);
+          "--disable-setuid-sandbox",
+
+          "--disable-dev-shm-usage",
+
+          "--disable-gpu",
+
+          "--no-zygote",
+
+          "--single-process",
+
+          "--disable-extensions",
+
+          "--disable-background-networking",
+
+          "--disable-background-timer-throttling",
+
+          "--disable-renderer-backgrounding",
+
+          "--disable-sync",
+
+          "--mute-audio"
+        ]
+      });
+
+    page =
+      await browser.newPage();
+
+    page.setDefaultNavigationTimeout(
+      15000
+    );
 
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
     );
 
-    await page.setRequestInterception(true);
+    await page.setRequestInterception(
+      true
+    );
 
-    page.on("request", req => {
-      const type = req.resourceType();
+    page.on(
+      "request",
 
-      if (
-        type === "image" ||
-        type === "media" ||
-        type === "font" ||
-        type === "stylesheet"
-      ) {
-        req.abort();
-      } else {
-        req.continue();
+      req => {
+        const type =
+          req.resourceType();
+
+        if (
+          type === "image" ||
+          type === "media" ||
+          type === "font" ||
+          type ===
+            "stylesheet"
+        ) {
+          req.abort();
+        } else {
+          req.continue();
+        }
       }
-    });
+    );
 
     await page.goto(
       "https://gg.deals/deals/",
+
       {
-        waitUntil: "domcontentloaded",
+        waitUntil:
+          "domcontentloaded",
+
         timeout: 15000
       }
     );
 
-    // zamiast waitForSelector
+    // lekki wait zamiast selectorów
     await new Promise(r =>
-      setTimeout(r, 3000)
+      setTimeout(r, 2500)
     );
 
-    const deals = await page.$$eval(
-      ".game-item",
+    const deals =
+      await page.$$eval(
+        ".game-item",
 
-      cards =>
-        cards
-          .map(card => {
-            const html =
-              card.innerHTML;
+        cards =>
+          cards
+            .map(card => {
+              const html =
+                card.innerHTML;
 
-            const text = (
-              card.textContent || ""
-            )
-              .replace(/\s+/g, " ")
-              .trim()
-              .toLowerCase();
-
-            let store = null;
-
-            if (
-              html.includes(
-                "svg-drm-ea"
+              const text = (
+                card.textContent ||
+                ""
               )
-            ) {
-              store = "EA App";
-            } else if (
-              html.includes(
-                "svg-drm-microsoft-store"
-              )
-            ) {
-              store =
-                "Microsoft / Xbox";
-            } else if (
-              html.includes(
-                "svg-drm-ubisoft-connect"
-              )
-            ) {
-              store =
-                "Ubisoft Connect";
-            } else if (
-              html.includes(
-                "svg-drm-amazon"
-              )
-            ) {
-              store =
-                "Amazon Games";
-            }
+                .replace(
+                  /\s+/g,
+                  " "
+                )
+                .trim()
+                .toLowerCase();
 
-            if (!store) {
-              return null;
-            }
+              let store =
+                null;
 
-            const isFree =
-              text.includes(
-                "-100%"
-              ) &&
-              text.includes(
-                "free"
-              );
+              if (
+                html.includes(
+                  "svg-drm-ea"
+                )
+              ) {
+                store =
+                  "EA App";
+              } else if (
+                html.includes(
+                  "svg-drm-microsoft-store"
+                )
+              ) {
+                store =
+                  "Microsoft / Xbox";
+              } else if (
+                html.includes(
+                  "svg-drm-ubisoft-connect"
+                )
+              ) {
+                store =
+                  "Ubisoft Connect";
+              } else if (
+                html.includes(
+                  "svg-drm-amazon"
+                )
+              ) {
+                store =
+                  "Amazon Games";
+              }
 
-            if (!isFree) {
-              return null;
-            }
+              if (!store) {
+                return null;
+              }
 
-            const title = card
-              .querySelector(
-                ".game-info-title.title"
-              )
-              ?.textContent?.trim();
+              const isFree =
+                text.includes(
+                  "-100%"
+                ) &&
+                text.includes(
+                  "free"
+                );
 
-            if (!title) {
-              return null;
-            }
+              if (!isFree) {
+                return null;
+              }
 
-            return {
-              store,
-              title
-            };
-          })
+              const title =
+                card
+                  .querySelector(
+                    ".game-info-title.title"
+                  )
+                  ?.textContent?.trim();
 
-          .filter(Boolean)
-    );
+              if (!title) {
+                return null;
+              }
 
-    const seen = new Set();
+              return {
+                store,
 
-    const unique = deals.filter(
-      item => {
-        const key =
-          `${item.store}|${item.title}`;
+                title
+              };
+            })
 
-        if (seen.has(key)) {
-          return false;
+            .filter(Boolean)
+      );
+
+    const seen =
+      new Set();
+
+    const unique =
+      deals.filter(
+        item => {
+          const key =
+            `${item.store}|${item.title}`;
+
+          if (
+            seen.has(key)
+          ) {
+            return false;
+          }
+
+          seen.add(key);
+
+          return true;
         }
-
-        seen.add(key);
-
-        return true;
-      }
-    );
+      );
 
     console.log(
       "========== DEALS0 =========="
@@ -155,7 +219,8 @@ async function check(client, savedData, saveData) {
       "============================"
     );
 
-    savedData.deals0 = unique;
+    savedData.deals0 =
+      unique;
 
     saveData();
 
@@ -174,8 +239,16 @@ async function check(client, savedData, saveData) {
       } catch {}
     }
 
+    if (browser) {
+      try {
+        await browser.close();
+      } catch {}
+    }
+
     global.gc?.();
   }
 }
 
-module.exports = { check };
+module.exports = {
+  check
+};

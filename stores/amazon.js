@@ -1,4 +1,4 @@
-const { getBrowser } = require("../browser");
+const puppeteer = require("puppeteer");
 
 const {
   EmbedBuilder,
@@ -7,234 +7,374 @@ const {
   ButtonStyle
 } = require("discord.js");
 
-const CHANNEL_ID = "1499461446365352017";
-const ROLE_ID = "1499461776604004392";
+const CHANNEL_ID =
+  "1499461446365352017";
 
-async function check(client, savedData, saveData) {
-  console.log("🟠 Amazon: sprawdzam Prime freebies...");
+const ROLE_ID =
+  "1499461776604004392";
+
+async function check(
+  client,
+  savedData,
+  saveData
+) {
+  console.log(
+    "🟠 Amazon: sprawdzam Prime freebies..."
+  );
+
+  let browser = null;
 
   let page = null;
 
   try {
-    const browser = await getBrowser();
+    browser =
+      await puppeteer.launch({
+        headless: "new",
 
-    page = await browser.newPage();
+        args: [
+          "--no-sandbox",
 
-    page.setDefaultNavigationTimeout(30000);
+          "--disable-setuid-sandbox",
+
+          "--disable-dev-shm-usage",
+
+          "--disable-gpu",
+
+          "--no-zygote",
+
+          "--single-process",
+
+          "--disable-extensions",
+
+          "--disable-background-networking",
+
+          "--disable-background-timer-throttling",
+
+          "--disable-renderer-backgrounding",
+
+          "--disable-sync",
+
+          "--mute-audio"
+        ]
+      });
+
+    page =
+      await browser.newPage();
+
+    page.setDefaultNavigationTimeout(
+      20000
+    );
 
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
     );
 
-    await page.setRequestInterception(true);
-
-    page.on("request", req => {
-      const type = req.resourceType();
-
-      if (
-        type === "image" ||
-        type === "media" ||
-        type === "font" ||
-        type === "stylesheet"
-      ) {
-        req.abort();
-      } else {
-        req.continue();
-      }
-    });
-
-    await page.goto("https://gaming.amazon.com/home", {
-      waitUntil: "domcontentloaded",
-      timeout: 30000
-    });
-
-    for (let i = 0; i < 5; i++) {
-      await page.evaluate(() => {
-        window.scrollBy(0, 2500);
-      });
-
-      await new Promise(r => setTimeout(r, 1000));
-    }
-
-    const games = await page.evaluate(() => {
-      const found = [];
-      const seen = new Set();
-
-      const links = [
-        ...document.querySelectorAll("a[href*='/claims/']")
-      ];
-
-      const blacklist = [
-        "claim",
-        "odbierz",
-        "pobierz",
-        "play",
-        "graj",
-        "included with prime",
-        "prime gaming",
-        "cookie",
-        "cookies",
-        "plikach cookie",
-        "powiadomienie",
-        "notification"
-      ];
-
-      for (const a of links) {
-        const href = a.href;
-        const text = a.innerText?.trim();
-
-        if (!href || !text) continue;
-
-        const slug = href
-          .split("/claims/")[1]
-          ?.split(/[?#]/)[0];
-
-        if (!slug) continue;
-        if (seen.has(slug)) continue;
-
-        const lines = text
-          .split("\n")
-          .map(x => x.trim())
-          .filter(Boolean);
-
-        const title = lines.find(line => {
-          const lower = line.toLowerCase();
-
-          if (line.length < 3) return false;
-          if (line.length > 80) return false;
-
-          if (blacklist.some(word => lower.includes(word))) {
-            return false;
-          }
-
-          return true;
-        });
-
-        if (!title) continue;
-
-        seen.add(slug);
-
-        found.push({
-          title,
-          url: href
-        });
-      }
-
-      return found;
-    });
-
-    const old = savedData.amazon || [];
-
-    const oldKeys = new Set(
-      old.map(x =>
-        x.url?.split("/claims/")[1]?.split(/[?#]/)[0]
-      )
+    await page.setRequestInterception(
+      true
     );
 
-    const fresh = games.filter(game => {
-      const slug = game.url
-        .split("/claims/")[1]
-        ?.split(/[?#]/)[0];
+    page.on(
+      "request",
 
-      return slug && !oldKeys.has(slug);
-    });
+      req => {
+        const type =
+          req.resourceType();
+
+        if (
+          type === "image" ||
+          type === "media" ||
+          type === "font" ||
+          type ===
+            "stylesheet"
+        ) {
+          req.abort();
+        } else {
+          req.continue();
+        }
+      }
+    );
+
+    await page.goto(
+      "https://gaming.amazon.com/home",
+
+      {
+        waitUntil:
+          "domcontentloaded",
+
+        timeout: 20000
+      }
+    );
+
+    // lazy load
+    for (
+      let i = 0;
+      i < 4;
+      i++
+    ) {
+      await page.evaluate(
+        () => {
+          window.scrollBy(
+            0,
+            2500
+          );
+        }
+      );
+
+      await new Promise(r =>
+        setTimeout(r, 800)
+      );
+    }
+
+    const games =
+      await page.evaluate(() => {
+        const found =
+          [];
+
+        const seen =
+          new Set();
+
+        const links = [
+          ...document.querySelectorAll(
+            "a[href*='/claims/']"
+          )
+        ];
+
+        const blacklist = [
+          "claim",
+
+          "odbierz",
+
+          "pobierz",
+
+          "play",
+
+          "graj",
+
+          "included with prime",
+
+          "prime gaming",
+
+          "cookie",
+
+          "cookies",
+
+          "plikach cookie",
+
+          "powiadomienie",
+
+          "notification"
+        ];
+
+        for (const a of links) {
+          const href =
+            a.href;
+
+          const text =
+            a.innerText?.trim();
+
+          if (
+            !href ||
+            !text
+          ) {
+            continue;
+          }
+
+          const slug =
+            href
+              .split(
+                "/claims/"
+              )[1]
+              ?.split(
+                /[?#]/
+              )[0];
+
+          if (!slug) {
+            continue;
+          }
+
+          if (
+            seen.has(slug)
+          ) {
+            continue;
+          }
+
+          const lines =
+            text
+              .split("\n")
+              .map(x =>
+                x.trim()
+              )
+              .filter(Boolean);
+
+          const title =
+            lines.find(
+              line => {
+                const lower =
+                  line.toLowerCase();
+
+                if (
+                  line.length <
+                  3
+                ) {
+                  return false;
+                }
+
+                if (
+                  line.length >
+                  80
+                ) {
+                  return false;
+                }
+
+                if (
+                  blacklist.some(
+                    word =>
+                      lower.includes(
+                        word
+                      )
+                  )
+                ) {
+                  return false;
+                }
+
+                return true;
+              }
+            );
+
+          if (!title) {
+            continue;
+          }
+
+          seen.add(slug);
+
+          found.push({
+            title,
+
+            url: href
+          });
+        }
+
+        return found;
+      });
+
+    const old =
+      savedData.amazon ||
+      [];
+
+    const oldKeys =
+      new Set(
+        old.map(x =>
+          x.url
+            ?.split(
+              "/claims/"
+            )[1]
+            ?.split(/[?#]/)[0]
+        )
+      );
+
+    const fresh =
+      games.filter(game => {
+        const slug =
+          game.url
+            .split(
+              "/claims/"
+            )[1]
+            ?.split(/[?#]/)[0];
+
+        return (
+          slug &&
+          !oldKeys.has(slug)
+        );
+      });
 
     if (fresh.length > 0) {
-      const channel = await client.channels.fetch(CHANNEL_ID);
+      const channel =
+        await client.channels.fetch(
+          CHANNEL_ID
+        );
 
       for (const game of fresh) {
-        let image = null;
-        let claimPage = null;
+        // bez dodatkowych page dla obrazków
+        // duży save RAM
 
-        try {
-          claimPage = await browser.newPage();
+        const embed =
+          new EmbedBuilder()
+            .setColor(
+              "#FF9900"
+            )
 
-          claimPage.setDefaultNavigationTimeout(15000);
+            .setAuthor({
+              name:
+                "Amazon Prime Gaming"
+            })
 
-          await claimPage.setRequestInterception(true);
+            .setTitle(
+              `🎮 ${game.title}`
+            )
 
-          claimPage.on("request", req => {
-            const type = req.resourceType();
+            .setURL(
+              game.url
+            )
 
-            if (
-              type === "image" ||
-              type === "media" ||
-              type === "font" ||
-              type === "stylesheet"
-            ) {
-              req.abort();
-            } else {
-              req.continue();
-            }
-          });
+            .setDescription(
+              "🔥 **Nowa darmowa gra do odebrania**"
+            )
 
-          await claimPage.goto(game.url, {
-            waitUntil: "domcontentloaded",
-            timeout: 15000
-          });
+            .setFooter({
+              text:
+                "Amazon Prime Freebie"
+            })
 
-          image = await claimPage.evaluate(() => {
-            return (
-              document
-                .querySelector('meta[property="og:image"]')
-                ?.getAttribute("content") || null
-            );
-          });
-        } catch {
-          image = null;
-        } finally {
-          if (claimPage) {
-            try {
-              await claimPage.close();
-            } catch {}
-          }
-        }
+            .setTimestamp();
 
-        const embed = new EmbedBuilder()
-          .setColor("#FF9900")
-          .setAuthor({
-            name: "Amazon Prime Gaming"
-          })
-          .setTitle(`🎮 ${game.title}`)
-          .setURL(game.url)
-          .setDescription(
-            "🔥 **Nowa darmowa gra do odebrania**"
-          )
-          .setFooter({
-            text: "Amazon Prime Freebie"
-          })
-          .setTimestamp();
+        const button =
+          new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+              .setLabel(
+                "🎁 Odbierz grę"
+              )
 
-        if (image) {
-          embed.setImage(image);
-        }
+              .setStyle(
+                ButtonStyle.Link
+              )
 
-        const button = new ActionRowBuilder().addComponents(
-          new ButtonBuilder()
-            .setLabel("🎁 Odbierz grę")
-            .setStyle(ButtonStyle.Link)
-            .setURL(game.url)
-        );
+              .setURL(
+                game.url
+              )
+          );
 
         await channel.send({
           content: `<@&${ROLE_ID}>`,
+
           embeds: [embed],
+
           components: [button]
         });
 
-        console.log("📨 Wysłano:", game.title);
+        console.log(
+          "📨 Wysłano:",
+          game.title
+        );
       }
     } else {
-      console.log("⏸ Amazon: bez zmian");
+      console.log(
+        "⏸ Amazon: bez zmian"
+      );
     }
 
-    savedData.amazon = games;
+    savedData.amazon =
+      games;
 
     saveData();
 
-    console.log(`✅ Amazon: ${games.length}`);
+    console.log(
+      `✅ Amazon: ${games.length}`
+    );
   } catch (err) {
-    console.log("❌ Amazon:", err.message);
+    console.log(
+      "❌ Amazon:",
+      err.message
+    );
   } finally {
     if (page) {
       try {
@@ -242,8 +382,16 @@ async function check(client, savedData, saveData) {
       } catch {}
     }
 
+    if (browser) {
+      try {
+        await browser.close();
+      } catch {}
+    }
+
     global.gc?.();
   }
 }
 
-module.exports = { check };
+module.exports = {
+  check
+};

@@ -22,11 +22,6 @@ const steam = require("./stores/steam");
 const amazon = require("./stores/amazon");
 const deals0 = require("./stores/deals0");
 
-// browser manager
-const {
-  restartBrowser
-} = require("./browser");
-
 // ==========================
 // CLIENT
 // ==========================
@@ -43,6 +38,9 @@ const CHECK_INTERVAL =
   15 * 60 * 1000;
 
 const STORE_DELAY = 1500;
+
+const CLEANUP_INTERVAL =
+  70 * 60 * 1000;
 
 const DATA_PATH =
   fs.existsSync("/data")
@@ -70,13 +68,51 @@ function sleep(ms) {
   );
 }
 
-// sleep mode 00:05 -> 10:00
+// sleep mode 00:00 -> 10:00
 function isSleepMode() {
   const now = new Date();
 
   const hour = now.getHours();
 
   return hour >= 0 && hour < 10;
+}
+
+function getTime() {
+  return new Intl.DateTimeFormat(
+    "pl-PL",
+    {
+      timeZone:
+        "Europe/Warsaw",
+
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+
+      hour12: false
+    }
+  ).format(new Date());
+}
+
+function memoryCleanup() {
+  try {
+    if (global.gc) {
+      global.gc();
+    }
+
+    const used = Math.round(
+      process.memoryUsage().rss /
+        1024 /
+        1024
+    );
+
+    console.log(
+      `🧹 RAM cleanup (${used} MB)`
+    );
+  } catch {}
 }
 
 // ==========================
@@ -221,7 +257,9 @@ const STORES = [
 async function runChecks() {
   // sleep mode
   if (isSleepMode()) {
-    console.log("🌙 Sleep mode");
+    console.log(
+      `🌙 Sleep mode (${getTime()})`
+    );
 
     return;
   }
@@ -236,11 +274,12 @@ async function runChecks() {
 
   isRunning = true;
 
-  const startedAt = Date.now();
+  const startedAt =
+    Date.now();
 
   try {
     console.log(
-      `\n🔎 START sprawdzania - ${new Date().toLocaleString()}`
+      `\n🔎 START sprawdzania - ${getTime()}`
     );
 
     for (const store of STORES) {
@@ -297,8 +336,14 @@ async function runChecks() {
         1000
       ).toFixed(1);
 
+    const ram = Math.round(
+      process.memoryUsage().rss /
+        1024 /
+        1024
+    );
+
     console.log(
-      `✅ Sprawdzanie zakończone (${total}s)`
+      `✅ Sprawdzanie zakończone (${total}s | ${ram} MB)`
     );
   } finally {
     isRunning = false;
@@ -330,27 +375,12 @@ client.once(
       CHECK_INTERVAL
     );
 
-    // browser restart co 6h
-    setInterval(
-      async () => {
-        try {
-          console.log(
-            "🔄 Restart shared browser..."
-          );
-
-          await restartBrowser();
-
-          global.gc?.();
-        } catch (err) {
-          console.log(
-            "❌ Browser restart error:",
-            err.message
-          );
-        }
-      },
-
-      6 * 60 * 60 * 1000
-    );
+    // RAM cleanup
+    setInterval(() => {
+      if (!isRunning) {
+        memoryCleanup();
+      }
+    }, CLEANUP_INTERVAL);
 
     console.log(
       "⏱️ Sprawdzanie ustawione co 15 minut"
