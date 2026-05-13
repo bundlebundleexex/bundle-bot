@@ -10,7 +10,7 @@ async function check(client, savedData, saveData) {
 
     page = await browser.newPage();
 
-    page.setDefaultNavigationTimeout(20000);
+    page.setDefaultNavigationTimeout(15000);
 
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
@@ -33,86 +33,140 @@ async function check(client, savedData, saveData) {
       }
     });
 
-    await page.goto("https://gg.deals/deals/", {
-      waitUntil: "domcontentloaded",
-      timeout: 20000
-    });
+    await page.goto(
+      "https://gg.deals/deals/",
+      {
+        waitUntil: "domcontentloaded",
+        timeout: 15000
+      }
+    );
 
-    await page.waitForSelector(".game-item", {
-      timeout: 10000
-    });
+    // zamiast waitForSelector
+    await new Promise(r =>
+      setTimeout(r, 3000)
+    );
 
-    const deals = await page.$$eval(".game-item", cards =>
-      cards
-        .map(card => {
-          const html = card.innerHTML;
+    const deals = await page.$$eval(
+      ".game-item",
 
-          const text = (card.textContent || "")
-            .replace(/\s+/g, " ")
-            .trim()
-            .toLowerCase();
+      cards =>
+        cards
+          .map(card => {
+            const html =
+              card.innerHTML;
 
-          let store = null;
+            const text = (
+              card.textContent || ""
+            )
+              .replace(/\s+/g, " ")
+              .trim()
+              .toLowerCase();
 
-          if (html.includes("svg-drm-ea")) {
-            store = "EA App";
-          } else if (
-            html.includes("svg-drm-microsoft-store")
-          ) {
-            store = "Microsoft / Xbox";
-          } else if (
-            html.includes("svg-drm-ubisoft-connect")
-          ) {
-            store = "Ubisoft Connect";
-          } else if (html.includes("svg-drm-amazon")) {
-            store = "Amazon Games";
-          }
+            let store = null;
 
-          if (!store) return null;
+            if (
+              html.includes(
+                "svg-drm-ea"
+              )
+            ) {
+              store = "EA App";
+            } else if (
+              html.includes(
+                "svg-drm-microsoft-store"
+              )
+            ) {
+              store =
+                "Microsoft / Xbox";
+            } else if (
+              html.includes(
+                "svg-drm-ubisoft-connect"
+              )
+            ) {
+              store =
+                "Ubisoft Connect";
+            } else if (
+              html.includes(
+                "svg-drm-amazon"
+              )
+            ) {
+              store =
+                "Amazon Games";
+            }
 
-          const isFree =
-            text.includes("-100%") &&
-            text.includes("free");
+            if (!store) {
+              return null;
+            }
 
-          if (!isFree) return null;
+            const isFree =
+              text.includes(
+                "-100%"
+              ) &&
+              text.includes(
+                "free"
+              );
 
-          const title = card
-            .querySelector(".game-info-title.title")
-            ?.textContent?.trim();
+            if (!isFree) {
+              return null;
+            }
 
-          if (!title) return null;
+            const title = card
+              .querySelector(
+                ".game-info-title.title"
+              )
+              ?.textContent?.trim();
 
-          return {
-            store,
-            title
-          };
-        })
-        .filter(Boolean)
+            if (!title) {
+              return null;
+            }
+
+            return {
+              store,
+              title
+            };
+          })
+
+          .filter(Boolean)
     );
 
     const seen = new Set();
 
-    const unique = deals.filter(item => {
-      const key = `${item.store}|${item.title}`;
+    const unique = deals.filter(
+      item => {
+        const key =
+          `${item.store}|${item.title}`;
 
-      if (seen.has(key)) return false;
+        if (seen.has(key)) {
+          return false;
+        }
 
-      seen.add(key);
+        seen.add(key);
 
-      return true;
-    });
+        return true;
+      }
+    );
 
-    console.log("========== DEALS0 ==========");
+    console.log(
+      "========== DEALS0 =========="
+    );
+
     console.log(unique);
-    console.log("============================");
+
+    console.log(
+      "============================"
+    );
 
     savedData.deals0 = unique;
 
     saveData();
 
-    console.log(`✅ deals0: ${unique.length}`);
+    console.log(
+      `✅ deals0: ${unique.length}`
+    );
   } catch (err) {
-    console.log("❌ deals0:", err.message);
+    console.log(
+      "❌ deals0:",
+      err.message
+    );
   } finally {
     if (page) {
       try {
