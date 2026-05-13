@@ -1,4 +1,4 @@
-const puppeteer = require("puppeteer");
+const { getBrowser } = require("../browser");
 const cheerio = require("cheerio");
 const axios = require("axios");
 
@@ -21,23 +21,14 @@ const PERMA_F2P = new Set([
 ]);
 
 async function fetchSteamDBFree() {
-  let browser = null;
   let page = null;
 
   try {
-    browser = await puppeteer.launch({
-      headless: "new",
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu",
-        "--no-zygote",
-        "--single-process"
-      ]
-    });
+    const browser = await getBrowser();
 
     page = await browser.newPage();
+
+    page.setDefaultNavigationTimeout(20000);
 
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
@@ -68,31 +59,11 @@ async function fetchSteamDBFree() {
       }
     );
 
-    await Promise.race([
-      page.waitForSelector("body", {
-        timeout: 10000
-      }),
+    await page.waitForSelector("body", {
+      timeout: 10000
+    });
 
-      new Promise((_, reject) =>
-        setTimeout(() => {
-          reject(
-            new Error("Steam selector timeout")
-          );
-        }, 12000)
-      )
-    ]);
-
-    const html = await Promise.race([
-      page.content(),
-
-      new Promise((_, reject) =>
-        setTimeout(() => {
-          reject(
-            new Error("Steam content timeout")
-          );
-        }, 12000)
-      )
-    ]);
+    const html = await page.content();
 
     if (!html || html.length < 1000) {
       throw new Error("SteamDB empty HTML");
@@ -160,12 +131,6 @@ async function fetchSteamDBFree() {
       } catch {}
     }
 
-    if (browser) {
-      try {
-        await browser.close();
-      } catch {}
-    }
-
     global.gc?.();
   }
 }
@@ -204,7 +169,7 @@ module.exports.check = async (
 ) => {
   try {
     console.log(
-      "🟦 SteamDB (Puppeteer): checking..."
+      "🟦 SteamDB (Shared Browser): checking..."
     );
 
     savedData.steamGames ??= [];

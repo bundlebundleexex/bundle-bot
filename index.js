@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const { Client, GatewayIntentBits } = require("discord.js");
+
 const fs = require("fs");
 const path = require("path");
 
@@ -9,30 +10,42 @@ const fanatical = require("./stores/fanatical");
 const gmg = require("./stores/gmg");
 const indiegala = require("./stores/indiegala");
 const digiphile = require("./stores/digiphile");
+
 const epic = require("./stores/epic");
 const epicDeals = require("./stores/epicdeals");
+
 const freeDeals = require("./stores/freeDeals");
 const gog = require("./stores/gog");
+
 const steam = require("./stores/steam");
 const amazon = require("./stores/amazon");
-const ggdeals = require("./stores/ggdeals");
 const deals0 = require("./stores/deals0");
+
+const {
+  restartBrowser
+} = require("./browser");
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 });
 
-const CHECK_INTERVAL = 10 * 60 * 1000;
+const CHECK_INTERVAL =
+  10 * 60 * 1000;
 
 // ==========================
 // DATA PATH
 // ==========================
 
-const DATA_PATH = fs.existsSync("/data")
-  ? "/data/data.json"
-  : path.join(__dirname, "data.json");
+const DATA_PATH =
+  fs.existsSync("/data")
+    ? "/data/data.json"
+    : path.join(
+        __dirname,
+        "data.json"
+      );
 
 let savedData = {};
+
 let isRunning = false;
 
 // ==========================
@@ -43,7 +56,10 @@ function loadData() {
   if (fs.existsSync(DATA_PATH)) {
     try {
       savedData = JSON.parse(
-        fs.readFileSync(DATA_PATH, "utf8")
+        fs.readFileSync(
+          DATA_PATH,
+          "utf8"
+        )
       );
     } catch {
       console.log(
@@ -56,17 +72,27 @@ function loadData() {
 
   savedData.humbleBundles ??= [];
   savedData.humbleChoice ??= null;
+
   savedData.fanaticalBundles ??= [];
+
   savedData.gmgBundles ??= [];
+
   savedData.indiegalaBundles ??= [];
+
   savedData.digiphileCollections ??= [];
+
   savedData.epicGames ??= [];
+
   savedData.epicDeals ??= [];
+
   savedData.freeDeals ??= [];
+
   savedData.gogGames ??= [];
+
   savedData.steamGames ??= [];
+
   savedData.amazon ??= [];
-  savedData.ggdeals ??= [];
+
   savedData.deals0 ??= [];
 
   saveData();
@@ -76,10 +102,17 @@ function saveData() {
   try {
     fs.writeFileSync(
       DATA_PATH,
-      JSON.stringify(savedData, null, 2)
+      JSON.stringify(
+        savedData,
+        null,
+        2
+      )
     );
   } catch (err) {
-    console.log("❌ saveData:", err.message);
+    console.log(
+      "❌ saveData:",
+      err.message
+    );
   }
 }
 
@@ -88,23 +121,64 @@ function saveData() {
 // ==========================
 
 const STORES = [
-  { name: "Humble", fn: humble.check },
-  { name: "Fanatical", fn: fanatical.check },
-  { name: "GMG", fn: gmg.check },
-  { name: "IndieGala", fn: indiegala.check },
-  { name: "Digiphile", fn: digiphile.check },
-  { name: "Deals0", fn: deals0.check },
-  { name: "Epic", fn: epic.check },
-  { name: "EpicDeals", fn: epicDeals.check },
-  { name: "FreeDeals", fn: freeDeals.check },
-  { name: "GOG", fn: gog.check },
-  { name: "Steam", fn: steam.check },
-  { name: "Amazon", fn: amazon.check },
-
-  // placeholder
   {
-    name: "GG.DEALS",
-    fn: async () => {}
+    name: "Humble",
+    fn: humble.check
+  },
+
+  {
+    name: "Fanatical",
+    fn: fanatical.check
+  },
+
+  {
+    name: "GMG",
+    fn: gmg.check
+  },
+
+  {
+    name: "IndieGala",
+    fn: indiegala.check
+  },
+
+  {
+    name: "Digiphile",
+    fn: digiphile.check
+  },
+
+  {
+    name: "Deals0",
+    fn: deals0.check
+  },
+
+  {
+    name: "Epic",
+    fn: epic.check
+  },
+
+  {
+    name: "EpicDeals",
+    fn: epicDeals.check
+  },
+
+  {
+    name: "FreeDeals",
+    fn: freeDeals.check
+  },
+
+  {
+    name: "GOG",
+    fn: gog.check
+  },
+
+  {
+    name: "Steam",
+    fn: steam.check
+  },
+
+  {
+    name: "Amazon",
+    fn: amazon.check
   }
 ];
 
@@ -143,7 +217,9 @@ async function runChecks() {
       }
     }
 
-    console.log("✅ Sprawdzanie zakończone");
+    console.log(
+      "✅ Sprawdzanie zakończone"
+    );
   } finally {
     isRunning = false;
 
@@ -155,40 +231,79 @@ async function runChecks() {
 // READY
 // ==========================
 
-client.once("clientReady", async () => {
-  console.log(
-    `🤖 Zalogowano jako ${client.user.tag}`
-  );
+client.once(
+  "clientReady",
 
-  loadData();
+  async () => {
+    console.log(
+      `🤖 Zalogowano jako ${client.user.tag}`
+    );
 
-  await runChecks();
+    loadData();
 
-  setInterval(runChecks, CHECK_INTERVAL);
+    await runChecks();
 
-  console.log(
-    "⏱️ Sprawdzanie ustawione co 10 minut"
-  );
-});
+    setInterval(
+      runChecks,
+      CHECK_INTERVAL
+    );
+
+    // restart browser co 6h
+    setInterval(
+      async () => {
+        try {
+          console.log(
+            "🔄 Restart shared browser..."
+          );
+
+          await restartBrowser();
+
+          global.gc?.();
+        } catch (err) {
+          console.log(
+            "❌ Browser restart error:",
+            err.message
+          );
+        }
+      },
+
+      6 * 60 * 60 * 1000
+    );
+
+    console.log(
+      "⏱️ Sprawdzanie ustawione co 10 minut"
+    );
+  }
+);
 
 // ==========================
 // ERROR HANDLING
 // ==========================
 
-process.on("unhandledRejection", err => {
-  console.error(
-    "❌ Unhandled promise rejection:",
-    err
-  );
-});
+process.on(
+  "unhandledRejection",
 
-process.on("uncaughtException", err => {
-  console.error(
-    "❌ Uncaught exception:",
-    err
-  );
-});
+  err => {
+    console.error(
+      "❌ Unhandled promise rejection:",
+      err
+    );
+  }
+);
+
+process.on(
+  "uncaughtException",
+
+  err => {
+    console.error(
+      "❌ Uncaught exception:",
+      err
+    );
+  }
+);
 
 // ==========================
 
-client.login(process.env.TOKEN);
+client.login(
+  process.env.TOKEN
+);

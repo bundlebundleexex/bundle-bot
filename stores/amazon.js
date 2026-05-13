@@ -1,4 +1,5 @@
-const puppeteer = require("puppeteer");
+const { getBrowser } = require("../browser");
+
 const {
   EmbedBuilder,
   ActionRowBuilder,
@@ -12,39 +13,47 @@ const ROLE_ID = "1499461776604004392";
 async function check(client, savedData, saveData) {
   console.log("🟠 Amazon: sprawdzam Prime freebies...");
 
-  let browser;
+  let page = null;
 
   try {
-    browser = await puppeteer.launch({
-      headless: "new",
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu",
-        "--no-zygote",
-        "--single-process"
-      ]
-    });
+    const browser = await getBrowser();
 
-    const page = await browser.newPage();
+    page = await browser.newPage();
+
+    page.setDefaultNavigationTimeout(30000);
 
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
     );
 
-    await page.goto("https://gaming.amazon.com/home", {
-      waitUntil: "domcontentloaded",
-      timeout: 60000
+    await page.setRequestInterception(true);
+
+    page.on("request", req => {
+      const type = req.resourceType();
+
+      if (
+        type === "image" ||
+        type === "media" ||
+        type === "font" ||
+        type === "stylesheet"
+      ) {
+        req.abort();
+      } else {
+        req.continue();
+      }
     });
 
-    // lazy load
-    for (let i = 0; i < 6; i++) {
+    await page.goto("https://gaming.amazon.com/home", {
+      waitUntil: "domcontentloaded",
+      timeout: 30000
+    });
+
+    for (let i = 0; i < 5; i++) {
       await page.evaluate(() => {
         window.scrollBy(0, 2500);
       });
 
-      await new Promise(r => setTimeout(r, 1200));
+      await new Promise(r => setTimeout(r, 1000));
     }
 
     const games = await page.evaluate(() => {
@@ -140,9 +149,28 @@ async function check(client, savedData, saveData) {
         try {
           claimPage = await browser.newPage();
 
+          claimPage.setDefaultNavigationTimeout(15000);
+
+          await claimPage.setRequestInterception(true);
+
+          claimPage.on("request", req => {
+            const type = req.resourceType();
+
+            if (
+              type === "image" ||
+              type === "media" ||
+              type === "font" ||
+              type === "stylesheet"
+            ) {
+              req.abort();
+            } else {
+              req.continue();
+            }
+          });
+
           await claimPage.goto(game.url, {
             waitUntil: "domcontentloaded",
-            timeout: 30000
+            timeout: 15000
           });
 
           image = await claimPage.evaluate(() => {
@@ -201,15 +229,16 @@ async function check(client, savedData, saveData) {
     }
 
     savedData.amazon = games;
+
     saveData();
 
     console.log(`✅ Amazon: ${games.length}`);
   } catch (err) {
     console.log("❌ Amazon:", err.message);
   } finally {
-    if (browser) {
+    if (page) {
       try {
-        await browser.close();
+        await page.close();
       } catch {}
     }
 

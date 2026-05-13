@@ -1,24 +1,16 @@
-const puppeteer = require("puppeteer");
+const { getBrowser } = require("../browser");
 
 async function check(client, savedData, saveData) {
   console.log("🧪 deals0: scanning freebies...");
 
-  let browser;
+  let page = null;
 
   try {
-    browser = await puppeteer.launch({
-      headless: "new",
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu",
-        "--no-zygote",
-        "--single-process"
-      ]
-    });
+    const browser = await getBrowser();
 
-    const page = await browser.newPage();
+    page = await browser.newPage();
+
+    page.setDefaultNavigationTimeout(20000);
 
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
@@ -32,7 +24,8 @@ async function check(client, savedData, saveData) {
       if (
         type === "image" ||
         type === "media" ||
-        type === "font"
+        type === "font" ||
+        type === "stylesheet"
       ) {
         req.abort();
       } else {
@@ -42,11 +35,11 @@ async function check(client, savedData, saveData) {
 
     await page.goto("https://gg.deals/deals/", {
       waitUntil: "domcontentloaded",
-      timeout: 60000
+      timeout: 20000
     });
 
     await page.waitForSelector(".game-item", {
-      timeout: 15000
+      timeout: 10000
     });
 
     const deals = await page.$$eval(".game-item", cards =>
@@ -121,9 +114,9 @@ async function check(client, savedData, saveData) {
   } catch (err) {
     console.log("❌ deals0:", err.message);
   } finally {
-    if (browser) {
+    if (page) {
       try {
-        await browser.close();
+        await page.close();
       } catch {}
     }
 
