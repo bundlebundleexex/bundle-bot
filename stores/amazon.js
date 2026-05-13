@@ -13,6 +13,10 @@ const CHANNEL_ID =
 const ROLE_ID =
   "1499461776604004392";
 
+// ==========================
+// MAIN
+// ==========================
+
 async function check(
   client,
   savedData,
@@ -42,7 +46,8 @@ async function check(
 
           "--no-zygote",
 
-          "--single-process",
+          // ❌ removed single-process
+          // powodował detached frames
 
           "--disable-extensions",
 
@@ -54,7 +59,10 @@ async function check(
 
           "--disable-sync",
 
-          "--mute-audio"
+          "--mute-audio",
+
+          // stabilniejsze chromium
+          "--disable-features=site-per-process"
         ]
       });
 
@@ -69,30 +77,8 @@ async function check(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
     );
 
-    await page.setRequestInterception(
-      true
-    );
-
-    page.on(
-      "request",
-
-      req => {
-        const type =
-          req.resourceType();
-
-        if (
-          type === "image" ||
-          type === "media" ||
-          type === "font" ||
-          type ===
-            "stylesheet"
-        ) {
-          req.abort();
-        } else {
-          req.continue();
-        }
-      }
-    );
+    // ❌ bez request interception
+    // Amazon źle działa z interception
 
     await page.goto(
       "https://gaming.amazon.com/home",
@@ -105,24 +91,33 @@ async function check(
       }
     );
 
-    // lazy load
+    // stabilizacja React DOM
+    await new Promise(r =>
+      setTimeout(r, 3000)
+    );
+
+    // lazy loading
     for (
       let i = 0;
       i < 4;
       i++
     ) {
-      await page.evaluate(
-        () => {
-          window.scrollBy(
-            0,
-            2500
-          );
-        }
-      );
+      try {
+        await page.evaluate(
+          () => {
+            window.scrollBy(
+              0,
+              2500
+            );
+          }
+        );
 
-      await new Promise(r =>
-        setTimeout(r, 800)
-      );
+        await new Promise(r =>
+          setTimeout(r, 1000)
+        );
+      } catch {
+        break;
+      }
     }
 
     const games =
@@ -166,92 +161,94 @@ async function check(
         ];
 
         for (const a of links) {
-          const href =
-            a.href;
+          try {
+            const href =
+              a.href;
 
-          const text =
-            a.innerText?.trim();
+            const text =
+              a.innerText?.trim();
 
-          if (
-            !href ||
-            !text
-          ) {
-            continue;
-          }
+            if (
+              !href ||
+              !text
+            ) {
+              continue;
+            }
 
-          const slug =
-            href
-              .split(
-                "/claims/"
-              )[1]
-              ?.split(
-                /[?#]/
-              )[0];
+            const slug =
+              href
+                .split(
+                  "/claims/"
+                )[1]
+                ?.split(
+                  /[?#]/
+                )[0];
 
-          if (!slug) {
-            continue;
-          }
+            if (!slug) {
+              continue;
+            }
 
-          if (
-            seen.has(slug)
-          ) {
-            continue;
-          }
+            if (
+              seen.has(slug)
+            ) {
+              continue;
+            }
 
-          const lines =
-            text
-              .split("\n")
-              .map(x =>
-                x.trim()
-              )
-              .filter(Boolean);
+            const lines =
+              text
+                .split("\n")
+                .map(x =>
+                  x.trim()
+                )
+                .filter(Boolean);
 
-          const title =
-            lines.find(
-              line => {
-                const lower =
-                  line.toLowerCase();
+            const title =
+              lines.find(
+                line => {
+                  const lower =
+                    line.toLowerCase();
 
-                if (
-                  line.length <
-                  3
-                ) {
-                  return false;
+                  if (
+                    line.length <
+                    3
+                  ) {
+                    return false;
+                  }
+
+                  if (
+                    line.length >
+                    80
+                  ) {
+                    return false;
+                  }
+
+                  if (
+                    blacklist.some(
+                      word =>
+                        lower.includes(
+                          word
+                        )
+                    )
+                  ) {
+                    return false;
+                  }
+
+                  return true;
                 }
+              );
 
-                if (
-                  line.length >
-                  80
-                ) {
-                  return false;
-                }
+            if (!title) {
+              continue;
+            }
 
-                if (
-                  blacklist.some(
-                    word =>
-                      lower.includes(
-                        word
-                      )
-                  )
-                ) {
-                  return false;
-                }
+            seen.add(slug);
 
-                return true;
-              }
-            );
+            found.push({
+              title,
 
-          if (!title) {
-            continue;
-          }
-
-          seen.add(slug);
-
-          found.push({
-            title,
-
-            url: href
-          });
+              url: href
+            });
+          } catch {}
         }
 
         return found;
@@ -294,67 +291,71 @@ async function check(
         );
 
       for (const game of fresh) {
-        // bez dodatkowych page dla obrazków
-        // duży save RAM
-
-        const embed =
-          new EmbedBuilder()
-            .setColor(
-              "#FF9900"
-            )
-
-            .setAuthor({
-              name:
-                "Amazon Prime Gaming"
-            })
-
-            .setTitle(
-              `🎮 ${game.title}`
-            )
-
-            .setURL(
-              game.url
-            )
-
-            .setDescription(
-              "🔥 **Nowa darmowa gra do odebrania**"
-            )
-
-            .setFooter({
-              text:
-                "Amazon Prime Freebie"
-            })
-
-            .setTimestamp();
-
-        const button =
-          new ActionRowBuilder().addComponents(
-            new ButtonBuilder()
-              .setLabel(
-                "🎁 Odbierz grę"
+        try {
+          const embed =
+            new EmbedBuilder()
+              .setColor(
+                "#FF9900"
               )
 
-              .setStyle(
-                ButtonStyle.Link
+              .setAuthor({
+                name:
+                  "Amazon Prime Gaming"
+              })
+
+              .setTitle(
+                `🎮 ${game.title}`
               )
 
               .setURL(
                 game.url
               )
+
+              .setDescription(
+                "🔥 **Nowa darmowa gra do odebrania**"
+              )
+
+              .setFooter({
+                text:
+                  "Amazon Prime Freebie"
+              })
+
+              .setTimestamp();
+
+          const button =
+            new ActionRowBuilder().addComponents(
+              new ButtonBuilder()
+                .setLabel(
+                  "🎁 Odbierz grę"
+                )
+
+                .setStyle(
+                  ButtonStyle.Link
+                )
+
+                .setURL(
+                  game.url
+                )
+            );
+
+          await channel.send({
+            content: `<@&${ROLE_ID}>`,
+
+            embeds: [embed],
+
+            components: [button]
+          });
+
+          console.log(
+            "📨 Wysłano:",
+            game.title
           );
-
-        await channel.send({
-          content: `<@&${ROLE_ID}>`,
-
-          embeds: [embed],
-
-          components: [button]
-        });
-
-        console.log(
-          "📨 Wysłano:",
-          game.title
-        );
+        } catch (e) {
+          console.log(
+            "Amazon item error:",
+            e.message
+          );
+        }
       }
     } else {
       console.log(

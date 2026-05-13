@@ -1,6 +1,12 @@
 const puppeteer = require("puppeteer");
+
 const cheerio = require("cheerio");
+
 const axios = require("axios");
+
+const http = require("http");
+
+const https = require("https");
 
 const {
   EmbedBuilder,
@@ -9,19 +15,52 @@ const {
   ButtonStyle
 } = require("discord.js");
 
+// ==========================
+// CONFIG
+// ==========================
+
 const CHANNEL_ID =
   "1479078345382559804";
 
 const ROLE_ID =
   "1371121790046437448";
 
-const PERMA_F2P = new Set([
-  "730",
-  "570",
-  "440",
-  "578080",
-  "1172470"
-]);
+// ==========================
+// AXIOS
+// ==========================
+
+const axiosInstance =
+  axios.create({
+    timeout: 10000,
+
+    httpAgent:
+      new http.Agent({
+        keepAlive: false
+      }),
+
+    httpsAgent:
+      new https.Agent({
+        keepAlive: false
+      }),
+
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0"
+    }
+  });
+
+// ==========================
+// PERMA F2P
+// ==========================
+
+const PERMA_F2P =
+  new Set([
+    "730",
+    "570",
+    "440",
+    "578080",
+    "1172470"
+  ]);
 
 // ==========================
 // FETCH FREE GAMES
@@ -48,7 +87,7 @@ async function fetchSteamDBFree() {
 
           "--no-zygote",
 
-          "--single-process",
+          // ❌ removed single-process
 
           "--disable-extensions",
 
@@ -60,7 +99,9 @@ async function fetchSteamDBFree() {
 
           "--disable-sync",
 
-          "--mute-audio"
+          "--mute-audio",
+
+          "--disable-features=site-per-process"
         ]
       });
 
@@ -75,6 +116,7 @@ async function fetchSteamDBFree() {
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
     );
 
+    // lekkie interception
     await page.setRequestInterception(
       true
     );
@@ -89,9 +131,7 @@ async function fetchSteamDBFree() {
         if (
           type === "image" ||
           type === "media" ||
-          type === "font" ||
-          type ===
-            "stylesheet"
+          type === "font"
         ) {
           req.abort();
         } else {
@@ -111,13 +151,17 @@ async function fetchSteamDBFree() {
       }
     );
 
-    // mały wait zamiast ciężkich selectorów
+    // stabilizacja DOM
     await new Promise(r =>
-      setTimeout(r, 2500)
+      setTimeout(r, 2000)
     );
 
+    // dużo stabilniejsze niż page.content()
     const html =
-      await page.content();
+      await page.evaluate(
+        () =>
+          document.body.innerHTML
+      );
 
     if (
       !html ||
@@ -133,7 +177,8 @@ async function fetchSteamDBFree() {
 
     const games = [];
 
-    const seen = new Set();
+    const seen =
+      new Set();
 
     $("a[href*='/app/']").each(
       (_, el) => {
@@ -156,7 +201,9 @@ async function fetchSteamDBFree() {
             match[1];
 
           if (
-            seen.has(appid)
+            seen.has(
+              appid
+            )
           ) {
             return;
           }
@@ -183,15 +230,7 @@ async function fetchSteamDBFree() {
           const areaText =
             $(el)
               .closest("tr")
-              .text() ||
-            $(el)
-              .parent()
-              .parent()
-              .text() ||
-            $(el)
-              .parent()
-              .text() ||
-            "";
+              .text() || "";
 
           if (
             !/Free to Keep/i.test(
@@ -241,7 +280,7 @@ async function fetchSteamDetails(
 ) {
   try {
     const { data } =
-      await axios.get(
+      await axiosInstance.get(
         "https://store.steampowered.com/api/appdetails",
 
         {
@@ -251,13 +290,6 @@ async function fetchSteamDetails(
             cc: "us",
 
             l: "en"
-          },
-
-          timeout: 10000,
-
-          headers: {
-            "User-Agent":
-              "Mozilla/5.0"
           }
         }
       );
@@ -311,7 +343,7 @@ module.exports.check =
                     "SteamDB hard timeout"
                   )
                 );
-              }, 25000)
+              }, 20000)
           )
         ]);
 
@@ -440,6 +472,8 @@ module.exports.check =
           `✅ wysłano ${sent}`
         );
       }
+
+      global.gc?.();
     } catch (err) {
       console.log(
         "❌ Steam error:",

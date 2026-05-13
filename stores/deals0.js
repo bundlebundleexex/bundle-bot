@@ -1,251 +1,349 @@
-const puppeteer = require("puppeteer");
+const axios = require("axios");
+
+const http = require("http");
+
+const https = require("https");
+
+// ==========================
+// AXIOS
+// ==========================
+
+const axiosInstance =
+  axios.create({
+    timeout: 15000,
+
+    httpAgent:
+      new http.Agent({
+        keepAlive: false
+      }),
+
+    httpsAgent:
+      new https.Agent({
+        keepAlive: false
+      }),
+
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0"
+    }
+  });
+
+// ==========================
+// FILTERS
+// ==========================
+
+function isBlocked(
+  game
+) {
+  const text =
+    `${game.title || ""} ${game.description || ""}`.toLowerCase();
+
+  const blocked = [
+    "dlc",
+
+    "starter pack",
+
+    "starter bundle",
+
+    "founder pack",
+
+    "founder's pack",
+
+    "skin pack",
+
+    "weapon pack",
+
+    "bonus pack",
+
+    "beta",
+
+    "playtest",
+
+    "early access",
+
+    "demo",
+
+    "trial",
+
+    "soundtrack",
+
+    "artbook",
+
+    "primogems",
+
+    "gift pack",
+
+    "bundle key",
+
+    "ufo hat",
+
+    "currency",
+
+    "drops",
+
+    "closed beta",
+
+    "open beta"
+  ];
+
+  return blocked.some(
+    word =>
+      text.includes(word)
+  );
+}
+
+function isValidPlatform(
+  platforms
+) {
+  if (!platforms) {
+    return false;
+  }
+
+  const text =
+    platforms.toLowerCase();
+
+  // mobile only out
+  if (
+    !text.includes("pc") &&
+    (text.includes(
+      "android"
+    ) ||
+      text.includes(
+        "ios"
+      ))
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+function isInterestingStore(
+  game
+) {
+  const text =
+    `${game.platforms || ""} ${game.title || ""}`.toLowerCase();
+
+  // Epic out
+  if (
+    text.includes("epic")
+  ) {
+    return false;
+  }
+
+  // itch.io out
+  if (
+    text.includes("itch.io") ||
+    text.includes("itchio")
+  ) {
+    return false;
+  }
+
+  return (
+    text.includes(
+      "steam"
+    ) ||
+
+    text.includes(
+      "ubisoft"
+    ) ||
+
+    text.includes(
+      "xbox"
+    ) ||
+
+    text.includes(
+      "amazon"
+    ) ||
+
+    text.includes(
+      "gog"
+    ) ||
+
+    text.includes(
+      "indiegala"
+    ) ||
+
+    text.includes(
+      "fanatical"
+    )
+  );
+}
+
+function isGoodSteamGiveaway(
+  game
+) {
+  const text =
+    `${game.title || ""} ${game.description || ""}`.toLowerCase();
+
+  // Steam key giveaways
+  if (
+    text.includes(
+      "steam key"
+    ) ||
+    text.includes(
+      "key giveaway"
+    )
+  ) {
+    return true;
+  }
+
+  // normal Steam games
+  if (
+    text.includes(
+      "steam"
+    ) &&
+    game.type === "Game"
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+// ==========================
+// MAIN
+// ==========================
 
 async function check(
   client,
   savedData,
   saveData
 ) {
-  console.log(
-    "🧪 deals0: scanning freebies..."
-  );
-
-  let browser = null;
-
-  let page = null;
-
   try {
-    browser =
-      await puppeteer.launch({
-        headless: "new",
-
-        args: [
-          "--no-sandbox",
-
-          "--disable-setuid-sandbox",
-
-          "--disable-dev-shm-usage",
-
-          "--disable-gpu",
-
-          "--no-zygote",
-
-          "--single-process",
-
-          "--disable-extensions",
-
-          "--disable-background-networking",
-
-          "--disable-background-timer-throttling",
-
-          "--disable-renderer-backgrounding",
-
-          "--disable-sync",
-
-          "--mute-audio"
-        ]
-      });
-
-    page =
-      await browser.newPage();
-
-    page.setDefaultNavigationTimeout(
-      15000
+    console.log(
+      "🧪 deals0: scanning giveaways..."
     );
 
-    await page.setUserAgent(
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
-    );
+    const res =
+      await axiosInstance.get(
+        "https://www.gamerpower.com/api/giveaways"
+      );
 
-    await page.setRequestInterception(
-      true
-    );
+    const data =
+      res.data || [];
 
-    page.on(
-      "request",
+    savedData.deals0 ??=
+      [];
 
-      req => {
-        const type =
-          req.resourceType();
+    const known =
+      new Set(
+        savedData.deals0
+      );
+
+    const fresh = [];
+
+    for (const game of data) {
+      try {
+        if (
+          game.status !==
+          "Active"
+        ) {
+          continue;
+        }
 
         if (
-          type === "image" ||
-          type === "media" ||
-          type === "font" ||
-          type ===
-            "stylesheet"
+          game.type !==
+            "Game" &&
+          !isGoodSteamGiveaway(
+            game
+          )
         ) {
-          req.abort();
-        } else {
-          req.continue();
+          continue;
         }
-      }
-    );
 
-    await page.goto(
-      "https://gg.deals/deals/",
-
-      {
-        waitUntil:
-          "domcontentloaded",
-
-        timeout: 15000
-      }
-    );
-
-    // lekki wait zamiast selectorów
-    await new Promise(r =>
-      setTimeout(r, 2500)
-    );
-
-    const deals =
-      await page.$$eval(
-        ".game-item",
-
-        cards =>
-          cards
-            .map(card => {
-              const html =
-                card.innerHTML;
-
-              const text = (
-                card.textContent ||
-                ""
-              )
-                .replace(
-                  /\s+/g,
-                  " "
-                )
-                .trim()
-                .toLowerCase();
-
-              let store =
-                null;
-
-              if (
-                html.includes(
-                  "svg-drm-ea"
-                )
-              ) {
-                store =
-                  "EA App";
-              } else if (
-                html.includes(
-                  "svg-drm-microsoft-store"
-                )
-              ) {
-                store =
-                  "Microsoft / Xbox";
-              } else if (
-                html.includes(
-                  "svg-drm-ubisoft-connect"
-                )
-              ) {
-                store =
-                  "Ubisoft Connect";
-              } else if (
-                html.includes(
-                  "svg-drm-amazon"
-                )
-              ) {
-                store =
-                  "Amazon Games";
-              }
-
-              if (!store) {
-                return null;
-              }
-
-              const isFree =
-                text.includes(
-                  "-100%"
-                ) &&
-                text.includes(
-                  "free"
-                );
-
-              if (!isFree) {
-                return null;
-              }
-
-              const title =
-                card
-                  .querySelector(
-                    ".game-info-title.title"
-                  )
-                  ?.textContent?.trim();
-
-              if (!title) {
-                return null;
-              }
-
-              return {
-                store,
-
-                title
-              };
-            })
-
-            .filter(Boolean)
-      );
-
-    const seen =
-      new Set();
-
-    const unique =
-      deals.filter(
-        item => {
-          const key =
-            `${item.store}|${item.title}`;
-
-          if (
-            seen.has(key)
-          ) {
-            return false;
-          }
-
-          seen.add(key);
-
-          return true;
+        if (
+          game.worth ===
+          "N/A"
+        ) {
+          continue;
         }
-      );
+
+        if (
+          isBlocked(game)
+        ) {
+          continue;
+        }
+
+        if (
+          !isValidPlatform(
+            game.platforms
+          )
+        ) {
+          continue;
+        }
+
+        if (
+          !isInterestingStore(
+            game
+          )
+        ) {
+          continue;
+        }
+
+        const id =
+          String(game.id);
+
+        if (
+          known.has(id)
+        ) {
+          continue;
+        }
+
+        fresh.push({
+          id,
+
+          title:
+            game.title,
+
+          worth:
+            game.worth,
+
+          platforms:
+            game.platforms,
+
+          type:
+            game.type,
+
+          end:
+            game.end_date
+        });
+
+        savedData.deals0.push(
+          id
+        );
+      } catch {}
+    }
+
+    savedData.deals0 =
+      [
+        ...new Set(
+          savedData.deals0
+        )
+      ].slice(-1000);
+
+    saveData();
 
     console.log(
       "========== DEALS0 =========="
     );
 
-    console.log(unique);
+    console.log(fresh);
 
     console.log(
       "============================"
     );
 
-    savedData.deals0 =
-      unique;
-
-    saveData();
-
     console.log(
-      `✅ deals0: ${unique.length}`
+      `✅ deals0: ${fresh.length}`
     );
+
+    global.gc?.();
   } catch (err) {
     console.log(
       "❌ deals0:",
       err.message
     );
-  } finally {
-    if (page) {
-      try {
-        await page.close();
-      } catch {}
-    }
-
-    if (browser) {
-      try {
-        await browser.close();
-      } catch {}
-    }
-
-    global.gc?.();
   }
 }
 

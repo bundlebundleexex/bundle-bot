@@ -16,7 +16,9 @@
     "https://www.humblebundle.com/games/humble-15-for-15-april-2026",
     "https://www.humblebundle.com/games/creature-feature-bundle",
     "https://www.humblebundle.com/games/heavenly-bullets",
-    "https://www.humblebundle.com/games/ticket-to-ride-all-aboard-collection"
+    "https://www.humblebundle.com/games/ticket-to-ride-all-aboard-collection",
+    "https://www.humblebundle.com/games/humble-15th-anniversary-indie-icons-showcase",
+    "https://www.humblebundle.com/games/build-shuffle-battle"
   ],
   "humbleChoice": "may_2026_choice",
   "fanaticalBundles": [
@@ -36,9 +38,14 @@
     "monsters-den-collection-bundle",
     "build-your-own-killer-bundle",
     "build-your-own-special-editions-bundle",
-    "build-your-own-arcane-bundle"
+    "build-your-own-arcane-bundle",
+    "build-your-own-indie-showcase-bundle",
+    "build-your-own-crazy-co-op-bundle",
+    "whale-and-dolphin-conservation-charity-bundle"
   ],
-  "gmgBundles": [],
+  "gmgBundles": [
+    "https://www.greenmangamingbundles.com/bundles/3d-fantasy-megapack"
+  ],
   "indiegalaBundles": [
     "https://www.indiegala.com/bundle/princess-and-blade-bundle",
     "https://www.indiegala.com/bundle/silly-heroes-tales-bundle",
@@ -66,6 +73,10 @@
   ],
   "amazon": [
     {
+      "title": "Fruitbus",
+      "url": "https://luna.amazon.com/claims/fruitbus-gog/dp/amzn1.pg.item.8c20e953-fecb-47ba-9824-89c72c69e7eb?g=s&ingress=amzn&ref_=SM_Fruitbus_S01_FGWP_CRWN"
+    },
+    {
       "title": "Neo Cab",
       "url": "https://luna.amazon.com/claims/neo-cab-gog/dp/amzn1.pg.item.e2868d3e-ca75-4dd1-93ce-ef343e126305?g=s&ingress=amzn&ref_=SM_NeoCab_S01_FGWP_CRWN"
     },
@@ -90,10 +101,6 @@
       "url": "https://luna.amazon.com/claims/a-rats-quest-the-way-back-home-epic/dp/amzn1.pg.item.34210f82-0bf5-4aa6-860e-87640c1caf50?g=s&ingress=amzn&ref_=SM_ARatsQuestTheWayBackHome_S01_FGWP_CRWN"
     },
     {
-      "title": "King of Retail",
-      "url": "https://luna.amazon.com/claims/king-of-retail-gog/dp/amzn1.pg.item.36296c26-8f00-4a21-987a-8dc131220c5a?g=s&ingress=amzn&ref_=SM_KingofRetail_S01_FGWP_CRWN"
-    },
-    {
       "title": "XCOM: Enemy Unknown Complete Pack",
       "url": "https://luna.amazon.com/claims/xcom-enemy-unknown-complete-pack-gog/dp/amzn1.pg.item.3674d591-5127-4b22-9cf4-16b42e63bc40?g=s&ingress=amzn&ref_=SM_XCOMEnemyUnknownCompletePack_S01_FGWP_CRWN"
     },
@@ -114,12 +121,12 @@
       "url": "https://luna.amazon.com/claims/tiny-tinas-assault-on-dragon-keep-a-wonderlands-one-shot-epic/dp/amzn1.pg.item.59929a8c-55be-4c60-9ffb-546ec4293e4c?g=s&ingress=amzn&ref_=SM_TinyTinasAssaultonDragonKeepAWonderlandsOneshot_S01_FGWP_CRWN"
     },
     {
-      "title": "Mafia II: Definitive Edition",
-      "url": "https://luna.amazon.com/claims/mafia-ii-definitive-edition-gog/dp/amzn1.pg.item.e604b1c9-c80d-48fb-8f08-db31ce376bb7?g=s&ingress=amzn&ref_=SM_MafiaIIDefinitiveEdition_S02_FGWP_CRWN"
+      "title": "Tattoo Tycoon",
+      "url": "https://luna.amazon.com/claims/tattoo-tycoon-epic/dp/amzn1.pg.item.4efdece7-33f4-40ae-88d6-f4a73e79bcb4?g=s&ingress=amzn&ref_=SM_TattooTycoon_S01_FGWP_CRWN"
     },
     {
-      "title": "Fruitbus",
-      "url": "https://luna.amazon.com/claims/fruitbus-gog/dp/amzn1.pg.item.8c20e953-fecb-47ba-9824-89c72c69e7eb?g=s&ingress=amzn&ref_=SM_Fruitbus_S01_FGWP_CRWN"
+      "title": "Mafia II: Definitive Edition",
+      "url": "https://luna.amazon.com/claims/mafia-ii-definitive-edition-gog/dp/amzn1.pg.item.e604b1c9-c80d-48fb-8f08-db31ce376bb7?g=s&ingress=amzn&ref_=SM_MafiaIIDefinitiveEdition_S02_FGWP_CRWN"
     },
     {
       "title": "KinnikuNeko: SUPER MUSCLE CAT",
@@ -132,13 +139,23 @@
     {
       "title": "Fantasy General",
       "url": "https://luna.amazon.com/claims/fantasy-general-gog/dp/amzn1.pg.item.9d4ded3f-a772-485b-8fb8-0868631044fb?g=s&ingress=amzn&ref_=SM_FantasyGeneral_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Meganoid",
-      "url": "https://luna.amazon.com/claims/meganoid-gog/dp/amzn1.pg.item.593601a3-507c-4235-befd-a62df5d73eed?g=s&ingress=amzn&ref_=SM_Meganoid_S01_FGWP_CRWN"
     }
   ],
-  "deals0": [],
+  "deals0": [
+    "905",
+    "3272",
+    "3626",
+    "3625",
+    "3622",
+    "3621",
+    "3266",
+    "3257",
+    "3552",
+    "3096",
+    "3394",
+    "2204",
+    "1604"
+  ],
   "lastCheckedSteamPackageId": 1634348,
   "ggdeals": []
 }
