@@ -70,11 +70,26 @@ function sleep(ms) {
 
 // sleep mode 00:00 -> 10:00
 function isSleepMode() {
-  const now = new Date();
+  const hour =
+    new Intl.DateTimeFormat(
+      "pl-PL",
+      {
+        timeZone:
+          "Europe/Warsaw",
 
-  const hour = now.getHours();
+        hour: "2-digit",
 
-  return hour >= 0 && hour < 10;
+        hour12: false
+      }
+    ).format(new Date());
+
+  const currentHour =
+    parseInt(hour);
+
+  return (
+    currentHour >= 0 &&
+    currentHour < 10
+  );
 }
 
 function getTime() {
