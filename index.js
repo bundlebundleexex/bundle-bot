@@ -40,7 +40,7 @@ const client = new Client({
 // ==========================
 
 const CHECK_INTERVAL =
-  10 * 60 * 1000;
+  15 * 60 * 1000;
 
 const STORE_DELAY = 1500;
 
@@ -68,6 +68,15 @@ function sleep(ms) {
   return new Promise(resolve =>
     setTimeout(resolve, ms)
   );
+}
+
+// sleep mode 00:05 -> 10:00
+function isSleepMode() {
+  const now = new Date();
+
+  const hour = now.getHours();
+
+  return hour >= 0 && hour < 10;
 }
 
 // ==========================
@@ -210,6 +219,13 @@ const STORES = [
 // ==========================
 
 async function runChecks() {
+  // sleep mode
+  if (isSleepMode()) {
+    console.log("🌙 Sleep mode");
+
+    return;
+  }
+
   if (isRunning) {
     console.log(
       "⏳ Poprzednie sprawdzanie jeszcze trwa..."
@@ -271,7 +287,6 @@ async function runChecks() {
       // mała przerwa
       await sleep(STORE_DELAY);
 
-      // cleanup hint
       global.gc?.();
     }
 
@@ -338,7 +353,7 @@ client.once(
     );
 
     console.log(
-      "⏱️ Sprawdzanie ustawione co 10 minut"
+      "⏱️ Sprawdzanie ustawione co 15 minut"
     );
   }
 );
