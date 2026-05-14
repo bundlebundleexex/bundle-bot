@@ -1,502 +1,72 @@
-const puppeteer = require("puppeteer");
+} finally {
+  if (page) {
+    try {
+      await page.close();
+    } catch {}
+  }
 
-const cheerio = require("cheerio");
+  if (browser) {
+    try {
+      const proc =
+        browser.process();
 
-const axios = require("axios");
+      try {
+        await browser.close();
+      } catch {}
 
-const http = require("http");
+      try {
+        proc?.kill("SIGKILL");
+      } catch {}
+    } catch {}
+  }
 
-const https = require("https");
-
-const { execSync } =
-  require("child_process");
-
-const {
-  EmbedBuilder,
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle
-} = require("discord.js");
-
-// ==========================
-// CONFIG
-// ==========================
-
-const CHANNEL_ID =
-  "1479078345382559804";
-
-const ROLE_ID =
-  "1371121790046437448";
-
-// ==========================
-// AXIOS
-// ==========================
-
-const axiosInstance =
-  axios.create({
-    timeout: 10000,
-
-    httpAgent:
-      new http.Agent({
-        keepAlive: false
-      }),
-
-    httpsAgent:
-      new https.Agent({
-        keepAlive: false
-      }),
-
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0"
-    }
-  });
-
-// ==========================
-// PERMA F2P
-// ==========================
-
-const PERMA_F2P =
-  new Set([
-    "730",
-    "570",
-    "440",
-    "578080",
-    "1172470"
-  ]);
-
-// ==========================
-// FETCH FREE GAMES
-// ==========================
-
-async function fetchSteamDBFree() {
-  let browser = null;
-
-  let page = null;
+  // ==========================
+  // HARD CHROMIUM CLEANUP
+  // ==========================
 
   try {
-    browser =
-      await puppeteer.launch({
-        headless: true,
-
-        args: [
-          "--no-sandbox",
-
-          "--disable-setuid-sandbox",
-
-          "--disable-dev-shm-usage",
-
-          "--disable-gpu",
-
-          "--no-zygote",
-
-          "--disable-extensions",
-
-          "--disable-background-networking",
-
-          "--disable-background-timer-throttling",
-
-          "--disable-renderer-backgrounding",
-
-          "--disable-sync",
-
-          "--mute-audio"
-        ]
-      });
-
-    page =
-      await browser.newPage();
-
-    page.setDefaultNavigationTimeout(
-      15000
+    execSync(
+      "pkill -9 chromium || true"
     );
 
-    await page.setUserAgent(
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
+    execSync(
+      "pkill -9 chrome || true"
     );
 
-    // lekkie interception
-    await page.setRequestInterception(
-      true
+    execSync(
+      "pkill -9 chrome-linux || true"
     );
 
-    page.on(
-      "request",
-
-      req => {
-        const type =
-          req.resourceType();
-
-        if (
-          type === "image" ||
-          type === "media" ||
-          type === "font"
-        ) {
-          req.abort();
-        } else {
-          req.continue();
-        }
-      }
+    execSync(
+      "pkill -9 puppeteer || true"
     );
+  } catch {}
 
-    await page.goto(
-      "https://steamdb.info/upcoming/free/",
+  // ==========================
+  // HARD GC
+  // ==========================
 
-      {
-        waitUntil:
-          "domcontentloaded",
-
-        timeout: 15000
-      }
-    );
-
-    // stabilizacja DOM
-    await new Promise(r =>
-      setTimeout(r, 2000)
-    );
-
-    // stabilniejsze niż page.content()
-    const html =
-      await page.evaluate(
-        () =>
-          document.body.innerHTML
-      );
-
-    if (
-      !html ||
-      html.length < 1000
-    ) {
-      throw new Error(
-        "SteamDB empty HTML"
-      );
-    }
-
-    const $ =
-      cheerio.load(html);
-
-    const games = [];
-
-    const seen =
-      new Set();
-
-    $("a[href*='/app/']").each(
-      (_, el) => {
-        try {
-          const href =
-            $(el).attr(
-              "href"
-            ) || "";
-
-          const match =
-            href.match(
-              /\/app\/(\d+)\//
-            );
-
-          if (!match) {
-            return;
-          }
-
-          const appid =
-            match[1];
-
-          if (
-            seen.has(
-              appid
-            )
-          ) {
-            return;
-          }
-
-          if (
-            PERMA_F2P.has(
-              appid
-            )
-          ) {
-            return;
-          }
-
-          const name = $(el)
-            .text()
-            .trim();
-
-          if (
-            !name ||
-            name.length < 2
-          ) {
-            return;
-          }
-
-          const areaText =
-            $(el)
-              .closest("tr")
-              .text() || "";
-
-          if (
-            !/Free to Keep/i.test(
-              areaText
-            )
-          ) {
-            return;
-          }
-
-          seen.add(appid);
-
-          games.push({
-            appid,
-
-            name,
-
-            url: `https://store.steampowered.com/app/${appid}/`
-          });
-        } catch {}
-      }
-    );
-
-    return games;
-  } finally {
-    if (page) {
-      try {
-        await page.close();
-      } catch {}
-    }
-
-    if (browser) {
-      try {
-        const proc =
-          browser.process();
-
-        try {
-          await browser.close();
-        } catch {}
-
-        try {
-          proc?.kill("SIGKILL");
-        } catch {}
-      } catch {}
-    }
-
-    // hard chromium cleanup
-    try {
-      execSync(
-        "pkill -f chromium || true"
-      );
-
-      execSync(
-        "pkill -f chrome || true"
-      );
-    } catch {}
+  try {
+    global.gc?.();
 
     global.gc?.();
-  }
-}
 
-// ==========================
-// FETCH DETAILS
-// ==========================
+    global.gc?.();
+  } catch {}
 
-async function fetchSteamDetails(
-  appid
-) {
+  // ==========================
+  // RAM LOG
+  // ==========================
+
   try {
-    const { data } =
-      await axiosInstance.get(
-        "https://store.steampowered.com/api/appdetails",
-
-        {
-          params: {
-            appids: appid,
-
-            cc: "us",
-
-            l: "en"
-          }
-        }
-      );
-
-    return (
-      data?.[appid] ||
-      null
+    const used = Math.round(
+      process.memoryUsage().rss /
+        1024 /
+        1024
     );
-  } catch {
-    return null;
-  }
+
+    console.log(
+      `🧹 Steam cleanup (${used} MB)`
+    );
+  } catch {}
 }
-
-// ==========================
-// MAIN CHECK
-// ==========================
-
-module.exports.check =
-  async (
-    client,
-    savedData,
-    saveData
-  ) => {
-    try {
-      console.log(
-        "🟦 SteamDB: checking..."
-      );
-
-      savedData.steamGames ??=
-        [];
-
-      const known =
-        new Set(
-          savedData.steamGames
-        );
-
-      const channel =
-        await client.channels.fetch(
-          CHANNEL_ID
-        );
-
-      const list =
-        await Promise.race([
-          fetchSteamDBFree(),
-
-          new Promise(
-            (_, reject) =>
-              setTimeout(() => {
-                reject(
-                  new Error(
-                    "SteamDB hard timeout"
-                  )
-                );
-              }, 20000)
-          )
-        ]);
-
-      console.log(
-        `📦 found: ${list.length}`
-      );
-
-      let sent = 0;
-
-      for (const item of list) {
-        try {
-          if (
-            known.has(
-              item.appid
-            )
-          ) {
-            continue;
-          }
-
-          const app =
-            await fetchSteamDetails(
-              item.appid
-            );
-
-          if (
-            !app?.success ||
-            !app.data
-          ) {
-            continue;
-          }
-
-          const game =
-            app.data;
-
-          const embed =
-            new EmbedBuilder()
-              .setColor(
-                0x00c853
-              )
-
-              .setTitle(
-                `🎮 ${game.name}`
-              )
-
-              .setURL(
-                item.url
-              )
-
-              .setDescription(
-                "🔥 **NOWA DARMÓWKA NA STEAM!**\n\n✅ **Free to Keep**\n📌 **Dodaj do konta — zostaje na zawsze**"
-              )
-
-              .setThumbnail(
-                game.capsule_image ||
-                  null
-              )
-
-              .setImage(
-                game.header_image ||
-                  null
-              )
-
-              .setFooter({
-                text:
-                  "BundleBot • Steam Giveaway"
-              })
-
-              .setTimestamp();
-
-          const row =
-            new ActionRowBuilder().addComponents(
-              new ButtonBuilder()
-                .setLabel(
-                  "🎮 Odbierz na Steam"
-                )
-
-                .setStyle(
-                  ButtonStyle.Link
-                )
-
-                .setURL(
-                  item.url
-                )
-            );
-
-          await channel.send({
-            content: `🚨 **NOWA DARMOWA GRA NA STEAM!** <@&${ROLE_ID}>`,
-
-            embeds: [embed],
-
-            components: [row]
-          });
-
-          savedData.steamGames.push(
-            item.appid
-          );
-
-          savedData.steamGames =
-            [
-              ...new Set(
-                savedData.steamGames
-              )
-            ].slice(-1000);
-
-          saveData();
-
-          sent++;
-
-          console.log(
-            `✔ Sent: ${game.name}`
-          );
-        } catch (e) {
-          console.log(
-            "Steam item error:",
-            e.message
-          );
-        }
-      }
-
-      if (!sent) {
-        console.log(
-          "⏸ nic nowego"
-        );
-      } else {
-        console.log(
-          `✅ wysłano ${sent}`
-        );
-      }
-
-      global.gc?.();
-    } catch (err) {
-      console.log(
-        "❌ Steam error:",
-        err.message
-      );
-    }
-  };
