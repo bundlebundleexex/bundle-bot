@@ -7,6 +7,7 @@ const path = require("path");
 
 // stores
 const humble = require("./stores/humble");
+const steam = require("./stores/steam");
 const fanatical = require("./stores/fanatical");
 const gmg = require("./stores/gmg");
 const indiegala = require("./stores/indiegala");
@@ -18,7 +19,6 @@ const epicDeals = require("./stores/epicdeals");
 const freeDeals = require("./stores/freeDeals");
 const gog = require("./stores/gog");
 
-const steam = require("./stores/steam");
 const amazon = require("./stores/amazon");
 const deals0 = require("./stores/deals0");
 
@@ -210,6 +210,11 @@ const STORES = [
   },
 
   {
+    name: "Steam",
+    fn: steam.check
+  },
+  
+  {
     name: "Fanatical",
     fn: fanatical.check
   },
@@ -252,11 +257,6 @@ const STORES = [
   {
     name: "GOG",
     fn: gog.check
-  },
-
-  {
-    name: "Steam",
-    fn: steam.check
   },
 
   {

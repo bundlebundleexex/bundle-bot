@@ -41,7 +41,9 @@
     "build-your-own-arcane-bundle",
     "build-your-own-indie-showcase-bundle",
     "build-your-own-crazy-co-op-bundle",
-    "whale-and-dolphin-conservation-charity-bundle"
+    "whale-and-dolphin-conservation-charity-bundle",
+    "build-your-own-zenith-bundle",
+    "capcom-classics-bundle-gog-edition"
   ],
   "gmgBundles": [
     "https://www.greenmangamingbundles.com/bundles/3d-fantasy-megapack"
@@ -60,7 +62,11 @@
     "arranger-a-rolepuzzling-adventure-dbfde7_2026-05-07T15:00:00.000Z_2026-05-14T15:00:00.000Z",
     "trash-goblin-cd5fd7_2026-05-07T15:00:00.000Z_2026-05-14T15:00:00.000Z"
   ],
-  "epicDeals": [],
+  "epicDeals": [
+    "3637",
+    "3636",
+    "3635"
+  ],
   "freeDeals": [
     "3614",
     "3612",
@@ -69,12 +75,29 @@
   ],
   "gogGames": [],
   "steamGames": [
-    "3353830"
+    "3353830",
+    "3587490"
   ],
   "amazon": [
     {
+      "title": "60 Minutes to Extinction: Escape Room",
+      "url": "https://luna.amazon.com/claims/60-minutes-to-extinction-escape-room-gog/dp/amzn1.pg.item.15f8ec7c-efc1-4422-846a-627acfd66b46?g=s&ingress=amzn&ref_=SM_60MinutestoExtinctionEscapeRoom_S01_FGWP_CRWN"
+    },
+    {
       "title": "Fruitbus",
       "url": "https://luna.amazon.com/claims/fruitbus-gog/dp/amzn1.pg.item.8c20e953-fecb-47ba-9824-89c72c69e7eb?g=s&ingress=amzn&ref_=SM_Fruitbus_S01_FGWP_CRWN"
+    },
+    {
+      "title": "KinnikuNeko: SUPER MUSCLE CAT",
+      "url": "https://luna.amazon.com/claims/kinnikuneko-super-muscle-cat-epic/dp/amzn1.pg.item.1ddb7652-affd-420e-a2af-9b0a2ba70ac1?g=s&ingress=amzn&ref_=SM_KinnikuNekoSUPERMUSCLECAT_S01_FGWP_CRWN"
+    },
+    {
+      "title": "Pinball Spire",
+      "url": "https://luna.amazon.com/claims/pinball-spire-gog/dp/amzn1.pg.item.76919ab0-9718-4c3d-9433-9484478f32b0?g=s&ingress=amzn&ref_=SM_PinballSpire_S01_FGWP_CRWN"
+    },
+    {
+      "title": "Fantasy General",
+      "url": "https://luna.amazon.com/claims/fantasy-general-gog/dp/amzn1.pg.item.9d4ded3f-a772-485b-8fb8-0868631044fb?g=s&ingress=amzn&ref_=SM_FantasyGeneral_S01_FGWP_CRWN"
     },
     {
       "title": "Neo Cab",
@@ -109,36 +132,16 @@
       "url": "https://luna.amazon.com/claims/deep-sky-derelicts-aga/dp/amzn1.pg.item.2bee44d2-9560-4916-a052-6a41cd434318?g=s&ingress=amzn&ref_=SM_DeepSkyDerelicts_S01_FGWP_CRWN"
     },
     {
-      "title": "Rebel Galaxy",
-      "url": "https://luna.amazon.com/claims/rebel-galaxy-gog/dp/amzn1.pg.item.e1e1ec5b-0df4-4091-9c63-ede5a86cb9ed?g=s&ingress=amzn&ref_=SM_RebelGalaxy_S01_FGWP_CRWN"
+      "title": "Survival: Fountain of Youth",
+      "url": "https://luna.amazon.com/claims/survival-fountain-of-youth-aga/dp/amzn1.pg.item.35fc21f8-36dc-4f75-903b-795b97b13cc5?g=s&ingress=amzn&ref_=SM_SurvivalFountainofYouth_S01_FGWP_CRWN"
     },
     {
-      "title": "Sir Questionnaire",
-      "url": "https://luna.amazon.com/claims/sir-questionnaire-gog/dp/amzn1.pg.item.6dd1d038-96ea-4b01-af91-64731bfa55ef?g=s&ingress=amzn&ref_=SM_SirQuestionnaire_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Tiny Tina's Assault on Dragon Keep: A Wonderlands One-shot",
-      "url": "https://luna.amazon.com/claims/tiny-tinas-assault-on-dragon-keep-a-wonderlands-one-shot-epic/dp/amzn1.pg.item.59929a8c-55be-4c60-9ffb-546ec4293e4c?g=s&ingress=amzn&ref_=SM_TinyTinasAssaultonDragonKeepAWonderlandsOneshot_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Tattoo Tycoon",
-      "url": "https://luna.amazon.com/claims/tattoo-tycoon-epic/dp/amzn1.pg.item.4efdece7-33f4-40ae-88d6-f4a73e79bcb4?g=s&ingress=amzn&ref_=SM_TattooTycoon_S01_FGWP_CRWN"
+      "title": "Lethal Honor - Order of the Apocalypse",
+      "url": "https://luna.amazon.com/claims/lethal-honor-order-of-the-apocalypse-epic/dp/amzn1.pg.item.f610100a-1240-41f8-84dd-767c2df675b4?g=s&ingress=amzn&ref_=SM_LethalHonorOrderoftheApocalypse_S01_FGWP_CRWN"
     },
     {
       "title": "Mafia II: Definitive Edition",
       "url": "https://luna.amazon.com/claims/mafia-ii-definitive-edition-gog/dp/amzn1.pg.item.e604b1c9-c80d-48fb-8f08-db31ce376bb7?g=s&ingress=amzn&ref_=SM_MafiaIIDefinitiveEdition_S02_FGWP_CRWN"
-    },
-    {
-      "title": "KinnikuNeko: SUPER MUSCLE CAT",
-      "url": "https://luna.amazon.com/claims/kinnikuneko-super-muscle-cat-epic/dp/amzn1.pg.item.1ddb7652-affd-420e-a2af-9b0a2ba70ac1?g=s&ingress=amzn&ref_=SM_KinnikuNekoSUPERMUSCLECAT_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Pinball Spire",
-      "url": "https://luna.amazon.com/claims/pinball-spire-gog/dp/amzn1.pg.item.76919ab0-9718-4c3d-9433-9484478f32b0?g=s&ingress=amzn&ref_=SM_PinballSpire_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Fantasy General",
-      "url": "https://luna.amazon.com/claims/fantasy-general-gog/dp/amzn1.pg.item.9d4ded3f-a772-485b-8fb8-0868631044fb?g=s&ingress=amzn&ref_=SM_FantasyGeneral_S01_FGWP_CRWN"
     }
   ],
   "deals0": [
@@ -154,7 +157,8 @@
     "3096",
     "3394",
     "2204",
-    "1604"
+    "1604",
+    "3641"
   ],
   "lastCheckedSteamPackageId": 1634348,
   "ggdeals": []

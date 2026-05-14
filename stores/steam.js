@@ -77,7 +77,7 @@ async function fetchSteamDBFree() {
   try {
     browser =
       await puppeteer.launch({
-        headless: true,
+        headless: "new",
 
         args: [
           "--no-sandbox",
@@ -100,7 +100,9 @@ async function fetchSteamDBFree() {
 
           "--disable-sync",
 
-          "--mute-audio"
+          "--mute-audio",
+
+          "--disable-blink-features=AutomationControlled"
         ]
       });
 
@@ -108,8 +110,13 @@ async function fetchSteamDBFree() {
       await browser.newPage();
 
     page.setDefaultNavigationTimeout(
-      15000
+      30000
     );
+
+    await page.setViewport({
+      width: 1366,
+      height: 3000
+    });
 
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/147 Safari/537.36"
@@ -143,64 +150,61 @@ async function fetchSteamDBFree() {
 
       {
         waitUntil:
-          "domcontentloaded",
+          "networkidle2",
 
+        timeout: 30000
+      }
+    );
+
+    await page.waitForSelector(
+      ".panel-sale",
+      {
         timeout: 15000
       }
     );
 
-    await new Promise(r =>
-      setTimeout(r, 2000)
-    );
+    // lazy load scroll
+
+    for (
+      let i = 0;
+      i < 8;
+      i++
+    ) {
+      await page.evaluate(
+        () => {
+          window.scrollBy(
+            0,
+            2000
+          );
+        }
+      );
+
+      await new Promise(r =>
+        setTimeout(r, 1000)
+      );
+    }
 
     const html =
       await page.evaluate(
         () =>
-          document.body.innerHTML
+          document.documentElement
+            .outerHTML
       );
-
-    if (
-      !html ||
-      html.length < 1000
-    ) {
-      throw new Error(
-        "SteamDB empty HTML"
-      );
-    }
 
     const $ =
       cheerio.load(html);
 
     const games = [];
 
-    const seen =
-      new Set();
-
-    $("a[href*='/app/']").each(
+    $(".panel-sale").each(
       (_, el) => {
         try {
-          const href =
+          const appid =
             $(el).attr(
-              "href"
-            ) || "";
-
-          const match =
-            href.match(
-              /\/app\/(\d+)\//
+              "data-appid"
             );
 
-          if (!match) {
-            return;
-          }
-
-          const appid =
-            match[1];
-
-          if (
-            seen.has(
-              appid
-            )
-          ) {
+          if (!appid) {
             return;
           }
 
@@ -212,38 +216,43 @@ async function fetchSteamDBFree() {
             return;
           }
 
-          const name = $(el)
-            .text()
-            .trim();
+          const name =
+            $(el)
+              .find(
+                ".panel-sale-name a"
+              )
+              .first()
+              .text()
+              .trim();
 
           if (
             !name ||
-            name.length < 2
+            name ===
+              "View Store"
           ) {
             return;
           }
 
-          const areaText =
+          const isFreeToKeep =
             $(el)
-              .closest("tr")
-              .text() || "";
+              .find(
+                ".cat-free-to-keep"
+              )
+              .length > 0;
 
-          if (
-            !/Free to Keep/i.test(
-              areaText
-            )
-          ) {
+          if (!isFreeToKeep) {
             return;
           }
 
-          seen.add(appid);
+          const url =
+            `https://store.steampowered.com/app/${appid}/`;
 
           games.push({
             appid,
 
             name,
 
-            url: `https://store.steampowered.com/app/${appid}/`
+            url
           });
         } catch {}
       }
@@ -273,31 +282,42 @@ async function fetchSteamDBFree() {
       } catch {}
     }
 
+    // linux cleanup
+
+    if (
+      process.platform !==
+      "win32"
+    ) {
+      try {
+        execSync(
+          "pkill -9 chromium"
+        );
+
+        execSync(
+          "pkill -9 chrome"
+        );
+
+        execSync(
+          "pkill -9 chrome-linux"
+        );
+
+        execSync(
+          "pkill -9 puppeteer"
+        );
+      } catch {}
+    }
+
+    // hard gc
+
     try {
-      execSync(
-        "pkill -9 chromium || true"
-      );
+      global.gc?.();
 
-      execSync(
-        "pkill -9 chrome || true"
-      );
+      global.gc?.();
 
-      execSync(
-        "pkill -9 chrome-linux || true"
-      );
-
-      execSync(
-        "pkill -9 puppeteer || true"
-      );
+      global.gc?.();
     } catch {}
 
-    try {
-      global.gc?.();
-
-      global.gc?.();
-
-      global.gc?.();
-    } catch {}
+    // ram log
 
     try {
       const used = Math.round(
@@ -384,7 +404,7 @@ async function check(
                   "SteamDB hard timeout"
                 )
               );
-            }, 20000)
+            }, 35000)
         )
       ]);
 
@@ -434,7 +454,7 @@ async function check(
             )
 
             .setDescription(
-              "🔥 **NOWA DARMÓWKA NA STEAM!**\n\n✅ **Free to Keep**\n📌 **Dodaj do konta — zostaje na zawsze**"
+              "🔥 **NOWA DARMÓWKA NA STEAM!**\n\n✅ Free to Keep\n📌 Dodaj do konta — zostaje na zawsze"
             )
 
             .setThumbnail(
