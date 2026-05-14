@@ -1,3 +1,74 @@
+const puppeteer = require("puppeteer");
+
+const cheerio = require("cheerio");
+
+const axios = require("axios");
+
+const http = require("http");
+
+const https = require("https");
+
+const { execSync } =
+  require("child_process");
+
+const {
+  EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle
+} = require("discord.js");
+
+// ==========================
+// CONFIG
+// ==========================
+
+const CHANNEL_ID =
+  "1479078345382559804";
+
+const ROLE_ID =
+  "1371121790046437448";
+
+// ==========================
+// AXIOS
+// ==========================
+
+const axiosInstance =
+  axios.create({
+    timeout: 10000,
+
+    httpAgent:
+      new http.Agent({
+        keepAlive: false
+      }),
+
+    httpsAgent:
+      new https.Agent({
+        keepAlive: false
+      }),
+
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0"
+    }
+  });
+
+// ==========================
+// PERMA F2P
+// ==========================
+
+const PERMA_F2P =
+  new Set([
+    "730",
+    "570",
+    "440",
+    "578080",
+    "1172470"
+  ]);
+
+// ==========================
+// FETCH FREE GAMES
+// ==========================
+
 async function fetchSteamDBFree() {
   let browser = null;
 
@@ -202,8 +273,6 @@ async function fetchSteamDBFree() {
       } catch {}
     }
 
-    // HARD CHROMIUM CLEANUP
-
     try {
       execSync(
         "pkill -9 chromium || true"
@@ -222,8 +291,6 @@ async function fetchSteamDBFree() {
       );
     } catch {}
 
-    // HARD GC
-
     try {
       global.gc?.();
 
@@ -231,8 +298,6 @@ async function fetchSteamDBFree() {
 
       global.gc?.();
     } catch {}
-
-    // RAM LOG
 
     try {
       const used = Math.round(
@@ -247,3 +312,216 @@ async function fetchSteamDBFree() {
     } catch {}
   }
 }
+
+// ==========================
+// FETCH DETAILS
+// ==========================
+
+async function fetchSteamDetails(
+  appid
+) {
+  try {
+    const { data } =
+      await axiosInstance.get(
+        "https://store.steampowered.com/api/appdetails",
+
+        {
+          params: {
+            appids: appid,
+
+            cc: "us",
+
+            l: "en"
+          }
+        }
+      );
+
+    return (
+      data?.[appid] ||
+      null
+    );
+  } catch {
+    return null;
+  }
+}
+
+// ==========================
+// MAIN CHECK
+// ==========================
+
+async function check(
+  client,
+  savedData,
+  saveData
+) {
+  try {
+    console.log(
+      "🟦 SteamDB: checking..."
+    );
+
+    savedData.steamGames ??=
+      [];
+
+    const known =
+      new Set(
+        savedData.steamGames
+      );
+
+    const channel =
+      await client.channels.fetch(
+        CHANNEL_ID
+      );
+
+    const list =
+      await Promise.race([
+        fetchSteamDBFree(),
+
+        new Promise(
+          (_, reject) =>
+            setTimeout(() => {
+              reject(
+                new Error(
+                  "SteamDB hard timeout"
+                )
+              );
+            }, 20000)
+        )
+      ]);
+
+    console.log(
+      `📦 found: ${list.length}`
+    );
+
+    let sent = 0;
+
+    for (const item of list) {
+      try {
+        if (
+          known.has(
+            item.appid
+          )
+        ) {
+          continue;
+        }
+
+        const app =
+          await fetchSteamDetails(
+            item.appid
+          );
+
+        if (
+          !app?.success ||
+          !app.data
+        ) {
+          continue;
+        }
+
+        const game =
+          app.data;
+
+        const embed =
+          new EmbedBuilder()
+            .setColor(
+              0x00c853
+            )
+
+            .setTitle(
+              `🎮 ${game.name}`
+            )
+
+            .setURL(
+              item.url
+            )
+
+            .setDescription(
+              "🔥 **NOWA DARMÓWKA NA STEAM!**\n\n✅ **Free to Keep**\n📌 **Dodaj do konta — zostaje na zawsze**"
+            )
+
+            .setThumbnail(
+              game.capsule_image ||
+                null
+            )
+
+            .setImage(
+              game.header_image ||
+                null
+            )
+
+            .setFooter({
+              text:
+                "BundleBot • Steam Giveaway"
+            })
+
+            .setTimestamp();
+
+        const row =
+          new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+              .setLabel(
+                "🎮 Odbierz na Steam"
+              )
+
+              .setStyle(
+                ButtonStyle.Link
+              )
+
+              .setURL(
+                item.url
+              )
+          );
+
+        await channel.send({
+          content: `🚨 **NOWA DARMOWA GRA NA STEAM!** <@&${ROLE_ID}>`,
+
+          embeds: [embed],
+
+          components: [row]
+        });
+
+        savedData.steamGames.push(
+          item.appid
+        );
+
+        savedData.steamGames =
+          [
+            ...new Set(
+              savedData.steamGames
+            )
+          ].slice(-1000);
+
+        saveData();
+
+        sent++;
+
+        console.log(
+          `✔ Sent: ${game.name}`
+        );
+      } catch (e) {
+        console.log(
+          "Steam item error:",
+          e.message
+        );
+      }
+    }
+
+    if (!sent) {
+      console.log(
+        "⏸ nic nowego"
+      );
+    } else {
+      console.log(
+        `✅ wysłano ${sent}`
+      );
+    }
+
+  } catch (err) {
+    console.log(
+      "❌ Steam error:",
+      err.message
+    );
+  }
+}
+
+module.exports = {
+  check
+};
