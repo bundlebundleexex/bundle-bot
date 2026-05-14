@@ -1,5 +1,8 @@
 const puppeteer = require("puppeteer");
 
+const { execSync } =
+  require("child_process");
+
 const {
   EmbedBuilder,
   ActionRowBuilder,
@@ -382,11 +385,26 @@ async function check(
         const proc =
           browser.process();
 
-        await browser.close();
+        try {
+          await browser.close();
+        } catch {}
 
-        proc?.kill("SIGKILL");
+        try {
+          proc?.kill("SIGKILL");
+        } catch {}
       } catch {}
     }
+
+    // hard chromium cleanup
+    try {
+      execSync(
+        "pkill -f chromium || true"
+      );
+
+      execSync(
+        "pkill -f chrome || true"
+      );
+    } catch {}
 
     global.gc?.();
   }
