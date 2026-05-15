@@ -156,14 +156,28 @@ async function fetchSteamDBFree() {
       }
     );
 
-    await page.waitForSelector(
-      ".panel-sale",
-      {
-        timeout: 15000
-      }
-    );
+    // ==========================
+    // WAIT FOR GIVEAWAYS
+    // ==========================
 
-    // lazy load scroll
+    try {
+      await page.waitForSelector(
+        ".panel-sale",
+        {
+          timeout: 15000
+        }
+      );
+    } catch {
+      console.log(
+        "⚠️ No panel-sale found"
+      );
+
+      return [];
+    }
+
+    // ==========================
+    // SCROLL
+    // ==========================
 
     for (
       let i = 0;
@@ -183,6 +197,10 @@ async function fetchSteamDBFree() {
         setTimeout(r, 1000)
       );
     }
+
+    // ==========================
+    // HTML
+    // ==========================
 
     const html =
       await page.evaluate(
