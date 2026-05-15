@@ -43,7 +43,8 @@
     "build-your-own-crazy-co-op-bundle",
     "whale-and-dolphin-conservation-charity-bundle",
     "build-your-own-zenith-bundle",
-    "capcom-classics-bundle-gog-edition"
+    "capcom-classics-bundle-gog-edition",
+    "prestige-collection-build-your-own-bundle"
   ],
   "gmgBundles": [
     "https://www.greenmangamingbundles.com/bundles/3d-fantasy-megapack"
@@ -65,7 +66,8 @@
   "epicDeals": [
     "3637",
     "3636",
-    "3635"
+    "3635",
+    "3643"
   ],
   "freeDeals": [
     "3614",
@@ -75,8 +77,8 @@
   ],
   "gogGames": [],
   "steamGames": [
-    "3353830",
-    "3587490"
+    "3587490",
+    "3343840"
   ],
   "amazon": [
     {
@@ -158,7 +160,8 @@
     "3394",
     "2204",
     "1604",
-    "3641"
+    "3641",
+    "3644"
   ],
   "lastCheckedSteamPackageId": 1634348,
   "ggdeals": []
