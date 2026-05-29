@@ -18,7 +18,15 @@
     "https://www.humblebundle.com/games/heavenly-bullets",
     "https://www.humblebundle.com/games/ticket-to-ride-all-aboard-collection",
     "https://www.humblebundle.com/games/humble-15th-anniversary-indie-icons-showcase",
-    "https://www.humblebundle.com/games/build-shuffle-battle"
+    "https://www.humblebundle.com/games/build-shuffle-battle",
+    "https://www.humblebundle.com/games/critical-hits-arpg-bundle-game",
+    "https://www.humblebundle.com/games/awesome-automation",
+    "https://www.humblebundle.com/games/devil-may-cry-devil-trigger-reloaded-collection-2026",
+    "https://www.humblebundle.com/games/perplexing-puzzles",
+    "https://www.humblebundle.com/games/4x-xplore-xpand-xploit-xterminate",
+    "https://www.humblebundle.com/games/warhammer-skulls-2026-bundle",
+    "https://www.humblebundle.com/games/doubleshift-simulation-bundle",
+    "https://www.humblebundle.com/games/monster-hunter-spring-hunting-collection-2026"
   ],
   "humbleChoice": "may_2026_choice",
   "fanaticalBundles": [
@@ -44,24 +52,35 @@
     "whale-and-dolphin-conservation-charity-bundle",
     "build-your-own-zenith-bundle",
     "capcom-classics-bundle-gog-edition",
-    "prestige-collection-build-your-own-bundle"
+    "prestige-collection-build-your-own-bundle",
+    "build-your-own-ultimate-collection",
+    "build-your-own-solstice-bundle",
+    "build-your-own-fusion-bundle",
+    "batman-arkham-collection",
+    "neurovoider-deluxe-edition",
+    "into-games-charity-bundle-2026"
   ],
   "gmgBundles": [
-    "https://www.greenmangamingbundles.com/bundles/3d-fantasy-megapack"
+    "https://www.greenmangamingbundles.com/bundles/3d-fantasy-megapack",
+    "https://www.greenmangamingbundles.com/bundles/the-akupara-collection",
+    "https://www.greenmangamingbundles.com/bundles/the-indieio-collection"
   ],
   "indiegalaBundles": [
     "https://www.indiegala.com/bundle/princess-and-blade-bundle",
     "https://www.indiegala.com/bundle/silly-heroes-tales-bundle",
     "https://www.indiegala.com/bundle/pixel-traditions2-bundle",
     "https://www.indiegala.com/bundle/flirty-elf-bundle",
-    "https://www.indiegala.com/bundle/wild-rage-bundle"
+    "https://www.indiegala.com/bundle/wild-rage-bundle",
+    "https://www.indiegala.com/bundle/hentai-pair2-bundle"
   ],
   "digiphileCollections": [
     "https://www.digiphile.co/collections/landfall-aggro-crab-showcase"
   ],
   "epicGames": [
     "arranger-a-rolepuzzling-adventure-dbfde7_2026-05-07T15:00:00.000Z_2026-05-14T15:00:00.000Z",
-    "trash-goblin-cd5fd7_2026-05-07T15:00:00.000Z_2026-05-14T15:00:00.000Z"
+    "trash-goblin-cd5fd7_2026-05-07T15:00:00.000Z_2026-05-14T15:00:00.000Z",
+    "9621cc6e5d32437ca3dd998de177f6da_2026-05-28T15:00:00.000Z_2026-06-04T15:00:00.000Z",
+    "7fc5abc8f11c471e837ddd00ce963350_2026-05-28T15:00:00.000Z_2026-06-04T15:00:00.000Z"
   ],
   "epicDeals": [
     "3637",
@@ -78,73 +97,46 @@
   "gogGames": [],
   "steamGames": [
     "3587490",
-    "3343840"
+    "3343840",
+    "2218460",
+    "1070580"
   ],
   "amazon": [
-    {
-      "title": "60 Minutes to Extinction: Escape Room",
-      "url": "https://luna.amazon.com/claims/60-minutes-to-extinction-escape-room-gog/dp/amzn1.pg.item.15f8ec7c-efc1-4422-846a-627acfd66b46?g=s&ingress=amzn&ref_=SM_60MinutestoExtinctionEscapeRoom_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Fruitbus",
-      "url": "https://luna.amazon.com/claims/fruitbus-gog/dp/amzn1.pg.item.8c20e953-fecb-47ba-9824-89c72c69e7eb?g=s&ingress=amzn&ref_=SM_Fruitbus_S01_FGWP_CRWN"
-    },
-    {
-      "title": "KinnikuNeko: SUPER MUSCLE CAT",
-      "url": "https://luna.amazon.com/claims/kinnikuneko-super-muscle-cat-epic/dp/amzn1.pg.item.1ddb7652-affd-420e-a2af-9b0a2ba70ac1?g=s&ingress=amzn&ref_=SM_KinnikuNekoSUPERMUSCLECAT_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Pinball Spire",
-      "url": "https://luna.amazon.com/claims/pinball-spire-gog/dp/amzn1.pg.item.76919ab0-9718-4c3d-9433-9484478f32b0?g=s&ingress=amzn&ref_=SM_PinballSpire_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Fantasy General",
-      "url": "https://luna.amazon.com/claims/fantasy-general-gog/dp/amzn1.pg.item.9d4ded3f-a772-485b-8fb8-0868631044fb?g=s&ingress=amzn&ref_=SM_FantasyGeneral_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Neo Cab",
-      "url": "https://luna.amazon.com/claims/neo-cab-gog/dp/amzn1.pg.item.e2868d3e-ca75-4dd1-93ce-ef343e126305?g=s&ingress=amzn&ref_=SM_NeoCab_S01_FGWP_CRWN"
-    },
-    {
-      "title": "The Pale Beyond",
-      "url": "https://luna.amazon.com/claims/the-pale-beyond-gog/dp/amzn1.pg.item.7791491d-6134-4109-b285-1b7f1b79f07a?g=s&ingress=amzn&ref_=SM_ThePaleBeyond_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Monster Harvest",
-      "url": "https://luna.amazon.com/claims/monster-harvest-epic/dp/amzn1.pg.item.299d6ca2-9dfa-4e26-b865-cca0d7117a3a?g=s&ingress=amzn&ref_=SM_MonsterHarvest_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Snake Core",
-      "url": "https://luna.amazon.com/claims/snake-core-gog/dp/amzn1.pg.item.8dae30db-2cb3-4de1-99c4-9a1ce8700286?g=s&ingress=amzn&ref_=SM_SnakeCore_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Detective Agency: Gray Tie - CE",
-      "url": "https://luna.amazon.com/claims/detective-agency-gray-tie-ce-legacy/dp/amzn1.pg.item.190edc63-f7f7-4a70-addc-7d56a0ca7efd?g=s&ingress=amzn&ref_=SM_DetectiveAgencyGrayTieCE_S01_FGWP_CRWN"
-    },
-    {
-      "title": "A Rat's Quest - The Way Back Home",
-      "url": "https://luna.amazon.com/claims/a-rats-quest-the-way-back-home-epic/dp/amzn1.pg.item.34210f82-0bf5-4aa6-860e-87640c1caf50?g=s&ingress=amzn&ref_=SM_ARatsQuestTheWayBackHome_S01_FGWP_CRWN"
-    },
-    {
-      "title": "XCOM: Enemy Unknown Complete Pack",
-      "url": "https://luna.amazon.com/claims/xcom-enemy-unknown-complete-pack-gog/dp/amzn1.pg.item.3674d591-5127-4b22-9cf4-16b42e63bc40?g=s&ingress=amzn&ref_=SM_XCOMEnemyUnknownCompletePack_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Deep Sky Derelicts",
-      "url": "https://luna.amazon.com/claims/deep-sky-derelicts-aga/dp/amzn1.pg.item.2bee44d2-9560-4916-a052-6a41cd434318?g=s&ingress=amzn&ref_=SM_DeepSkyDerelicts_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Survival: Fountain of Youth",
-      "url": "https://luna.amazon.com/claims/survival-fountain-of-youth-aga/dp/amzn1.pg.item.35fc21f8-36dc-4f75-903b-795b97b13cc5?g=s&ingress=amzn&ref_=SM_SurvivalFountainofYouth_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Lethal Honor - Order of the Apocalypse",
-      "url": "https://luna.amazon.com/claims/lethal-honor-order-of-the-apocalypse-epic/dp/amzn1.pg.item.f610100a-1240-41f8-84dd-767c2df675b4?g=s&ingress=amzn&ref_=SM_LethalHonorOrderoftheApocalypse_S01_FGWP_CRWN"
-    },
-    {
-      "title": "Mafia II: Definitive Edition",
-      "url": "https://luna.amazon.com/claims/mafia-ii-definitive-edition-gog/dp/amzn1.pg.item.e604b1c9-c80d-48fb-8f08-db31ce376bb7?g=s&ingress=amzn&ref_=SM_MafiaIIDefinitiveEdition_S02_FGWP_CRWN"
-    }
+    "title:pro basketball manager 2026",
+    "slug:pro-basketball-manager-2026-aga",
+    "title:space grunts",
+    "slug:space-grunts-gog",
+    "title:hot brass",
+    "slug:hot-brass-gog",
+    "title:60 minutes to extinction: escape room",
+    "slug:60-minutes-to-extinction-escape-room-gog",
+    "title:survival: fountain of youth",
+    "slug:survival-fountain-of-youth-aga",
+    "title:lethal honor - order of the apocalypse",
+    "slug:lethal-honor-order-of-the-apocalypse-epic",
+    "title:mafia ii: definitive edition",
+    "slug:mafia-ii-definitive-edition-gog",
+    "title:fruitbus",
+    "slug:fruitbus-gog",
+    "title:kinnikuneko: super muscle cat",
+    "slug:kinnikuneko-super-muscle-cat-epic",
+    "title:pinball spire",
+    "slug:pinball-spire-gog",
+    "title:fantasy general",
+    "slug:fantasy-general-gog",
+    "title:snake core",
+    "slug:snake-core-gog",
+    "title:a rat's quest - the way back home",
+    "slug:a-rats-quest-the-way-back-home-epic",
+    "title:nordic storm solitaire",
+    "slug:nordic-storm-solitaire-legacy",
+    "title:moon mystery",
+    "slug:moon-mystery-epic",
+    "title:palindrome syndrome: escape room",
+    "slug:palindrome-syndrome-escape-room-gog",
+    "title:conditions of use",
+    "slug:cookie-notice",
+    "title:luna guide"
   ],
   "deals0": [
     "905",
@@ -161,8 +153,21 @@
     "2204",
     "1604",
     "3641",
-    "3644"
+    "3644",
+    "3660",
+    "3287",
+    "3654"
   ],
   "lastCheckedSteamPackageId": 1634348,
-  "ggdeals": []
+  "ggdeals": [],
+  "digiphileEndedCollections": [
+    "https://www.digiphile.co/collections/before-absolute-creator-owned-image-comics",
+    "https://www.digiphile.co/collections/planet-coaster-free-game-plus",
+    "https://www.digiphile.co/collections/boomer-shooter-blueprint",
+    "https://www.digiphile.co/collections/indie-boomer-shooters",
+    "https://www.digiphile.co/collections/indie-imsim-spotlight",
+    "https://www.digiphile.co/collections/welcome-to-astro-city",
+    "https://www.digiphile.co/collections/return-of-the-immersive-sim"
+  ],
+  "digiphileInvalidCollections": []
 }
