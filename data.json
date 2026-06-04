@@ -26,9 +26,13 @@
     "https://www.humblebundle.com/games/4x-xplore-xpand-xploit-xterminate",
     "https://www.humblebundle.com/games/warhammer-skulls-2026-bundle",
     "https://www.humblebundle.com/games/doubleshift-simulation-bundle",
-    "https://www.humblebundle.com/games/monster-hunter-spring-hunting-collection-2026"
+    "https://www.humblebundle.com/games/monster-hunter-spring-hunting-collection-2026",
+    "https://www.humblebundle.com/games/ign-live-bundle-2026",
+    "https://www.humblebundle.com/games/we-will-always-be-here-pride-month-2026",
+    "https://www.humblebundle.com/games/2k-sports-champions-bundle",
+    "https://www.humblebundle.com/games/12-for-10"
   ],
-  "humbleChoice": "may_2026_choice",
+  "humbleChoice": "june_2026_choice",
   "fanaticalBundles": [
     "platinum-collection-build-your-own-bundle",
     "build-your-own-capcom-masters-bundle",
@@ -58,12 +62,17 @@
     "build-your-own-fusion-bundle",
     "batman-arkham-collection",
     "neurovoider-deluxe-edition",
-    "into-games-charity-bundle-2026"
+    "into-games-charity-bundle-2026",
+    "platinum-collection-build-your-own-bundle:1970-01",
+    "build-your-own-ultimate-collection:1970-01",
+    "prestige-collection-build-your-own-bundle:1970-01",
+    "goblinz-studio-10th-anniversary-bundle"
   ],
   "gmgBundles": [
     "https://www.greenmangamingbundles.com/bundles/3d-fantasy-megapack",
     "https://www.greenmangamingbundles.com/bundles/the-akupara-collection",
-    "https://www.greenmangamingbundles.com/bundles/the-indieio-collection"
+    "https://www.greenmangamingbundles.com/bundles/the-indieio-collection",
+    "https://www.greenmangamingbundles.com/bundles/master-builders-collection"
   ],
   "indiegalaBundles": [
     "https://www.indiegala.com/bundle/princess-and-blade-bundle",
@@ -71,7 +80,8 @@
     "https://www.indiegala.com/bundle/pixel-traditions2-bundle",
     "https://www.indiegala.com/bundle/flirty-elf-bundle",
     "https://www.indiegala.com/bundle/wild-rage-bundle",
-    "https://www.indiegala.com/bundle/hentai-pair2-bundle"
+    "https://www.indiegala.com/bundle/hentai-pair2-bundle",
+    "https://www.indiegala.com/bundle/twist-and-tangle-bundle"
   ],
   "digiphileCollections": [
     "https://www.digiphile.co/collections/landfall-aggro-crab-showcase"
@@ -86,7 +96,8 @@
     "3637",
     "3636",
     "3635",
-    "3643"
+    "3643",
+    "3662"
   ],
   "freeDeals": [
     "3614",
@@ -99,7 +110,9 @@
     "3587490",
     "3343840",
     "2218460",
-    "1070580"
+    "1070580",
+    "577740",
+    "858710"
   ],
   "amazon": [
     "title:pro basketball manager 2026",
@@ -136,7 +149,13 @@
     "slug:palindrome-syndrome-escape-room-gog",
     "title:conditions of use",
     "slug:cookie-notice",
-    "title:luna guide"
+    "title:luna guide",
+    "title:xcom: chimera squad",
+    "slug:xcom-chimera-squad-gog",
+    "title:mafia iii: definitive edition",
+    "slug:mafia-iii-definitive-edition-gog",
+    "title:tomb raider iv-vi remastered",
+    "slug:tomb-raider-iv-vi-remastered-epic"
   ],
   "deals0": [
     "905",
@@ -156,7 +175,10 @@
     "3644",
     "3660",
     "3287",
-    "3654"
+    "3654",
+    "3666",
+    "2386",
+    "3665"
   ],
   "lastCheckedSteamPackageId": 1634348,
   "ggdeals": [],
