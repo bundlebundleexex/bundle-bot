@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const { Client, GatewayIntentBits } = require("discord.js");
+const { execFileSync } = require("child_process");
 
 const fs = require("fs");
 const path = require("path");
@@ -12,13 +13,9 @@ const fanatical = require("./stores/fanatical");
 const gmg = require("./stores/gmg");
 const indiegala = require("./stores/indiegala");
 const digiphile = require("./stores/digiphile");
-
 const epic = require("./stores/epic");
-const epicDeals = require("./stores/epicdeals");
-
 const freeDeals = require("./stores/freeDeals");
 const gog = require("./stores/gog");
-
 const amazon = require("./stores/amazon");
 const deals0 = require("./stores/deals0");
 
@@ -36,15 +33,31 @@ const client = new Client({
 
 const TIME_ZONE = "Europe/Warsaw";
 
-const CHECK_INTERVAL = 15 * 60 * 1000;
-const STORE_DELAY = 1500;
-const CLEANUP_INTERVAL = 70 * 60 * 1000;
+const CHECK_INTERVAL = Number(process.env.CHECK_INTERVAL_MS || 15 * 60 * 1000);
+const STORE_DELAY = Number(process.env.STORE_DELAY_MS || 1500);
+const CLEANUP_INTERVAL = Number(process.env.CLEANUP_INTERVAL_MS || 70 * 60 * 1000);
 const STORE_TIMEOUT = Number(process.env.STORE_TIMEOUT_MS || 90 * 1000);
 
-// Optional:
-// MEMORY_RESTART_MB=450 - restart process when RSS reaches this value.
-// EXIT_ON_STORE_TIMEOUT=1 - restart process when a store gets stuck.
-const MEMORY_RESTART_MB = Number(process.env.MEMORY_RESTART_MB || 0);
+// Post-scan flush:
+// POST_SCAN_GC_RUNS=5          - how many forced GC passes after each full scan
+// POST_SCAN_RESTART_MB=260     - restart after scan if RSS is still above this
+// MEMORY_RESTART_MB=260        - accepted as an alias for POST_SCAN_RESTART_MB
+// POST_SCAN_KILL_CHROME=0      - disable Linux Chromium cleanup
+// RESTART_COOLDOWN_MS=1200000  - skip immediate scan after memory restart
+const POST_SCAN_GC_RUNS = Math.max(
+  1,
+  Number(process.env.POST_SCAN_GC_RUNS || 5)
+);
+const POST_SCAN_RESTART_MB = Number(
+  process.env.POST_SCAN_RESTART_MB || process.env.MEMORY_RESTART_MB || 0
+);
+const POST_SCAN_KILL_CHROME = process.env.POST_SCAN_KILL_CHROME !== "0";
+const RESTART_COOLDOWN_MS = Number(
+  process.env.RESTART_COOLDOWN_MS || 20 * 60 * 1000
+);
+const SKIP_FIRST_RUN_AFTER_RESTART =
+  process.env.SKIP_FIRST_RUN_AFTER_RESTART !== "0";
+
 const EXIT_ON_STORE_TIMEOUT = process.env.EXIT_ON_STORE_TIMEOUT === "1";
 
 const DATA_PATH = fs.existsSync("/data")
@@ -116,15 +129,12 @@ function msUntilWakeModeEnds() {
 function getTime() {
   return new Intl.DateTimeFormat("pl-PL", {
     timeZone: TIME_ZONE,
-
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-
     hour12: false
   }).format(new Date());
 }
@@ -141,38 +151,102 @@ function getMemoryMb() {
   };
 }
 
-function logMemory(label) {
-  const memory = getMemoryMb();
-
-  console.log(
-    `🧠 RAM ${label}: rss=${memory.rss} MB | heap=${memory.heapUsed}/${memory.heapTotal} MB | external=${memory.external} MB | buffers=${memory.arrayBuffers} MB`
+function formatMemory(memory) {
+  return (
+    `rss=${memory.rss} MB | ` +
+    `heap=${memory.heapUsed}/${memory.heapTotal} MB | ` +
+    `external=${memory.external} MB | ` +
+    `buffers=${memory.arrayBuffers} MB`
   );
-
-  if (MEMORY_RESTART_MB > 0 && memory.rss >= MEMORY_RESTART_MB) {
-    console.log(
-      `♻️ RAM przekroczył ${MEMORY_RESTART_MB} MB - kończę proces do restartu`
-    );
-
-    gracefulExit(1, "memory limit");
-  }
 }
 
-function memoryCleanup() {
-  try {
-    if (global.gc) {
-      global.gc();
-    } else if (!gcNoticeShown) {
-      console.log(
-        "ℹ️ GC niedostępne - uruchom bota przez: node --expose-gc index.js"
-      );
+function logMemory(label) {
+  console.log(`RAM ${label}: ${formatMemory(getMemoryMb())}`);
+}
 
+async function runGcPasses(passes) {
+  if (!global.gc) {
+    if (!gcNoticeShown) {
+      console.log("GC unavailable. Start with: node --expose-gc index.js");
       gcNoticeShown = true;
     }
 
-    logMemory("cleanup");
-  } catch (err) {
-    console.log("❌ memoryCleanup:", err.message);
+    return;
   }
+
+  for (let i = 0; i < passes; i++) {
+    global.gc();
+    await sleep(150);
+  }
+}
+
+function hardChromeCleanup() {
+  if (!POST_SCAN_KILL_CHROME || process.platform === "win32") {
+    return;
+  }
+
+  for (const name of ["chromium", "chrome", "chrome-linux"]) {
+    try {
+      execFileSync("pkill", ["-9", name], {
+        stdio: "ignore"
+      });
+    } catch {}
+  }
+}
+
+async function memoryFlush(reason, options = {}) {
+  const before = getMemoryMb();
+
+  if (options.killChrome) {
+    hardChromeCleanup();
+  }
+
+  await runGcPasses(options.gcRuns || POST_SCAN_GC_RUNS);
+  await sleep(250);
+
+  const after = getMemoryMb();
+  const diff = before.rss - after.rss;
+
+  console.log(
+    `Memory flush (${reason}): before ${formatMemory(before)} -> after ${formatMemory(
+      after
+    )} | rss_delta=${diff} MB`
+  );
+
+  return after;
+}
+
+async function memoryCleanup(reason = "interval") {
+  try {
+    await memoryFlush(reason, {
+      gcRuns: Math.max(2, POST_SCAN_GC_RUNS),
+      killChrome: true
+    });
+  } catch (err) {
+    console.log("memoryCleanup error:", err.message);
+  }
+}
+
+function markMemoryRestart(reason, memory) {
+  savedData.runtime ??= {};
+  savedData.runtime.lastMemoryRestartAt = Date.now();
+  savedData.runtime.lastMemoryRestartReason = reason;
+  savedData.runtime.lastMemoryRestartRss = memory?.rss || null;
+  saveData();
+}
+
+function shouldSkipFirstRunAfterMemoryRestart() {
+  if (!SKIP_FIRST_RUN_AFTER_RESTART) {
+    return false;
+  }
+
+  const lastRestartAt = Number(savedData.runtime?.lastMemoryRestartAt || 0);
+
+  if (!lastRestartAt) {
+    return false;
+  }
+
+  return Date.now() - lastRestartAt < RESTART_COOLDOWN_MS;
 }
 
 function clearCheckTimer() {
@@ -183,19 +257,25 @@ function clearCheckTimer() {
 }
 
 function scheduleNextRun(delayMs) {
+  if (isShuttingDown) {
+    return;
+  }
+
   clearCheckTimer();
 
   const safeDelay = Math.max(delayMs, 1000);
   const minutes = Math.ceil(safeDelay / 1000 / 60);
 
-  console.log(`⏱️ Następne sprawdzanie za ${minutes} min`);
+  console.log(`Next scan in ${minutes} min`);
 
   checkTimer = setTimeout(async () => {
     checkTimer = null;
 
     await runChecks();
 
-    scheduleNextRun(isSleepMode() ? msUntilWakeModeEnds() : CHECK_INTERVAL);
+    if (!isShuttingDown) {
+      scheduleNextRun(isSleepMode() ? msUntilWakeModeEnds() : CHECK_INTERVAL);
+    }
   }, safeDelay);
 }
 
@@ -206,7 +286,7 @@ function gracefulExit(code, reason) {
 
   isShuttingDown = true;
 
-  console.log(`👋 Zamykanie bota (${reason})`);
+  console.log(`Shutting down bot (${reason})`);
 
   clearCheckTimer();
 
@@ -246,7 +326,8 @@ function ensureDataShape() {
     gogGames: [],
     steamGames: [],
     amazon: [],
-    deals0: []
+    deals0: [],
+    runtime: {}
   };
 
   for (const [key, value] of Object.entries(defaults)) {
@@ -269,7 +350,7 @@ function loadData() {
           ? parsed
           : {};
     } catch {
-      console.log("⚠️ data.json uszkodzony - resetuję");
+      console.log("data.json is damaged - resetting state");
 
       savedData = {};
     }
@@ -285,7 +366,9 @@ function saveData() {
     const dir = path.dirname(DATA_PATH);
 
     if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
+      fs.mkdirSync(dir, {
+        recursive: true
+      });
     }
 
     const tempPath = `${DATA_PATH}.tmp`;
@@ -294,7 +377,7 @@ function saveData() {
     fs.writeFileSync(tempPath, json);
     fs.renameSync(tempPath, DATA_PATH);
   } catch (err) {
-    console.log("❌ saveData:", err.message);
+    console.log("saveData error:", err.message);
   }
 }
 
@@ -307,57 +390,42 @@ const STORES = [
     name: "Humble",
     fn: humble.check
   },
-
   {
     name: "Steam",
     fn: steam.check
   },
-
   {
     name: "Fanatical",
     fn: fanatical.check
   },
-
   {
     name: "GMG",
     fn: gmg.check
   },
-
   {
     name: "IndieGala",
     fn: indiegala.check
   },
-
   {
     name: "Digiphile",
     fn: digiphile.check
   },
-
   {
     name: "Deals0",
     fn: deals0.check
   },
-
   {
     name: "Epic",
     fn: epic.check
   },
-
-  {
-    name: "EpicDeals",
-    fn: epicDeals.check
-  },
-
   {
     name: "FreeDeals",
     fn: freeDeals.check
   },
-
   {
     name: "GOG",
     fn: gog.check
   },
-
   {
     name: "Amazon",
     fn: amazon.check
@@ -389,14 +457,12 @@ async function runStoreWithTimeout(store) {
   task.then(
     () => {
       if (timedOut) {
-        console.log(`ℹ️ ${store.name}: spóźnione zadanie zakończone`);
+        console.log(`${store.name}: late task finished`);
       }
     },
     err => {
       if (timedOut) {
-        console.log(
-          `⚠️ ${store.name}: spóźniony błąd po timeout: ${err.message}`
-        );
+        console.log(`${store.name}: late error after timeout: ${err.message}`);
       }
     }
   ).finally(() => {
@@ -412,7 +478,7 @@ async function runStoreWithTimeout(store) {
         controller.abort();
       }
 
-      reject(new Error(`Store timeout po ${STORE_TIMEOUT / 1000}s`));
+      reject(new Error(`Store timeout after ${STORE_TIMEOUT / 1000}s`));
     }, STORE_TIMEOUT);
   });
 
@@ -434,24 +500,19 @@ async function runChecks() {
     return;
   }
 
-  // sleep mode
   if (isSleepMode()) {
-    console.log(`🌙 Sleep mode (${getTime()})`);
-    memoryCleanup();
-
+    console.log(`Sleep mode (${getTime()})`);
+    await memoryCleanup("sleep mode");
     return;
   }
 
   if (isRunning) {
-    console.log("⏳ Poprzednie sprawdzanie jeszcze trwa...");
-
+    console.log("Previous scan is still running");
     return;
   }
 
   if (activeStoreTasks.size > 0) {
-    console.log(
-      `⏳ Czekam na spóźnione zadania sklepów: ${activeStoreTasks.size}`
-    );
+    console.log(`Waiting for late store tasks: ${activeStoreTasks.size}`);
 
     if (
       EXIT_ON_STORE_TIMEOUT &&
@@ -469,7 +530,7 @@ async function runChecks() {
   const startedAt = Date.now();
 
   try {
-    console.log(`\n🔎 START sprawdzania - ${getTime()}`);
+    console.log(`\nSTART scan - ${getTime()}`);
     logMemory("start");
 
     for (const store of STORES) {
@@ -481,22 +542,19 @@ async function runChecks() {
       } catch (err) {
         storeTimedOut = err.message.startsWith("Store timeout");
 
-        console.log(`❌ ${store.name}:`, err.message);
+        console.log(`${store.name}: ${err.message}`);
       }
 
       const duration = ((Date.now() - storeStart) / 1000).toFixed(1);
 
-      console.log(`⏱ ${store.name}: ${duration}s`);
+      console.log(`${store.name}: ${duration}s`);
 
-      if (global.gc) {
-        global.gc();
-      }
-
+      await runGcPasses(1);
       logMemory(store.name);
 
       if (storeTimedOut) {
         console.log(
-          `⛔ ${store.name}: przerywam ten cykl, żeby nie dokładać kolejnych zadań w tle`
+          `${store.name}: stopping this scan to avoid stacking background tasks`
         );
 
         if (EXIT_ON_STORE_TIMEOUT) {
@@ -510,15 +568,25 @@ async function runChecks() {
     }
 
     const total = ((Date.now() - startedAt) / 1000).toFixed(1);
-    const ram = getMemoryMb();
+    const ramBeforeFlush = getMemoryMb();
 
-    console.log(`✅ Sprawdzanie zakończone (${total}s | ${ram.rss} MB)`);
+    console.log(`Scan finished (${total}s | ${ramBeforeFlush.rss} MB before flush)`);
+
+    const ramAfterFlush = await memoryFlush("post-scan", {
+      gcRuns: POST_SCAN_GC_RUNS,
+      killChrome: true
+    });
+
+    if (POST_SCAN_RESTART_MB > 0 && ramAfterFlush.rss >= POST_SCAN_RESTART_MB) {
+      console.log(
+        `RSS still above ${POST_SCAN_RESTART_MB} MB after flush - restarting process for Railway`
+      );
+
+      markMemoryRestart("post-scan memory limit", ramAfterFlush);
+      gracefulExit(1, "post-scan memory limit");
+    }
   } finally {
     isRunning = false;
-
-    if (global.gc) {
-      global.gc();
-    }
   }
 }
 
@@ -527,33 +595,36 @@ async function runChecks() {
 // ==========================
 
 client.once("clientReady", async () => {
-  console.log(`🤖 Zalogowano jako ${client.user.tag}`);
+  console.log(`Logged in as ${client.user.tag}`);
 
   loadData();
 
-  console.log(`📄 Data path: ${DATA_PATH}`);
+  console.log(`Data path: ${DATA_PATH}`);
 
   if (!global.gc) {
-    console.log(
-      "ℹ️ GC niedostępne. Dla lepszego cleanupu uruchom: node --expose-gc index.js"
-    );
+    console.log("GC unavailable. For Railway use start: node --expose-gc index.js");
     gcNoticeShown = true;
   }
 
-  // first run
-  await runChecks();
+  if (shouldSkipFirstRunAfterMemoryRestart()) {
+    console.log(
+      `Recent memory restart detected - skipping immediate first scan for ${Math.ceil(
+        RESTART_COOLDOWN_MS / 60000
+      )} min cooldown`
+    );
+  } else {
+    await runChecks();
+  }
 
-  // cyclic checks
   scheduleNextRun(isSleepMode() ? msUntilWakeModeEnds() : CHECK_INTERVAL);
 
-  // RAM cleanup
   cleanupTimer = setInterval(() => {
     if (!isRunning) {
-      memoryCleanup();
+      memoryCleanup("interval");
     }
   }, CLEANUP_INTERVAL);
 
-  console.log("⏱️ Sprawdzanie ustawione co 15 minut");
+  console.log("Scan interval set");
 });
 
 // ==========================
@@ -561,11 +632,11 @@ client.once("clientReady", async () => {
 // ==========================
 
 process.on("unhandledRejection", err => {
-  console.error("❌ Unhandled promise rejection:", err);
+  console.error("Unhandled promise rejection:", err);
 });
 
 process.on("uncaughtException", err => {
-  console.error("❌ Uncaught exception:", err);
+  console.error("Uncaught exception:", err);
   gracefulExit(1, "uncaught exception");
 });
 

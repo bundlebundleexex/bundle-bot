@@ -30,7 +30,11 @@
     "https://www.humblebundle.com/games/ign-live-bundle-2026",
     "https://www.humblebundle.com/games/we-will-always-be-here-pride-month-2026",
     "https://www.humblebundle.com/games/2k-sports-champions-bundle",
-    "https://www.humblebundle.com/games/12-for-10"
+    "https://www.humblebundle.com/games/12-for-10",
+    "https://www.humblebundle.com/games/yuri-in-luck-waifus-for-laifus",
+    "https://www.humblebundle.com/games/complete-inkle-library",
+    "https://www.humblebundle.com/games/redline-racing-bundle",
+    "https://www.humblebundle.com/games/frosty-games-fest-showcase-bundle-2026-made-in-anz"
   ],
   "humbleChoice": "june_2026_choice",
   "fanaticalBundles": [
@@ -66,13 +70,18 @@
     "platinum-collection-build-your-own-bundle:1970-01",
     "build-your-own-ultimate-collection:1970-01",
     "prestige-collection-build-your-own-bundle:1970-01",
-    "goblinz-studio-10th-anniversary-bundle"
+    "goblinz-studio-10th-anniversary-bundle",
+    "best-of-platinum-collection-build-your-own-bundle:1970-01",
+    "build-your-own-onyx-bundle",
+    "build-your-own-summer-bundle"
   ],
   "gmgBundles": [
     "https://www.greenmangamingbundles.com/bundles/3d-fantasy-megapack",
     "https://www.greenmangamingbundles.com/bundles/the-akupara-collection",
     "https://www.greenmangamingbundles.com/bundles/the-indieio-collection",
-    "https://www.greenmangamingbundles.com/bundles/master-builders-collection"
+    "https://www.greenmangamingbundles.com/bundles/master-builders-collection",
+    "https://www.greenmangamingbundles.com/bundles/master-builders-collection/?utm_term=uspbanner",
+    "https://www.greenmangamingbundles.com/bundles/master-builders-collection/?utm_term=flatpage"
   ],
   "indiegalaBundles": [
     "https://www.indiegala.com/bundle/princess-and-blade-bundle",
@@ -81,7 +90,8 @@
     "https://www.indiegala.com/bundle/flirty-elf-bundle",
     "https://www.indiegala.com/bundle/wild-rage-bundle",
     "https://www.indiegala.com/bundle/hentai-pair2-bundle",
-    "https://www.indiegala.com/bundle/twist-and-tangle-bundle"
+    "https://www.indiegala.com/bundle/twist-and-tangle-bundle",
+    "https://www.indiegala.com/bundle/massive-music4-bundle"
   ],
   "digiphileCollections": [
     "https://www.digiphile.co/collections/landfall-aggro-crab-showcase"
@@ -90,7 +100,19 @@
     "arranger-a-rolepuzzling-adventure-dbfde7_2026-05-07T15:00:00.000Z_2026-05-14T15:00:00.000Z",
     "trash-goblin-cd5fd7_2026-05-07T15:00:00.000Z_2026-05-14T15:00:00.000Z",
     "9621cc6e5d32437ca3dd998de177f6da_2026-05-28T15:00:00.000Z_2026-06-04T15:00:00.000Z",
-    "7fc5abc8f11c471e837ddd00ce963350_2026-05-28T15:00:00.000Z_2026-06-04T15:00:00.000Z"
+    "7fc5abc8f11c471e837ddd00ce963350_2026-05-28T15:00:00.000Z_2026-06-04T15:00:00.000Z",
+    "epic:title:the ouroboros king:2026-06-18T15:00:00.000Z",
+    "epic:title:the ouroboros king:2026-06-11T15:00:00.000Z:2026-06-18T15:00:00.000Z",
+    "epic:slug:the-ouroboros-king-e1d547:2026-06-18T15:00:00.000Z",
+    "epic:id:7f0ab2828f9743d0abc6612a11222fdf:2026-06-18T15:00:00.000Z",
+    "epic:namespace:b002ccbe10f946f082a63bf85fa30558:2026-06-18T15:00:00.000Z",
+    "7f0ab2828f9743d0abc6612a11222fdf_2026-06-11T15:00:00.000Z_2026-06-18T15:00:00.000Z",
+    "epic:title:warhammer 40k speed freeks:2026-06-18T15:00:00.000Z",
+    "epic:title:warhammer 40k speed freeks:2026-06-11T15:00:00.000Z:2026-06-18T15:00:00.000Z",
+    "epic:slug:warhammer-40k-speed-freeks-12879c:2026-06-18T15:00:00.000Z",
+    "epic:id:eb6ae87e73d94d2c96bab3c4da4dd3de:2026-06-18T15:00:00.000Z",
+    "epic:namespace:e64225d40c214f32a71ccf6a7a612d6b:2026-06-18T15:00:00.000Z",
+    "eb6ae87e73d94d2c96bab3c4da4dd3de_2026-06-11T15:00:00.000Z_2026-06-18T15:00:00.000Z"
   ],
   "epicDeals": [
     "3637",
@@ -112,7 +134,11 @@
     "2218460",
     "1070580",
     "577740",
-    "858710"
+    "858710",
+    "1134700",
+    "6100",
+    "1433340",
+    "1053710"
   ],
   "amazon": [
     "title:pro basketball manager 2026",
@@ -155,7 +181,15 @@
     "title:mafia iii: definitive edition",
     "slug:mafia-iii-definitive-edition-gog",
     "title:tomb raider iv-vi remastered",
-    "slug:tomb-raider-iv-vi-remastered-epic"
+    "slug:tomb-raider-iv-vi-remastered-epic",
+    "title:g.i. joe: wrath of cobra",
+    "slug:gi-joe-wrath-of-cobra-epic",
+    "title:tested on humans: escape room",
+    "slug:tested-on-humans-escape-room-gog",
+    "title:sin slayers: reign of the 8th",
+    "slug:sin-slayers-reign-of-the-8th-gog",
+    "title:paradise killer",
+    "slug:paradise-killer-gog"
   ],
   "deals0": [
     "905",
@@ -178,7 +212,12 @@
     "3654",
     "3666",
     "2386",
-    "3665"
+    "3665",
+    "3410",
+    "3684",
+    "3682",
+    "3679",
+    "3279"
   ],
   "lastCheckedSteamPackageId": 1634348,
   "ggdeals": [],
@@ -191,5 +230,6 @@
     "https://www.digiphile.co/collections/welcome-to-astro-city",
     "https://www.digiphile.co/collections/return-of-the-immersive-sim"
   ],
-  "digiphileInvalidCollections": []
+  "digiphileInvalidCollections": [],
+  "runtime": {}
 }
