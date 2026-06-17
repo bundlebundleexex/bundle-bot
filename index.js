@@ -6,18 +6,9 @@ const { execFileSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
-// stores
-const humble = require("./stores/humble");
-const steam = require("./stores/steam");
-const fanatical = require("./stores/fanatical");
-const gmg = require("./stores/gmg");
-const indiegala = require("./stores/indiegala");
-const digiphile = require("./stores/digiphile");
-const epic = require("./stores/epic");
-const freeDeals = require("./stores/freeDeals");
-const gog = require("./stores/gog");
-const amazon = require("./stores/amazon");
-const deals0 = require("./stores/deals0");
+// Store modules are loaded lazily during scans. This keeps the idle process
+// lighter, especially at night, because heavy modules like puppeteer are not
+// kept in memory from startup.
 
 // ==========================
 // CLIENT
@@ -52,6 +43,7 @@ const POST_SCAN_RESTART_MB = Number(
   process.env.POST_SCAN_RESTART_MB || process.env.MEMORY_RESTART_MB || 0
 );
 const POST_SCAN_KILL_CHROME = process.env.POST_SCAN_KILL_CHROME !== "0";
+const PURGE_STORE_CACHE = process.env.PURGE_STORE_CACHE !== "0";
 const RESTART_COOLDOWN_MS = Number(
   process.env.RESTART_COOLDOWN_MS || 20 * 60 * 1000
 );
@@ -388,47 +380,47 @@ function saveData() {
 const STORES = [
   {
     name: "Humble",
-    fn: humble.check
+    modulePath: "./stores/humble"
   },
   {
     name: "Steam",
-    fn: steam.check
+    modulePath: "./stores/steam"
   },
   {
     name: "Fanatical",
-    fn: fanatical.check
+    modulePath: "./stores/fanatical"
   },
   {
     name: "GMG",
-    fn: gmg.check
+    modulePath: "./stores/gmg"
   },
   {
     name: "IndieGala",
-    fn: indiegala.check
+    modulePath: "./stores/indiegala"
   },
   {
     name: "Digiphile",
-    fn: digiphile.check
+    modulePath: "./stores/digiphile"
   },
   {
     name: "Deals0",
-    fn: deals0.check
+    modulePath: "./stores/deals0"
   },
   {
     name: "Epic",
-    fn: epic.check
+    modulePath: "./stores/epic"
   },
   {
     name: "FreeDeals",
-    fn: freeDeals.check
+    modulePath: "./stores/freeDeals"
   },
   {
     name: "GOG",
-    fn: gog.check
+    modulePath: "./stores/gog"
   },
   {
     name: "Amazon",
-    fn: amazon.check
+    modulePath: "./stores/amazon"
   }
 ];
 
@@ -436,21 +428,77 @@ const STORES = [
 // RUN CHECKS
 // ==========================
 
+function loadStoreCheck(store) {
+  const resolved = require.resolve(store.modulePath);
+  const storeModule = require(resolved);
+  const check = storeModule.check || storeModule;
+
+  if (typeof check !== "function") {
+    throw new Error(`${store.name} does not export check()`);
+  }
+
+  return {
+    check,
+    resolved
+  };
+}
+
+function purgeCacheByIncludes(parts) {
+  for (const id of Object.keys(require.cache)) {
+    if (parts.some(part => id.includes(part))) {
+      delete require.cache[id];
+    }
+  }
+}
+
+function purgeStoreCache(store, resolved) {
+  if (!PURGE_STORE_CACHE) {
+    return;
+  }
+
+  try {
+    delete require.cache[resolved || require.resolve(store.modulePath)];
+  } catch {}
+
+  if (store.name === "Amazon") {
+    purgeCacheByIncludes([
+      `${path.sep}node_modules${path.sep}puppeteer`,
+      `${path.sep}node_modules${path.sep}@puppeteer`,
+      `${path.sep}node_modules${path.sep}puppeteer-core`,
+      `${path.sep}node_modules${path.sep}chromium-bidi`,
+      `${path.sep}node_modules${path.sep}devtools-protocol`
+    ]);
+  }
+
+  if (store.name === "Digiphile") {
+    purgeCacheByIncludes([
+      `${path.sep}node_modules${path.sep}cheerio`,
+      `${path.sep}node_modules${path.sep}htmlparser2`,
+      `${path.sep}node_modules${path.sep}domhandler`,
+      `${path.sep}node_modules${path.sep}domutils`
+    ]);
+  }
+}
+
 async function runStoreWithTimeout(store) {
   const controller =
     typeof AbortController !== "undefined" ? new AbortController() : null;
 
   let timeoutId = null;
   let timedOut = false;
+  let resolved = null;
 
-  const task = Promise.resolve().then(() =>
-    store.fn(
+  const task = Promise.resolve().then(() => {
+    const loaded = loadStoreCheck(store);
+    resolved = loaded.resolved;
+
+    return loaded.check(
       client,
       savedData,
       saveData,
       controller ? { signal: controller.signal } : undefined
-    )
-  );
+    );
+  });
 
   activeStoreTasks.add(task);
 
@@ -493,6 +541,11 @@ async function runStoreWithTimeout(store) {
       activeStoreTasks.delete(task);
     }
   }
+
+  return {
+    resolved,
+    timedOut
+  };
 }
 
 async function runChecks() {
@@ -536,9 +589,10 @@ async function runChecks() {
     for (const store of STORES) {
       const storeStart = Date.now();
       let storeTimedOut = false;
+      let storeResult = null;
 
       try {
-        await runStoreWithTimeout(store);
+        storeResult = await runStoreWithTimeout(store);
       } catch (err) {
         storeTimedOut = err.message.startsWith("Store timeout");
 
@@ -548,6 +602,10 @@ async function runChecks() {
       const duration = ((Date.now() - storeStart) / 1000).toFixed(1);
 
       console.log(`${store.name}: ${duration}s`);
+
+      if (!storeTimedOut) {
+        purgeStoreCache(store, storeResult?.resolved);
+      }
 
       await runGcPasses(1);
       logMemory(store.name);
