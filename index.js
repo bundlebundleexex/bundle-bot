@@ -40,15 +40,17 @@ const POST_SCAN_GC_RUNS = Math.max(
   Number(process.env.POST_SCAN_GC_RUNS || 5)
 );
 const POST_SCAN_RESTART_MB = Number(
-  process.env.POST_SCAN_RESTART_MB || process.env.MEMORY_RESTART_MB || 0
+  process.env.POST_SCAN_RESTART_MB || process.env.MEMORY_RESTART_MB || 230
 );
 const POST_SCAN_KILL_CHROME = process.env.POST_SCAN_KILL_CHROME !== "0";
-const PURGE_STORE_CACHE = process.env.PURGE_STORE_CACHE !== "0";
 const RESTART_COOLDOWN_MS = Number(
   process.env.RESTART_COOLDOWN_MS || 20 * 60 * 1000
 );
 const SKIP_FIRST_RUN_AFTER_RESTART =
   process.env.SKIP_FIRST_RUN_AFTER_RESTART !== "0";
+const DAILY_RESTART_ENABLED = process.env.DAILY_RESTART_ENABLED !== "0";
+const DAILY_RESTART_HOUR = Number(process.env.DAILY_RESTART_HOUR || 3);
+const DAILY_RESTART_MINUTE = Number(process.env.DAILY_RESTART_MINUTE || 5);
 
 const EXIT_ON_STORE_TIMEOUT = process.env.EXIT_ON_STORE_TIMEOUT === "1";
 
@@ -67,6 +69,7 @@ let isShuttingDown = false;
 let gcNoticeShown = false;
 let checkTimer = null;
 let cleanupTimer = null;
+let maintenanceRestartTimer = null;
 let lastStoreTimeoutAt = 0;
 
 const activeStoreTasks = new Set();
@@ -271,6 +274,53 @@ function scheduleNextRun(delayMs) {
   }, safeDelay);
 }
 
+function msUntilDailyRestart() {
+  const { hour, minute, second } = getWarsawTimeParts();
+  const currentSeconds = hour * 3600 + minute * 60 + second;
+  const targetSeconds = DAILY_RESTART_HOUR * 3600 + DAILY_RESTART_MINUTE * 60;
+  let secondsLeft = targetSeconds - currentSeconds;
+
+  if (secondsLeft <= 0) {
+    secondsLeft += 24 * 3600;
+  }
+
+  return secondsLeft * 1000;
+}
+
+function requestDailyRestart() {
+  maintenanceRestartTimer = null;
+
+  if (isRunning) {
+    console.log("Daily restart waiting for current scan to finish");
+    maintenanceRestartTimer = setTimeout(requestDailyRestart, 60 * 1000);
+    return;
+  }
+
+  console.log("Daily maintenance restart starting");
+  gracefulExit(1, "daily maintenance restart");
+}
+
+function scheduleDailyRestart() {
+  if (!DAILY_RESTART_ENABLED || isShuttingDown) {
+    return;
+  }
+
+  if (maintenanceRestartTimer) {
+    clearTimeout(maintenanceRestartTimer);
+  }
+
+  const delay = msUntilDailyRestart();
+  const hours = (delay / 3600000).toFixed(1);
+
+  console.log(
+    `Daily restart scheduled for ${String(DAILY_RESTART_HOUR).padStart(2, "0")}:${String(
+      DAILY_RESTART_MINUTE
+    ).padStart(2, "0")} Europe/Warsaw (in ${hours}h)`
+  );
+
+  maintenanceRestartTimer = setTimeout(requestDailyRestart, delay);
+}
+
 function gracefulExit(code, reason) {
   if (isShuttingDown) {
     return;
@@ -285,6 +335,11 @@ function gracefulExit(code, reason) {
   if (cleanupTimer) {
     clearInterval(cleanupTimer);
     cleanupTimer = null;
+  }
+
+  if (maintenanceRestartTimer) {
+    clearTimeout(maintenanceRestartTimer);
+    maintenanceRestartTimer = null;
   }
 
   try {
@@ -428,7 +483,13 @@ const STORES = [
 // RUN CHECKS
 // ==========================
 
+const loadedStores = new Map();
+
 function loadStoreCheck(store) {
+  if (loadedStores.has(store.modulePath)) {
+    return loadedStores.get(store.modulePath);
+  }
+
   const resolved = require.resolve(store.modulePath);
   const storeModule = require(resolved);
   const check = storeModule.check || storeModule;
@@ -437,47 +498,10 @@ function loadStoreCheck(store) {
     throw new Error(`${store.name} does not export check()`);
   }
 
-  return {
-    check,
-    resolved
-  };
-}
+  const loaded = { check, resolved };
+  loadedStores.set(store.modulePath, loaded);
 
-function purgeCacheByIncludes(parts) {
-  for (const id of Object.keys(require.cache)) {
-    if (parts.some(part => id.includes(part))) {
-      delete require.cache[id];
-    }
-  }
-}
-
-function purgeStoreCache(store, resolved) {
-  if (!PURGE_STORE_CACHE) {
-    return;
-  }
-
-  try {
-    delete require.cache[resolved || require.resolve(store.modulePath)];
-  } catch {}
-
-  if (store.name === "Amazon") {
-    purgeCacheByIncludes([
-      `${path.sep}node_modules${path.sep}puppeteer`,
-      `${path.sep}node_modules${path.sep}@puppeteer`,
-      `${path.sep}node_modules${path.sep}puppeteer-core`,
-      `${path.sep}node_modules${path.sep}chromium-bidi`,
-      `${path.sep}node_modules${path.sep}devtools-protocol`
-    ]);
-  }
-
-  if (store.name === "Digiphile") {
-    purgeCacheByIncludes([
-      `${path.sep}node_modules${path.sep}cheerio`,
-      `${path.sep}node_modules${path.sep}htmlparser2`,
-      `${path.sep}node_modules${path.sep}domhandler`,
-      `${path.sep}node_modules${path.sep}domutils`
-    ]);
-  }
+  return loaded;
 }
 
 async function runStoreWithTimeout(store) {
@@ -589,10 +613,9 @@ async function runChecks() {
     for (const store of STORES) {
       const storeStart = Date.now();
       let storeTimedOut = false;
-      let storeResult = null;
 
       try {
-        storeResult = await runStoreWithTimeout(store);
+        await runStoreWithTimeout(store);
       } catch (err) {
         storeTimedOut = err.message.startsWith("Store timeout");
 
@@ -602,10 +625,6 @@ async function runChecks() {
       const duration = ((Date.now() - storeStart) / 1000).toFixed(1);
 
       console.log(`${store.name}: ${duration}s`);
-
-      if (!storeTimedOut) {
-        purgeStoreCache(store, storeResult?.resolved);
-      }
 
       await runGcPasses(1);
       logMemory(store.name);
@@ -658,6 +677,7 @@ client.once("clientReady", async () => {
   loadData();
 
   console.log(`Data path: ${DATA_PATH}`);
+  scheduleDailyRestart();
 
   if (!global.gc) {
     console.log("GC unavailable. For Railway use start: node --expose-gc index.js");
