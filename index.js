@@ -34,6 +34,7 @@ const STORE_TIMEOUT = Number(process.env.STORE_TIMEOUT_MS || 90 * 1000);
 // POST_SCAN_RESTART_MB=260     - restart after scan if RSS is still above this
 // MEMORY_RESTART_MB=260        - accepted as an alias for POST_SCAN_RESTART_MB
 // POST_SCAN_KILL_CHROME=0      - disable Linux Chromium cleanup
+// RESTART_AFTER_SCAN=1         - restart after every finished scan
 // RESTART_COOLDOWN_MS=1200000  - skip immediate scan after memory restart
 const POST_SCAN_GC_RUNS = Math.max(
   1,
@@ -43,6 +44,7 @@ const POST_SCAN_RESTART_MB = Number(
   process.env.POST_SCAN_RESTART_MB || process.env.MEMORY_RESTART_MB || 230
 );
 const POST_SCAN_KILL_CHROME = process.env.POST_SCAN_KILL_CHROME !== "0";
+const RESTART_AFTER_SCAN = process.env.RESTART_AFTER_SCAN === "1";
 const RESTART_COOLDOWN_MS = Number(
   process.env.RESTART_COOLDOWN_MS || 20 * 60 * 1000
 );
@@ -146,12 +148,48 @@ function getMemoryMb() {
   };
 }
 
+function readMemoryFileMb(filePath) {
+  try {
+    if (!fs.existsSync(filePath)) {
+      return null;
+    }
+
+    const raw = fs.readFileSync(filePath, "utf8").trim();
+
+    if (!raw || raw === "max") {
+      return null;
+    }
+
+    const bytes = Number(raw);
+
+    if (!Number.isFinite(bytes) || bytes <= 0) {
+      return null;
+    }
+
+    return Math.round(bytes / 1024 / 1024);
+  } catch {
+    return null;
+  }
+}
+
+function getContainerMemoryMb() {
+  return (
+    readMemoryFileMb("/sys/fs/cgroup/memory.current") ??
+    readMemoryFileMb("/sys/fs/cgroup/memory/memory.usage_in_bytes")
+  );
+}
+
 function formatMemory(memory) {
+  const container = getContainerMemoryMb();
+  const containerText =
+    container !== null ? ` | container=${container} MB` : "";
+
   return (
     `rss=${memory.rss} MB | ` +
     `heap=${memory.heapUsed}/${memory.heapTotal} MB | ` +
     `external=${memory.external} MB | ` +
-    `buffers=${memory.arrayBuffers} MB`
+    `buffers=${memory.arrayBuffers} MB` +
+    containerText
   );
 }
 
@@ -180,9 +218,33 @@ function hardChromeCleanup() {
     return;
   }
 
-  for (const name of ["chromium", "chrome", "chrome-linux"]) {
+  const names = [
+    "chromium",
+    "chromium-browser",
+    "chrome",
+    "chrome-linux",
+    "google-chrome",
+    "chrome_crashpad"
+  ];
+
+  for (const name of names) {
     try {
       execFileSync("pkill", ["-9", name], {
+        stdio: "ignore"
+      });
+    } catch {}
+  }
+
+  const commandPatterns = [
+    "chrome",
+    "chromium",
+    "chrome_crashpad_handler",
+    "puppeteer"
+  ];
+
+  for (const pattern of commandPatterns) {
+    try {
+      execFileSync("pkill", ["-9", "-f", pattern], {
         stdio: "ignore"
       });
     } catch {}
@@ -213,10 +275,28 @@ async function memoryFlush(reason, options = {}) {
 
 async function memoryCleanup(reason = "interval") {
   try {
-    await memoryFlush(reason, {
+    const memoryAfterFlush = await memoryFlush(reason, {
       gcRuns: Math.max(2, POST_SCAN_GC_RUNS),
       killChrome: true
     });
+
+    const containerAfterFlush = getContainerMemoryMb();
+    const memoryForRestart = Math.max(
+      memoryAfterFlush.rss,
+      containerAfterFlush || 0
+    );
+
+    if (POST_SCAN_RESTART_MB > 0 && memoryForRestart >= POST_SCAN_RESTART_MB) {
+      console.log(
+        `Idle memory still above ${POST_SCAN_RESTART_MB} MB after flush ` +
+          `(rss=${memoryAfterFlush.rss} MB, container=${
+            containerAfterFlush ?? "unknown"
+          } MB) - restarting process for Railway`
+      );
+
+      markMemoryRestart(`${reason} memory limit`, memoryAfterFlush);
+      gracefulExit(1, `${reason} memory limit`);
+    }
   } catch (err) {
     console.log("memoryCleanup error:", err.message);
   }
@@ -227,6 +307,7 @@ function markMemoryRestart(reason, memory) {
   savedData.runtime.lastMemoryRestartAt = Date.now();
   savedData.runtime.lastMemoryRestartReason = reason;
   savedData.runtime.lastMemoryRestartRss = memory?.rss || null;
+  savedData.runtime.lastMemoryRestartContainer = getContainerMemoryMb();
   saveData();
 }
 
@@ -653,10 +734,27 @@ async function runChecks() {
       gcRuns: POST_SCAN_GC_RUNS,
       killChrome: true
     });
+    const containerAfterFlush = getContainerMemoryMb();
+    const memoryForRestart = Math.max(
+      ramAfterFlush.rss,
+      containerAfterFlush || 0
+    );
 
-    if (POST_SCAN_RESTART_MB > 0 && ramAfterFlush.rss >= POST_SCAN_RESTART_MB) {
+    if (RESTART_AFTER_SCAN) {
+      console.log("Restart after scan enabled - restarting process for Railway");
+
+      markMemoryRestart("restart after scan", ramAfterFlush);
+      gracefulExit(1, "restart after scan");
+
+      return;
+    }
+
+    if (POST_SCAN_RESTART_MB > 0 && memoryForRestart >= POST_SCAN_RESTART_MB) {
       console.log(
-        `RSS still above ${POST_SCAN_RESTART_MB} MB after flush - restarting process for Railway`
+        `Memory still above ${POST_SCAN_RESTART_MB} MB after flush ` +
+          `(rss=${ramAfterFlush.rss} MB, container=${
+            containerAfterFlush ?? "unknown"
+          } MB) - restarting process for Railway`
       );
 
       markMemoryRestart("post-scan memory limit", ramAfterFlush);
