@@ -316,13 +316,17 @@ function shouldSkipFirstRunAfterMemoryRestart() {
     return false;
   }
 
+  return getMemoryRestartCooldownLeft() > 0;
+}
+
+function getMemoryRestartCooldownLeft() {
   const lastRestartAt = Number(savedData.runtime?.lastMemoryRestartAt || 0);
 
   if (!lastRestartAt) {
-    return false;
+    return 0;
   }
 
-  return Date.now() - lastRestartAt < RESTART_COOLDOWN_MS;
+  return Math.max(RESTART_COOLDOWN_MS - (Date.now() - lastRestartAt), 0);
 }
 
 function clearCheckTimer() {
@@ -782,17 +786,24 @@ client.once("clientReady", async () => {
     gcNoticeShown = true;
   }
 
+  let firstDelay = isSleepMode() ? msUntilWakeModeEnds() : CHECK_INTERVAL;
+  const restartCooldownLeft = getMemoryRestartCooldownLeft();
+
   if (shouldSkipFirstRunAfterMemoryRestart()) {
+    firstDelay = isSleepMode()
+      ? msUntilWakeModeEnds()
+      : Math.max(restartCooldownLeft, CHECK_INTERVAL);
+
     console.log(
       `Recent memory restart detected - skipping immediate first scan for ${Math.ceil(
-        RESTART_COOLDOWN_MS / 60000
+        firstDelay / 60000
       )} min cooldown`
     );
   } else {
     await runChecks();
   }
 
-  scheduleNextRun(isSleepMode() ? msUntilWakeModeEnds() : CHECK_INTERVAL);
+  scheduleNextRun(firstDelay);
 
   cleanupTimer = setInterval(() => {
     if (!isRunning) {
