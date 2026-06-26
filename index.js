@@ -28,13 +28,17 @@ const CHECK_INTERVAL = Number(process.env.CHECK_INTERVAL_MS || 15 * 60 * 1000);
 const STORE_DELAY = Number(process.env.STORE_DELAY_MS || 1500);
 const CLEANUP_INTERVAL = Number(process.env.CLEANUP_INTERVAL_MS || 70 * 60 * 1000);
 const STORE_TIMEOUT = Number(process.env.STORE_TIMEOUT_MS || 90 * 1000);
+const AMAZON_INTERVAL_MS = Number(
+  process.env.AMAZON_INTERVAL_MS || 6 * 60 * 60 * 1000
+);
 
 // Post-scan flush:
 // POST_SCAN_GC_RUNS=5          - how many forced GC passes after each full scan
 // POST_SCAN_RESTART_MB=260     - restart after scan if RSS is still above this
 // MEMORY_RESTART_MB=260        - accepted as an alias for POST_SCAN_RESTART_MB
 // POST_SCAN_KILL_CHROME=0      - disable Linux Chromium cleanup
-// RESTART_AFTER_SCAN=1         - restart after every finished scan
+// PROCESS_RESTART_ENABLED=1    - allow process.exit restarts on Railway
+// RESTART_AFTER_SCAN=1         - restart after every finished scan, needs PROCESS_RESTART_ENABLED=1
 // RESTART_COOLDOWN_MS=1200000  - skip immediate scan after memory restart
 const POST_SCAN_GC_RUNS = Math.max(
   1,
@@ -44,13 +48,16 @@ const POST_SCAN_RESTART_MB = Number(
   process.env.POST_SCAN_RESTART_MB || process.env.MEMORY_RESTART_MB || 230
 );
 const POST_SCAN_KILL_CHROME = process.env.POST_SCAN_KILL_CHROME !== "0";
-const RESTART_AFTER_SCAN = process.env.RESTART_AFTER_SCAN === "1";
+const PROCESS_RESTART_ENABLED = process.env.PROCESS_RESTART_ENABLED === "1";
+const RESTART_AFTER_SCAN =
+  PROCESS_RESTART_ENABLED && process.env.RESTART_AFTER_SCAN === "1";
 const RESTART_COOLDOWN_MS = Number(
   process.env.RESTART_COOLDOWN_MS || 20 * 60 * 1000
 );
 const SKIP_FIRST_RUN_AFTER_RESTART =
   process.env.SKIP_FIRST_RUN_AFTER_RESTART !== "0";
-const DAILY_RESTART_ENABLED = process.env.DAILY_RESTART_ENABLED !== "0";
+const DAILY_RESTART_ENABLED =
+  PROCESS_RESTART_ENABLED && process.env.DAILY_RESTART_ENABLED === "1";
 const DAILY_RESTART_HOUR = Number(process.env.DAILY_RESTART_HOUR || 3);
 const DAILY_RESTART_MINUTE = Number(process.env.DAILY_RESTART_MINUTE || 5);
 
@@ -287,12 +294,18 @@ async function memoryCleanup(reason = "interval") {
     );
 
     if (POST_SCAN_RESTART_MB > 0 && memoryForRestart >= POST_SCAN_RESTART_MB) {
-      console.log(
+      const message =
         `Idle memory still above ${POST_SCAN_RESTART_MB} MB after flush ` +
-          `(rss=${memoryAfterFlush.rss} MB, container=${
-            containerAfterFlush ?? "unknown"
-          } MB) - restarting process for Railway`
-      );
+        `(rss=${memoryAfterFlush.rss} MB, container=${
+          containerAfterFlush ?? "unknown"
+        } MB)`;
+
+      if (!PROCESS_RESTART_ENABLED) {
+        console.log(`${message} - restart disabled, keeping bot online`);
+        return;
+      }
+
+      console.log(`${message} - restarting process for Railway`);
 
       markMemoryRestart(`${reason} memory limit`, memoryAfterFlush);
       gracefulExit(1, `${reason} memory limit`);
@@ -560,7 +573,8 @@ const STORES = [
   },
   {
     name: "Amazon",
-    modulePath: "./stores/amazon"
+    modulePath: "./stores/amazon",
+    minIntervalMs: AMAZON_INTERVAL_MS
   }
 ];
 
@@ -587,6 +601,33 @@ function loadStoreCheck(store) {
   loadedStores.set(store.modulePath, loaded);
 
   return loaded;
+}
+
+function getStoreIntervalLeft(store) {
+  if (!store.minIntervalMs || store.minIntervalMs <= 0) {
+    return 0;
+  }
+
+  const lastRuns = savedData.runtime?.lastStoreRunAt || {};
+  const lastRunAt = Number(lastRuns[store.name] || 0);
+
+  if (!lastRunAt) {
+    return 0;
+  }
+
+  return Math.max(store.minIntervalMs - (Date.now() - lastRunAt), 0);
+}
+
+function markStoreRun(store) {
+  if (!store.minIntervalMs || store.minIntervalMs <= 0) {
+    return;
+  }
+
+  savedData.runtime ??= {};
+  savedData.runtime.lastStoreRunAt ??= {};
+  savedData.runtime.lastStoreRunAt[store.name] = Date.now();
+
+  saveData();
 }
 
 async function runStoreWithTimeout(store) {
@@ -696,11 +737,24 @@ async function runChecks() {
     logMemory("start");
 
     for (const store of STORES) {
+      const intervalLeft = getStoreIntervalLeft(store);
+
+      if (intervalLeft > 0) {
+        console.log(
+          `${store.name}: skipped, next run in ${Math.ceil(
+            intervalLeft / 60000
+          )} min`
+        );
+
+        continue;
+      }
+
       const storeStart = Date.now();
       let storeTimedOut = false;
 
       try {
         await runStoreWithTimeout(store);
+        markStoreRun(store);
       } catch (err) {
         storeTimedOut = err.message.startsWith("Store timeout");
 
@@ -754,12 +808,18 @@ async function runChecks() {
     }
 
     if (POST_SCAN_RESTART_MB > 0 && memoryForRestart >= POST_SCAN_RESTART_MB) {
-      console.log(
+      const message =
         `Memory still above ${POST_SCAN_RESTART_MB} MB after flush ` +
-          `(rss=${ramAfterFlush.rss} MB, container=${
-            containerAfterFlush ?? "unknown"
-          } MB) - restarting process for Railway`
-      );
+        `(rss=${ramAfterFlush.rss} MB, container=${
+          containerAfterFlush ?? "unknown"
+        } MB)`;
+
+      if (!PROCESS_RESTART_ENABLED) {
+        console.log(`${message} - restart disabled, keeping bot online`);
+        return;
+      }
+
+      console.log(`${message} - restarting process for Railway`);
 
       markMemoryRestart("post-scan memory limit", ramAfterFlush);
       gracefulExit(1, "post-scan memory limit");
