@@ -110,6 +110,17 @@ function hasBlockedCategory(game) {
 }
 
 function isToolOrSoftware(game) {
+  const offerType = String(game.offerType || "").toUpperCase();
+  const categories = getCategoryPaths(game);
+
+  if (
+    offerType === "BASE_GAME" &&
+    categories.includes("freegames") &&
+    categories.some(category => category === "games" || category.startsWith("games/"))
+  ) {
+    return false;
+  }
+
   const text = [
     game.title,
     game.urlSlug,
@@ -121,7 +132,7 @@ function isToolOrSoftware(game) {
     .join(" ")
     .toLowerCase();
 
-  return /(software|application|editor|toolkit|creator kit|mod kit|asset pack|template pack)/.test(
+  return /(software|developer tool|creator kit|mod kit|asset pack|template pack)/.test(
     text
   );
 }
@@ -322,6 +333,7 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
     const now = new Date();
     const candidates = [];
     const skipReasons = {};
+    const skippedTitles = {};
     const stats = {
       all: elements.length,
       activeFree: 0,
@@ -336,6 +348,12 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
         if (result.skip) {
           stats.skipped++;
           skipReasons[result.reason] = (skipReasons[result.reason] || 0) + 1;
+
+          if (result.reason !== "no active free promo") {
+            skippedTitles[result.reason] ??= [];
+            skippedTitles[result.reason].push(result.title);
+          }
+
           continue;
         }
 
@@ -372,6 +390,10 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
 
     if (Object.keys(skipReasons).length) {
       console.log("Epic skip reasons:", skipReasons);
+    }
+
+    if (Object.keys(skippedTitles).length) {
+      console.log("Epic skipped titles:", skippedTitles);
     }
 
     if (!fresh.length) {
