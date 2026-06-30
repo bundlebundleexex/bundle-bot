@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const { Client, GatewayIntentBits } = require("discord.js");
-const { execFileSync } = require("child_process");
+const { execFileSync, fork } = require("child_process");
 
 const fs = require("fs");
 const path = require("path");
@@ -23,6 +23,10 @@ const client = new Client({
 // ==========================
 
 const TIME_ZONE = "Europe/Warsaw";
+
+const SCAN_WORKER_MODE = process.env.SCAN_WORKER === "1";
+const USE_SCAN_WORKER =
+  process.env.USE_SCAN_WORKER !== "0" && !SCAN_WORKER_MODE;
 
 const CHECK_INTERVAL = Number(process.env.CHECK_INTERVAL_MS || 15 * 60 * 1000);
 const STORE_DELAY = Number(process.env.STORE_DELAY_MS || 1500);
@@ -79,6 +83,8 @@ let gcNoticeShown = false;
 let checkTimer = null;
 let cleanupTimer = null;
 let maintenanceRestartTimer = null;
+let parentScanTimer = null;
+let scanWorkerProcess = null;
 let lastStoreTimeoutAt = 0;
 
 const activeStoreTasks = new Set();
@@ -438,6 +444,16 @@ function gracefulExit(code, reason) {
   if (maintenanceRestartTimer) {
     clearTimeout(maintenanceRestartTimer);
     maintenanceRestartTimer = null;
+  }
+
+  clearParentScanTimer();
+
+  if (scanWorkerProcess && !scanWorkerProcess.killed) {
+    try {
+      scanWorkerProcess.kill("SIGKILL");
+    } catch {}
+
+    scanWorkerProcess = null;
   }
 
   try {
@@ -830,6 +846,108 @@ async function runChecks() {
 }
 
 // ==========================
+// WORKER SCHEDULER
+// ==========================
+
+function clearParentScanTimer() {
+  if (parentScanTimer) {
+    clearTimeout(parentScanTimer);
+    parentScanTimer = null;
+  }
+}
+
+function scheduleNextParentScan(delayMs) {
+  if (isShuttingDown) {
+    return;
+  }
+
+  clearParentScanTimer();
+
+  const safeDelay = Math.max(delayMs, 1000);
+  const minutes = Math.ceil(safeDelay / 1000 / 60);
+
+  console.log(`Parent: next worker scan in ${minutes} min`);
+
+  parentScanTimer = setTimeout(() => {
+    parentScanTimer = null;
+    runParentScanCycle();
+  }, safeDelay);
+}
+
+function runParentScanCycle() {
+  if (isShuttingDown) {
+    return;
+  }
+
+  if (isSleepMode()) {
+    console.log(`Parent: sleep mode (${getTime()})`);
+
+    memoryCleanup("parent sleep mode").finally(() => {
+      scheduleNextParentScan(msUntilWakeModeEnds());
+    });
+
+    return;
+  }
+
+  if (scanWorkerProcess) {
+    console.log("Parent: previous scan worker is still running");
+    scheduleNextParentScan(Math.min(CHECK_INTERVAL, 5 * 60 * 1000));
+    return;
+  }
+
+  console.log(`\nParent: starting scan worker - ${getTime()}`);
+  logMemory("parent before worker");
+
+  const child = fork(__filename, [], {
+    env: {
+      ...process.env,
+      SCAN_WORKER: "1"
+    },
+    execArgv: process.execArgv,
+    stdio: ["ignore", "inherit", "inherit", "ipc"]
+  });
+
+  scanWorkerProcess = child;
+
+  child.on("error", err => {
+    console.log("Parent: scan worker error:", err.message);
+  });
+
+  child.on("exit", (code, signal) => {
+    scanWorkerProcess = null;
+
+    console.log(
+      `Parent: scan worker finished (code=${code ?? "null"}, signal=${
+        signal ?? "null"
+      })`
+    );
+
+    memoryCleanup("parent post-worker").finally(() => {
+      logMemory("parent after worker");
+      scheduleNextParentScan(isSleepMode() ? msUntilWakeModeEnds() : CHECK_INTERVAL);
+    });
+  });
+}
+
+function startParentScheduler() {
+  console.log("Parent scheduler mode enabled");
+  console.log(`Data path will be used by scan workers: ${DATA_PATH}`);
+
+  if (!global.gc) {
+    console.log("GC unavailable. For Railway use start: node --expose-gc index.js");
+    gcNoticeShown = true;
+  }
+
+  runParentScanCycle();
+
+  cleanupTimer = setInterval(() => {
+    memoryCleanup("parent interval");
+  }, CLEANUP_INTERVAL);
+
+  console.log("Parent scheduler started");
+}
+
+// ==========================
 // READY
 // ==========================
 
@@ -839,6 +957,28 @@ client.once("clientReady", async () => {
   loadData();
 
   console.log(`Data path: ${DATA_PATH}`);
+
+  if (SCAN_WORKER_MODE) {
+    console.log("Scan worker mode enabled");
+
+    if (!global.gc) {
+      console.log("GC unavailable. For Railway use start: node --expose-gc index.js");
+      gcNoticeShown = true;
+    }
+
+    try {
+      await runChecks();
+      await memoryFlush("worker final", {
+        gcRuns: POST_SCAN_GC_RUNS,
+        killChrome: true
+      });
+    } finally {
+      gracefulExit(0, "scan worker finished");
+    }
+
+    return;
+  }
+
   scheduleDailyRestart();
 
   if (!global.gc) {
@@ -899,4 +1039,8 @@ process.on("SIGTERM", () => {
 // LOGIN
 // ==========================
 
-client.login(process.env.TOKEN);
+if (USE_SCAN_WORKER) {
+  startParentScheduler();
+} else {
+  client.login(process.env.TOKEN);
+}
