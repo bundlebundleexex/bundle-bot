@@ -979,6 +979,11 @@ client.once("clientReady", async () => {
     return;
   }
 
+  if (USE_SCAN_WORKER) {
+    startParentScheduler();
+    return;
+  }
+
   scheduleDailyRestart();
 
   if (!global.gc) {
@@ -1039,8 +1044,4 @@ process.on("SIGTERM", () => {
 // LOGIN
 // ==========================
 
-if (USE_SCAN_WORKER) {
-  startParentScheduler();
-} else {
-  client.login(process.env.TOKEN);
-}
+client.login(process.env.TOKEN);
