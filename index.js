@@ -85,6 +85,7 @@ let cleanupTimer = null;
 let maintenanceRestartTimer = null;
 let parentScanTimer = null;
 let scanWorkerProcess = null;
+let parentSchedulerStarted = false;
 let lastStoreTimeoutAt = 0;
 
 const activeStoreTasks = new Set();
@@ -930,6 +931,13 @@ function runParentScanCycle() {
 }
 
 function startParentScheduler() {
+  if (parentSchedulerStarted) {
+    console.log("Parent scheduler already running");
+    return;
+  }
+
+  parentSchedulerStarted = true;
+
   console.log("Parent scheduler mode enabled");
   console.log(`Data path will be used by scan workers: ${DATA_PATH}`);
 
