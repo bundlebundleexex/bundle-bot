@@ -884,7 +884,7 @@ function runParentScanCycle() {
     console.log(`Parent: sleep mode (${getTime()})`);
 
     memoryCleanup("parent sleep mode").finally(() => {
-      scheduleNextParentScan(msUntilWakeModeEnds());
+      scheduleNextParentScan(Math.min(msUntilWakeModeEnds(), CHECK_INTERVAL));
     });
 
     return;
