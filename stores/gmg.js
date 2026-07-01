@@ -184,20 +184,46 @@ module.exports.check =
               bodyText
             ).toLowerCase();
 
+          const titleText =
+            title.toLowerCase();
+
           // =========================
           // BLOCKLISTS
           // =========================
 
           const HARD_BLOCK =
             [
+              // software / tools
+              "software bundle",
+              "software collection",
+              "software pack",
+              "software suite",
+              "plugin",
+              "plugins",
+              "instrument bundle",
+              "studio bundle",
+
               // audio
               "royalty-free",
               "sound effects",
+              "sound effect",
+              "sound pack",
+              "sound packs",
               "sfx",
               "audio pack",
+              "audio packs",
+              "audio engineering",
+              "audio creator",
+              "audio creators",
+              "music production",
+              "music producer",
+              "music makers",
+              "sample pack",
+              "sample packs",
               "music pack",
               "audio library",
               "sound library",
+              "sound design",
 
               // assets
               "megapack",
@@ -256,13 +282,16 @@ module.exports.check =
 
           const GAME_HINTS =
             [
-              "steam",
-              "game",
-              "games",
-              "dlc",
-              "pc",
-              "key",
-              "keys"
+              "steam key",
+              "steam keys",
+              "activate on steam",
+              "redeem on steam",
+              "pc game",
+              "pc games",
+              "game bundle",
+              "games bundle",
+              "dlc pack",
+              "game keys"
             ];
 
           // =========================
@@ -329,6 +358,19 @@ module.exports.check =
           // =========================
           // FILTERS
           // =========================
+
+          if (
+            /(software|audio|sound|music|producer|asset|assets|course|courses|training|unreal engine|unity|cad|3d model|texture|sample pack|plugin)/i.test(
+              titleText
+            )
+          ) {
+            console.log(
+              "🚫 Non-game GMG bundle:",
+              title
+            );
+
+            continue;
+          }
 
           if (hasHard) {
             console.log(

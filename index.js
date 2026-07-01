@@ -32,6 +32,9 @@ const CHECK_INTERVAL = Number(process.env.CHECK_INTERVAL_MS || 15 * 60 * 1000);
 const STORE_DELAY = Number(process.env.STORE_DELAY_MS || 1500);
 const CLEANUP_INTERVAL = Number(process.env.CLEANUP_INTERVAL_MS || 70 * 60 * 1000);
 const STORE_TIMEOUT = Number(process.env.STORE_TIMEOUT_MS || 90 * 1000);
+const SCAN_WORKER_MAX_RUNTIME_MS = Number(
+  process.env.SCAN_WORKER_MAX_RUNTIME_MS || 6 * 60 * 1000
+);
 const AMAZON_INTERVAL_MS = Number(
   process.env.AMAZON_INTERVAL_MS || 6 * 60 * 60 * 1000
 );
@@ -450,10 +453,7 @@ function gracefulExit(code, reason) {
   clearParentScanTimer();
 
   if (scanWorkerProcess && !scanWorkerProcess.killed) {
-    try {
-      scanWorkerProcess.kill("SIGKILL");
-    } catch {}
-
+    killScanWorkerProcess("parent shutdown");
     scanWorkerProcess = null;
   }
 
@@ -857,6 +857,25 @@ function clearParentScanTimer() {
   }
 }
 
+function killScanWorkerProcess(reason) {
+  if (!scanWorkerProcess || scanWorkerProcess.killed) {
+    return;
+  }
+
+  console.log(`Parent: killing scan worker (${reason})`);
+
+  if (process.platform !== "win32" && scanWorkerProcess.pid) {
+    try {
+      process.kill(-scanWorkerProcess.pid, "SIGKILL");
+      return;
+    } catch {}
+  }
+
+  try {
+    scanWorkerProcess.kill("SIGKILL");
+  } catch {}
+}
+
 function scheduleNextParentScan(delayMs) {
   if (isShuttingDown) {
     return;
@@ -905,16 +924,24 @@ function runParentScanCycle() {
       SCAN_WORKER: "1"
     },
     execArgv: process.execArgv,
+    detached: process.platform !== "win32",
     stdio: ["ignore", "inherit", "inherit", "ipc"]
   });
 
   scanWorkerProcess = child;
+
+  const workerWatchdog = setTimeout(() => {
+    killScanWorkerProcess(
+      `runtime exceeded ${Math.round(SCAN_WORKER_MAX_RUNTIME_MS / 1000)}s`
+    );
+  }, SCAN_WORKER_MAX_RUNTIME_MS);
 
   child.on("error", err => {
     console.log("Parent: scan worker error:", err.message);
   });
 
   child.on("exit", (code, signal) => {
+    clearTimeout(workerWatchdog);
     scanWorkerProcess = null;
 
     console.log(
