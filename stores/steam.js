@@ -41,7 +41,18 @@ const axiosInstance =
 
     headers: {
       "User-Agent":
-        "Mozilla/5.0"
+        "Mozilla/5.0",
+
+      "Accept-Language":
+        "en-US,en;q=0.9",
+
+      Cookie:
+        [
+          "birthtime=568022401",
+          "lastagecheckage=1-January-1988",
+          "wants_mature_content=1",
+          "mature_content=1"
+        ].join("; ")
     }
   });
 
@@ -65,17 +76,33 @@ async function fetchSearchPage() {
 
     const { data } =
       await axiosInstance.get(
-        "https://store.steampowered.com/search/",
+        "https://store.steampowered.com/search/results/",
         {
           params: {
             maxprice: "free",
             specials: 1,
-            supportedlang: "english"
+            supportedlang: "english",
+            category1: 998,
+            hidef2p: 1,
+            ignore_preferences: 1,
+            cc: "us",
+            l: "english",
+            ndl: 1,
+            json: 1,
+            start: 0,
+            count: 100
           }
         }
       );
 
-    return String(data);
+    if (typeof data === "string") {
+      return data;
+    }
+
+    return String(
+      data?.results_html ||
+      ""
+    );
 
   } catch (err) {
 
@@ -171,7 +198,17 @@ async function fetchStorePage(
 
     const { data } =
       await axiosInstance.get(
-        `https://store.steampowered.com/app/${appid}/`
+        `https://store.steampowered.com/app/${appid}/`,
+        {
+          params: {
+            cc: "us",
+            l: "english",
+            ageDay: "1",
+            ageMonth: "January",
+            ageYear: "1988",
+            ndl: 1
+          }
+        }
       );
 
     return String(data)
@@ -210,9 +247,16 @@ async function validateGiveaway(
     // API CHECK
     // ==========================
 
+    const initial =
+      Number(po.initial || 0);
+
+    const final =
+      Number(po.final || 0);
+
     const apiValid =
-      game.is_free === true &&
-      po.discount_percent === 100;
+      po.discount_percent === 100 &&
+      final === 0 &&
+      initial > 0;
 
     if (!apiValid) {
       return false;
@@ -237,16 +281,21 @@ async function validateGiveaway(
         html.includes("-100%"),
 
       discountPct:
-        html.includes("discount_pct"),
+        html.includes("discount_pct") ||
+        html.includes("discount_block"),
 
       discountFinal:
-        html.includes("discount_final_price"),
+        html.includes("discount_final_price") ||
+        html.includes("free to keep"),
 
       addToAccount:
-        html.includes("add to account"),
+        html.includes("add to account") ||
+        html.includes("add to your account") ||
+        html.includes("add to library"),
 
       freeToKeep:
-        html.includes("free to keep")
+        html.includes("free to keep") ||
+        html.includes("100%")
     };
 
     // ==========================
@@ -262,15 +311,18 @@ async function validateGiveaway(
       `🔍 ${appid}`,
       {
         ...checks,
-        isRealF2P
+        isRealF2P,
+        initial,
+        final,
+        discount: po.discount_percent
       }
     );
 
     return (
       checks.minus100 &&
-      checks.discountPct &&
-      checks.discountFinal &&
       (
+        checks.discountPct ||
+        checks.discountFinal ||
         checks.addToAccount ||
         checks.freeToKeep
       ) &&
