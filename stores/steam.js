@@ -1,4 +1,4 @@
-const axios = require("axios");
+﻿const axios = require("axios");
 
 const http = require("http");
 
@@ -20,6 +20,9 @@ const CHANNEL_ID =
 
 const ROLE_ID =
   "1371121790046437448";
+
+const STEAM_COUNTRY =
+  process.env.STEAM_CC || "pl";
 
 // ==========================
 // AXIOS
@@ -92,7 +95,7 @@ async function fetchSearchPage() {
               specials: 1,
               supportedlang: "english",
               ignore_preferences: 1,
-              cc: "us",
+              cc: STEAM_COUNTRY,
               l: "english",
               ndl: 1,
               json: 1,
@@ -132,7 +135,7 @@ async function fetchSearchPage() {
   } catch (err) {
 
     console.log(
-      "❌ fetchSearchPage:",
+      "âťŚ fetchSearchPage:",
       err.message
     );
 
@@ -189,7 +192,7 @@ async function fetchDetails(
         {
           params: {
             appids: appid,
-            cc: "us",
+            cc: STEAM_COUNTRY,
             l: "english"
           }
         }
@@ -203,7 +206,7 @@ async function fetchDetails(
   } catch (err) {
 
     console.log(
-      `❌ API ${appid}:`,
+      `âťŚ API ${appid}:`,
       err.message
     );
 
@@ -226,7 +229,7 @@ async function fetchStorePage(
         `https://store.steampowered.com/app/${appid}/`,
         {
           params: {
-            cc: "us",
+            cc: STEAM_COUNTRY,
             l: "english",
             ageDay: "1",
             ageMonth: "January",
@@ -242,7 +245,7 @@ async function fetchStorePage(
   } catch (err) {
 
     console.log(
-      `❌ HTML ${appid}:`,
+      `âťŚ HTML ${appid}:`,
       err.message
     );
 
@@ -297,7 +300,7 @@ async function validateGiveaway(
       );
 
     if (!html) {
-      return false;
+      return true;
     }
 
     const checks = {
@@ -333,7 +336,7 @@ async function validateGiveaway(
       );
 
     console.log(
-      `🔍 ${appid}`,
+      `đź”Ť ${appid}`,
       {
         ...checks,
         isRealF2P,
@@ -357,7 +360,7 @@ async function validateGiveaway(
   } catch (err) {
 
     console.log(
-      `❌ VALIDATE ${appid}:`,
+      `âťŚ VALIDATE ${appid}:`,
       err.message
     );
 
@@ -378,7 +381,7 @@ async function check(
   try {
 
     console.log(
-      "🟦 Steam Giveaway Scan..."
+      "đźź¦ Steam Giveaway Scan..."
     );
 
     savedData.steamGames ??=
@@ -404,7 +407,7 @@ async function check(
     if (!html) {
 
       console.log(
-        "❌ No HTML"
+        "âťŚ No HTML"
       );
 
       return;
@@ -420,13 +423,13 @@ async function check(
       );
 
     console.log(
-      `🎮 AppIDs: ${appids.length}`
+      `đźŽ® AppIDs: ${appids.length}`
     );
 
     if (!appids.length) {
 
       console.log(
-        "⏸ No appids"
+        "âŹ¸ No appids"
       );
 
       return;
@@ -474,14 +477,14 @@ async function check(
         if (!valid) {
 
           console.log(
-            `❌ Not giveaway: ${appid}`
+            `âťŚ Not giveaway: ${appid}`
           );
 
           continue;
         }
 
         console.log(
-          `🎁 GIVEAWAY: ${game.name}`
+          `đźŽ GIVEAWAY: ${game.name}`
         );
 
         const url =
@@ -499,7 +502,7 @@ async function check(
             )
 
             .setTitle(
-              `🎮 ${game.name}`
+              `đźŽ® ${game.name}`
             )
 
             .setURL(
@@ -507,7 +510,7 @@ async function check(
             )
 
             .setDescription(
-              "🔥 **NOWA DARMOWA GRA NA STEAM!**\n\n✅ Promocja -100%\n✅ Free to Keep\n📌 Dodaj do konta — zostaje na zawsze"
+              "đź”Ą **NOWA DARMOWA GRA NA STEAM!**\n\nâś… Promocja -100%\nâś… Free to Keep\nđź“Ś Dodaj do konta â€” zostaje na zawsze"
             )
 
             .setThumbnail(
@@ -522,7 +525,7 @@ async function check(
 
             .setFooter({
               text:
-                "BundleBot • Steam Giveaway Tracker"
+                "BundleBot â€˘ Steam Giveaway Tracker"
             })
 
             .setTimestamp();
@@ -534,7 +537,7 @@ async function check(
               new ButtonBuilder()
 
                 .setLabel(
-                  "🎮 Odbierz na Steam"
+                  "đźŽ® Odbierz na Steam"
                 )
 
                 .setStyle(
@@ -553,7 +556,7 @@ async function check(
         await channel.send({
 
           content:
-            `🚨 **NOWA DARMOWA GRA NA STEAM!** <@&${ROLE_ID}>`,
+            `đźš¨ **NOWA DARMOWA GRA NA STEAM!** <@&${ROLE_ID}>`,
 
           embeds: [embed],
 
@@ -580,13 +583,13 @@ async function check(
         sent++;
 
         console.log(
-          `✔ Sent: ${game.name}`
+          `âś” Sent: ${game.name}`
         );
 
       } catch (err) {
 
         console.log(
-          `❌ PROCESS ${appid}:`,
+          `âťŚ PROCESS ${appid}:`,
           err.message
         );
       }
@@ -599,13 +602,13 @@ async function check(
     if (!sent) {
 
       console.log(
-        "⏸ No new giveaways"
+        "âŹ¸ No new giveaways"
       );
 
     } else {
 
       console.log(
-        `✅ Sent ${sent}`
+        `âś… Sent ${sent}`
       );
     }
 
@@ -626,7 +629,7 @@ async function check(
         );
 
       console.log(
-        `🧹 RAM ${used} MB`
+        `đź§ą RAM ${used} MB`
       );
 
     } catch {}
@@ -634,7 +637,7 @@ async function check(
   } catch (err) {
 
     console.log(
-      "❌ Steam error:",
+      "âťŚ Steam error:",
       err.message
     );
   }
