@@ -74,35 +74,60 @@ async function fetchSearchPage() {
 
   try {
 
-    const { data } =
-      await axiosInstance.get(
-        "https://store.steampowered.com/search/results/",
-        {
-          params: {
-            maxprice: "free",
-            specials: 1,
-            supportedlang: "english",
-            category1: 998,
-            hidef2p: 1,
-            ignore_preferences: 1,
-            cc: "us",
-            l: "english",
-            ndl: 1,
-            json: 1,
-            start: 0,
-            count: 100
-          }
-        }
-      );
+    const count = 100;
+    const maxPages = 20;
+    let html = "";
+    let totalCount = null;
 
-    if (typeof data === "string") {
-      return data;
+    for (let page = 0; page < maxPages; page++) {
+      const start =
+        page * count;
+
+      const { data } =
+        await axiosInstance.get(
+          "https://store.steampowered.com/search/results/",
+          {
+            params: {
+              maxprice: "free",
+              specials: 1,
+              supportedlang: "english",
+              ignore_preferences: 1,
+              cc: "us",
+              l: "english",
+              ndl: 1,
+              json: 1,
+              start,
+              count
+            }
+          }
+        );
+
+      const pageHtml =
+        typeof data === "string"
+          ? data
+          : String(data?.results_html || "");
+
+      if (!pageHtml.trim()) {
+        break;
+      }
+
+      html += `\n${pageHtml}`;
+
+      const parsedTotal =
+        Number(data?.total_count);
+
+      if (Number.isFinite(parsedTotal) && parsedTotal > 0) {
+        totalCount = parsedTotal;
+      }
+
+      if (totalCount && start + count >= totalCount) {
+        break;
+      }
+
+      await sleep(300);
     }
 
-    return String(
-      data?.results_html ||
-      ""
-    );
+    return html;
 
   } catch (err) {
 
