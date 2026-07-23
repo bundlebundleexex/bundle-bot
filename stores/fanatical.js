@@ -121,6 +121,7 @@ function isRecurringPickMix(bundle) {
 
 function getDateValue(bundle) {
   return (
+    bundle.available_valid_from ||
     bundle.valid_from ||
     bundle.start_date ||
     bundle.starts_at ||
@@ -132,21 +133,40 @@ function getDateValue(bundle) {
   );
 }
 
-function getMonthKey(bundle) {
-  const dateValue = getDateValue(bundle);
-  const date = dateValue ? new Date(dateValue) : new Date();
-  const safeDate = Number.isNaN(date.getTime()) ? new Date() : date;
-  const year = safeDate.getFullYear();
-  const month = String(safeDate.getMonth() + 1).padStart(2, "0");
+function parseFanaticalDate(value) {
+  if (!value) {
+    return null;
+  }
 
-  return `${year}-${month}`;
+  const numericValue = Number(value);
+
+  if (Number.isFinite(numericValue)) {
+    const milliseconds =
+      numericValue < 100000000000 ? numericValue * 1000 : numericValue;
+    const date = new Date(milliseconds);
+
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  const date = new Date(value);
+
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function getDateKey(bundle) {
+  const date = parseFanaticalDate(getDateValue(bundle)) || new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
 }
 
 function getBundleKey(bundle) {
   const slug = bundle.slug;
 
-  if (isRecurringPickMix(bundle)) {
-    return `${slug}:${getMonthKey(bundle)}`;
+  if (isPickMix(bundle)) {
+    return `${slug}:${getDateKey(bundle)}`;
   }
 
   return slug;
