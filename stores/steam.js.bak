@@ -1,4 +1,4 @@
-﻿const axios = require("axios");
+const axios = require("axios");
 
 const http = require("http");
 
@@ -16,13 +16,10 @@ const {
 // ==========================
 
 const CHANNEL_ID =
-  "1531601524109611008";
+  "1479078345382559804";
 
 const ROLE_ID =
   "1371121790046437448";
-
-const STEAM_COUNTRY =
-  process.env.STEAM_CC || "pl";
 
 // ==========================
 // AXIOS
@@ -95,7 +92,7 @@ async function fetchSearchPage() {
               specials: 1,
               supportedlang: "english",
               ignore_preferences: 1,
-              cc: STEAM_COUNTRY,
+              cc: "us",
               l: "english",
               ndl: 1,
               json: 1,
@@ -105,44 +102,10 @@ async function fetchSearchPage() {
           }
         );
 
-      const resultsHtml =
+      const pageHtml =
         typeof data === "string"
           ? data
           : String(data?.results_html || "");
-
-      const itemsText =
-        data &&
-        typeof data === "object" &&
-        Array.isArray(data.items)
-          ? data.items
-              .map(item =>
-                [
-                  item?.appid,
-                  item?.id,
-                  item?.url,
-                  item?.logo,
-                  item?.name
-                ]
-                  .filter(Boolean)
-                  .join(" ")
-              )
-              .join("\n")
-          : "";
-
-      const pageHtml =
-        [
-          resultsHtml,
-          itemsText
-        ]
-          .filter(Boolean)
-          .join("\n");
-
-      const itemCount =
-        data &&
-        typeof data === "object" &&
-        Array.isArray(data.items)
-          ? data.items.length
-          : null;
 
       if (!pageHtml.trim()) {
         break;
@@ -161,10 +124,6 @@ async function fetchSearchPage() {
         break;
       }
 
-      if (!totalCount && itemCount !== null && itemCount < count) {
-        break;
-      }
-
       await sleep(300);
     }
 
@@ -173,7 +132,7 @@ async function fetchSearchPage() {
   } catch (err) {
 
     console.log(
-      "âťŚ fetchSearchPage:",
+      "❌ fetchSearchPage:",
       err.message
     );
 
@@ -191,20 +150,17 @@ function extractAppIds(
 
   try {
 
-    const patterns =
+    const regex =
+      /data-ds-appid="(\d+)"/g;
+
+    const matches =
       [
-        /data-ds-appid="(\d+)"/g,
-        /\/apps\/(\d+)(?:\/|$)/g,
-        /\/app\/(\d+)(?:\/|$)/g
+        ...html.matchAll(regex)
       ];
 
     const ids =
-      patterns.flatMap(
-        regex => [
-          ...html.matchAll(regex)
-        ].map(
-          x => x[1]
-        )
+      matches.map(
+        x => x[1]
       );
 
     return [
@@ -233,7 +189,7 @@ async function fetchDetails(
         {
           params: {
             appids: appid,
-            cc: STEAM_COUNTRY,
+            cc: "us",
             l: "english"
           }
         }
@@ -247,7 +203,7 @@ async function fetchDetails(
   } catch (err) {
 
     console.log(
-      `âťŚ API ${appid}:`,
+      `❌ API ${appid}:`,
       err.message
     );
 
@@ -270,7 +226,7 @@ async function fetchStorePage(
         `https://store.steampowered.com/app/${appid}/`,
         {
           params: {
-            cc: STEAM_COUNTRY,
+            cc: "us",
             l: "english",
             ageDay: "1",
             ageMonth: "January",
@@ -286,7 +242,7 @@ async function fetchStorePage(
   } catch (err) {
 
     console.log(
-      `âťŚ HTML ${appid}:`,
+      `❌ HTML ${appid}:`,
       err.message
     );
 
@@ -322,22 +278,9 @@ async function validateGiveaway(
     const final =
       Number(po.final || 0);
 
-    const discountPercent =
-      Number(po.discount_percent || 0);
-
-    const finalFormatted =
-      String(po.final_formatted || "")
-        .trim()
-        .toLowerCase();
-
-    const apiFinalIsFree =
-      final === 0 ||
-      finalFormatted === "free" ||
-      finalFormatted.includes("free to keep");
-
     const apiValid =
-      discountPercent === 100 &&
-      apiFinalIsFree &&
+      po.discount_percent === 100 &&
+      final === 0 &&
       initial > 0;
 
     if (!apiValid) {
@@ -354,7 +297,7 @@ async function validateGiveaway(
       );
 
     if (!html) {
-      return true;
+      return false;
     }
 
     const checks = {
@@ -390,14 +333,13 @@ async function validateGiveaway(
       );
 
     console.log(
-      `đź”Ť ${appid}`,
+      `🔍 ${appid}`,
       {
         ...checks,
         isRealF2P,
         initial,
         final,
-        finalFormatted,
-        discount: discountPercent
+        discount: po.discount_percent
       }
     );
 
@@ -415,7 +357,7 @@ async function validateGiveaway(
   } catch (err) {
 
     console.log(
-      `âťŚ VALIDATE ${appid}:`,
+      `❌ VALIDATE ${appid}:`,
       err.message
     );
 
@@ -436,7 +378,7 @@ async function check(
   try {
 
     console.log(
-      "đźź¦ Steam Giveaway Scan..."
+      "🟦 Steam Giveaway Scan..."
     );
 
     savedData.steamGames ??=
@@ -462,7 +404,7 @@ async function check(
     if (!html) {
 
       console.log(
-        "âťŚ No HTML"
+        "❌ No HTML"
       );
 
       return;
@@ -478,13 +420,13 @@ async function check(
       );
 
     console.log(
-      `đźŽ® AppIDs: ${appids.length}`
+      `🎮 AppIDs: ${appids.length}`
     );
 
     if (!appids.length) {
 
       console.log(
-        "âŹ¸ No appids"
+        "⏸ No appids"
       );
 
       return;
@@ -532,14 +474,14 @@ async function check(
         if (!valid) {
 
           console.log(
-            `âťŚ Not giveaway: ${appid}`
+            `❌ Not giveaway: ${appid}`
           );
 
           continue;
         }
 
         console.log(
-          `đźŽ GIVEAWAY: ${game.name}`
+          `🎁 GIVEAWAY: ${game.name}`
         );
 
         const url =
@@ -557,7 +499,7 @@ async function check(
             )
 
             .setTitle(
-              `đźŽ® ${game.name}`
+              `🎮 ${game.name}`
             )
 
             .setURL(
@@ -565,7 +507,7 @@ async function check(
             )
 
             .setDescription(
-              "đź”Ą **NOWA DARMOWA GRA NA STEAM!**\n\nâś… Promocja -100%\nâś… Free to Keep\nđź“Ś Dodaj do konta â€” zostaje na zawsze"
+              "🔥 **NOWA DARMOWA GRA NA STEAM!**\n\n✅ Promocja -100%\n✅ Free to Keep\n📌 Dodaj do konta — zostaje na zawsze"
             )
 
             .setThumbnail(
@@ -580,7 +522,7 @@ async function check(
 
             .setFooter({
               text:
-                "BundleBot â€˘ Steam Giveaway Tracker"
+                "BundleBot • Steam Giveaway Tracker"
             })
 
             .setTimestamp();
@@ -592,7 +534,7 @@ async function check(
               new ButtonBuilder()
 
                 .setLabel(
-                  "đźŽ® Odbierz na Steam"
+                  "🎮 Odbierz na Steam"
                 )
 
                 .setStyle(
@@ -611,7 +553,7 @@ async function check(
         await channel.send({
 
           content:
-            `đźš¨ **NOWA DARMOWA GRA NA STEAM!** <@&${ROLE_ID}>`,
+            `🚨 **NOWA DARMOWA GRA NA STEAM!** <@&${ROLE_ID}>`,
 
           embeds: [embed],
 
@@ -638,13 +580,13 @@ async function check(
         sent++;
 
         console.log(
-          `âś” Sent: ${game.name}`
+          `✔ Sent: ${game.name}`
         );
 
       } catch (err) {
 
         console.log(
-          `âťŚ PROCESS ${appid}:`,
+          `❌ PROCESS ${appid}:`,
           err.message
         );
       }
@@ -657,13 +599,13 @@ async function check(
     if (!sent) {
 
       console.log(
-        "âŹ¸ No new giveaways"
+        "⏸ No new giveaways"
       );
 
     } else {
 
       console.log(
-        `âś… Sent ${sent}`
+        `✅ Sent ${sent}`
       );
     }
 
@@ -684,7 +626,7 @@ async function check(
         );
 
       console.log(
-        `đź§ą RAM ${used} MB`
+        `🧹 RAM ${used} MB`
       );
 
     } catch {}
@@ -692,7 +634,7 @@ async function check(
   } catch (err) {
 
     console.log(
-      "âťŚ Steam error:",
+      "❌ Steam error:",
       err.message
     );
   }

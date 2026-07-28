@@ -3,7 +3,7 @@ const http = require("http");
 const https = require("https");
 const { EmbedBuilder } = require("discord.js");
 
-const CHANNEL_ID = process.env.EPIC_CHANNEL_ID || "1479058453204045955";
+const CHANNEL_ID = process.env.EPIC_CHANNEL_ID || "1531289390360428564";
 const ROLE_ID = process.env.EPIC_ROLE_ID || "1371121977628295390";
 
 const API_BASE =

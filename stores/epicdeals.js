@@ -4,7 +4,7 @@ const https = require("https");
 
 const { EmbedBuilder } = require("discord.js");
 
-const CHANNEL_ID = "1479058453204045955";
+const CHANNEL_ID = "1531289390360428564";
 const ROLE_ID = "1371121977628295390";
 
 const GAMERPOWER_URL =
