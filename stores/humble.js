@@ -1,7 +1,7 @@
 const axios = require("axios");
 const { EmbedBuilder } = require("discord.js");
 
-const CHANNEL_ID = process.env.CHANNEL_ID;
+const CHANNEL_ID = process.env.BUNDLE_CHANNEL_ID || "1531609869327667210";
 const ROLE_ID = "1371122206670852146";
 
 function trim(text, max = 220) {

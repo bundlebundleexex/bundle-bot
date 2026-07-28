@@ -2,7 +2,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const { EmbedBuilder } = require("discord.js");
 
-const CHANNEL_ID = process.env.CHANNEL_ID;
+const CHANNEL_ID = process.env.BUNDLE_CHANNEL_ID || "1531609869327667210";
 const ROLE_ID = "1371122206670852146";
 
 const BASE_URL = "https://www.digiphile.co";

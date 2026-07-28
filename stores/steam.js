@@ -305,6 +305,19 @@ async function validateGiveaway(
 
   try {
 
+    const type =
+      String(game.type || "")
+        .trim()
+        .toLowerCase();
+
+    if (type !== "game") {
+      console.log(
+        `Skip non-game Steam app: ${appid} (${type || "unknown"})`
+      );
+
+      return false;
+    }
+
     const po =
       game.price_overview;
 
@@ -557,7 +570,7 @@ async function check(
             )
 
             .setTitle(
-              `đźŽ® ${game.name}`
+              `\uD83C\uDFAE ${game.name}`
             )
 
             .setURL(
@@ -565,7 +578,7 @@ async function check(
             )
 
             .setDescription(
-              "đź”Ą **NOWA DARMOWA GRA NA STEAM!**\n\nâś… Promocja -100%\nâś… Free to Keep\nđź“Ś Dodaj do konta â€” zostaje na zawsze"
+              "\uD83D\uDD25 **NOWA DARMOWA GRA NA STEAM!**\n\n\u2705 Promocja -100%\n\u2705 Free to Keep\n\uD83D\uDCCC Dodaj do konta - zostaje na zawsze"
             )
 
             .setThumbnail(
@@ -592,7 +605,7 @@ async function check(
               new ButtonBuilder()
 
                 .setLabel(
-                  "đźŽ® Odbierz na Steam"
+                  "\uD83C\uDFAE Odbierz na Steam"
                 )
 
                 .setStyle(
@@ -611,7 +624,7 @@ async function check(
         await channel.send({
 
           content:
-            `đźš¨ **NOWA DARMOWA GRA NA STEAM!** <@&${ROLE_ID}>`,
+            `\uD83D\uDEA8 **NOWA DARMOWA GRA NA STEAM!** <@&${ROLE_ID}>`,
 
           embeds: [embed],
 

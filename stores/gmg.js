@@ -7,7 +7,7 @@ const {
 } = require("discord.js");
 
 const CHANNEL_ID =
-  process.env.CHANNEL_ID;
+  process.env.BUNDLE_CHANNEL_ID || "1531609869327667210";
 
 const ROLE_ID =
   "1371122206670852146";
