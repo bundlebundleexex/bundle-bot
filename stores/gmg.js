@@ -12,6 +12,234 @@ const CHANNEL_ID =
 const ROLE_ID =
   "1371122206670852146";
 
+const BUNDLE_BASE_URL =
+  "https://www.greenmangamingbundles.com";
+
+function normalizeBundleUrl(rawUrl) {
+  try {
+    const url =
+      new URL(
+        rawUrl,
+        BUNDLE_BASE_URL
+      );
+
+    url.search =
+      "";
+
+    url.hash =
+      "";
+
+    url.pathname =
+      url.pathname.replace(
+        /\/+$/,
+        ""
+      );
+
+    return url
+      .toString()
+      .replace(
+        /\/$/,
+        ""
+      );
+  } catch {
+    return String(rawUrl || "")
+      .split("#")[0]
+      .split("?")[0]
+      .replace(
+        /\/+$/,
+        ""
+      );
+  }
+}
+
+function getKnownBundleUrls(
+  savedData,
+  saveData
+) {
+  savedData.gmgBundles ??=
+    [];
+
+  const normalized =
+    [
+      ...new Set(
+        savedData.gmgBundles
+          .map(normalizeBundleUrl)
+          .filter(Boolean)
+      )
+    ].slice(-500);
+
+  const changed =
+    normalized.length !== savedData.gmgBundles.length ||
+    normalized.some(
+      (url, index) =>
+        url !== savedData.gmgBundles[index]
+    );
+
+  if (changed) {
+    savedData.gmgBundles =
+      normalized;
+
+    saveData();
+  }
+
+  return new Set(
+    normalized
+  );
+}
+
+const NON_GAME_TITLE_PATTERN =
+  /\b(software|audio|sound|music|producer|assets?|books?|e-?books?|epub|pdf|packt|career|data\s*(?:&|and)\s*ai|course|courses|training|certification|machine learning|artificial intelligence|python|unreal engine|unity|cad|3d model|texture|sample packs?|plugins?)\b/i;
+
+const NON_GAME_PATTERNS =
+  [
+    /\bsoftware (bundle|collection|pack|suite)\b/,
+    /\bplugins?\b/,
+    /\binstrument bundle\b/,
+    /\bstudio bundle\b/,
+    /\bbook (bundle|collection|pack)\b/,
+    /\be-?books?\b/,
+    /\bepub\b/,
+    /\bpdf formats?\b/,
+    /\bpackt\b/,
+    /\bcareer accelerator\b/,
+    /\bdata\s*(?:&|and)\s*ai\b/,
+    /\bdata science\b/,
+    /\bmachine learning\b/,
+    /\bartificial intelligence\b/,
+    /\broyalty-free\b/,
+    /\bsound effects?\b/,
+    /\bsound packs?\b/,
+    /\bsound lab\b/,
+    /\bsfx\b/,
+    /\baudio (pack|packs|engineering|creator|creators|library)\b/,
+    /\bmusic (production|producer|makers|pack|bundle)\b/,
+    /\bsample packs?\b/,
+    /\bsound (library|design)\b/,
+    /\bmega ?pack\b/,
+    /\bassets?\b/,
+    /\b3d models?\b/,
+    /\b2d assets?\b/,
+    /\bsprites?\b/,
+    /\btextures?\b/,
+    /\btexture pack\b/,
+    /\bvfx\b/,
+    /\benvironment pack\b/,
+    /\bcharacter pack\b/,
+    /\banimation pack\b/,
+    /\bshaders?\b/,
+    /\bmaterials?\b/,
+    /\bicons?\b/,
+    /\btilesets?\b/,
+    /\bgui pack\b/
+  ];
+
+const EDUCATION_PATTERNS =
+  [
+    /\bcourses?\b/,
+    /\blearn(?:ing)?\b/,
+    /\btraining\b/,
+    /\btutorials?\b/,
+    /\bacademy\b/,
+    /\bmasterclass\b/,
+    /\blessons?\b/,
+    /\bcertification\b/,
+    /\bcareer\b/,
+    /\bpython\b/
+  ];
+
+const DEV_PATTERNS =
+  [
+    /\bunreal engine\b/,
+    /\bunity\b/,
+    /\bblender\b/,
+    /\bgodot\b/,
+    /\bgame dev(?:elopment)?\b/
+  ];
+
+const GAME_SIGNAL_PATTERNS =
+  [
+    /\bgame bundle\b/,
+    /\bgames bundle\b/,
+    /\bsteam keys?\b/,
+    /\bactivate on steam\b/,
+    /\bredeem on steam\b/,
+    /\bpc games?\b/,
+    /\bvideo games?\b/,
+    /\bgame keys?\b/
+  ];
+
+function matchesAny(
+  text,
+  patterns
+) {
+  return patterns.some(
+    pattern =>
+      pattern.test(text)
+  );
+}
+
+function buildClassificationText(
+  title,
+  description,
+  bodyText
+) {
+  const heroText =
+    bodyText
+      .split("offer ends")[0]
+      .slice(0, 2000);
+
+  return (
+    title +
+    " " +
+    description +
+    " " +
+    heroText
+  ).toLowerCase();
+}
+
+function getNonGameReason(
+  titleText,
+  classificationText
+) {
+  if (NON_GAME_TITLE_PATTERN.test(titleText)) {
+    return "title";
+  }
+
+  if (matchesAny(classificationText, NON_GAME_PATTERNS)) {
+    return "non-game keywords";
+  }
+
+  if (
+    matchesAny(classificationText, DEV_PATTERNS) &&
+    matchesAny(classificationText, EDUCATION_PATTERNS)
+  ) {
+    return "game-dev learning";
+  }
+
+  if (matchesAny(classificationText, EDUCATION_PATTERNS)) {
+    return "education";
+  }
+
+  return null;
+}
+
+function hasGameSignal(
+  classificationText
+) {
+  return matchesAny(
+    classificationText,
+    GAME_SIGNAL_PATTERNS
+  );
+}
+
+function isExpiredBundle(
+  bodyText
+) {
+  return /\b(bundle expired|offer ended|offer has ended|deal expired|this bundle has expired)\b/.test(
+    bodyText
+  );
+}
+
 module.exports.check =
   async (
     client,
@@ -55,6 +283,8 @@ module.exports.check =
       links = [
         ...new Set(
           links
+            .map(normalizeBundleUrl)
+            .filter(Boolean)
         )
       ];
 
@@ -72,19 +302,16 @@ module.exports.check =
           CHANNEL_ID
         );
 
-      savedData.gmgBundles ??=
-        [];
+      const known =
+        getKnownBundleUrls(
+          savedData,
+          saveData
+        );
 
-      for (let url of links) {
+      for (const url of links) {
         try {
-          url =
-            url.replace(
-              /\/$/,
-              ""
-            );
-
           if (
-            savedData.gmgBundles.includes(
+            known.has(
               url
             )
           ) {
@@ -130,17 +357,7 @@ module.exports.check =
           // EXPIRED
           // =========================
 
-          if (
-            bodyText.includes(
-              "expired"
-            ) ||
-            bodyText.includes(
-              "offer ended"
-            ) ||
-            bodyText.includes(
-              "ended"
-            )
-          ) {
+          if (isExpiredBundle(bodyText)) {
             console.log(
               "⛔ Expired:",
               url
@@ -175,14 +392,15 @@ module.exports.check =
               "content"
             ) || null;
 
-          const fullText =
-            (
-              title +
-              " " +
-              description +
-              " " +
+          const classificationText =
+            buildClassificationText(
+              title,
+              description,
               bodyText
-            ).toLowerCase();
+            );
+
+          const fullText =
+            classificationText;
 
           const titleText =
             title.toLowerCase();
@@ -202,6 +420,23 @@ module.exports.check =
               "plugins",
               "instrument bundle",
               "studio bundle",
+
+              // books / learning
+              "book bundle",
+              "book collection",
+              "book pack",
+              "ebook",
+              "ebooks",
+              "epub",
+              "pdf format",
+              "pdf formats",
+              "packt",
+              "career accelerator",
+              "data & ai",
+              "data and ai",
+              "data science",
+              "machine learning",
+              "artificial intelligence",
 
               // audio
               "royalty-free",
@@ -267,7 +502,17 @@ module.exports.check =
               "tutorial",
               "academy",
               "masterclass",
-              "lessons"
+              "lessons",
+              "book",
+              "books",
+              "ebook",
+              "ebooks",
+              "certification",
+              "career",
+              "data science",
+              "machine learning",
+              "artificial intelligence",
+              "python"
             ];
 
           const DEV_KEYWORDS =
@@ -299,19 +544,14 @@ module.exports.check =
           // =========================
 
           const hasGame =
-            GAME_HINTS.some(
-              w =>
-                fullText.includes(
-                  w
-                )
+            hasGameSignal(
+              classificationText
             );
 
           const hasHard =
-            HARD_BLOCK.some(
-              w =>
-                fullText.includes(
-                  w
-                )
+            matchesAny(
+              classificationText,
+              NON_GAME_PATTERNS
             );
 
           const hasSoft =
@@ -323,19 +563,15 @@ module.exports.check =
             );
 
           const hasEdu =
-            EDUCATION_BLOCK.some(
-              w =>
-                fullText.includes(
-                  w
-                )
+            matchesAny(
+              classificationText,
+              EDUCATION_PATTERNS
             );
 
           const hasDev =
-            DEV_KEYWORDS.some(
-              w =>
-                fullText.includes(
-                  w
-                )
+            matchesAny(
+              classificationText,
+              DEV_PATTERNS
             );
 
           const looksLikeAsset =
@@ -359,8 +595,32 @@ module.exports.check =
           // FILTERS
           // =========================
 
+          const nonGameReason =
+            getNonGameReason(
+              titleText,
+              classificationText
+            );
+
+          if (nonGameReason) {
+            console.log(
+              `GMG non-game bundle (${nonGameReason}):`,
+              title
+            );
+
+            continue;
+          }
+
+          if (!hasGameSignal(classificationText)) {
+            console.log(
+              "GMG no clear game signal:",
+              title
+            );
+
+            continue;
+          }
+
           if (
-            /(software|audio|sound|music|producer|asset|assets|course|courses|training|unreal engine|unity|cad|3d model|texture|sample pack|plugin)/i.test(
+            NON_GAME_TITLE_PATTERN.test(
               titleText
             )
           ) {
@@ -451,6 +711,15 @@ module.exports.check =
             continue;
           }
 
+          if (!hasGame) {
+            console.log(
+              "🚫 No clear game signal:",
+              title
+            );
+
+            continue;
+          }
+
           // =========================
           // VALID GAME BUNDLE
           // =========================
@@ -461,6 +730,19 @@ module.exports.check =
           );
 
           savedData.gmgBundles.push(
+            url
+          );
+
+          savedData.gmgBundles =
+            [
+              ...new Set(
+                savedData.gmgBundles
+                  .map(normalizeBundleUrl)
+                  .filter(Boolean)
+              )
+            ].slice(-500);
+
+          known.add(
             url
           );
 
