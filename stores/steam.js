@@ -593,7 +593,7 @@ async function check(
 
             .setFooter({
               text:
-                "BundleBot â€˘ Steam Giveaway Tracker"
+                "Steam Giveaway"
             })
 
             .setTimestamp();
