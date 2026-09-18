@@ -143,12 +143,44 @@ function isEndedCollection($, html) {
   );
 }
 
-function getPrice(html) {
-  const prices = [...html.matchAll(/\$(\d+(?:\.\d{1,2})?)/g)]
-    .map(match => Number(match[1]))
-    .filter(number => number >= 1);
+function formatPrice(value) {
+  if (!Number.isFinite(value)) {
+    return null;
+  }
 
-  return prices.length ? `$${Math.min(...prices)}` : null;
+  return Number.isInteger(value) ? `$${value}` : `$${value.toFixed(2)}`;
+}
+
+function parseDollarAmount(text) {
+  const match = String(text || "").match(/\$(\d+(?:\.\d{1,2})?)/);
+
+  return match ? Number(match[1]) : null;
+}
+
+function getPrice($) {
+  const tierHeader = $("h4")
+    .filter((_, el) => $(el).text().includes("Select Collection Tier"))
+    .first();
+
+  if (tierHeader.length) {
+    const tierPrices = tierHeader
+      .parent()
+      .find("button")
+      .map((_, el) => parseDollarAmount($(el).text()))
+      .get()
+      .filter(number => Number.isFinite(number) && number > 0);
+
+    if (tierPrices.length) {
+      return formatPrice(Math.min(...tierPrices));
+    }
+  }
+
+  const startingAtMatch = $("body")
+    .text()
+    .replace(/\s+/g, " ")
+    .match(/Starting at\s+\$(\d+(?:\.\d{1,2})?)/i);
+
+  return startingAtMatch ? formatPrice(Number(startingAtMatch[1])) : null;
 }
 
 function getImage($) {
@@ -223,7 +255,7 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
           continue;
         }
 
-        const price = getPrice(pageHtml);
+        const price = getPrice($);
         const image = getImage($);
 
         const embed = new EmbedBuilder()
