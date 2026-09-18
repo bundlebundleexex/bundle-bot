@@ -240,6 +240,225 @@ function isExpiredBundle(
   );
 }
 
+const CURRENCY_PRICE_PATTERN =
+  /(?:[€£$]\s*\d+(?:[.,]\d{1,2})?)|(?:\b(?:USD|EUR|GBP|AUD|CAD|PLN)\b\s*\d+(?:[.,]\d{1,2})?)|(?:\d+(?:[.,]\d{1,2})?\s*\b(?:USD|EUR|GBP|AUD|CAD|PLN)\b)/gi;
+
+function parsePriceCandidate(
+  rawPrice
+) {
+  const text =
+    String(rawPrice || "")
+      .replace(
+        /\s+/g,
+        " "
+      )
+      .trim();
+
+  const amountMatch =
+    text.match(
+      /\d+(?:[.,]\d{1,2})?/
+    );
+
+  if (!amountMatch) {
+    return null;
+  }
+
+  const value =
+    Number(
+      amountMatch[0].replace(
+        ",",
+        "."
+      )
+    );
+
+  if (!Number.isFinite(value)) {
+    return null;
+  }
+
+  const code =
+    text
+      .toUpperCase()
+      .match(
+        /\b(USD|EUR|GBP|AUD|CAD|PLN)\b/
+      )?.[1] || "";
+
+  const symbol =
+    text.match(
+      /[€£$]/
+    )?.[0] || "";
+
+  const currency =
+    code || symbol;
+
+  const hasDecimals =
+    /[.,]\d{1,2}/.test(
+      amountMatch[0]
+    );
+
+  const amount =
+    hasDecimals || !Number.isInteger(value)
+      ? value.toFixed(2)
+      : String(value);
+
+  const display =
+    currency.length === 3
+      ? `${currency} ${amount}`
+      : `${currency}${amount}`;
+
+  return {
+    value,
+    display
+  };
+}
+
+function getLowestPriceFromText(
+  text
+) {
+  const prices =
+    [
+      ...String(text || "").matchAll(
+        CURRENCY_PRICE_PATTERN
+      )
+    ]
+      .map(match =>
+        parsePriceCandidate(
+          match[0]
+        )
+      )
+      .filter(Boolean);
+
+  if (!prices.length) {
+    return null;
+  }
+
+  prices.sort(
+    (a, b) =>
+      a.value - b.value
+  );
+
+  return prices[0].display;
+}
+
+function getPriceAfterFrom(
+  text
+) {
+  const match =
+    String(text || "").match(
+      /\bFROM\s+((?:[€£$]\s*\d+(?:[.,]\d{1,2})?)|(?:\b(?:USD|EUR|GBP|AUD|CAD|PLN)\b\s*\d+(?:[.,]\d{1,2})?)|(?:\d+(?:[.,]\d{1,2})?\s*\b(?:USD|EUR|GBP|AUD|CAD|PLN)\b))/i
+    );
+
+  return match
+    ? parsePriceCandidate(
+      match[1]
+    )?.display || null
+    : null;
+}
+
+function getListingPrices(
+  $
+) {
+  const prices =
+    new Map();
+
+  $(".product-card").each(
+    (_, card) => {
+      const cardText =
+        $(card)
+          .text()
+          .replace(
+            /\s+/g,
+            " "
+          )
+          .trim();
+
+      const price =
+        getPriceAfterFrom(
+          cardText
+        );
+
+      if (!price) {
+        return;
+      }
+
+      $(card)
+        .find(
+          "a[href*='greenmangamingbundles.com/bundles']"
+        )
+        .each(
+          (_, link) => {
+            const url =
+              normalizeBundleUrl(
+                $(link).attr(
+                  "href"
+                )
+              );
+
+            if (url) {
+              prices.set(
+                url,
+                price
+              );
+            }
+          }
+        );
+    }
+  );
+
+  return prices;
+}
+
+function getBundlePrice(
+  $,
+  fallbackPrice
+) {
+  const bodyText =
+    $("body")
+      .text()
+      .replace(
+        /\s+/g,
+        " "
+      )
+      .trim();
+
+  const checkoutIndex =
+    bodyText.indexOf(
+      "CHECKOUT"
+    );
+
+  if (checkoutIndex !== -1) {
+    const startIndex =
+      Math.max(
+        bodyText.lastIndexOf(
+          "Pay what you want",
+          checkoutIndex
+        ),
+        bodyText.lastIndexOf(
+          "Suggested",
+          checkoutIndex
+        )
+      );
+
+    if (startIndex !== -1) {
+      const tierText =
+        bodyText.slice(
+          startIndex,
+          checkoutIndex
+        );
+
+      const tierPrice =
+        getLowestPriceFromText(
+          tierText
+        );
+
+      if (tierPrice) {
+        return tierPrice;
+      }
+    }
+  }
+
+  return fallbackPrice || null;
+}
+
 module.exports.check =
   async (
     client,
@@ -287,6 +506,11 @@ module.exports.check =
             .filter(Boolean)
         )
       ];
+
+      const listingPrices =
+        getListingPrices(
+          $
+        );
 
       console.log(
         "🔗 GMG znalezione:",
@@ -391,6 +615,14 @@ module.exports.check =
             ).attr(
               "content"
             ) || null;
+
+          const price =
+            getBundlePrice(
+              $$,
+              listingPrices.get(
+                url
+              )
+            );
 
           const classificationText =
             buildClassificationText(
@@ -763,6 +995,11 @@ module.exports.check =
               )
 
               .setDescription(
+                (
+                  price
+                    ? `💰 Cena od: **${price}**\n\n`
+                    : ""
+                ) +
                 description.substring(
                   0,
                   400
