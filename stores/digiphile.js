@@ -95,12 +95,55 @@ function trimData(savedData) {
   ].slice(-200);
 }
 
+function keepVisibleUrls(urls, currentUrlSet) {
+  return [
+    ...new Set(
+      (urls || [])
+        .map(normalizeUrl)
+        .filter(url => url && currentUrlSet.has(url))
+    )
+  ];
+}
+
+function pruneMissingCollections(savedData, currentUrls) {
+  if (!currentUrls.length) {
+    return {
+      changed: false,
+      removed: 0
+    };
+  }
+
+  const currentUrlSet = new Set(currentUrls);
+  let removed = 0;
+  let changed = false;
+
+  for (const key of [
+    "digiphileCollections",
+    "digiphileEndedCollections",
+    "digiphileInvalidCollections"
+  ]) {
+    const previous = savedData[key] || [];
+    const next = keepVisibleUrls(previous, currentUrlSet);
+
+    removed += previous.length - next.length;
+
+    if (
+      previous.length !== next.length ||
+      previous.some((url, index) => url !== next[index])
+    ) {
+      savedData[key] = next;
+      changed = true;
+    }
+  }
+
+  return {
+    changed,
+    removed
+  };
+}
+
 function isKnown(savedData, url) {
-  return (
-    savedData.digiphileCollections.includes(url) ||
-    savedData.digiphileEndedCollections.includes(url) ||
-    savedData.digiphileInvalidCollections.includes(url)
-  );
+  return savedData.digiphileCollections.includes(url);
 }
 
 function extractCollectionLinks(html) {
@@ -203,6 +246,17 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
 
     const html = await fetchWithRetry(COLLECTIONS_URL, 3, options.signal);
     const uniqueLinks = extractCollectionLinks(html);
+    const cleanup = pruneMissingCollections(savedData, uniqueLinks);
+
+    if (cleanup.changed) {
+      trimData(savedData);
+      saveData();
+
+      console.log(
+        `🧹 Digiphile: wyczyszczono nieaktywne kolekcje=${cleanup.removed}`
+      );
+    }
+
     const freshLinks = uniqueLinks
       .filter(url => !isKnown(savedData, url))
       .slice(0, MAX_COLLECTIONS_PER_RUN);
