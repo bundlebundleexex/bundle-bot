@@ -52,6 +52,33 @@ function extractLowestPrice(product) {
   return prices[0].raw;
 }
 
+function getGameBundleLink(product) {
+  if (product.category !== "bundle") return null;
+  if (!product.product_url?.startsWith("/games/")) return null;
+
+  return `https://www.humblebundle.com${product.product_url}`;
+}
+
+function pruneInactiveHumbleBundles(savedData, currentLinks, saveData) {
+  if (!currentLinks.length) return;
+
+  const current = new Set(currentLinks);
+  const previous = savedData.humbleBundles || [];
+  const next = [...new Set(previous)].filter(link => current.has(link));
+
+  if (
+    previous.length !== next.length ||
+    previous.some((link, index) => link !== next[index])
+  ) {
+    savedData.humbleBundles = next;
+    saveData();
+
+    console.log(
+      `🧹 Humble: wyczyszczono nieaktywne bundle=${previous.length - next.length}`
+    );
+  }
+}
+
 module.exports.check = async (client, savedData, saveData) => {
   try {
     console.log("🔎 Humble: start sprawdzania");
@@ -78,15 +105,27 @@ module.exports.check = async (client, savedData, saveData) => {
     if (scripts[1]) {
       const json = JSON.parse(scripts[1][1]);
       const mosaic = json?.data?.games?.mosaic || [];
+      const currentLinks = [];
 
       for (const section of mosaic) {
         if (!section.products) continue;
 
         for (const product of section.products) {
-          if (product.category !== "bundle") continue;
-          if (!product.product_url?.startsWith("/games/")) continue;
+          const link = getGameBundleLink(product);
 
-          const link = `https://www.humblebundle.com${product.product_url}`;
+          if (link) currentLinks.push(link);
+        }
+      }
+
+      pruneInactiveHumbleBundles(savedData, currentLinks, saveData);
+
+      for (const section of mosaic) {
+        if (!section.products) continue;
+
+        for (const product of section.products) {
+          const link = getGameBundleLink(product);
+
+          if (!link) continue;
 
           if (savedData.humbleBundles.includes(link)) continue;
 

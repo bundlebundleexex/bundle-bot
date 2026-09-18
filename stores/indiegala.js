@@ -4,10 +4,54 @@ const { EmbedBuilder } = require("discord.js");
 
 const CHANNEL_ID = process.env.BUNDLE_CHANNEL_ID || "1531609869327667210";
 // ROLE_ID już niepotrzebne, bo nie pingujemy
+const BASE_URL = "https://www.indiegala.com";
 
 function trim(text, max = 600) {
   if (!text) return "";
   return text.length > max ? text.substring(0, max) + "..." : text;
+}
+
+function normalizeBundleUrl(href) {
+  try {
+    const url = new URL(href, BASE_URL);
+
+    url.search = "";
+    url.hash = "";
+
+    if (!url.pathname.startsWith("/bundle/")) {
+      return null;
+    }
+
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    return null;
+  }
+}
+
+function pruneInactiveIndiegalaBundles(savedData, currentLinks, saveData) {
+  if (!currentLinks.length) return;
+
+  const current = new Set(currentLinks);
+  const previous = savedData.indiegalaBundles || [];
+  const next = [
+    ...new Set(
+      previous
+        .map(normalizeBundleUrl)
+        .filter(link => link && current.has(link))
+    )
+  ];
+
+  if (
+    previous.length !== next.length ||
+    previous.some((link, index) => link !== next[index])
+  ) {
+    savedData.indiegalaBundles = next;
+    saveData();
+
+    console.log(
+      `🧹 IndieGala: wyczyszczono nieaktywne bundle=${previous.length - next.length}`
+    );
+  }
 }
 
 module.exports.check = async (client, savedData, saveData) => {
@@ -29,13 +73,12 @@ module.exports.check = async (client, savedData, saveData) => {
     $("a[href*='/bundle/']").each((_, el) => {
       const href = $(el).attr("href");
       const title = $(el).text().trim();
+      const link = normalizeBundleUrl(href);
 
-      if (href && title.length > 3) {
+      if (link && title.length > 3) {
         bundles.push({
           title,
-          link: href.startsWith("http")
-            ? href
-            : `https://www.indiegala.com${href}`
+          link
         });
       }
     });
@@ -52,6 +95,11 @@ module.exports.check = async (client, savedData, saveData) => {
     console.log(`✨ IndieGala: znaleziono ${uniqueBundles.length} bundle`);
 
     savedData.indiegalaBundles ??= [];
+    pruneInactiveIndiegalaBundles(
+      savedData,
+      uniqueBundles.map(bundle => bundle.link),
+      saveData
+    );
 
     const channel = await client.channels.fetch(CHANNEL_ID);
 

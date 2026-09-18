@@ -181,6 +181,27 @@ function saveKnown(savedData, known, saveData) {
   saveData();
 }
 
+function pruneInactiveFanaticalBundles(savedData, currentKeys, saveData) {
+  if (!currentKeys.size) {
+    return;
+  }
+
+  const previous = savedData.fanaticalBundles.map(String);
+  const next = [...new Set(previous)].filter(key => currentKeys.has(key));
+
+  if (
+    previous.length !== next.length ||
+    previous.some((key, index) => key !== next[index])
+  ) {
+    savedData.fanaticalBundles = next;
+    saveData();
+
+    console.log(
+      `🧹 Fanatical: wyczyszczono nieaktywne bundle=${previous.length - next.length}`
+    );
+  }
+}
+
 module.exports.check = async (client, savedData, saveData, options = {}) => {
   try {
     console.log("🔎 Fanatical: scanning...");
@@ -196,14 +217,14 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
 
     ensureData(savedData);
 
-    const known = new Set(savedData.fanaticalBundles.map(String));
-
     let checked = 0;
     let skipped = 0;
     let duplicates = 0;
     let sent = 0;
     let recurring = 0;
 
+    const currentKeys = new Set();
+    const candidates = [];
     const fresh = [];
 
     for (const bundle of data) {
@@ -225,15 +246,26 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
         recurring++;
       }
 
+      currentKeys.add(bundleKey);
+      candidates.push({
+        bundle,
+        bundleKey
+      });
+    }
+
+    pruneInactiveFanaticalBundles(savedData, currentKeys, saveData);
+
+    const known = new Set(savedData.fanaticalBundles.map(String));
+
+    for (const item of candidates) {
+      const { bundle, bundleKey } = item;
+
       if (known.has(bundleKey)) {
         duplicates++;
         continue;
       }
 
-      fresh.push({
-        bundle,
-        bundleKey
-      });
+      fresh.push(item);
     }
 
     if (!fresh.length) {

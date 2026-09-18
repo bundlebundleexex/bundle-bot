@@ -87,6 +87,58 @@ function getKnownBundleUrls(
   );
 }
 
+function pruneInactiveBundleUrls(
+  savedData,
+  currentUrls,
+  saveData
+) {
+  if (!currentUrls.length) {
+    return;
+  }
+
+  savedData.gmgBundles ??=
+    [];
+
+  const current =
+    new Set(
+      currentUrls
+    );
+
+  const previous =
+    [
+      ...new Set(
+        savedData.gmgBundles
+          .map(normalizeBundleUrl)
+          .filter(Boolean)
+      )
+    ];
+
+  const next =
+    previous.filter(
+      url =>
+        current.has(
+          url
+        )
+    );
+
+  if (
+    previous.length !== next.length ||
+    previous.some(
+      (url, index) =>
+        url !== next[index]
+    )
+  ) {
+    savedData.gmgBundles =
+      next;
+
+    saveData();
+
+    console.log(
+      `🧹 GMG: wyczyszczono nieaktywne bundle=${previous.length - next.length}`
+    );
+  }
+}
+
 const NON_GAME_TITLE_PATTERN =
   /\b(software|audio|sound|music|producer|assets?|books?|e-?books?|epub|pdf|packt|career|data\s*(?:&|and)\s*ai|course|courses|training|certification|machine learning|artificial intelligence|python|unreal engine|unity|cad|3d model|texture|sample packs?|plugins?)\b/i;
 
@@ -520,6 +572,12 @@ module.exports.check =
       if (!links.length) {
         return;
       }
+
+      pruneInactiveBundleUrls(
+        savedData,
+        links,
+        saveData
+      );
 
       const channel =
         await client.channels.fetch(
