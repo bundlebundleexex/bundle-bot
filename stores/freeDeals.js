@@ -1,8 +1,8 @@
 const axios = require("axios");
 const { EmbedBuilder } = require("discord.js");
 
-const CHANNEL_ID = "1499461446365352017";
-const ROLE_ID = "1499461776604004392";
+const CHANNEL_ID = "1531601524109611008";
+const ROLE_ID = "1371121790046437448";
 
 function formatDate(dateString) {
   if (!dateString) return "brak daty";

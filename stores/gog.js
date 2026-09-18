@@ -1,7 +1,8 @@
 const axios = require("axios");
 const { EmbedBuilder } = require("discord.js");
 
-const CHANNEL_ID = "1479078345382559804";
+const CHANNEL_ID = "1531601524109611008";
+const ROLE_ID = "1371121790046437448";
 
 module.exports.check = async (client, savedData, saveData) => {
 
@@ -46,6 +47,7 @@ module.exports.check = async (client, savedData, saveData) => {
       .setFooter({ text: "GOG" });
 
     await channel.send({
+      content: `🎁 **NOWA DARMÓWKA NA GOG!** <@&${ROLE_ID}>`,
       embeds: [embed]
     });
 
