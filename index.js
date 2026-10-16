@@ -477,6 +477,7 @@ function ensureDataShape() {
 
   const defaults = {
     humbleBundles: [],
+    humbleBundleHistory: [],
     humbleChoice: null,
     fanaticalBundles: [],
     gmgBundles: [],

@@ -59,6 +59,66 @@ function getGameBundleLink(product) {
   return `https://www.humblebundle.com${product.product_url}`;
 }
 
+function normalizeBundleName(value) {
+  return String(value || "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/\b(bundle|collection|edition|games?)\b/g, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+function findSimilarBundle(history, title) {
+  const normalized = normalizeBundleName(title);
+  if (!normalized) return null;
+
+  const words = new Set(normalized.split(" ").filter(word => word.length > 2));
+  let best = null;
+  let bestScore = 0;
+
+  for (const entry of history) {
+    const previous = normalizeBundleName(entry.title);
+    if (!previous) continue;
+    if (previous === normalized) return entry;
+
+    const previousWords = new Set(previous.split(" ").filter(word => word.length > 2));
+    const intersection = [...words].filter(word => previousWords.has(word)).length;
+    const score = intersection / Math.max(words.size, previousWords.size, 1);
+    if (score > bestScore) {
+      best = entry;
+      bestScore = score;
+    }
+  }
+
+  return bestScore >= 0.7 ? best : null;
+}
+
+function normalizeBundleLink(link) {
+  try {
+    const url = new URL(link);
+    url.search = "";
+    url.hash = "";
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    return String(link || "").replace(/\/$/, "");
+  }
+}
+
+function getBundleEndDate(product) {
+  const value =
+    product.end_date ||
+    product.endDate ||
+    product.expiration_date ||
+    product.expires_at ||
+    product.sale_end_date ||
+    product.saleEndDate ||
+    null;
+  const timestamp = value ? Date.parse(value) : NaN;
+  return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : null;
+}
+
 function pruneInactiveHumbleBundles(savedData, currentLinks, saveData) {
   if (!currentLinks.length) return;
 
@@ -90,6 +150,7 @@ module.exports.check = async (client, savedData, saveData) => {
     ========================= */
 
     if (!savedData.humbleBundles) savedData.humbleBundles = [];
+    if (!Array.isArray(savedData.humbleBundleHistory)) savedData.humbleBundleHistory = [];
 
     const { data: gamesHtml } = await axios.get(
       "https://www.humblebundle.com/games",
@@ -127,9 +188,26 @@ module.exports.check = async (client, savedData, saveData) => {
 
           if (!link) continue;
 
-          if (savedData.humbleBundles.includes(link)) continue;
-
           const title = product.tile_name;
+          const normalizedLink = normalizeBundleLink(link);
+          const wasActive = savedData.humbleBundles.some(
+            existing => normalizeBundleLink(existing) === normalizedLink
+          );
+          const similarBundle = findSimilarBundle(savedData.humbleBundleHistory, title);
+          const previousRecord = [...savedData.humbleBundleHistory]
+            .reverse()
+            .find(entry => normalizeBundleLink(entry.url) === normalizedLink);
+          const renewalRecord = previousRecord || similarBundle;
+          const endDate = getBundleEndDate(product);
+          const previousEnd = Date.parse(renewalRecord?.expiresAt || "");
+          const extension = Boolean(
+            Number.isFinite(previousEnd) &&
+            previousEnd <= Date.now() + 24 * 60 * 60 * 1000 &&
+            endDate &&
+            Date.parse(endDate) > previousEnd
+          );
+          if (wasActive && !extension) continue;
+
           const description =
             product.short_marketing_blurb ||
             product.marketing_blurb ||
@@ -142,9 +220,24 @@ module.exports.check = async (client, savedData, saveData) => {
 
           const price = extractLowestPrice(product);
 
-          savedData.humbleBundles.push(link);
+          if (!wasActive) savedData.humbleBundles.push(link);
           savedData.humbleBundles =
             [...new Set(savedData.humbleBundles)].slice(-100);
+
+          const seenAt = new Date().toISOString();
+          if (previousRecord) {
+            previousRecord.lastSeenAt = seenAt;
+            if (endDate) previousRecord.expiresAt = endDate;
+          } else {
+            savedData.humbleBundleHistory.push({
+              title,
+              url: link,
+              firstSeenAt: seenAt,
+              lastSeenAt: seenAt,
+              expiresAt: endDate
+            });
+          }
+          savedData.humbleBundleHistory = savedData.humbleBundleHistory.slice(-500);
           saveData();
 
           const embed = new EmbedBuilder()
@@ -152,7 +245,7 @@ module.exports.check = async (client, savedData, saveData) => {
             .setURL(link)
             .setColor(0xE67E22)
             .setDescription(
-              `────────────────\n${trim(description)}\n────────────────`
+              `────────────────\n${trim(description)}${similarBundle ? `\n\nPodobny bundle był już wcześniej: **${similarBundle.title}** (${formatDate(similarBundle.firstSeenAt)}).` : ""}\n────────────────`
             )
             .addFields({
               name: "💰 Cena minimalna",
@@ -165,7 +258,9 @@ module.exports.check = async (client, savedData, saveData) => {
           if (image) embed.setImage(image);
 
           await channel.send({
-            content: `🔥 **NOWY HUMBLE GAME BUNDLE!** <@&${ROLE_ID}>`,
+            content: extension
+              ? "🔥 **HUMBLE GAME BUNDLE — PRZEDŁUŻONY**"
+              : `🔥 **NOWY HUMBLE GAME BUNDLE!** <@&${ROLE_ID}>`,
             embeds: [embed]
           });
 
