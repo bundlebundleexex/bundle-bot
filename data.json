@@ -1,272 +1,1829 @@
 {
   "humbleBundles": [
-    "https://www.humblebundle.com/games/destiny-2-expansions-bundle-2026",
-    "https://www.humblebundle.com/games/mexican-entertainment-system-bundle",
-    "https://www.humblebundle.com/games/playism-publisher-bundle-2026",
-    "https://www.humblebundle.com/games/mecha-mania",
-    "https://www.humblebundle.com/games/tower-defense-2",
-    "https://www.humblebundle.com/games/speak-to-manager",
-    "https://www.humblebundle.com/games/dead-rising-shop-til-you-drop-bundle",
-    "https://www.humblebundle.com/games/fore-golf-games-bundle-games",
-    "https://www.humblebundle.com/games/sovereign-sandbox-bundle",
-    "https://www.humblebundle.com/games/your-move-turn-based-games",
-    "https://www.humblebundle.com/games/vr-kiwi-bundle",
-    "https://www.humblebundle.com/games/sharp-shooters-bundle",
-    "https://www.humblebundle.com/games/train-sim-world-6-first-class-ticket-bundle",
-    "https://www.humblebundle.com/games/humble-15-for-15-april-2026",
-    "https://www.humblebundle.com/games/creature-feature-bundle",
-    "https://www.humblebundle.com/games/heavenly-bullets",
-    "https://www.humblebundle.com/games/ticket-to-ride-all-aboard-collection",
-    "https://www.humblebundle.com/games/humble-15th-anniversary-indie-icons-showcase",
-    "https://www.humblebundle.com/games/build-shuffle-battle",
-    "https://www.humblebundle.com/games/critical-hits-arpg-bundle-game",
-    "https://www.humblebundle.com/games/awesome-automation",
-    "https://www.humblebundle.com/games/devil-may-cry-devil-trigger-reloaded-collection-2026",
-    "https://www.humblebundle.com/games/perplexing-puzzles",
-    "https://www.humblebundle.com/games/4x-xplore-xpand-xploit-xterminate",
-    "https://www.humblebundle.com/games/warhammer-skulls-2026-bundle",
-    "https://www.humblebundle.com/games/doubleshift-simulation-bundle",
-    "https://www.humblebundle.com/games/monster-hunter-spring-hunting-collection-2026",
-    "https://www.humblebundle.com/games/ign-live-bundle-2026",
-    "https://www.humblebundle.com/games/we-will-always-be-here-pride-month-2026",
-    "https://www.humblebundle.com/games/2k-sports-champions-bundle",
-    "https://www.humblebundle.com/games/12-for-10",
-    "https://www.humblebundle.com/games/yuri-in-luck-waifus-for-laifus",
-    "https://www.humblebundle.com/games/complete-inkle-library",
-    "https://www.humblebundle.com/games/redline-racing-bundle",
-    "https://www.humblebundle.com/games/frosty-games-fest-showcase-bundle-2026-made-in-anz",
-    "https://www.humblebundle.com/games/2k-megahits-2026-bundle",
-    "https://www.humblebundle.com/games/idlers-and-desktop-companions",
-    "https://www.humblebundle.com/games/animal-style-bundle",
-    "https://www.humblebundle.com/games/point-click-package",
-    "https://www.humblebundle.com/games/even-steamier-sakura-special",
-    "https://www.humblebundle.com/games/squad-goals",
-    "https://www.humblebundle.com/games/handhelds-bundle",
-    "https://www.humblebundle.com/games/twin-sails-interactive-2026",
-    "https://www.humblebundle.com/games/liminal-spaces",
-    "https://www.humblebundle.com/games/narrative-12-for-10-bundle"
+    "https://www.humblebundle.com/games/15th-anniversary-scifi-exposure",
+    "https://www.humblebundle.com/games/marmalade-games-ultimate-digital-game-night",
+    "https://www.humblebundle.com/games/best-bundle-indie-fears-bundle",
+    "https://www.humblebundle.com/games/flat2vr-bundle",
+    "https://www.humblebundle.com/games/hambles-fright-or-fight-halloween-bundle",
+    "https://www.humblebundle.com/games/puzzlers-to-puzzle-you",
+    "https://www.humblebundle.com/games/gals-and-pals-pqube-japanese-games",
+    "https://www.humblebundle.com/games/phunkier-physics",
+    "https://www.humblebundle.com/games/beyond-reality-scifi-survival-vr-collection",
+    "https://www.humblebundle.com/games/capcom-classics-bundle",
+    "https://www.humblebundle.com/games/indie-fighters",
+    "https://www.humblebundle.com/games/twisted-trilogies-and-terrors-dark-visual-novels",
+    "https://www.humblebundle.com/games/factory-must-grow",
+    "https://www.humblebundle.com/games/cozy-after-dark-showcase-bundle",
+    "https://www.humblebundle.com/games/triplei-initiative-showcase-bundle",
+    "https://www.humblebundle.com/games/serenity-forge-emotional-impact-bundle",
+    "https://www.humblebundle.com/games/double-fine-publisher-bundle"
   ],
-  "humbleChoice": "july_2026_choice",
+  "humbleBundleHistory": [
+    {
+      "title": "Humble 15th Anniversary - Sci-Fi Exposure Bundle",
+      "url": "https://www.humblebundle.com/games/15th-anniversary-scifi-exposure",
+      "firstSeenAt": "2026-10-28T13:02:26.240Z",
+      "lastSeenAt": "2026-10-28T13:02:26.240Z",
+      "expiresAt": null
+    },
+    {
+      "title": "Marmalade Game Studio: Ultimate Digital Game Night",
+      "url": "https://www.humblebundle.com/games/marmalade-games-ultimate-digital-game-night",
+      "firstSeenAt": "2026-10-28T13:02:26.868Z",
+      "lastSeenAt": "2026-10-28T13:02:26.868Z",
+      "expiresAt": null
+    },
+    {
+      "title": "Best of Humble Bundle - Indie Fears Bundle",
+      "url": "https://www.humblebundle.com/games/best-bundle-indie-fears-bundle",
+      "firstSeenAt": "2026-10-28T13:02:27.215Z",
+      "lastSeenAt": "2026-10-28T13:02:27.215Z",
+      "expiresAt": null
+    },
+    {
+      "title": "Flat2VR Bundle",
+      "url": "https://www.humblebundle.com/games/flat2vr-bundle",
+      "firstSeenAt": "2026-10-28T13:02:27.760Z",
+      "lastSeenAt": "2026-10-28T13:02:27.760Z",
+      "expiresAt": null
+    },
+    {
+      "title": "Hamble's Fright or Fight Halloween Bundle",
+      "url": "https://www.humblebundle.com/games/hambles-fright-or-fight-halloween-bundle",
+      "firstSeenAt": "2026-10-28T13:02:28.098Z",
+      "lastSeenAt": "2026-10-28T13:02:28.098Z",
+      "expiresAt": null
+    },
+    {
+      "title": "Puzzlers to Puzzle You",
+      "url": "https://www.humblebundle.com/games/puzzlers-to-puzzle-you",
+      "firstSeenAt": "2026-10-28T13:02:28.445Z",
+      "lastSeenAt": "2026-10-28T13:02:28.445Z",
+      "expiresAt": null
+    },
+    {
+      "title": "Gals and Pals: PQube Japanese Games",
+      "url": "https://www.humblebundle.com/games/gals-and-pals-pqube-japanese-games",
+      "firstSeenAt": "2026-10-28T13:02:28.848Z",
+      "lastSeenAt": "2026-10-28T13:02:28.848Z",
+      "expiresAt": null
+    },
+    {
+      "title": "Phunkier Physics",
+      "url": "https://www.humblebundle.com/games/phunkier-physics",
+      "firstSeenAt": "2026-10-28T13:02:29.245Z",
+      "lastSeenAt": "2026-10-28T13:02:29.245Z",
+      "expiresAt": null
+    },
+    {
+      "title": "Beyond Reality: Sci-Fi & Survival VR Collection",
+      "url": "https://www.humblebundle.com/games/beyond-reality-scifi-survival-vr-collection",
+      "firstSeenAt": "2026-10-28T13:02:34.164Z",
+      "lastSeenAt": "2026-10-28T13:02:34.164Z",
+      "expiresAt": null
+    },
+    {
+      "title": "Capcom Classics Bundle",
+      "url": "https://www.humblebundle.com/games/capcom-classics-bundle",
+      "firstSeenAt": "2026-10-28T13:02:34.552Z",
+      "lastSeenAt": "2026-10-28T13:02:34.552Z",
+      "expiresAt": null
+    },
+    {
+      "title": "Humble Indie Fighters Bundle",
+      "url": "https://www.humblebundle.com/games/indie-fighters",
+      "firstSeenAt": "2026-10-28T13:02:34.908Z",
+      "lastSeenAt": "2026-10-28T13:02:34.908Z",
+      "expiresAt": null
+    },
+    {
+      "title": "Twisted Trilogies and Terrors: Dark Visual Novels",
+      "url": "https://www.humblebundle.com/games/twisted-trilogies-and-terrors-dark-visual-novels",
+      "firstSeenAt": "2026-10-28T13:02:35.232Z",
+      "lastSeenAt": "2026-10-28T13:02:35.232Z",
+      "expiresAt": null
+    },
+    {
+      "title": "The Factory Must Grow",
+      "url": "https://www.humblebundle.com/games/factory-must-grow",
+      "firstSeenAt": "2026-10-28T13:02:38.873Z",
+      "lastSeenAt": "2026-10-28T13:02:38.873Z",
+      "expiresAt": null
+    },
+    {
+      "title": "Cozy After Dark Showcase Bundle",
+      "url": "https://www.humblebundle.com/games/cozy-after-dark-showcase-bundle",
+      "firstSeenAt": "2026-10-28T13:02:39.178Z",
+      "lastSeenAt": "2026-10-28T13:02:39.178Z",
+      "expiresAt": null
+    },
+    {
+      "title": "The Triple-i Initiative Showcase Bundle",
+      "url": "https://www.humblebundle.com/games/triplei-initiative-showcase-bundle",
+      "firstSeenAt": "2026-10-28T13:02:39.511Z",
+      "lastSeenAt": "2026-10-28T13:02:39.511Z",
+      "expiresAt": null
+    },
+    {
+      "title": "Serenity Forge Emotional Impact Bundle",
+      "url": "https://www.humblebundle.com/games/serenity-forge-emotional-impact-bundle",
+      "firstSeenAt": "2026-10-28T13:02:39.885Z",
+      "lastSeenAt": "2026-10-28T13:02:39.885Z",
+      "expiresAt": null
+    },
+    {
+      "title": "Double Fine Publisher Bundle",
+      "url": "https://www.humblebundle.com/games/double-fine-publisher-bundle",
+      "firstSeenAt": "2026-10-28T13:02:40.234Z",
+      "lastSeenAt": "2026-10-28T13:02:40.234Z",
+      "expiresAt": null
+    }
+  ],
+  "humbleChoice": "october_2026_choice",
   "fanaticalBundles": [
-    "platinum-collection-build-your-own-bundle",
-    "build-your-own-capcom-masters-bundle",
-    "build-your-own-legendary-bundle",
-    "build-your-own-fantasy-worlds-bundle",
-    "build-your-own-wholesome-collection",
-    "build-your-own-gamersky-all-stars-bundle",
-    "build-your-own-adrenaline-bundle",
-    "build-your-own-survival-horror-bundle",
-    "build-your-own-exodus-bundle",
-    "build-your-own-bethesda-bundle-gog-edition",
-    "build-your-own-tactical-triple-pack",
-    "build-your-own-titanium-collection",
-    "monsters-den-collection-bundle",
-    "build-your-own-killer-bundle",
-    "build-your-own-special-editions-bundle",
-    "build-your-own-arcane-bundle",
-    "build-your-own-indie-showcase-bundle",
-    "build-your-own-crazy-co-op-bundle",
-    "whale-and-dolphin-conservation-charity-bundle",
-    "build-your-own-zenith-bundle",
-    "capcom-classics-bundle-gog-edition",
-    "prestige-collection-build-your-own-bundle",
-    "build-your-own-ultimate-collection",
-    "build-your-own-solstice-bundle",
-    "build-your-own-fusion-bundle",
-    "batman-arkham-collection",
-    "neurovoider-deluxe-edition",
-    "into-games-charity-bundle-2026",
-    "platinum-collection-build-your-own-bundle:1970-01",
-    "build-your-own-ultimate-collection:1970-01",
-    "prestige-collection-build-your-own-bundle:1970-01",
-    "goblinz-studio-10th-anniversary-bundle",
-    "best-of-platinum-collection-build-your-own-bundle:1970-01",
-    "build-your-own-onyx-bundle",
-    "build-your-own-summer-bundle",
-    "prestige-collection-build-your-own-bundle:2026-07-23",
-    "build-your-own-best-of-killer-bundle:2026-07-13",
-    "build-your-own-bento-bundle:2026-07-22",
-    "build-your-own-best-of-bento-bundle:2026-07-15",
-    "build-your-own-triple-pack:2026-06-26",
-    "build-your-own-very-positive-deluxe-collection:2026-06-24",
-    "build-your-own-best-of-cozy-bundle:2026-07-14",
-    "build-your-own-best-of-tabletop-bundle:2026-07-16",
-    "specialeffect-charity-bundle",
-    "platinum-collection-build-your-own-bundle:2026-07-02",
-    "build-your-own-simulator-collection:2026-07-10",
-    "premiere-bundle",
-    "build-your-own-indiependence-day-bundle:2026-07-01",
-    "build-your-own-field-of-glory-bundle:2026-07-06",
-    "movember-fathers-day-charity-bundle-2026",
-    "build-your-own-wholesome-collection:2026-07-27"
+    "build-your-own-legendary-bundle:2026-10-22",
+    "build-your-own-slayer-bundle:2026-10-27",
+    "build-your-own-puzzle-adventure-bundle:2026-10-26",
+    "build-your-own-fantasy-ages-bundle:2026-10-19",
+    "build-your-own-frightmare-bundle:2026-10-23",
+    "prestige-collection-build-your-own-bundle:2026-09-11",
+    "build-your-own-misfits-and-mayhem-bundle:2026-09-24",
+    "build-your-own-killer-bundle:2026-09-07",
+    "coppafeel-charity-bundle",
+    "build-your-own-retro-revival-bundle:2026-09-29",
+    "cook-up-your-own-culinary-capers-bundle:2026-10-16",
+    "build-your-own-fall-bundle:2026-09-25",
+    "build-your-own-triple-pack-fall-2026:2026-10-05",
+    "platinum-collection-build-your-own-bundle:2026-09-30",
+    "build-your-own-all-stars-bundle:2026-10-09",
+    "monsters-den-collection-bundle"
   ],
   "gmgBundles": [
-    "https://www.greenmangamingbundles.com/bundles/3d-fantasy-megapack",
-    "https://www.greenmangamingbundles.com/bundles/the-akupara-collection",
-    "https://www.greenmangamingbundles.com/bundles/the-indieio-collection",
-    "https://www.greenmangamingbundles.com/bundles/master-builders-collection",
-    "https://www.greenmangamingbundles.com/bundles/master-builders-collection/?utm_term=uspbanner",
-    "https://www.greenmangamingbundles.com/bundles/master-builders-collection/?utm_term=flatpage",
-    "https://www.greenmangamingbundles.com/bundles/boomer-shooter-bonanza/?utm_term=uspbanner",
-    "https://www.greenmangamingbundles.com/bundles/boomer-shooter-bonanza",
-    "https://www.greenmangamingbundles.com/bundles/lego-at-the-movies/?utm_term=flatpage",
-    "https://www.greenmangamingbundles.com/bundles/the-data-ai-career-accelerator/?utm_term=flatpage"
+    "https://www.greenmangamingbundles.com/bundles/lego-dc-vs-marvel-collection-bundle",
+    "https://www.greenmangamingbundles.com/bundles/hidden-gems-bundle"
   ],
   "indiegalaBundles": [
-    "https://www.indiegala.com/bundle/princess-and-blade-bundle",
-    "https://www.indiegala.com/bundle/silly-heroes-tales-bundle",
-    "https://www.indiegala.com/bundle/pixel-traditions2-bundle",
-    "https://www.indiegala.com/bundle/flirty-elf-bundle",
-    "https://www.indiegala.com/bundle/wild-rage-bundle",
-    "https://www.indiegala.com/bundle/hentai-pair2-bundle",
-    "https://www.indiegala.com/bundle/twist-and-tangle-bundle",
-    "https://www.indiegala.com/bundle/massive-music4-bundle",
-    "https://www.indiegala.com/bundle/idol-days-bundle",
-    "https://www.indiegala.com/bundle/pixel-traditions3-bundle",
-    "https://www.indiegala.com/bundle/horror-station-bundle"
+    "https://www.indiegala.com/bundle/wicked-stardust-bundle",
+    "https://www.indiegala.com/bundle/power-halt-bundle",
+    "https://www.indiegala.com/bundle/witches-and-candy-bundle",
+    "https://www.indiegala.com/bundle/hentai-balloons2"
   ],
   "digiphileCollections": [
-    "https://www.digiphile.co/collections/landfall-aggro-crab-showcase"
+    "https://www.digiphile.co/collections/orcatober-aquatic-horrors",
+    "https://www.digiphile.co/collections/social-multiplayer-games-collection-digiphile"
   ],
   "epicGames": [
-    "arranger-a-rolepuzzling-adventure-dbfde7_2026-05-07T15:00:00.000Z_2026-05-14T15:00:00.000Z",
-    "trash-goblin-cd5fd7_2026-05-07T15:00:00.000Z_2026-05-14T15:00:00.000Z",
-    "9621cc6e5d32437ca3dd998de177f6da_2026-05-28T15:00:00.000Z_2026-06-04T15:00:00.000Z",
-    "7fc5abc8f11c471e837ddd00ce963350_2026-05-28T15:00:00.000Z_2026-06-04T15:00:00.000Z",
-    "epic:title:the ouroboros king:2026-06-18T15:00:00.000Z",
-    "epic:title:the ouroboros king:2026-06-11T15:00:00.000Z:2026-06-18T15:00:00.000Z",
-    "epic:slug:the-ouroboros-king-e1d547:2026-06-18T15:00:00.000Z",
-    "epic:id:7f0ab2828f9743d0abc6612a11222fdf:2026-06-18T15:00:00.000Z",
-    "epic:namespace:b002ccbe10f946f082a63bf85fa30558:2026-06-18T15:00:00.000Z",
-    "7f0ab2828f9743d0abc6612a11222fdf_2026-06-11T15:00:00.000Z_2026-06-18T15:00:00.000Z",
-    "epic:title:warhammer 40k speed freeks:2026-06-18T15:00:00.000Z",
-    "epic:title:warhammer 40k speed freeks:2026-06-11T15:00:00.000Z:2026-06-18T15:00:00.000Z",
-    "epic:slug:warhammer-40k-speed-freeks-12879c:2026-06-18T15:00:00.000Z",
-    "epic:id:eb6ae87e73d94d2c96bab3c4da4dd3de:2026-06-18T15:00:00.000Z",
-    "epic:namespace:e64225d40c214f32a71ccf6a7a612d6b:2026-06-18T15:00:00.000Z",
-    "eb6ae87e73d94d2c96bab3c4da4dd3de_2026-06-11T15:00:00.000Z_2026-06-18T15:00:00.000Z",
-    "epic:title:foretales:2026-07-30T15:00:00.000Z",
-    "epic:title:foretales:2026-07-16T15:00:00.000Z:2026-07-30T15:00:00.000Z",
-    "epic:slug:foretales-d6c5bd:2026-07-30T15:00:00.000Z",
-    "epic:id:223c59e227e74e079a1bbe5a234b896f:2026-07-30T15:00:00.000Z",
-    "epic:namespace:c5730ad3d7004a65a472a7699b88008a:2026-07-30T15:00:00.000Z",
-    "223c59e227e74e079a1bbe5a234b896f_2026-07-16T15:00:00.000Z_2026-07-30T15:00:00.000Z"
+    "epic:title:sker ritual:2026-10-29T15:00:00.000Z",
+    "epic:title:sker ritual:2026-10-22T15:00:00.000Z:2026-10-29T15:00:00.000Z",
+    "epic:slug:sker-ritual-aac702:2026-10-29T15:00:00.000Z",
+    "epic:id:6aab3ddef4f84fbc9dd81c60f9d8549c:2026-10-29T15:00:00.000Z",
+    "epic:namespace:156c17659ff0468bb533eba104a1f19f:2026-10-29T15:00:00.000Z",
+    "6aab3ddef4f84fbc9dd81c60f9d8549c_2026-10-22T15:00:00.000Z_2026-10-29T15:00:00.000Z",
+    "epic:title:home a unique horror adventure:2026-10-29T15:00:00.000Z",
+    "epic:title:home a unique horror adventure:2026-10-22T15:00:00.000Z:2026-10-29T15:00:00.000Z",
+    "epic:slug:home-19212a:2026-10-29T15:00:00.000Z",
+    "epic:id:06190191cede42afb633fe89ef08c27e:2026-10-29T15:00:00.000Z",
+    "epic:namespace:c7e46cce751b40b6937e878abd0fc531:2026-10-29T15:00:00.000Z",
+    "06190191cede42afb633fe89ef08c27e_2026-10-22T15:00:00.000Z_2026-10-29T15:00:00.000Z"
   ],
   "epicDeals": [],
-  "freeDeals": [
-    "3614",
-    "3612",
-    "3611",
-    "3613"
-  ],
+  "freeDeals": [],
   "gogGames": [],
-  "steamGames": [
-    "3587490",
-    "3343840",
-    "2218460",
-    "1070580",
-    "577740",
-    "858710",
-    "1134700",
-    "6100",
-    "1433340",
-    "1053710"
-  ],
-  "amazon": [
-    "title:pro basketball manager 2026",
-    "slug:pro-basketball-manager-2026-aga",
-    "title:space grunts",
-    "slug:space-grunts-gog",
-    "title:hot brass",
-    "slug:hot-brass-gog",
-    "title:60 minutes to extinction: escape room",
-    "slug:60-minutes-to-extinction-escape-room-gog",
-    "title:survival: fountain of youth",
-    "slug:survival-fountain-of-youth-aga",
-    "title:lethal honor - order of the apocalypse",
-    "slug:lethal-honor-order-of-the-apocalypse-epic",
-    "title:mafia ii: definitive edition",
-    "slug:mafia-ii-definitive-edition-gog",
-    "title:fruitbus",
-    "slug:fruitbus-gog",
-    "title:kinnikuneko: super muscle cat",
-    "slug:kinnikuneko-super-muscle-cat-epic",
-    "title:pinball spire",
-    "slug:pinball-spire-gog",
-    "title:fantasy general",
-    "slug:fantasy-general-gog",
-    "title:snake core",
-    "slug:snake-core-gog",
-    "title:a rat's quest - the way back home",
-    "slug:a-rats-quest-the-way-back-home-epic",
-    "title:nordic storm solitaire",
-    "slug:nordic-storm-solitaire-legacy",
-    "title:moon mystery",
-    "slug:moon-mystery-epic",
-    "title:palindrome syndrome: escape room",
-    "slug:palindrome-syndrome-escape-room-gog",
-    "title:conditions of use",
-    "slug:cookie-notice",
-    "title:luna guide",
-    "title:xcom: chimera squad",
-    "slug:xcom-chimera-squad-gog",
-    "title:mafia iii: definitive edition",
-    "slug:mafia-iii-definitive-edition-gog",
-    "title:tomb raider iv-vi remastered",
-    "slug:tomb-raider-iv-vi-remastered-epic",
-    "title:g.i. joe: wrath of cobra",
-    "slug:gi-joe-wrath-of-cobra-epic",
-    "title:tested on humans: escape room",
-    "slug:tested-on-humans-escape-room-gog",
-    "title:sin slayers: reign of the 8th",
-    "slug:sin-slayers-reign-of-the-8th-gog",
-    "title:paradise killer",
-    "slug:paradise-killer-gog"
-  ],
+  "steamGames": [],
+  "amazon": [],
   "deals0": [
-    "905",
-    "3272",
-    "3626",
-    "3625",
-    "3622",
-    "3621",
-    "3266",
-    "3257",
-    "3552",
-    "3096",
-    "3394",
-    "2204",
-    "1604",
-    "3641",
-    "3644",
-    "3660",
-    "3287",
-    "3654",
-    "3666",
-    "2386",
-    "3665",
-    "3410",
-    "3684",
-    "3682",
-    "3679",
-    "3279",
+    "3340",
+    "3331",
+    "3328",
+    "3322",
+    "3324",
+    "3316",
+    "3313",
     "3301",
-    "3722",
-    "3716",
-    "3306",
-    "3294"
+    "3716"
   ],
-  "lastCheckedSteamPackageId": 1634348,
-  "ggdeals": [],
+  "runtime": {
+    "lastStoreRunAt": {
+      "Amazon": 1793192648619
+    }
+  },
   "digiphileEndedCollections": [
+    "https://www.digiphile.co/collections/vr-games-showcase-the-new-essentials",
+    "https://www.digiphile.co/collections/rts-renaissance",
+    "https://www.digiphile.co/collections/landfall-aggro-crab-showcase",
     "https://www.digiphile.co/collections/before-absolute-creator-owned-image-comics",
     "https://www.digiphile.co/collections/planet-coaster-free-game-plus",
-    "https://www.digiphile.co/collections/boomer-shooter-blueprint",
     "https://www.digiphile.co/collections/indie-boomer-shooters",
-    "https://www.digiphile.co/collections/indie-imsim-spotlight",
-    "https://www.digiphile.co/collections/welcome-to-astro-city",
-    "https://www.digiphile.co/collections/return-of-the-immersive-sim"
+    "https://www.digiphile.co/collections/boomer-shooter-blueprint"
   ],
   "digiphileInvalidCollections": [],
-  "runtime": {}
+  "twitchDropRewardIds": [
+    "ee4a624d-8452-4396-8925-7da45ee2671a:7d5b70c8-c7fc-11f1-a2fb-0a58a9feac02:f8d45eee-c759-11f1-9557-0a58a9feac02",
+    "e8b7af11-0544-4a76-99e7-4807e4f3f35f:12bc36e9-d14e-11f1-be13-0a58a9feac02:4cdbd5a2-d14e-11f1-8a48-0a58a9feac02",
+    "e8b7af11-0544-4a76-99e7-4807e4f3f35f:0d0c7712-d14e-11f1-8959-0a58a9feac02:32db5a6c-d14e-11f1-a73b-0a58a9feac02",
+    "8035a74a-d067-4c2e-815f-8fa17044aa24:b41172ab-cf1d-11f1-bcee-0a58a9feac02:d15e38e0-cf1d-11f1-96d2-0a58a9feac02",
+    "8fbafdec-31ee-4878-a9ca-9ebbe07ca74d:f4ea4a2b-c4e0-11f1-9641-0a58a9feac02:20e82c33-c4e1-11f1-9c0f-0a58a9feac02",
+    "381d286a-8959-4bb1-a95e-dbd2ecf944a1:c8a4e1a5-ccca-11f1-ae7b-0a58a9feac02:c3a7ce72-cccd-11f1-9a12-0a58a9feac02",
+    "a9c2f298-5a53-439a-9a8c-41b4d88937e1:f82c27d9-ccce-11f1-841a-0a58a9feac02:96c68fe2-cccf-11f1-8e25-0a58a9feac02",
+    "e1e9dc8b-f3f5-4757-b450-7de7028db47f:5dc90510-c292-11f1-ac5f-0a58a9feac02:24388e42-c293-11f1-ab46-0a58a9feac02",
+    "e1e9dc8b-f3f5-4757-b450-7de7028db47f:5409c5ba-c292-11f1-9a33-0a58a9feac02:4de8e50e-c293-11f1-884f-0a58a9feac02",
+    "e1e9dc8b-f3f5-4757-b450-7de7028db47f:67c68932-c292-11f1-b553-0a58a9feac02:76c1ac68-c293-11f1-b47f-0a58a9feac02",
+    "3ed1adc1-8f12-4d18-82ac-fd543f08722d:5ef9661a-ccb9-11f1-b47a-0a58a9feac02:afc9b0fe-1e6b-11f1-8cf7-9a121026d2ee",
+    "4c37cc62-b880-40c6-99ae-fc8219dac1aa:e9ff8256-c7e9-11f1-bb68-0a58a9feac02:e2a7e686-c7ea-11f1-9e24-0a58a9feac02",
+    "6b50175a-a8a6-4c41-a2e7-3ae0cd028831:81a61b09-c775-11f1-bc64-0a58a9feac02:049283ab-c776-11f1-92ae-0a58a9feac02",
+    "b66c6ae7-42bc-4e67-b0ad-8ab0d9897d26:26fee398-c759-11f1-a917-0a58a9feac02:37ea3450-c759-11f1-9665-0a58a9feac02",
+    "773f4909-b958-455c-be7a-641ade4067c5:a470c029-c0b1-11f1-8d61-0a58a9feac02:843870a1-c0b1-11f1-9e5d-0a58a9feac02",
+    "773f4909-b958-455c-be7a-641ade4067c5:174a731a-c0b1-11f1-8dd0-0a58a9feac02:62d8c0e1-c0b1-11f1-937a-0a58a9feac02",
+    "26a32c34-dfd6-48a4-87fc-a8da6de68e47:93f0b1af-bdb6-11f1-9305-0a58a9feac02:b8201321-bdb6-11f1-89e0-0a58a9feac02",
+    "26a32c34-dfd6-48a4-87fc-a8da6de68e47:8c6bf837-bdb6-11f1-8346-0a58a9feac02:d67d51f7-bdb6-11f1-9872-0a58a9feac02",
+    "711b6068-c16e-4d0f-bcb1-6be54eb91c3f:2c1bc1d1-bd1c-11f1-b165-0a58a9feac02:67823d4d-bd1c-11f1-8609-0a58a9feac02",
+    "ef371a6b-b762-4d7e-b31e-e4211be15030:0fd97dbb-b663-11f1-9aab-0a58a9feac02:81166d0e-b663-11f1-9aab-0a58a9feac02",
+    "ef371a6b-b762-4d7e-b31e-e4211be15030:0306ec39-b663-11f1-ab56-0a58a9feac02:ab93766d-b663-11f1-ba4d-0a58a9feac02",
+    "0979f1bb-fa0d-40d8-b175-c19b8d30bab8:0f2a81ed-b1f1-11f1-9fcc-0a58a9feac02:c1b96ff4-b1f1-11f1-85fb-0a58a9feac02",
+    "5e6e8172-09f9-4e28-bf54-0b4bef23804d:358dfbeb-bd15-11f1-bf9f-0a58a9feac02:ec787d69-bd15-11f1-8a02-0a58a9feac02"
+  ],
+  "twitchDropRewardStates": {
+    "ee4a624d-8452-4396-8925-7da45ee2671a:7d5b70c8-c7fc-11f1-a2fb-0a58a9feac02:f8d45eee-c759-11f1-9557-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-27T16:00:00Z",
+      "endAt": "2026-11-07T15:59:59.999Z",
+      "reward": {
+        "key": "ee4a624d-8452-4396-8925-7da45ee2671a:7d5b70c8-c7fc-11f1-a2fb-0a58a9feac02:f8d45eee-c759-11f1-9557-0a58a9feac02",
+        "type": "BADGE",
+        "name": "True Damage Fan",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/f8d45eee-c759-11f1-9557-0a58a9feac02.png",
+        "minutes": 30,
+        "subs": 0,
+        "dropName": "True Damage Chat Badge",
+        "campaignName": "True Damage Chat Badge",
+        "campaignId": "ee4a624d-8452-4396-8925-7da45ee2671a",
+        "campaignStart": "2026-10-27T16:00:00Z",
+        "campaignEnd": "2026-11-07T15:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=ee4a624d-8452-4396-8925-7da45ee2671a",
+        "gameName": "League of Legends",
+        "gameSlug": "league-of-legends",
+        "channels": [],
+        "description": "Watch the 2026 League of Legends World Championship to unlock your favorite bands' chat badges on Twitch!",
+        "relatedDrops": []
+      }
+    },
+    "e8b7af11-0544-4a76-99e7-4807e4f3f35f:12bc36e9-d14e-11f1-be13-0a58a9feac02:4cdbd5a2-d14e-11f1-8a48-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-26T14:54:34Z",
+      "endAt": "2026-11-09T13:59:59.999Z",
+      "reward": {
+        "key": "e8b7af11-0544-4a76-99e7-4807e4f3f35f:12bc36e9-d14e-11f1-be13-0a58a9feac02:4cdbd5a2-d14e-11f1-8a48-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Hunt Red",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/4cdbd5a2-d14e-11f1-8a48-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "Hunt Red",
+        "campaignName": "HS 1896 Halloween 2026",
+        "campaignId": "e8b7af11-0544-4a76-99e7-4807e4f3f35f",
+        "campaignStart": "2026-10-26T14:54:34Z",
+        "campaignEnd": "2026-11-09T13:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=e8b7af11-0544-4a76-99e7-4807e4f3f35f",
+        "gameName": "Hunt: Showdown 1896",
+        "gameSlug": "hunt-showdown",
+        "channels": [],
+        "description": "Hunt Giveth. Support your favourite creators either by subbing or watching to receive a myriad of varied rewards.  ",
+        "relatedDrops": []
+      }
+    },
+    "e8b7af11-0544-4a76-99e7-4807e4f3f35f:0d0c7712-d14e-11f1-8959-0a58a9feac02:32db5a6c-d14e-11f1-a73b-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-26T14:54:34Z",
+      "endAt": "2026-11-09T13:59:59.999Z",
+      "reward": {
+        "key": "e8b7af11-0544-4a76-99e7-4807e4f3f35f:0d0c7712-d14e-11f1-8959-0a58a9feac02:32db5a6c-d14e-11f1-a73b-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Hunt White",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/32db5a6c-d14e-11f1-a73b-0a58a9feac02.png",
+        "minutes": 15,
+        "subs": 0,
+        "dropName": "Hunt White",
+        "campaignName": "HS 1896 Halloween 2026",
+        "campaignId": "e8b7af11-0544-4a76-99e7-4807e4f3f35f",
+        "campaignStart": "2026-10-26T14:54:34Z",
+        "campaignEnd": "2026-11-09T13:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=e8b7af11-0544-4a76-99e7-4807e4f3f35f",
+        "gameName": "Hunt: Showdown 1896",
+        "gameSlug": "hunt-showdown",
+        "channels": [],
+        "description": "Hunt Giveth. Support your favourite creators either by subbing or watching to receive a myriad of varied rewards.  ",
+        "relatedDrops": []
+      }
+    },
+    "8035a74a-d067-4c2e-815f-8fa17044aa24:b41172ab-cf1d-11f1-bcee-0a58a9feac02:d15e38e0-cf1d-11f1-96d2-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-25T07:00:00Z",
+      "endAt": "2026-11-02T07:59:59.999Z",
+      "reward": {
+        "key": "8035a74a-d067-4c2e-815f-8fa17044aa24:b41172ab-cf1d-11f1-bcee-0a58a9feac02:d15e38e0-cf1d-11f1-96d2-0a58a9feac02",
+        "type": "EMOTE",
+        "name": "NMSBoxing Emote",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/d15e38e0-cf1d-11f1-96d2-0a58a9feac02.png",
+        "minutes": 60,
+        "subs": 0,
+        "dropName": "NMSBoxing Emote",
+        "campaignName": "NMS 5",
+        "campaignId": "8035a74a-d067-4c2e-815f-8fa17044aa24",
+        "campaignStart": "2026-10-25T07:00:00Z",
+        "campaignEnd": "2026-11-02T07:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=8035a74a-d067-4c2e-815f-8fa17044aa24",
+        "gameName": "NMS Boxing",
+        "gameSlug": "nms-boxing",
+        "channels": [
+          {
+            "twitch_id": "107117952",
+            "name": "jasontheween",
+            "display_name": "jasontheween"
+          }
+        ],
+        "description": "Watch /jasontheween stream for 60 minutes to unlock the NMSBoxing emote for a limited time.",
+        "relatedDrops": []
+      }
+    },
+    "8fbafdec-31ee-4878-a9ca-9ebbe07ca74d:f4ea4a2b-c4e0-11f1-9641-0a58a9feac02:20e82c33-c4e1-11f1-9c0f-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-23T17:00:00Z",
+      "endAt": "2026-11-13T17:59:59.999Z",
+      "reward": {
+        "key": "8fbafdec-31ee-4878-a9ca-9ebbe07ca74d:f4ea4a2b-c4e0-11f1-9641-0a58a9feac02:20e82c33-c4e1-11f1-9c0f-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Modern Warfare 4 Badge",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/20e82c33-c4e1-11f1-9c0f-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "Modern Warfare 4 Badge",
+        "campaignName": "Modern Warfare 4 Badge",
+        "campaignId": "8fbafdec-31ee-4878-a9ca-9ebbe07ca74d",
+        "campaignStart": "2026-10-23T17:00:00Z",
+        "campaignEnd": "2026-11-13T17:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=8fbafdec-31ee-4878-a9ca-9ebbe07ca74d",
+        "gameName": "Call of Duty: Modern Warfare 4",
+        "gameSlug": "call-of-duty-modern-warfare-4",
+        "channels": [],
+        "description": "Purchase or gift one subscription during a Call of Duty: Modern Warfare 4 stream to earn the Modern Warfare 4 chat badge!",
+        "relatedDrops": []
+      }
+    },
+    "381d286a-8959-4bb1-a95e-dbd2ecf944a1:c8a4e1a5-ccca-11f1-ae7b-0a58a9feac02:c3a7ce72-cccd-11f1-9a12-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-22T16:00:00Z",
+      "endAt": "2026-11-06T12:58:59.999Z",
+      "reward": {
+        "key": "381d286a-8959-4bb1-a95e-dbd2ecf944a1:c8a4e1a5-ccca-11f1-ae7b-0a58a9feac02:c3a7ce72-cccd-11f1-9a12-0a58a9feac02",
+        "type": "BADGE",
+        "name": "GZW Gold",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/c3a7ce72-cccd-11f1-9a12-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "Gray Zone Warfare (Gold)",
+        "campaignName": "GZW Rogue Ops 0.5 Update",
+        "campaignId": "381d286a-8959-4bb1-a95e-dbd2ecf944a1",
+        "campaignStart": "2026-10-22T16:00:00Z",
+        "campaignEnd": "2026-11-06T12:58:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=381d286a-8959-4bb1-a95e-dbd2ecf944a1",
+        "gameName": "Gray Zone Warfare",
+        "gameSlug": "gray-zone-warfare",
+        "channels": [
+          {
+            "twitch_id": "143123320",
+            "name": "2twistedtv",
+            "display_name": "2TwistedTV"
+          },
+          {
+            "twitch_id": "57709221",
+            "name": "actionjaxon",
+            "display_name": "actionjaxon"
+          },
+          {
+            "twitch_id": "166233281",
+            "name": "airwingmarine",
+            "display_name": "AirwingMarine"
+          },
+          {
+            "twitch_id": "135537742",
+            "name": "alpacasnackpack",
+            "display_name": "Alpacasnackpack"
+          },
+          {
+            "twitch_id": "190708734",
+            "name": "altair",
+            "display_name": "Altair"
+          },
+          {
+            "twitch_id": "102440358",
+            "name": "arcadebulls",
+            "display_name": "ArcadeBulls"
+          },
+          {
+            "twitch_id": "69907855",
+            "name": "bearki",
+            "display_name": "bearki"
+          },
+          {
+            "twitch_id": "52586794",
+            "name": "bigfry",
+            "display_name": "Bigfry"
+          },
+          {
+            "twitch_id": "118291244",
+            "name": "conducteir77",
+            "display_name": "Conducteir77"
+          },
+          {
+            "twitch_id": "126992526",
+            "name": "crash8",
+            "display_name": "Crash8"
+          },
+          {
+            "twitch_id": "65564204",
+            "name": "credard",
+            "display_name": "Credard"
+          },
+          {
+            "twitch_id": "71040143",
+            "name": "cyborgangel",
+            "display_name": "CyborgAngel"
+          },
+          {
+            "twitch_id": "51530423",
+            "name": "damnitbennett",
+            "display_name": "DamnitBennett"
+          },
+          {
+            "twitch_id": "58979959",
+            "name": "hitower_",
+            "display_name": "HiTower_"
+          },
+          {
+            "twitch_id": "256734589",
+            "name": "iiizwerg",
+            "display_name": "iiizwerg"
+          },
+          {
+            "twitch_id": "82634282",
+            "name": "jarh3ad_tv",
+            "display_name": "JarH3ad_TV"
+          },
+          {
+            "twitch_id": "193805205",
+            "name": "jenntacles",
+            "display_name": "jenntacles"
+          },
+          {
+            "twitch_id": "175279277",
+            "name": "jessekazam",
+            "display_name": "JesseKazam"
+          },
+          {
+            "twitch_id": "72974888",
+            "name": "kapitanrutain",
+            "display_name": "KapitanRutain"
+          },
+          {
+            "twitch_id": "126436297",
+            "name": "klean",
+            "display_name": "Klean"
+          },
+          {
+            "twitch_id": "81463115",
+            "name": "kotton",
+            "display_name": "Kotton"
+          },
+          {
+            "twitch_id": "401985255",
+            "name": "kouinia",
+            "display_name": "Kouinia"
+          },
+          {
+            "twitch_id": "145188914",
+            "name": "onepeg",
+            "display_name": "Onepeg"
+          },
+          {
+            "twitch_id": "92087494",
+            "name": "operatordrewski",
+            "display_name": "OperatorDrewski"
+          },
+          {
+            "twitch_id": "40033826",
+            "name": "rikonair",
+            "display_name": "RikOnAir"
+          },
+          {
+            "twitch_id": "270031838",
+            "name": "sgtpreppertv",
+            "display_name": "SgtPrepperTV"
+          },
+          {
+            "twitch_id": "109306231",
+            "name": "sixquatre",
+            "display_name": "Sixquatre"
+          },
+          {
+            "twitch_id": "554649808",
+            "name": "soa_snakeeyes",
+            "display_name": "SOA_SnakeEyes"
+          },
+          {
+            "twitch_id": "159143377",
+            "name": "stankrat",
+            "display_name": "stankRat"
+          },
+          {
+            "twitch_id": "86421838",
+            "name": "thejan11",
+            "display_name": "TheJan11"
+          },
+          {
+            "twitch_id": "145205710",
+            "name": "thesaintglizzy",
+            "display_name": "thesaintglizzy"
+          },
+          {
+            "twitch_id": "483987651",
+            "name": "triple_g",
+            "display_name": "Triple_G"
+          },
+          {
+            "twitch_id": "252435544",
+            "name": "typecheck",
+            "display_name": "typecheck"
+          },
+          {
+            "twitch_id": "431782741",
+            "name": "tyyplays",
+            "display_name": "TyyPlays"
+          },
+          {
+            "twitch_id": "118155820",
+            "name": "willerz",
+            "display_name": "WillerZ"
+          },
+          {
+            "twitch_id": "27370971",
+            "name": "xnapycz",
+            "display_name": "Xnapycz"
+          },
+          {
+            "twitch_id": "49557423",
+            "name": "xos93",
+            "display_name": "Xos93"
+          },
+          {
+            "twitch_id": "43212812",
+            "name": "xyko_tv",
+            "display_name": "Xyko_tv"
+          }
+        ],
+        "description": "Watch Gray Zone Warfare’s massive new Update 0.5 live on Twitch and earn exclusive Drops along the way. Get the game in the exclusive 35% off sale!  Watch eligible Gray Zone Warfare live streams to earn the Starter Pack with new weapons, the Hideout Pack to get a head start, and a set of exclusive apparel to become a stylish smuggler, agent, or hacker.",
+        "relatedDrops": []
+      }
+    },
+    "a9c2f298-5a53-439a-9a8c-41b4d88937e1:f82c27d9-ccce-11f1-841a-0a58a9feac02:96c68fe2-cccf-11f1-8e25-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-22T10:00:00Z",
+      "endAt": "2026-11-19T09:59:59.999Z",
+      "reward": {
+        "key": "a9c2f298-5a53-439a-9a8c-41b4d88937e1:f82c27d9-ccce-11f1-841a-0a58a9feac02:96c68fe2-cccf-11f1-8e25-0a58a9feac02",
+        "type": "BADGE",
+        "name": "The Mox",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/96c68fe2-cccf-11f1-8e25-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "The Mox",
+        "campaignName": "Cyberpunk 2077 Chat Badge",
+        "campaignId": "a9c2f298-5a53-439a-9a8c-41b4d88937e1",
+        "campaignStart": "2026-10-22T10:00:00Z",
+        "campaignEnd": "2026-11-19T09:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=a9c2f298-5a53-439a-9a8c-41b4d88937e1",
+        "gameName": "Cyberpunk 2077",
+        "gameSlug": "cyberpunk-2077",
+        "channels": [],
+        "description": "Subscribe to any channel streaming Cyberpunk 2077 to get The Mox Chat Badge!",
+        "relatedDrops": []
+      }
+    },
+    "e1e9dc8b-f3f5-4757-b450-7de7028db47f:5dc90510-c292-11f1-ac5f-0a58a9feac02:24388e42-c293-11f1-ab46-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-21T16:00:00Z",
+      "endAt": "2026-10-31T07:59:59.999Z",
+      "reward": {
+        "key": "e1e9dc8b-f3f5-4757-b450-7de7028db47f:5dc90510-c292-11f1-ac5f-0a58a9feac02:24388e42-c293-11f1-ab46-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Witch Hat",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/24388e42-c293-11f1-ab46-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "Witch Hat",
+        "campaignName": "Witchspire Halloween",
+        "campaignId": "e1e9dc8b-f3f5-4757-b450-7de7028db47f",
+        "campaignStart": "2026-10-21T16:00:00Z",
+        "campaignEnd": "2026-10-31T07:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=e1e9dc8b-f3f5-4757-b450-7de7028db47f",
+        "gameName": "Witchspire",
+        "gameSlug": "witchspire",
+        "channels": [],
+        "description": "Happy Halloween! Celebrate spooky season and our new update with exclusive chat badges #Witchspire",
+        "relatedDrops": []
+      }
+    },
+    "e1e9dc8b-f3f5-4757-b450-7de7028db47f:5409c5ba-c292-11f1-9a33-0a58a9feac02:4de8e50e-c293-11f1-884f-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-21T16:00:00Z",
+      "endAt": "2026-10-31T07:59:59.999Z",
+      "reward": {
+        "key": "e1e9dc8b-f3f5-4757-b450-7de7028db47f:5409c5ba-c292-11f1-9a33-0a58a9feac02:4de8e50e-c293-11f1-884f-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Witchspire Logo",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/4de8e50e-c293-11f1-884f-0a58a9feac02.png",
+        "minutes": 60,
+        "subs": 0,
+        "dropName": "Witchspire Logo",
+        "campaignName": "Witchspire Halloween",
+        "campaignId": "e1e9dc8b-f3f5-4757-b450-7de7028db47f",
+        "campaignStart": "2026-10-21T16:00:00Z",
+        "campaignEnd": "2026-10-31T07:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=e1e9dc8b-f3f5-4757-b450-7de7028db47f",
+        "gameName": "Witchspire",
+        "gameSlug": "witchspire",
+        "channels": [],
+        "description": "Happy Halloween! Celebrate spooky season and our new update with exclusive chat badges #Witchspire",
+        "relatedDrops": []
+      }
+    },
+    "e1e9dc8b-f3f5-4757-b450-7de7028db47f:67c68932-c292-11f1-b553-0a58a9feac02:76c1ac68-c293-11f1-b47f-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-21T16:00:00Z",
+      "endAt": "2026-10-31T07:59:59.999Z",
+      "reward": {
+        "key": "e1e9dc8b-f3f5-4757-b450-7de7028db47f:67c68932-c292-11f1-b553-0a58a9feac02:76c1ac68-c293-11f1-b47f-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Gold Stamp",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/76c1ac68-c293-11f1-b47f-0a58a9feac02.png",
+        "minutes": 240,
+        "subs": 0,
+        "dropName": "Golden Stamp",
+        "campaignName": "Witchspire Halloween",
+        "campaignId": "e1e9dc8b-f3f5-4757-b450-7de7028db47f",
+        "campaignStart": "2026-10-21T16:00:00Z",
+        "campaignEnd": "2026-10-31T07:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=e1e9dc8b-f3f5-4757-b450-7de7028db47f",
+        "gameName": "Witchspire",
+        "gameSlug": "witchspire",
+        "channels": [],
+        "description": "Happy Halloween! Celebrate spooky season and our new update with exclusive chat badges #Witchspire",
+        "relatedDrops": []
+      }
+    },
+    "3ed1adc1-8f12-4d18-82ac-fd543f08722d:5ef9661a-ccb9-11f1-b47a-0a58a9feac02:afc9b0fe-1e6b-11f1-8cf7-9a121026d2ee": {
+      "status": "started",
+      "startAt": "2026-10-21T13:00:00Z",
+      "endAt": "2026-11-18T12:59:59.999Z",
+      "reward": {
+        "key": "3ed1adc1-8f12-4d18-82ac-fd543f08722d:5ef9661a-ccb9-11f1-b47a-0a58a9feac02:afc9b0fe-1e6b-11f1-8cf7-9a121026d2ee",
+        "type": "BADGE",
+        "name": "QSMP2",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/afc9b0fe-1e6b-11f1-8cf7-9a121026d2ee.jpg",
+        "minutes": 60,
+        "subs": 0,
+        "dropName": "QSMP2",
+        "campaignName": "Quackity's QSMP2 Season 2",
+        "campaignId": "3ed1adc1-8f12-4d18-82ac-fd543f08722d",
+        "campaignStart": "2026-10-21T13:00:00Z",
+        "campaignEnd": "2026-11-18T12:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=3ed1adc1-8f12-4d18-82ac-fd543f08722d",
+        "gameName": "QSMP",
+        "gameSlug": "qsmp",
+        "channels": [
+          {
+            "twitch_id": "984820432",
+            "name": "qsmp",
+            "display_name": "QSMP"
+          },
+          {
+            "twitch_id": "48526626",
+            "name": "quackity",
+            "display_name": "Quackity"
+          },
+          {
+            "twitch_id": "639654714",
+            "name": "quackitytoo",
+            "display_name": "QuackityToo"
+          }
+        ],
+        "description": "This badge was earned for watching QSMP during the initial 2026 launch!",
+        "relatedDrops": []
+      }
+    },
+    "4c37cc62-b880-40c6-99ae-fc8219dac1aa:e9ff8256-c7e9-11f1-bb68-0a58a9feac02:e2a7e686-c7ea-11f1-9e24-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-15T08:00:00Z",
+      "endAt": "2026-10-29T22:58:59.999Z",
+      "reward": {
+        "key": "4c37cc62-b880-40c6-99ae-fc8219dac1aa:e9ff8256-c7e9-11f1-bb68-0a58a9feac02:e2a7e686-c7ea-11f1-9e24-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Flameborn Sigil",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/e2a7e686-c7ea-11f1-9e24-0a58a9feac02.png",
+        "minutes": 15,
+        "subs": 0,
+        "dropName": "Flameborn Sigil",
+        "campaignName": "Enshrouded v1.0 Launch",
+        "campaignId": "4c37cc62-b880-40c6-99ae-fc8219dac1aa",
+        "campaignStart": "2026-10-15T08:00:00Z",
+        "campaignEnd": "2026-10-29T22:58:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=4c37cc62-b880-40c6-99ae-fc8219dac1aa",
+        "gameName": "Enshrouded",
+        "gameSlug": "enshrouded",
+        "channels": [],
+        "description": "Enshrouded v1.0 is here! Come tune into our live stream and celebrate the game launch! #Enshrouded #PlayEnshrouded",
+        "relatedDrops": []
+      }
+    },
+    "6b50175a-a8a6-4c41-a2e7-3ae0cd028831:81a61b09-c775-11f1-bc64-0a58a9feac02:049283ab-c776-11f1-92ae-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-15T04:00:00Z",
+      "endAt": "2026-11-02T03:59:59.999Z",
+      "reward": {
+        "key": "6b50175a-a8a6-4c41-a2e7-3ae0cd028831:81a61b09-c775-11f1-bc64-0a58a9feac02:049283ab-c776-11f1-92ae-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Belmont's Curse",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/049283ab-c776-11f1-92ae-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "Belmont's Curse badge",
+        "campaignName": "Belmont's Curse badge",
+        "campaignId": "6b50175a-a8a6-4c41-a2e7-3ae0cd028831",
+        "campaignStart": "2026-10-15T04:00:00Z",
+        "campaignEnd": "2026-11-02T03:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=6b50175a-a8a6-4c41-a2e7-3ae0cd028831",
+        "gameName": "Castlevania: Belmont's Curse",
+        "gameSlug": "castlevania-belmonts-curse",
+        "channels": [],
+        "description": "This badge was earned by subscribing or gifting a sub to a streamer in the Castlevania: Belmont's Curse category during the game launch!",
+        "relatedDrops": []
+      }
+    },
+    "b66c6ae7-42bc-4e67-b0ad-8ab0d9897d26:26fee398-c759-11f1-a917-0a58a9feac02:37ea3450-c759-11f1-9665-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-14T19:00:00Z",
+      "endAt": "2026-11-15T18:59:59.999Z",
+      "reward": {
+        "key": "b66c6ae7-42bc-4e67-b0ad-8ab0d9897d26:26fee398-c759-11f1-a917-0a58a9feac02:37ea3450-c759-11f1-9665-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Worlds 2026 Supporter",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/37ea3450-c759-11f1-9665-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "Worlds 2026 Supporter",
+        "campaignName": "Worlds 2026 Chat Badge",
+        "campaignId": "b66c6ae7-42bc-4e67-b0ad-8ab0d9897d26",
+        "campaignStart": "2026-10-14T19:00:00Z",
+        "campaignEnd": "2026-11-15T18:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=b66c6ae7-42bc-4e67-b0ad-8ab0d9897d26",
+        "gameName": "League of Legends",
+        "gameSlug": "league-of-legends",
+        "channels": [
+          {
+            "twitch_id": "141744336",
+            "name": "adamshoutcaster",
+            "display_name": "adamshoutcaster"
+          },
+          {
+            "twitch_id": "474236515",
+            "name": "akofena_",
+            "display_name": "Akofena_"
+          },
+          {
+            "twitch_id": "122799408",
+            "name": "alois_nl",
+            "display_name": "Alois_NL"
+          },
+          {
+            "twitch_id": "93293941",
+            "name": "alwaysplanahealol",
+            "display_name": "alwaysplanahealol"
+          },
+          {
+            "twitch_id": "58534131",
+            "name": "arrowlol",
+            "display_name": "arrowlol"
+          },
+          {
+            "twitch_id": "140772558",
+            "name": "baiano",
+            "display_name": "Baiano"
+          },
+          {
+            "twitch_id": "433363015",
+            "name": "banaplayzz",
+            "display_name": "BanaPlayzz"
+          },
+          {
+            "twitch_id": "190774669",
+            "name": "barbakahn",
+            "display_name": "BarbaKahn"
+          },
+          {
+            "twitch_id": "49941379",
+            "name": "blaber",
+            "display_name": "Blaber"
+          },
+          {
+            "twitch_id": "451106403",
+            "name": "blaire",
+            "display_name": "Blaire"
+          },
+          {
+            "twitch_id": "41372534",
+            "name": "broeki",
+            "display_name": "Broeki"
+          },
+          {
+            "twitch_id": "661123779",
+            "name": "c9loki",
+            "display_name": "C9Loki"
+          },
+          {
+            "twitch_id": "833537365",
+            "name": "c9thanatos",
+            "display_name": "C9Thanatos"
+          },
+          {
+            "twitch_id": "122691064",
+            "name": "cabramaravilla",
+            "display_name": "Cabramaravilla"
+          },
+          {
+            "twitch_id": "92038375",
+            "name": "caedrel",
+            "display_name": "Caedrel"
+          },
+          {
+            "twitch_id": "127414443",
+            "name": "caltys",
+            "display_name": "Caltys"
+          },
+          {
+            "twitch_id": "36511475",
+            "name": "cblol",
+            "display_name": "CBLOL"
+          },
+          {
+            "twitch_id": "49968279",
+            "name": "coatpustmain",
+            "display_name": "coatpustmain"
+          },
+          {
+            "twitch_id": "165204409",
+            "name": "comp_lol",
+            "display_name": "comp_lol"
+          },
+          {
+            "twitch_id": "133359333",
+            "name": "czekolad_",
+            "display_name": "Czekolad_"
+          },
+          {
+            "twitch_id": "466139555",
+            "name": "dantes",
+            "display_name": "Dantes"
+          },
+          {
+            "twitch_id": "42332234",
+            "name": "diamondprox_lol",
+            "display_name": "Diamondprox_LoL"
+          },
+          {
+            "twitch_id": "40017619",
+            "name": "doublelift",
+            "display_name": "Doublelift"
+          },
+          {
+            "twitch_id": "159604284",
+            "name": "ducmanhblv",
+            "display_name": "ducmanhblv"
+          },
+          {
+            "twitch_id": "30889146",
+            "name": "dudstheboy",
+            "display_name": "dudstheboy"
+          },
+          {
+            "twitch_id": "115361391",
+            "name": "dynquedo1",
+            "display_name": "Dynquedo1"
+          },
+          {
+            "twitch_id": "111439505",
+            "name": "eduark0ng",
+            "display_name": "EduarK0ng"
+          },
+          {
+            "twitch_id": "90588405",
+            "name": "elizent",
+            "display_name": "Elizent"
+          },
+          {
+            "twitch_id": "135191428",
+            "name": "eragonuk",
+            "display_name": "EragonUK"
+          },
+          {
+            "twitch_id": "24973791",
+            "name": "esport2tv",
+            "display_name": "esport2tv"
+          },
+          {
+            "twitch_id": "74803819",
+            "name": "evinmotv",
+            "display_name": "evinmotv"
+          },
+          {
+            "twitch_id": "115780502",
+            "name": "feviknight",
+            "display_name": "feviknight"
+          },
+          {
+            "twitch_id": "58098825",
+            "name": "fooya",
+            "display_name": "FooYa"
+          },
+          {
+            "twitch_id": "107803559",
+            "name": "fortuna",
+            "display_name": "Fortuna"
+          },
+          {
+            "twitch_id": "438504575",
+            "name": "frajgo_",
+            "display_name": "frajgo_"
+          },
+          {
+            "twitch_id": "26753250",
+            "name": "freezecz",
+            "display_name": "Freezecz"
+          },
+          {
+            "twitch_id": "117386066",
+            "name": "gtroubleinc",
+            "display_name": "gtroubleinc"
+          },
+          {
+            "twitch_id": "30689180",
+            "name": "halpern",
+            "display_name": "Halpern"
+          },
+          {
+            "twitch_id": "20607836",
+            "name": "hitpointcz",
+            "display_name": "HITPOINTCZ"
+          },
+          {
+            "twitch_id": "186322512",
+            "name": "hoangluanblv",
+            "display_name": "HoangLuanBLV"
+          },
+          {
+            "twitch_id": "83232866",
+            "name": "ibai",
+            "display_name": "ibai"
+          },
+          {
+            "twitch_id": "26513896",
+            "name": "imls",
+            "display_name": "imls"
+          },
+          {
+            "twitch_id": "238414356",
+            "name": "itsmedettol",
+            "display_name": "itsmedettol"
+          },
+          {
+            "twitch_id": "25653002",
+            "name": "iwdominate",
+            "display_name": "IWDominate"
+          },
+          {
+            "twitch_id": "217210385",
+            "name": "jamada",
+            "display_name": "Jamada"
+          },
+          {
+            "twitch_id": "6094619",
+            "name": "jankos",
+            "display_name": "Jankos"
+          },
+          {
+            "twitch_id": "885513971",
+            "name": "jillipuff",
+            "display_name": "Jillipuff"
+          },
+          {
+            "twitch_id": "24534372",
+            "name": "jimrsng",
+            "display_name": "JimRsng"
+          },
+          {
+            "twitch_id": "228428255",
+            "name": "jonnijuro",
+            "display_name": "Jonnijuro"
+          },
+          {
+            "twitch_id": "153991013",
+            "name": "jordilmk",
+            "display_name": "JordiLMK"
+          },
+          {
+            "twitch_id": "77208443",
+            "name": "jukes",
+            "display_name": "jukes"
+          },
+          {
+            "twitch_id": "27115917",
+            "name": "kamet0",
+            "display_name": "Kamet0"
+          },
+          {
+            "twitch_id": "98914728",
+            "name": "kamuslol",
+            "display_name": "KamusLoL"
+          },
+          {
+            "twitch_id": "126632539",
+            "name": "katevolved",
+            "display_name": "KatEvolved"
+          },
+          {
+            "twitch_id": "82173521",
+            "name": "kenrhen",
+            "display_name": "KenRhen"
+          },
+          {
+            "twitch_id": "144924031",
+            "name": "kiittwy",
+            "display_name": "kiittwy"
+          },
+          {
+            "twitch_id": "264230873",
+            "name": "kmtlol",
+            "display_name": "KMTlol"
+          },
+          {
+            "twitch_id": "134863913",
+            "name": "lastcrosser",
+            "display_name": "Lastcrosser"
+          },
+          {
+            "twitch_id": "124420521",
+            "name": "lcs",
+            "display_name": "LCS"
+          },
+          {
+            "twitch_id": "104833324",
+            "name": "leagueoflegendsjp",
+            "display_name": "LeagueofLegendsJP"
+          },
+          {
+            "twitch_id": "1103155299",
+            "name": "leagueoflegendsth",
+            "display_name": "leagueoflegendsth"
+          },
+          {
+            "twitch_id": "124422593",
+            "name": "lec",
+            "display_name": "LEC"
+          },
+          {
+            "twitch_id": "1420579810",
+            "name": "les",
+            "display_name": "LES"
+          },
+          {
+            "twitch_id": "146982508",
+            "name": "lightfurylf",
+            "display_name": "LightFuryLF"
+          },
+          {
+            "twitch_id": "1278937468",
+            "name": "lolesports",
+            "display_name": "lolesports"
+          },
+          {
+            "twitch_id": "437144416",
+            "name": "lolesports_ar",
+            "display_name": "lolesports_ar"
+          },
+          {
+            "twitch_id": "142055874",
+            "name": "lolesportsla",
+            "display_name": "lolesportsla"
+          },
+          {
+            "twitch_id": "485855940",
+            "name": "lolesportstw",
+            "display_name": "lolesportstw"
+          },
+          {
+            "twitch_id": "42686036",
+            "name": "lolmechs",
+            "display_name": "lolmechs"
+          },
+          {
+            "twitch_id": "86131599",
+            "name": "lol_nemesis",
+            "display_name": "lol_nemesis"
+          },
+          {
+            "twitch_id": "27842439",
+            "name": "lourlo",
+            "display_name": "Lourlo"
+          },
+          {
+            "twitch_id": "1424757204",
+            "name": "ltaespanol",
+            "display_name": "ltaespanol"
+          },
+          {
+            "twitch_id": "424571482",
+            "name": "maisesportsbr",
+            "display_name": "maisesportsbr"
+          },
+          {
+            "twitch_id": "92737301",
+            "name": "malzaharberkut",
+            "display_name": "MalzaharBerkut"
+          },
+          {
+            "twitch_id": "246074082",
+            "name": "mercyplaystw",
+            "display_name": "MercyPlaysTW"
+          },
+          {
+            "twitch_id": "38708489",
+            "name": "meteos",
+            "display_name": "Meteos"
+          },
+          {
+            "twitch_id": "184578486",
+            "name": "mfreak00",
+            "display_name": "mfreak00"
+          },
+          {
+            "twitch_id": "92113890",
+            "name": "midbeast",
+            "display_name": "midbeast"
+          },
+          {
+            "twitch_id": "134104249",
+            "name": "mrschimchim",
+            "display_name": "MrsChimChim"
+          },
+          {
+            "twitch_id": "110005541",
+            "name": "muramina",
+            "display_name": "muramina"
+          },
+          {
+            "twitch_id": "105203178",
+            "name": "nahovsky",
+            "display_name": "nahovsky"
+          },
+          {
+            "twitch_id": "25452510",
+            "name": "nervarien",
+            "display_name": "Nervarien"
+          },
+          {
+            "twitch_id": "29722828",
+            "name": "never_loses",
+            "display_name": "NeVeR_LosEs"
+          },
+          {
+            "twitch_id": "54319112",
+            "name": "nickdaboom",
+            "display_name": "Nickdaboom"
+          },
+          {
+            "twitch_id": "525152946",
+            "name": "niikoletaa",
+            "display_name": "niikoletaa"
+          },
+          {
+            "twitch_id": "67708794",
+            "name": "nix",
+            "display_name": "Nix"
+          },
+          {
+            "twitch_id": "57557944",
+            "name": "nymaera",
+            "display_name": "Nymaera"
+          },
+          {
+            "twitch_id": "56924673",
+            "name": "obsess3",
+            "display_name": "Obsess3"
+          },
+          {
+            "twitch_id": "622498423",
+            "name": "otplol_",
+            "display_name": "otplol_"
+          },
+          {
+            "twitch_id": "29750090",
+            "name": "paoloidolo",
+            "display_name": "Paoloidolo"
+          },
+          {
+            "twitch_id": "53818082",
+            "name": "paresz",
+            "display_name": "Paresz"
+          },
+          {
+            "twitch_id": "25080754",
+            "name": "pobelter",
+            "display_name": "Pobelter"
+          },
+          {
+            "twitch_id": "264453364",
+            "name": "presencelol",
+            "display_name": "PresenceLoL"
+          },
+          {
+            "twitch_id": "530776645",
+            "name": "psychopathicporo",
+            "display_name": "PsychopathicPoro"
+          },
+          {
+            "twitch_id": "36029255",
+            "name": "riotgames",
+            "display_name": "Riot Games"
+          },
+          {
+            "twitch_id": "36513760",
+            "name": "riotgamesturkish",
+            "display_name": "RiotGamesTurkish"
+          },
+          {
+            "twitch_id": "13374246",
+            "name": "rtparenalol",
+            "display_name": "RTPArenaLoL"
+          },
+          {
+            "twitch_id": "840780913",
+            "name": "sannttosa",
+            "display_name": "Sannttosa"
+          },
+          {
+            "twitch_id": "22253819",
+            "name": "scarra",
+            "display_name": "Scarra"
+          },
+          {
+            "twitch_id": "33734881",
+            "name": "send0o",
+            "display_name": "Send0o"
+          },
+          {
+            "twitch_id": "70298660",
+            "name": "skyyart",
+            "display_name": "Skyyart"
+          },
+          {
+            "twitch_id": "182899347",
+            "name": "smurf_tv",
+            "display_name": "Smurf_tv"
+          },
+          {
+            "twitch_id": "24538518",
+            "name": "sneakylol",
+            "display_name": "sneakylol"
+          },
+          {
+            "twitch_id": "44864184",
+            "name": "sola",
+            "display_name": "Sola"
+          },
+          {
+            "twitch_id": "86195014",
+            "name": "starky",
+            "display_name": "Starky"
+          },
+          {
+            "twitch_id": "52277205",
+            "name": "tactical",
+            "display_name": "Tactical"
+          },
+          {
+            "twitch_id": "86690831",
+            "name": "takluz",
+            "display_name": "Takluz"
+          },
+          {
+            "twitch_id": "499928989",
+            "name": "tck10",
+            "display_name": "TcK10"
+          },
+          {
+            "twitch_id": "96161253",
+            "name": "tealzlol",
+            "display_name": "tealzlol"
+          },
+          {
+            "twitch_id": "1550842085",
+            "name": "telekomgoodgame",
+            "display_name": "telekomgoodgame"
+          },
+          {
+            "twitch_id": "30264374",
+            "name": "terenas",
+            "display_name": "Terenas"
+          },
+          {
+            "twitch_id": "29836234",
+            "name": "teshrak",
+            "display_name": "Teshrak"
+          },
+          {
+            "twitch_id": "41530075",
+            "name": "therock7_",
+            "display_name": "TheRock7_"
+          },
+          {
+            "twitch_id": "92078908",
+            "name": "tl_nero",
+            "display_name": "TL_Nero"
+          },
+          {
+            "twitch_id": "27045041",
+            "name": "toadamarillo",
+            "display_name": "ToadAmarillo"
+          },
+          {
+            "twitch_id": "181357564",
+            "name": "tolkin",
+            "display_name": "Tolkin"
+          },
+          {
+            "twitch_id": "81446331",
+            "name": "traytonlol",
+            "display_name": "TraYtoNlol"
+          },
+          {
+            "twitch_id": "790796770",
+            "name": "ttobias_lol",
+            "display_name": "TTobias_lol"
+          },
+          {
+            "twitch_id": "211735609",
+            "name": "veigarv2",
+            "display_name": "VeigarV2"
+          },
+          {
+            "twitch_id": "56399221",
+            "name": "viper",
+            "display_name": "Viper"
+          },
+          {
+            "twitch_id": "122371240",
+            "name": "vulcan_lol",
+            "display_name": "Vulcan_LoL"
+          },
+          {
+            "twitch_id": "25515122",
+            "name": "wuant",
+            "display_name": "wuant"
+          },
+          {
+            "twitch_id": "27370971",
+            "name": "xnapycz",
+            "display_name": "Xnapycz"
+          },
+          {
+            "twitch_id": "25075983",
+            "name": "yamatocannon",
+            "display_name": "YamatoCannon"
+          },
+          {
+            "twitch_id": "27680990",
+            "name": "yetz",
+            "display_name": "yeTz"
+          },
+          {
+            "twitch_id": "65737149",
+            "name": "yutapongo",
+            "display_name": "yutapongo"
+          },
+          {
+            "twitch_id": "45184940",
+            "name": "yvonnie",
+            "display_name": "yvonnie"
+          },
+          {
+            "twitch_id": "43976593",
+            "name": "zaboutine",
+            "display_name": "Zaboutine"
+          },
+          {
+            "twitch_id": "56040094",
+            "name": "zven_lol1",
+            "display_name": "zven_lol1"
+          },
+          {
+            "twitch_id": "69600926",
+            "name": "entych",
+            "display_name": "えんてぃ"
+          },
+          {
+            "twitch_id": "123278702",
+            "name": "syaruru3",
+            "display_name": "しゃるる"
+          },
+          {
+            "twitch_id": "93305727",
+            "name": "takayaspecial",
+            "display_name": "たかやスペシャル"
+          },
+          {
+            "twitch_id": "45839490",
+            "name": "alfrea",
+            "display_name": "らいじん"
+          },
+          {
+            "twitch_id": "128222917",
+            "name": "bbbb87",
+            "display_name": "世誠"
+          },
+          {
+            "twitch_id": "1097252496",
+            "name": "sendo_yuuhi",
+            "display_name": "千燈ゆうひ"
+          },
+          {
+            "twitch_id": "83140564",
+            "name": "karsalol",
+            "display_name": "咖撒"
+          },
+          {
+            "twitch_id": "40083477",
+            "name": "zod0416",
+            "display_name": "粒鷗滴"
+          },
+          {
+            "twitch_id": "1476573725",
+            "name": "saineginjo",
+            "display_name": "銀城サイネ"
+          }
+        ],
+        "description": "Support the biggest esports event of the year to earn the Worlds 2026 Supporter chat badge!",
+        "relatedDrops": []
+      }
+    },
+    "773f4909-b958-455c-be7a-641ade4067c5:a470c029-c0b1-11f1-8d61-0a58a9feac02:843870a1-c0b1-11f1-9e5d-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-08T17:00:00Z",
+      "endAt": "2026-11-05T16:59:59.999Z",
+      "reward": {
+        "key": "773f4909-b958-455c-be7a-641ade4067c5:a470c029-c0b1-11f1-8d61-0a58a9feac02:843870a1-c0b1-11f1-9e5d-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Vaultbreakers Golden",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/843870a1-c0b1-11f1-9e5d-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "Vaultbreakers Golden",
+        "campaignName": "Vaultbreakers",
+        "campaignId": "773f4909-b958-455c-be7a-641ade4067c5",
+        "campaignStart": "2026-10-08T17:00:00Z",
+        "campaignEnd": "2026-11-05T16:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=773f4909-b958-455c-be7a-641ade4067c5",
+        "gameName": "Vaultbreakers",
+        "gameSlug": "",
+        "channels": [],
+        "description": "Come watch your favourite streamers playing Vaultbreakers and grab yourself exclusive chat badges! #Vaultbreakers",
+        "relatedDrops": []
+      }
+    },
+    "773f4909-b958-455c-be7a-641ade4067c5:174a731a-c0b1-11f1-8dd0-0a58a9feac02:62d8c0e1-c0b1-11f1-937a-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-08T17:00:00Z",
+      "endAt": "2026-11-05T16:59:59.999Z",
+      "reward": {
+        "key": "773f4909-b958-455c-be7a-641ade4067c5:174a731a-c0b1-11f1-8dd0-0a58a9feac02:62d8c0e1-c0b1-11f1-937a-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Vaultbreakers",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/62d8c0e1-c0b1-11f1-937a-0a58a9feac02.png",
+        "minutes": 60,
+        "subs": 0,
+        "dropName": "Vaultbreakers",
+        "campaignName": "Vaultbreakers",
+        "campaignId": "773f4909-b958-455c-be7a-641ade4067c5",
+        "campaignStart": "2026-10-08T17:00:00Z",
+        "campaignEnd": "2026-11-05T16:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=773f4909-b958-455c-be7a-641ade4067c5",
+        "gameName": "Vaultbreakers",
+        "gameSlug": "",
+        "channels": [],
+        "description": "Come watch your favourite streamers playing Vaultbreakers and grab yourself exclusive chat badges! #Vaultbreakers",
+        "relatedDrops": []
+      }
+    },
+    "26a32c34-dfd6-48a4-87fc-a8da6de68e47:93f0b1af-bdb6-11f1-9305-0a58a9feac02:b8201321-bdb6-11f1-89e0-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-08T12:00:00Z",
+      "endAt": "2026-10-31T22:58:59.999Z",
+      "reward": {
+        "key": "26a32c34-dfd6-48a4-87fc-a8da6de68e47:93f0b1af-bdb6-11f1-9305-0a58a9feac02:b8201321-bdb6-11f1-89e0-0a58a9feac02",
+        "type": "BADGE",
+        "name": "FrekiFriend",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/b8201321-bdb6-11f1-89e0-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "FrekiFriend",
+        "campaignName": "Dragon’s Dogma 2 - DA",
+        "campaignId": "26a32c34-dfd6-48a4-87fc-a8da6de68e47",
+        "campaignStart": "2026-10-08T12:00:00Z",
+        "campaignEnd": "2026-10-31T22:58:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=26a32c34-dfd6-48a4-87fc-a8da6de68e47",
+        "gameName": "Dragon's Dogma II",
+        "gameSlug": "dragons-dogma-ii",
+        "channels": [],
+        "description": "Your unwritten epic begins now with the launch of Dragon’s Dogma 2: Dark Arisen! Come and celebrate on Twitch with two exclusive Dark Arisen themed chat badges! They're masterworks all, you can’t go wrong! #DD2DA ",
+        "relatedDrops": []
+      }
+    },
+    "26a32c34-dfd6-48a4-87fc-a8da6de68e47:8c6bf837-bdb6-11f1-8346-0a58a9feac02:d67d51f7-bdb6-11f1-9872-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-08T12:00:00Z",
+      "endAt": "2026-10-31T22:58:59.999Z",
+      "reward": {
+        "key": "26a32c34-dfd6-48a4-87fc-a8da6de68e47:8c6bf837-bdb6-11f1-8346-0a58a9feac02:d67d51f7-bdb6-11f1-9872-0a58a9feac02",
+        "type": "BADGE",
+        "name": "TheDragonsDogma",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/d67d51f7-bdb6-11f1-9872-0a58a9feac02.png",
+        "minutes": 60,
+        "subs": 0,
+        "dropName": "TheDragonsDogma",
+        "campaignName": "Dragon’s Dogma 2 - DA",
+        "campaignId": "26a32c34-dfd6-48a4-87fc-a8da6de68e47",
+        "campaignStart": "2026-10-08T12:00:00Z",
+        "campaignEnd": "2026-10-31T22:58:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=26a32c34-dfd6-48a4-87fc-a8da6de68e47",
+        "gameName": "Dragon's Dogma II",
+        "gameSlug": "dragons-dogma-ii",
+        "channels": [],
+        "description": "Your unwritten epic begins now with the launch of Dragon’s Dogma 2: Dark Arisen! Come and celebrate on Twitch with two exclusive Dark Arisen themed chat badges! They're masterworks all, you can’t go wrong! #DD2DA ",
+        "relatedDrops": []
+      }
+    },
+    "711b6068-c16e-4d0f-bcb1-6be54eb91c3f:2c1bc1d1-bd1c-11f1-b165-0a58a9feac02:67823d4d-bd1c-11f1-8609-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-01T20:00:00Z",
+      "endAt": "2026-10-28T19:59:59.999Z",
+      "reward": {
+        "key": "711b6068-c16e-4d0f-bcb1-6be54eb91c3f:2c1bc1d1-bd1c-11f1-b165-0a58a9feac02:67823d4d-bd1c-11f1-8609-0a58a9feac02",
+        "type": "EMOTE",
+        "name": "SFGuile Emote",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/67823d4d-bd1c-11f1-8609-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "SFGuile Emote",
+        "campaignName": "Street Fighter 6",
+        "campaignId": "711b6068-c16e-4d0f-bcb1-6be54eb91c3f",
+        "campaignStart": "2026-10-01T20:00:00Z",
+        "campaignEnd": "2026-10-28T19:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=711b6068-c16e-4d0f-bcb1-6be54eb91c3f",
+        "gameName": "Street Fighter 6",
+        "gameSlug": "street-fighter-6",
+        "channels": [],
+        "description": "Subscribe to any streamer streaming Street Fighter 6 to unlock the SFGuile emote for 1 year.",
+        "relatedDrops": []
+      }
+    },
+    "ef371a6b-b762-4d7e-b31e-e4211be15030:0fd97dbb-b663-11f1-9aab-0a58a9feac02:81166d0e-b663-11f1-9aab-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-01T09:00:00Z",
+      "endAt": "2026-10-29T08:58:59.999Z",
+      "reward": {
+        "key": "ef371a6b-b762-4d7e-b31e-e4211be15030:0fd97dbb-b663-11f1-9aab-0a58a9feac02:81166d0e-b663-11f1-9aab-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Sevastopol Station",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/81166d0e-b663-11f1-9aab-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "Sevastopol Station",
+        "campaignName": "Alien: Isolation Horror",
+        "campaignId": "ef371a6b-b762-4d7e-b31e-e4211be15030",
+        "campaignStart": "2026-10-01T09:00:00Z",
+        "campaignEnd": "2026-10-29T08:58:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=ef371a6b-b762-4d7e-b31e-e4211be15030",
+        "gameName": "Alien: Isolation",
+        "gameSlug": "alien-isolation",
+        "channels": [],
+        "description": "Dive into the dark corridors of Sevastopol Station during Twitch Fright Fest to grab exclusive #AlienIsolation chat badges!",
+        "relatedDrops": []
+      }
+    },
+    "ef371a6b-b762-4d7e-b31e-e4211be15030:0306ec39-b663-11f1-ab56-0a58a9feac02:ab93766d-b663-11f1-ba4d-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-01T09:00:00Z",
+      "endAt": "2026-10-29T08:58:59.999Z",
+      "reward": {
+        "key": "ef371a6b-b762-4d7e-b31e-e4211be15030:0306ec39-b663-11f1-ab56-0a58a9feac02:ab93766d-b663-11f1-ba4d-0a58a9feac02",
+        "type": "BADGE",
+        "name": "SEEGSON Synthetics",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/ab93766d-b663-11f1-ba4d-0a58a9feac02.png",
+        "minutes": 30,
+        "subs": 0,
+        "dropName": "SEEGSON Synthetics",
+        "campaignName": "Alien: Isolation Horror",
+        "campaignId": "ef371a6b-b762-4d7e-b31e-e4211be15030",
+        "campaignStart": "2026-10-01T09:00:00Z",
+        "campaignEnd": "2026-10-29T08:58:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=ef371a6b-b762-4d7e-b31e-e4211be15030",
+        "gameName": "Alien: Isolation",
+        "gameSlug": "alien-isolation",
+        "channels": [],
+        "description": "Dive into the dark corridors of Sevastopol Station during Twitch Fright Fest to grab exclusive #AlienIsolation chat badges!",
+        "relatedDrops": []
+      }
+    },
+    "0979f1bb-fa0d-40d8-b175-c19b8d30bab8:0f2a81ed-b1f1-11f1-9fcc-0a58a9feac02:c1b96ff4-b1f1-11f1-85fb-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-01T08:00:00Z",
+      "endAt": "2026-10-29T07:59:59.999Z",
+      "reward": {
+        "key": "0979f1bb-fa0d-40d8-b175-c19b8d30bab8:0f2a81ed-b1f1-11f1-9fcc-0a58a9feac02:c1b96ff4-b1f1-11f1-85fb-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Ultramarine",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/c1b96ff4-b1f1-11f1-85fb-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "Ultramarine",
+        "campaignName": "SM2 - 3rd Anniversary",
+        "campaignId": "0979f1bb-fa0d-40d8-b175-c19b8d30bab8",
+        "campaignStart": "2026-10-01T08:00:00Z",
+        "campaignEnd": "2026-10-29T07:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=0979f1bb-fa0d-40d8-b175-c19b8d30bab8",
+        "gameName": "Warhammer 40,000: Space Marine II",
+        "gameSlug": "warhammer-40-000-space-marine-ii",
+        "channels": [],
+        "description": "We're excited to kick-off Warhammer 40,000: Space Marine 2's 3rd year of support! Join your favorite creators and watch the new season unfold to grab exclusive chat badge and in-game cosmetic rewards!",
+        "relatedDrops": []
+      }
+    },
+    "5e6e8172-09f9-4e28-bf54-0b4bef23804d:358dfbeb-bd15-11f1-bf9f-0a58a9feac02:ec787d69-bd15-11f1-8a02-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-10-01T07:00:00Z",
+      "endAt": "2026-10-29T06:59:59.999Z",
+      "reward": {
+        "key": "5e6e8172-09f9-4e28-bf54-0b4bef23804d:358dfbeb-bd15-11f1-bf9f-0a58a9feac02:ec787d69-bd15-11f1-8a02-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Bloody Finger ELDEN RING",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/ec787d69-bd15-11f1-8a02-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "Bloody Finger ELDEN RING",
+        "campaignName": "Bloody Finger ELDEN RING",
+        "campaignId": "5e6e8172-09f9-4e28-bf54-0b4bef23804d",
+        "campaignStart": "2026-10-01T07:00:00Z",
+        "campaignEnd": "2026-10-29T06:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=5e6e8172-09f9-4e28-bf54-0b4bef23804d",
+        "gameName": "ELDEN RING",
+        "gameSlug": "elden-ring",
+        "channels": [],
+        "description": "This badge was earned by subscribing or gifting a sub to a streamer in the ELDEN RING category.",
+        "relatedDrops": []
+      }
+    }
+  },
+  "twitchDropCampaignVersions": {
+    "771bc139-cb68-4858-a53c-3a16692c4c63": "2026-10-28T13:01:40.872Z",
+    "d9d9ae7f-5e06-4159-b1e6-bd6905a7ba24": "2026-10-28T13:01:41.078Z",
+    "c0cdf686-c261-4dc0-9108-81e3d9137a8f": "2026-10-28T13:01:40.989Z",
+    "b3d9b711-f3b6-40b6-897a-1519852d0312": "2026-10-28T12:02:06.904Z",
+    "39f6d687-c96a-4095-99ac-dc2446f6c1b6": "2026-10-28T11:01:36.348Z",
+    "766aee60-373e-487e-b8c8-4516cdd25042": "2026-10-28T10:02:11.176Z",
+    "864dd182-0369-4a1b-b1c8-fbe0b2a02333": "2026-10-28T10:02:11.554Z",
+    "87d2acbd-36e8-48fb-b3d4-3b7921a9b779": "2026-10-28T10:02:11.734Z",
+    "ea2b20b8-b316-4d81-8e3e-02f5f87cb52f": "2026-10-28T08:02:10.114Z",
+    "2890acf3-fc66-4310-920e-f09980832da4": "2026-10-28T08:02:09.704Z",
+    "4731b3dc-e266-4f24-826e-a85feb44428d": "2026-10-28T07:01:31.129Z",
+    "7e53b036-f71b-4d07-a71a-578ed77c9332": "2026-10-28T02:01:56.005Z",
+    "beab118b-b5b0-411f-8957-1343393682b0": "2026-10-28T00:01:53.853Z",
+    "d6a79a3e-fd63-43ed-906d-3a8443cd8184": "2026-10-27T19:44:52.672Z",
+    "eb280ef7-5874-4fb3-a36b-88e2d76784f1": "2026-10-27T19:44:52.801Z",
+    "5f319798-ad86-435d-9598-744421b8a3ef": "2026-10-27T19:44:52.355Z",
+    "ee4a624d-8452-4396-8925-7da45ee2671a": "2026-10-27T19:44:52.936Z",
+    "18cf9a33-4a90-4a27-b544-f8a0fee9c2c2": "2026-10-27T15:52:48.482Z",
+    "e67399bb-1964-4392-8e22-bc7fb485c6c6": "2026-10-27T15:52:49.044Z",
+    "ed2154c8-041b-41c7-9448-ba074bc21d7f": "2026-10-27T15:52:49.349Z",
+    "8f49901e-4cf9-46d9-a559-441e396959da": "2026-10-26T23:52:46.914Z",
+    "119b5c68-114e-4085-bb93-db563cba5f4c": "2026-10-26T20:04:56.360Z",
+    "f7c5f69a-00fa-4d15-9009-23a0c24e5bde": "2026-10-26T20:04:58.325Z",
+    "c34181d6-b04c-4a53-96b9-e940001934f2": "2026-10-26T20:04:57.271Z",
+    "b2432aa9-50be-41e6-b61b-691ae0b44c89": "2026-10-26T20:04:57.131Z",
+    "0f3f83e9-93d1-4922-a15b-4d5da7a0a712": "2026-10-26T20:04:56.060Z",
+    "e8b7af11-0544-4a76-99e7-4807e4f3f35f": "2026-10-26T20:04:57.688Z",
+    "20045463-b9ab-4226-929b-4e2f129e880f": "2026-10-26T14:16:58.267Z",
+    "944d42e3-4932-4bc9-a32e-e0dd0b0fea1d": "2026-10-26T14:16:58.800Z",
+    "ba6607fe-7bb0-49f7-9da0-65254223c535": "2026-10-26T14:16:59.048Z",
+    "e05a3f77-585a-48c0-9adb-3e60e5e75863": "2026-10-26T14:16:59.219Z",
+    "75064d8e-726d-45e6-9caa-26d66d49b993": "2026-10-26T07:10:23.315Z",
+    "96eb6e6e-7ff9-4d37-b0f1-16fe59884195": "2026-10-26T07:10:23.658Z",
+    "d8d964f2-fcdc-4440-a979-9ff55351cbe8": "2026-10-26T00:02:03.369Z",
+    "3380dcef-23bf-4649-8268-aded1addb26c": "2026-10-26T00:02:02.709Z",
+    "95ebafd2-8c53-49b0-8c65-f2ae521c3a01": "2026-10-25T16:02:01.271Z",
+    "56cf9e35-6322-4484-9f9b-7002092f1ac2": "2026-10-25T10:02:06.341Z",
+    "8035a74a-d067-4c2e-815f-8fa17044aa24": "2026-10-25T07:01:43.208Z",
+    "cfdb7d07-2d7b-4487-889e-c4b83421d803": "2026-10-25T02:02:19.549Z",
+    "db624cf2-7001-48b2-b58c-386f6bdd18ff": "2026-10-24T11:01:57.923Z",
+    "c3c9db21-841c-4a9e-bf18-018d501707a4": "2026-10-23T19:02:17.517Z",
+    "59e67ea5-2fa8-47d4-b890-12f8bd227b20": "2026-10-23T19:02:17.091Z",
+    "233a7dcd-1c1f-4876-9529-2071a7f0d30d": "2026-10-23T18:03:27.889Z",
+    "907b637a-7ac0-49d2-b563-5b3dd79c29d4": "2026-10-23T17:43:05.242Z",
+    "f5e7af8c-ea05-4cb1-8fea-1ab002cb7443": "2026-10-23T17:43:06.016Z",
+    "eb8ad6af-ae8e-453f-9324-004e23f65a1a": "2026-10-23T17:43:05.815Z",
+    "8fbafdec-31ee-4878-a9ca-9ebbe07ca74d": "2026-10-23T17:43:05.057Z",
+    "47a6829c-eb3b-4b57-9548-67d85bff3a1c": "2026-10-23T17:43:04.625Z",
+    "e8b15816-901d-44fb-8ac4-58bf2ebf06c4": "2026-10-23T17:43:05.677Z",
+    "b4f12d3f-f92c-4d5a-a127-bdbd21f546c5": "2026-10-23T17:42:06.493Z",
+    "6d31797a-b6cc-4246-83e9-5710ba59eb0c": "2026-10-23T17:43:04.797Z",
+    "41fd0f1e-aee2-495f-910c-6c6ebd056087": "2026-10-23T12:54:48.867Z",
+    "b42d9f22-e860-4f26-bdd8-bd0a6b8a4b9f": "2026-10-23T12:54:49.461Z",
+    "7440ade0-714d-4a97-b9b7-f3961702e3e5": "2026-10-23T12:54:49.026Z",
+    "1ea91d87-67e0-48b9-b49d-cf0b3b58eafd": "2026-10-23T12:54:48.471Z",
+    "cc8fd90c-a765-4e92-b5cd-1d8348bd364d": "2026-10-23T00:01:43.220Z",
+    "a27bf158-7088-4161-9454-c9aa882e7e3b": "2026-10-22T18:02:17.125Z",
+    "2519eaa5-981e-4861-8b03-361dd002cfa4": "2026-10-22T17:11:45.258Z",
+    "97b4a33f-43a1-4166-bcda-f58b534b2c9b": "2026-10-22T16:01:52.115Z",
+    "381d286a-8959-4bb1-a95e-dbd2ecf944a1": "2026-10-22T16:01:51.073Z",
+    "437a3bed-7c38-4136-91e3-04cc9ce618b5": "2026-10-22T16:01:51.583Z",
+    "5fb929d6-4f3e-4e70-82d3-1862c2d3164c": "2026-10-22T16:01:51.942Z",
+    "5365884f-b4d3-4184-a270-b8fd8bed5dae": "2026-10-22T15:02:06.822Z",
+    "17de3088-e3f3-423d-aa84-101002ac41df": "2026-10-22T10:01:33.885Z",
+    "2592aee8-8a94-469d-8731-db914c197367": "2026-10-22T10:01:34.072Z",
+    "a9c2f298-5a53-439a-9a8c-41b4d88937e1": "2026-10-22T10:01:34.297Z",
+    "d8fbb86b-fda6-4737-9d03-2de77af5e05b": "2026-10-22T08:34:39.803Z",
+    "4b249954-342f-4a19-bfa1-0421ecf735a4": "2026-10-22T02:01:58.456Z",
+    "d3dea6a7-cb4e-4226-8906-54d7feee8bbe": "2026-10-22T01:01:24.245Z",
+    "69f32da3-7abf-4716-b051-085a879cb112": "2026-10-22T00:01:46.186Z",
+    "e02f8bb3-634e-4481-82d8-023f286a8770": "2026-10-22T00:01:46.395Z",
+    "2ed1e6e7-9f75-4b65-b0b5-1e811da88798": "2026-10-22T14:46:54.948Z",
+    "4ea61372-8f27-4ff8-be45-611db94c2a5a": "2026-10-22T14:46:55.408Z",
+    "18ae2563-22e9-4250-8734-3f1b6caa50e5": "2026-10-21T22:01:17.739Z",
+    "f584b1fa-8acd-4d7e-b78d-d395b2d8243c": "2026-10-21T18:01:46.494Z",
+    "e1e9dc8b-f3f5-4757-b450-7de7028db47f": "2026-10-21T16:01:24.284Z",
+    "5953ecbc-38fb-48e3-af8a-3d8574612a20": "2026-10-21T16:01:24.059Z",
+    "7c9c09a6-bc91-448f-862b-679ea9a9ca4d": "2026-10-21T16:01:24.190Z",
+    "3ed1adc1-8f12-4d18-82ac-fd543f08722d": "2026-10-21T21:01:41.534Z",
+    "e4f567f2-4eab-4dae-9995-c46e769b0c7a": "2026-10-21T02:01:57.156Z",
+    "587f7e5a-6994-4add-8c58-ef4bcfc70bc6": "2026-10-22T18:02:16.467Z",
+    "37fd344f-0050-4fbf-84ac-fe5648fc0cd9": "2026-10-20T16:01:58.486Z",
+    "aefa907c-43d5-4187-beed-4576c246ef7b": "2026-10-20T13:32:06.689Z",
+    "1b0b6519-5cfb-4894-816c-0bf6bd29cd26": "2026-10-20T09:02:00.177Z",
+    "f24a565e-9fa3-45c0-aafe-2c444f37b795": "2026-10-19T10:02:12.662Z",
+    "3061af39-49c5-4137-90a8-75837d5917ec": "2026-10-18T17:02:13.941Z",
+    "90273492-0fd5-46d0-b1cf-60084d901adf": "2026-10-18T15:02:03.427Z",
+    "9f42c463-846b-4e57-8dac-6e735a687c13": "2026-10-18T05:31:47.567Z",
+    "d8e74682-74d7-4def-8f2b-034d982d03c1": "2026-10-16T15:01:36.085Z",
+    "dfeba7d4-f52f-4195-9153-88656e5c1114": "2026-10-16T07:02:13.546Z",
+    "486811da-8b4c-4212-951d-1a8caa34b5bc": "2026-10-16T07:02:13.165Z",
+    "321f2214-c73d-4989-91fb-4b0364985a25": "2026-10-16T03:32:20.794Z",
+    "de187dc2-1549-44a6-8fe1-118efd83a38a": "2026-10-16T02:31:30.728Z",
+    "e3783806-14bb-4497-850b-fbb7d9468d54": "2026-10-15T15:01:56.837Z",
+    "2da47e43-9fbd-4a0b-b7ec-1c180fc4ce20": "2026-10-15T15:01:55.670Z",
+    "86254499-8b0b-4f45-b9d3-de79cb756773": "2026-10-15T15:01:56.520Z",
+    "61e12424-a3c8-4ad7-9141-6058b23ea044": "2026-10-15T15:01:56.068Z",
+    "8c373f6f-862e-4737-81fe-452dc0252977": "2026-10-15T14:16:34.139Z",
+    "4c37cc62-b880-40c6-99ae-fc8219dac1aa": "2026-10-15T08:01:42.684Z",
+    "cc08d25f-f80b-44f1-831f-c97bbbedc5fe": "2026-10-15T06:02:13.843Z",
+    "98f17628-ca8f-431d-9779-f898645b03d3": "2026-10-15T05:47:06.470Z",
+    "6b50175a-a8a6-4c41-a2e7-3ae0cd028831": "2026-10-15T04:01:36.141Z",
+    "853eaf12-2ecb-446c-b382-717c278f8af2": "2026-10-15T02:01:21.561Z",
+    "b66c6ae7-42bc-4e67-b0ad-8ab0d9897d26": "2026-10-14T19:01:26.782Z",
+    "d6d56572-09ce-4204-bd92-a86436ed2f25": "2026-10-13T17:01:20.945Z",
+    "8ee4cc17-5fd4-4d29-8147-14ec12477c45": "2026-10-13T17:01:20.572Z",
+    "1a262fb8-ab5d-4dbe-9284-bdc17aabe5c9": "2026-10-14T17:02:03.058Z",
+    "fc782035-c5b0-4790-a5dd-c57f12469331": "2026-10-13T12:01:17.515Z",
+    "c9b4b2ac-7ede-4fed-b45d-9c657f20a73c": "2026-10-11T16:31:46.199Z",
+    "6cd9dfd0-ac14-4405-97fc-49f191925268": "2026-10-09T12:32:23.570Z",
+    "2af30b0f-945d-434b-9deb-8161fdae8229": "2026-10-09T12:02:10.656Z",
+    "773f4909-b958-455c-be7a-641ade4067c5": "2026-10-08T17:43:05.732Z",
+    "379ef4ec-630e-4680-be66-afa041847757": "2026-10-08T13:08:10.753Z",
+    "26a32c34-dfd6-48a4-87fc-a8da6de68e47": "2026-10-08T12:07:36.623Z",
+    "e4f226c6-c9c3-4d99-9c13-e0050e004f9a": "2026-10-08T11:07:54.309Z",
+    "efb9b018-9c9e-4721-8659-6690bfd8cb63": "2026-10-08T00:06:34.815Z",
+    "dfa9c27f-877b-417a-8a49-279ecf0fbb15": "2026-10-06T18:31:09.379Z",
+    "35e7547f-0b2a-430d-850e-bfd9d5729eab": "2026-10-05T21:38:08.604Z",
+    "711b6068-c16e-4d0f-bcb1-6be54eb91c3f": "2026-10-01T20:49:21.638Z",
+    "19800c70-7d90-45bc-894b-b1765188b529": "2026-10-01T11:50:39.859Z",
+    "ef371a6b-b762-4d7e-b31e-e4211be15030": "2026-10-01T11:50:41.336Z",
+    "0979f1bb-fa0d-40d8-b175-c19b8d30bab8": "2026-10-01T11:50:39.558Z",
+    "5e6e8172-09f9-4e28-bf54-0b4bef23804d": "2026-10-01T11:50:40.363Z",
+    "5b32b5e7-7421-40ae-be32-e45b4df19a12": "2026-10-01T05:42:37.544Z"
+  }
 }

@@ -457,9 +457,13 @@ function gracefulExit(code, reason) {
     scanWorkerProcess = null;
   }
 
-  try {
-    saveData();
-  } catch {}
+  // In parent-scheduler mode the scan worker owns and writes the shared data file.
+  // Saving the parent's old in-memory snapshot here would erase the worker's updates.
+  if (!USE_SCAN_WORKER || SCAN_WORKER_MODE) {
+    try {
+      saveData();
+    } catch {}
+  }
 
   try {
     client.destroy();
@@ -593,6 +597,10 @@ const STORES = [
     name: "Amazon",
     modulePath: "./stores/amazon",
     minIntervalMs: AMAZON_INTERVAL_MS
+  },
+  {
+    name: "Twitch Badges",
+    modulePath: "./twitch-badges"
   }
 ];
 
