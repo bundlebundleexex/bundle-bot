@@ -176,20 +176,15 @@ function isPromoActive(promo, now) {
 }
 
 function isPromoFree(game, promo) {
-  const price = game.price?.totalPrice;
-  const discountPercentage = promo.discountSetting?.discountPercentage;
-
-  return (
-    discountPercentage === 0 ||
-    price?.discountPrice === 0 ||
-    isMysteryOrVault(game)
-  );
+  // The catalog price can be zero because of a different offer on the same game.
+  // Only the promotion's own discount tells us whether this specific window is free.
+  return promo?.discountSetting?.discountPercentage === 0;
 }
 
 function getActiveFreePromo(game, now) {
-  return getPromoOffers(game).find(
-    promo => isPromoActive(promo, now) && isPromoFree(game, promo)
-  );
+  return getPromoOffers(game)
+    .filter(promo => isPromoActive(promo, now) && isPromoFree(game, promo))
+    .sort((a, b) => new Date(b.endDate) - new Date(a.endDate))[0] || null;
 }
 
 function looksLikeClaimableGame(game) {
@@ -223,6 +218,7 @@ function getAliases(game, slug, promo) {
 
   if (title && end) aliases.add(`epic:title:${title}:${end}`);
   if (title && start && end) aliases.add(`epic:title:${title}:${start}:${end}`);
+  if (title && start) aliases.add(`epic:window:${title}|${start}`);
   if (slug && end) aliases.add(`epic:slug:${slug}:${end}`);
   if (game.id && end) aliases.add(`epic:id:${game.id}:${end}`);
   if (game.namespace && end) aliases.add(`epic:namespace:${game.namespace}:${end}`);
@@ -236,7 +232,18 @@ function getAliases(game, slug, promo) {
 }
 
 function isKnown(aliases, known) {
-  return aliases.some(alias => known.has(alias));
+  if (aliases.some(alias => known.has(alias))) return true;
+
+  // Migrate old title/start/end keys so changing an incorrect end date does not
+  // generate a second announcement for the same promotion window.
+  for (const alias of aliases) {
+    const match = alias.match(/^epic:window:(.*)\|(.*)$/);
+    if (!match) continue;
+    const legacyPrefix = `epic:title:${match[1]}:${match[2]}:`;
+    if ([...known].some(key => key.startsWith(legacyPrefix))) return true;
+  }
+
+  return false;
 }
 
 function saveKnown(savedData, known, saveData) {
@@ -299,10 +306,14 @@ function mergeCandidates(candidates) {
   const byKey = new Map();
 
   for (const candidate of candidates) {
-    const title = normalizeTitle(candidate.game.title);
-    const end = candidate.activePromo.endDate || "";
-    const slug = candidate.slug || "";
-    const key = title && end ? `${title}:${end}` : `${slug}:${end}`;
+    const slug = cleanSlug(candidate.slug || getSlug(candidate.game)) || "";
+    const key = slug
+      ? `slug:${slug.toLowerCase()}`
+      : candidate.game.namespace
+        ? `namespace:${candidate.game.namespace}`
+        : candidate.game.id
+          ? `id:${candidate.game.id}`
+          : `title:${normalizeTitle(candidate.game.title)}`;
 
     if (!key) continue;
 
@@ -312,8 +323,10 @@ function mergeCandidates(candidates) {
     }
 
     const current = byKey.get(key);
+    const currentEnd = Date.parse(current.activePromo.endDate || "");
+    const candidateEnd = Date.parse(candidate.activePromo.endDate || "");
 
-    if (!current.slug && candidate.slug) {
+    if (candidateEnd > currentEnd || (!current.slug && candidate.slug)) {
       byKey.set(key, candidate);
     }
   }
@@ -453,3 +466,9 @@ Gratis do: ${formatDate(activePromo.endDate)}${
     console.log("Epic error:", err.message);
   }
 };
+
+module.exports.getActiveFreePromo = getActiveFreePromo;
+module.exports.isPromoFree = isPromoFree;
+module.exports.getAliases = getAliases;
+module.exports.isKnown = isKnown;
+module.exports.mergeCandidates = mergeCandidates;
