@@ -1,6 +1,17 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { isBundleExtension, getBundleEndDate } = require("../stores/humble");
+const { isBundleExtension, extractLowestPrice, getBundleEndDate } = require("../stores/humble");
+
+test("prefers Humble's euro price instead of comparing regional currencies", () => {
+  assert.equal(extractLowestPrice({
+    hero_highlights: [
+      { heading: "Starting at $6.50" },
+      { heading: "Starting at €7.59" },
+      { heading: "Starting at £5.99" },
+      { heading: "Pay €12,99 or more" }
+    ]
+  }), "€7.59");
+});
 
 test("recognizes Humble renewals only after the end date moves by at least 20 hours", () => {
   assert.equal(isBundleExtension("2026-11-02T10:00:00Z", "2026-11-03T06:00:00Z"), true);

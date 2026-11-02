@@ -38,19 +38,21 @@ function extractLowestPrice(product) {
   for (const h of highlights) {
     if (!h.heading) continue;
 
-    const match = h.heading.match(/([$€£]\s?\d+[\.,]?\d*)/);
-    if (match) {
-      const numeric = parseFloat(
-        match[1].replace(/[€$£\s]/g, "").replace(",", ".")
-      );
-      prices.push({ raw: match[1], value: numeric });
+    for (const match of h.heading.matchAll(/([$€£])\s?(\d+(?:[.,]\d+)?)/g)) {
+      const numeric = Number(match[2].replace(",", "."));
+      if (!Number.isFinite(numeric)) continue;
+      prices.push({ raw: `${match[1]}${match[2]}`, currency: match[1], value: numeric });
     }
   }
 
   if (!prices.length) return "Brak danych";
 
-  prices.sort((a, b) => a.value - b.value);
-  return prices[0].raw;
+  // Humble can include several regional prices in the same tile. Choose the
+  // euro amount for our Polish audience instead of comparing unlike currencies.
+  const euroPrices = prices.filter(price => price.currency === "€");
+  const relevantPrices = euroPrices.length ? euroPrices : prices;
+  relevantPrices.sort((a, b) => a.value - b.value);
+  return relevantPrices[0].raw;
 }
 
 function getGameBundleLink(product) {
@@ -410,5 +412,6 @@ module.exports.check = async (client, savedData, saveData) => {
 };
 
 module.exports.isBundleExtension = isBundleExtension;
+module.exports.extractLowestPrice = extractLowestPrice;
 module.exports.getBundleEndDate = getBundleEndDate;
 module.exports.getBundleEndDateFromPage = getBundleEndDateFromPage;
