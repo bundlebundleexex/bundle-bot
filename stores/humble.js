@@ -107,7 +107,27 @@ function normalizeBundleLink(link) {
 }
 
 function getBundleEndDate(product) {
-  const value =
+  const knownKeys = [
+    "end_date", "enddate", "end_date|datetime", "expiration_date",
+    "expirationdate", "expires_at", "expiresat", "sale_end_date",
+    "saleenddate", "available_valid_to", "available_valid_until",
+    "valid_to", "valid_until", "ends_at", "expiry_date"
+  ];
+  const normalizedKnownKeys = new Set(knownKeys.map(key => key.toLowerCase().replace(/[^a-z]/g, "")));
+  const candidates = [];
+  const visit = value => {
+    if (!value || typeof value !== "object") return;
+    for (const [key, child] of Object.entries(value)) {
+      const normalizedKey = key.toLowerCase().replace(/[^a-z]/g, "");
+      if (normalizedKnownKeys.has(normalizedKey) && child != null && child !== "") {
+        candidates.push(child);
+      }
+      if (child && typeof child === "object") visit(child);
+    }
+  };
+  visit(product);
+
+  const value = candidates[0] ||
     product.end_date ||
     product.endDate ||
     product.expiration_date ||
@@ -115,8 +135,38 @@ function getBundleEndDate(product) {
     product.sale_end_date ||
     product.saleEndDate ||
     null;
-  const timestamp = value ? Date.parse(value) : NaN;
-  return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : null;
+  if (!value) return null;
+  const numeric = Number(value);
+  const timestamp = Number.isFinite(numeric)
+    ? (numeric < 100000000000 ? numeric * 1000 : numeric)
+    : Date.parse(value);
+  const date = new Date(timestamp);
+  return Number.isFinite(timestamp) && !Number.isNaN(date.getTime()) && date.getUTCFullYear() <= 2100
+    ? date.toISOString()
+    : null;
+}
+
+async function getBundleEndDateFromPage(url) {
+  try {
+    const { data: html } = await axios.get(url, {
+      timeout: 12000,
+      headers: { "User-Agent": "Mozilla/5.0" }
+    });
+    const scripts = [...String(html).matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)];
+    for (const [, content] of scripts) {
+      const source = content.trim();
+      if (!source.startsWith("{") && !source.startsWith("[")) continue;
+      try {
+        const endDate = getBundleEndDate(JSON.parse(source));
+        if (endDate) return endDate;
+      } catch {
+        // Ignore non-JSON script blocks and continue through the page data.
+      }
+    }
+  } catch (error) {
+    console.log("Humble: nie udało się odczytać terminu ze strony bundle:", error.message);
+  }
+  return null;
 }
 
 function isBundleExtension(previousEndDate, currentEndDate) {
@@ -205,7 +255,8 @@ module.exports.check = async (client, savedData, saveData) => {
             .find(entry => normalizeBundleLink(entry.url) === normalizedLink);
           // A renewal must be the same listing; a similar title can be a new bundle.
           const renewalRecord = previousRecord;
-          const endDate = getBundleEndDate(product);
+          let endDate = getBundleEndDate(product);
+          if (!endDate) endDate = await getBundleEndDateFromPage(link);
           const extension = isBundleExtension(renewalRecord?.expiresAt, endDate);
           if ((wasActive || previousRecord) && !extension) continue;
 
@@ -241,8 +292,12 @@ module.exports.check = async (client, savedData, saveData) => {
               { name: "Poprzednio do", value: formatDate(renewalRecord.expiresAt), inline: true },
               { name: "Nowy termin", value: formatDate(endDate), inline: true }
             );
-          } else if (endDate) {
-            embed.addFields({ name: "⏳ Dostępne do", value: formatDate(endDate), inline: false });
+          } else {
+            embed.addFields({
+              name: "⏳ Dostępne do",
+              value: endDate ? formatDate(endDate) : "Sklep nie podał daty końca",
+              inline: false
+            });
           }
 
           if (image) embed.setImage(image);
@@ -356,3 +411,5 @@ module.exports.check = async (client, savedData, saveData) => {
 };
 
 module.exports.isBundleExtension = isBundleExtension;
+module.exports.getBundleEndDate = getBundleEndDate;
+module.exports.getBundleEndDateFromPage = getBundleEndDateFromPage;

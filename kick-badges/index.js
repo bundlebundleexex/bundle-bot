@@ -264,7 +264,9 @@ async function getCampaigns() {
           : Array.isArray(data?.data?.campaigns)
             ? data.data.campaigns
             : [];
-  return [...new Map(items.map(item => [getCampaignId(item), item]).filter(([id]) => id)).values()];
+  // Kick may return several entries for one campaign, each with only a subset
+  // of its rewards. Keep every entry; reward-key state deduplicates repeats.
+  return items;
 }
 
 module.exports.check = async (client, savedData, saveData) => {
@@ -332,3 +334,4 @@ module.exports.sendReward = sendReward;
 module.exports.refreshRewardMessage = refreshRewardMessage;
 module.exports.slugifyCategory = slugifyCategory;
 module.exports.getKickCategoryUrl = getKickCategoryUrl;
+module.exports.getCampaigns = getCampaigns;

@@ -1,6 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { normalizeCampaign, makeRewardEmbed, sendReward, getKickCategoryUrl, refreshRewardMessage } = require("../kick-badges");
+const axios = require("axios");
+const { normalizeCampaign, makeRewardEmbed, sendReward, getKickCategoryUrl, refreshRewardMessage, getCampaigns } = require("../kick-badges");
 
 function fixture() {
   return {
@@ -74,5 +75,19 @@ test("refreshes an existing Kick post with full campaign and channel data withou
   assert.equal(state.reward, reward);
   assert.match(editPayload.embeds[0].data.fields[0].value, /ChannelOne/);
   assert.deepEqual(editPayload.allowedMentions, { parse: [] });
+});
+
+test("keeps separate Kick API records for one campaign so every reward is scanned", async () => {
+  const first = { ...fixture(), rewards: [{ id: "badge-1", name: "One Badge", required_units: 10 }] };
+  const second = { ...fixture(), rewards: [{ id: "badge-2", name: "Second Badge", required_units: 20 }] };
+  const originalGet = axios.get;
+  axios.get = async () => ({ data: [first, second] });
+  try {
+    const campaigns = await getCampaigns();
+    assert.equal(campaigns.length, 2);
+    assert.deepEqual(campaigns.flatMap(normalizeCampaign).map(reward => reward.name), ["One Badge", "Second Badge"]);
+  } finally {
+    axios.get = originalGet;
+  }
 });
 

@@ -153,7 +153,8 @@ function parseFanaticalDate(value) {
 
   const date = new Date(value);
 
-  return Number.isNaN(date.getTime()) ? null : date;
+  // Fanatical uses year 3001 as an open-ended sentinel, not a real deadline.
+  return Number.isNaN(date.getTime()) || date.getUTCFullYear() > 2100 ? null : date;
 }
 
 function getDateKey(bundle) {
@@ -367,8 +368,14 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
             { name: "Poprzednio do", value: formatFanaticalDate(previousEndDate), inline: true },
             { name: "Nowy termin", value: formatFanaticalDate(endDate), inline: true }
           );
-        } else if (endDate !== "unknown-end") {
-          embed.addFields({ name: "⏳ Dostępne do", value: formatFanaticalDate(endDate), inline: false });
+        } else {
+          embed.addFields({
+            name: "⏳ Dostępne do",
+            value: endDate !== "unknown-end"
+              ? formatFanaticalDate(endDate)
+              : "Sklep nie podał daty końca",
+            inline: false
+          });
         }
 
         if (image) {
@@ -411,3 +418,5 @@ module.exports.isPermanentlyBlocked = isPermanentlyBlocked;
 module.exports.hasSeenBundle = hasSeenBundle;
 module.exports.hasLegacyBundleKey = hasLegacyBundleKey;
 module.exports.findPreviousEndDate = findPreviousEndDate;
+module.exports.parseFanaticalDate = parseFanaticalDate;
+module.exports.getEndDateKey = getEndDateKey;
