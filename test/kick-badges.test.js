@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { normalizeCampaign, makeRewardEmbed, sendReward } = require("../kick-badges");
+const { normalizeCampaign, makeRewardEmbed, sendReward, getKickCategoryUrl, refreshRewardMessage } = require("../kick-badges");
 
 function fixture() {
   return {
@@ -8,12 +8,13 @@ function fixture() {
     name: "Chat Emote - True Damage",
     starts_at: "2026-10-28T08:00:00Z",
     ends_at: "2026-11-07T08:00:00Z",
-    category: { name: "League of Legends" },
+    category: { id: 5, name: "League of Legends", slug: "league-of-legends" },
+    channels: [{ slug: "channelone", user: { username: "ChannelOne" } }, { slug: "channeltwo", user: { username: "ChannelTwo" } }],
     rewards: [{
       id: "reward-1",
       name: "Chat Emote - True Damage",
-      rule_name: "Watch 30 minutes to earn",
-      image_url: "https://cdn.example/emote.png"
+      required_units: 30,
+      image_url: "drops/reward-image/emote.png"
     }, {
       id: "reward-skin",
       name: "Game skin",
@@ -28,8 +29,26 @@ test("extracts only Kick badge/emote drops and watch duration", () => {
   assert.equal(rewards[0].type, "EMOTE");
   assert.equal(rewards[0].minutes, 30);
   assert.equal(rewards[0].gameName, "League of Legends");
-  assert.match(makeRewardEmbed(rewards[0]).data.description, /Darmowy — za oglądanie przez 30 min/);
+  const description = makeRewardEmbed(rewards[0]).data.description;
+  assert.match(description, /\*\*Kampania:\*\* Chat Emote - True Damage/);
+  assert.match(description, /\*\*Kategoria:\*\* \[League of Legends\]\(https:\/\/kick\.com\/category\/league-of-legends\)/);
+  assert.match(description, /Darmowy — za oglądanie przez 30 min/);
+  const channelField = makeRewardEmbed(rewards[0]).data.fields.find(field => field.name === "Kanały");
+  assert.match(channelField.value, /\[ChannelOne\]\(https:\/\/kick\.com\/channelone\)/);
+  assert.match(channelField.value, /\[ChannelTwo\]\(https:\/\/kick\.com\/channeltwo\)/);
+  assert.equal(rewards[0].imageUrl, "https://ext.cdn.kick.com/drops/reward-image/emote.png");
   assert.equal(makeRewardEmbed(rewards[0]).data.footer.text, "Kick Emotka");
+});
+
+test("links category slugs to Kick instead of the scraper's internal category page", () => {
+  assert.equal(
+    getKickCategoryUrl({ name: "Call of Duty: Modern Warfare 4", slug: "call-of-duty-modern-warfare-4" }, "Call of Duty: Modern Warfare 4", "fallback"),
+    "https://kick.com/category/call-of-duty-modern-warfare-4"
+  );
+  assert.equal(
+    getKickCategoryUrl({ name: "League of Legends", url: "https://ttvdrops.lovinator.space/kick/games/5/" }, "League of Legends", "league-of-legends"),
+    "https://kick.com/category/league-of-legends"
+  );
 });
 
 test("posts Kick messages without role pings and uses nonce duplicate protection", async () => {
@@ -41,5 +60,19 @@ test("posts Kick messages without role pings and uses nonce duplicate protection
   assert.deepEqual(sent[0].allowedMentions, { parse: [] });
   assert.equal(sent[0].enforceNonce, true);
   assert.equal(sent[0].nonce.length, 25);
+});
+
+test("refreshes an existing Kick post with full campaign and channel data without reposting", async () => {
+  const [reward] = normalizeCampaign(fixture());
+  let editPayload;
+  const state = { messageId: "message-123", reward: { name: "old data" } };
+  const channel = { messages: { fetch: async id => {
+    assert.equal(id, "message-123");
+    return { edit: async payload => { editPayload = payload; } };
+  } } };
+  assert.equal(await refreshRewardMessage(channel, state, reward), true);
+  assert.equal(state.reward, reward);
+  assert.match(editPayload.embeds[0].data.fields[0].value, /ChannelOne/);
+  assert.deepEqual(editPayload.allowedMentions, { parse: [] });
 });
 

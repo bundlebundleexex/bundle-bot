@@ -178,7 +178,7 @@ function makeRewardEmbed(reward) {
       ? `sub${item.subs > 1 ? ` x${item.subs}` : ""}${item.minutes > 0 ? ` + ${item.minutes} min oglądania` : ""}`
       : `${item.minutes} min oglądania`}`);
   const description = [
-    `**Gra/kategoria:** ${reward.gameName}`,
+    `**Kategoria:** ${reward.gameName}`,
     getAccessDescription(reward),
     `**Start:** ${formatDate(reward.campaignStart)}`,
     `**Koniec:** ${formatDate(reward.campaignEnd)}`,

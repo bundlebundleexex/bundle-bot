@@ -150,7 +150,7 @@ test("includes other active and scheduled rewards of the same category as a curi
   }];
   const description = makeRewardEmbed(emote).data.description;
   assert.doesNotMatch(description, /\*\*Kampania:\*\*/);
-  assert.match(description, /\*\*Gra\/kategoria:\*\* Test Game/);
+  assert.match(description, /\*\*Kategoria:\*\* Test Game/);
   assert.match(description, /Dodatkowo dla tej kategorii/);
   assert.match(description, /Upcoming skin/);
   assert.match(description, /przedmiot do gry/);

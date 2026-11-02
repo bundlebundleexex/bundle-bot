@@ -3,10 +3,9 @@ const crypto = require("node:crypto");
 const { EmbedBuilder } = require("discord.js");
 const { editExpiredReward } = require("../twitch-badges");
 
-const API_URL = "https://ttvdrops.lovinator.space/api/v1/kick/campaigns/";
-const API_ORIGIN = "https://ttvdrops.lovinator.space";
+const API_URL = "https://web.kick.com/api/v1/drops/campaigns";
+const IMAGE_ORIGIN = "https://ext.cdn.kick.com/";
 const CHANNEL_ID = process.env.KICK_BADGE_CHANNEL_ID?.trim() || "1545521319284838602";
-const PAGE_SIZE = 500;
 
 function firstValue(...values) {
   return values.find(value => value !== undefined && value !== null && value !== "");
@@ -36,12 +35,82 @@ function getRewardMinutes(reward, campaign) {
     reward.minutes_watched,
     reward.required_watch_minutes,
     reward.duration_minutes,
-    reward.minutes
+    reward.minutes,
+    reward.required_units
   ));
   if (Number.isFinite(direct) && direct > 0) return direct;
   const description = `${reward.rule_name || ""} ${reward.description || ""} ${campaign.rule_name || ""}`;
   const match = description.match(/(?:watch|oglądw*)\D{0,20}(\d+)\s*(?:minutes|minut|min)?/i);
   return match ? Number(match[1]) : 0;
+}
+
+function slugifyCategory(value) {
+  return String(value || "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/&/g, " ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function getKickCategoryUrl(category, name, slug) {
+  const officialUrl = typeof category === "object"
+    ? [category.kick_url, category.category_url, category.url]
+      .find(value => typeof value === "string" && /^https?:\/\/(?:www\.)?kick\.com\//i.test(value))
+    : null;
+  if (officialUrl) return officialUrl;
+  const categorySlug = typeof category === "object"
+    ? firstValue(category.slug, category.category_slug, category.kick_slug, slug)
+    : slug;
+  return categorySlug ? `https://kick.com/category/${encodeURIComponent(categorySlug)}` : null;
+}
+
+function getCampaignChannels(campaign) {
+  const rawChannels = [campaign.channels, campaign.allowed_channels, campaign.participating_channels]
+    .find(Array.isArray) || [];
+  const bySlug = new Map();
+  for (const channel of rawChannels) {
+    const slug = firstValue(
+      channel?.slug,
+      channel?.channel_slug,
+      channel?.username,
+      channel?.user?.username,
+      channel?.name
+    );
+    if (!slug) continue;
+    const name = firstValue(
+      channel.display_name,
+      channel.user?.username,
+      channel.username,
+      channel.name,
+      slug
+    );
+    const suppliedUrl = [channel.url, channel.channel_url]
+      .find(value => typeof value === "string" && /^https?:\/\/(?:www\.)?kick\.com\//i.test(value));
+    bySlug.set(String(slug).toLowerCase(), {
+      name: String(name),
+      url: suppliedUrl || `https://kick.com/${encodeURIComponent(slug)}`
+    });
+  }
+  return [...bySlug.values()];
+}
+
+function chunkChannelLinks(channels, maxLength = 950) {
+  const chunks = [];
+  let current = "";
+  for (const channel of channels) {
+    const line = `[${channel.name.replace(/[\[\]]/g, "")}](${channel.url})`;
+    const next = current ? `${current}, ${line}` : line;
+    if (next.length > maxLength && current) {
+      chunks.push(current);
+      current = line;
+    } else {
+      current = next;
+    }
+  }
+  if (current) chunks.push(current);
+  return chunks;
 }
 
 function extractRewardEntries(campaign) {
@@ -65,10 +134,15 @@ function normalizeCampaign(campaign) {
   const end = getCampaignEnd(campaign);
   if (!id || !start || !end || Date.parse(start) >= Date.parse(end)) return [];
 
-  const category = firstValue(campaign.game, campaign.category, campaign.game_name, campaign.category_name, {});
+  const category = firstValue(campaign.category, campaign.game, campaign.game_name, campaign.category_name, {});
   const gameName = typeof category === "string"
     ? category
     : firstValue(category.display_name, category.name, campaign.game_name, campaign.category_name, "Kick");
+  const gameSlug = typeof category === "object"
+    ? firstValue(category.slug, category.category_slug, category.kick_slug, slugifyCategory(gameName))
+    : slugifyCategory(gameName);
+  const categoryUrl = getKickCategoryUrl(category, gameName, gameSlug);
+  const channels = getCampaignChannels(campaign);
   const result = [];
   for (const reward of extractRewardEntries(campaign)) {
     const name = firstValue(reward.name, reward.title, reward.display_name);
@@ -84,11 +158,13 @@ function normalizeCampaign(campaign) {
     const imageValue = firstValue(reward.image_url, reward.image, reward.icon_url, reward.icon);
     let imageUrl = null;
     if (typeof imageValue === "string") {
-      try { imageUrl = new URL(imageValue, API_ORIGIN).toString(); } catch {}
+      try { imageUrl = new URL(imageValue, IMAGE_ORIGIN).toString(); } catch {}
     }
     result.push({
       key: `${id}:${rewardId}`,
       campaignId: id,
+      campaignName: firstValue(campaign.name, campaign.title, name),
+      campaignChannels: channels,
       name,
       type: isEmote ? "EMOTE" : "BADGE",
       imageUrl,
@@ -96,8 +172,8 @@ function normalizeCampaign(campaign) {
       campaignStart: start,
       campaignEnd: end,
       gameName,
-      campaignUrl: `https://ttvdrops.lovinator.space/kick/campaigns/${encodeURIComponent(id)}/`,
-      categoryUrl: category.url || category.channel_url || null
+      campaignUrl: categoryUrl ? `${categoryUrl}/drops` : "https://kick.com/drops",
+      categoryUrl
     });
   }
   return result;
@@ -110,13 +186,26 @@ function makeRewardEmbed(reward) {
     .setTitle(`${reward.type === "EMOTE" ? "😀" : "🎖️"} ${reward.name}`)
     .setURL(reward.campaignUrl)
     .setDescription([
-      `**Gra/kategoria:** ${reward.categoryUrl ? `[${reward.gameName}](${reward.categoryUrl})` : reward.gameName}`,
+      `**Kampania:** ${reward.campaignName}`,
+      `**Kategoria:** ${reward.categoryUrl ? `[${reward.gameName}](${reward.categoryUrl})` : reward.gameName}`,
       `**Dostęp:** Darmowy — za oglądanie przez ${reward.minutes} min na Kick`,
       `**Start:** ${formatDate(reward.campaignStart)}`,
       `**Koniec:** ${formatDate(reward.campaignEnd)}`
     ].join("\n"))
     .setFooter({ text: `Kick ${label}` })
     .setTimestamp();
+  const channelChunks = chunkChannelLinks(reward.campaignChannels || []);
+  if (channelChunks.length) {
+    channelChunks.forEach((chunk, index) => {
+      embed.addFields({
+        name: index === 0 ? "Kanały" : "Kanały (ciąg dalszy)",
+        value: chunk,
+        inline: false
+      });
+    });
+  } else {
+    embed.addFields({ name: "Kanały", value: "Wszystkie kanały w tej kategorii", inline: false });
+  }
   if (reward.imageUrl) embed.setThumbnail(reward.imageUrl);
   return embed;
 }
@@ -143,22 +232,39 @@ async function sendReward(channel, reward, phase) {
   });
 }
 
-async function getCampaigns() {
-  const lists = await Promise.all(["active", "upcoming"].map(async status => {
-    const response = await axios.get(API_URL, {
-      params: { status, page: 1, page_size: PAGE_SIZE },
-      timeout: 20000
+async function refreshRewardMessage(channel, state, reward) {
+  if (!state?.messageId || !channel?.messages?.fetch) return false;
+  try {
+    const message = await channel.messages.fetch(state.messageId);
+    await message.edit({
+      embeds: [makeRewardEmbed(reward)],
+      allowedMentions: { parse: [] }
     });
-    return Array.isArray(response.data?.items) ? response.data.items : [];
-  }));
-  return [...new Map(lists.flat().map(item => [getCampaignId(item), item]).filter(([id]) => id)).values()];
+    state.reward = reward;
+    state.startAt = reward.campaignStart;
+    state.endAt = reward.campaignEnd;
+    return true;
+  } catch (err) {
+    console.log(`Kick Drops: nie udało się odświeżyć wiadomości ${reward.name}: ${err.message}`);
+    return false;
+  }
 }
 
-async function getCampaignDetails(summary) {
-  const id = getCampaignId(summary);
-  if (extractRewardEntries(summary).length) return summary;
-  const response = await axios.get(`${API_URL}${encodeURIComponent(id)}/`, { timeout: 20000 });
-  return response.data;
+async function getCampaigns() {
+  const response = await axios.get(API_URL, { timeout: 20000 });
+  const data = response.data;
+  const items = Array.isArray(data)
+    ? data
+    : Array.isArray(data?.items)
+      ? data.items
+      : Array.isArray(data?.campaigns)
+        ? data.campaigns
+        : Array.isArray(data?.data)
+          ? data.data
+          : Array.isArray(data?.data?.campaigns)
+            ? data.data.campaigns
+            : [];
+  return [...new Map(items.map(item => [getCampaignId(item), item]).filter(([id]) => id)).values()];
 }
 
 module.exports.check = async (client, savedData, saveData) => {
@@ -169,15 +275,7 @@ module.exports.check = async (client, savedData, saveData) => {
     const channel = await client.channels.fetch(CHANNEL_ID);
     let sent = 0;
 
-    for (const summary of summaries) {
-      let campaign;
-      try {
-        campaign = await getCampaignDetails(summary);
-      } catch (err) {
-        console.log(`Kick Drops: błąd kampanii ${getCampaignId(summary)}: ${err.response?.status || err.message}`);
-        continue;
-      }
-
+    for (const campaign of summaries) {
       const rewards = normalizeCampaign(campaign);
       for (const reward of rewards) {
         const existing = states[reward.key];
@@ -186,7 +284,13 @@ module.exports.check = async (client, savedData, saveData) => {
         const end = Date.parse(reward.campaignEnd);
         if (end <= now) continue;
         const phase = start > now ? "scheduled" : "started";
-        if (existing?.status === "started" || (existing?.status === "scheduled" && phase === "scheduled")) continue;
+        if (existing?.status === phase) {
+          if (JSON.stringify(existing.reward || {}) !== JSON.stringify(reward)) {
+            if (await refreshRewardMessage(channel, existing, reward)) saveData();
+          }
+          continue;
+        }
+        if (existing?.status === "started") continue;
         const message = await sendReward(channel, reward, phase);
         states[reward.key] = {
           status: phase,
@@ -225,3 +329,6 @@ module.exports.check = async (client, savedData, saveData) => {
 module.exports.normalizeCampaign = normalizeCampaign;
 module.exports.makeRewardEmbed = makeRewardEmbed;
 module.exports.sendReward = sendReward;
+module.exports.refreshRewardMessage = refreshRewardMessage;
+module.exports.slugifyCategory = slugifyCategory;
+module.exports.getKickCategoryUrl = getKickCategoryUrl;
