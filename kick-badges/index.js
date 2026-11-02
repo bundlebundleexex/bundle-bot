@@ -172,7 +172,9 @@ function normalizeCampaign(campaign) {
       campaignStart: start,
       campaignEnd: end,
       gameName,
-      campaignUrl: categoryUrl ? `${categoryUrl}/drops` : "https://kick.com/drops",
+      campaignUrl: channels.length === 1
+        ? channels[0].url
+        : categoryUrl || "https://kick.com/drops",
       categoryUrl
     });
   }
@@ -183,7 +185,7 @@ function makeRewardEmbed(reward) {
   const label = reward.type === "EMOTE" ? "Emotka" : "Badge";
   const embed = new EmbedBuilder()
     .setColor(0x53fc18)
-    .setTitle(`${reward.type === "EMOTE" ? "😀" : "🎖️"} ${reward.name}`)
+    .setTitle(`${reward.type === "EMOTE" ? "🎭" : "🎖️"} ${reward.name}`)
     .setURL(reward.campaignUrl)
     .setDescription([
       `**Kampania:** ${reward.campaignName}`,
@@ -204,7 +206,11 @@ function makeRewardEmbed(reward) {
       });
     });
   } else {
-    embed.addFields({ name: "Kanały", value: "Wszystkie kanały w tej kategorii", inline: false });
+    embed.addFields({
+      name: "Kanały",
+      value: `${reward.type === "EMOTE" ? "Emotka" : "Badge"} do zdobycia na każdym kanale w tej kategorii`,
+      inline: false
+    });
   }
   if (reward.imageUrl) embed.setThumbnail(reward.imageUrl);
   return embed;
@@ -221,10 +227,13 @@ function formatDate(value) {
 async function sendReward(channel, reward, phase) {
   const nonce = crypto.createHash("sha256").update(`kick:${reward.key}:${phase}`).digest("hex").slice(0, 25);
   const isScheduled = phase === "scheduled";
+  const isEmote = reward.type === "EMOTE";
+  const heading = isEmote ? "EMOTKA KICK" : "BADGE KICK";
+  const scheduledHeading = isEmote ? "NADCHODZĄCA EMOTKA KICK" : "NADCHODZĄCY BADGE KICK";
   return channel.send({
     content: isScheduled
-      ? "🕒 **NADCHODZĄCY BADGE/EMOTKA KICK**"
-      : "🎖️ **BADGE/EMOTKA KICK**",
+      ? `🕒 **${scheduledHeading}**`
+      : `${isEmote ? "🎭" : "🎖️"} **${heading}**`,
     embeds: [makeRewardEmbed(reward)],
     nonce,
     enforceNonce: true,

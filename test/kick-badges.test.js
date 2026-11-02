@@ -30,7 +30,10 @@ test("extracts only Kick badge/emote drops and watch duration", () => {
   assert.equal(rewards[0].type, "EMOTE");
   assert.equal(rewards[0].minutes, 30);
   assert.equal(rewards[0].gameName, "League of Legends");
-  const description = makeRewardEmbed(rewards[0]).data.description;
+  const embedData = makeRewardEmbed(rewards[0]).data;
+  assert.equal(embedData.url, "https://kick.com/category/league-of-legends");
+  assert.equal(embedData.url.includes("/drops"), false);
+  const description = embedData.description;
   assert.match(description, /\*\*Kampania:\*\* Chat Emote - True Damage/);
   assert.match(description, /\*\*Kategoria:\*\* \[League of Legends\]\(https:\/\/kick\.com\/category\/league-of-legends\)/);
   assert.match(description, /Darmowy — za oglądanie przez 30 min/);
@@ -52,15 +55,56 @@ test("links category slugs to Kick instead of the scraper's internal category pa
   );
 });
 
+test("links a channel-specific reward title directly to that channel", () => {
+  const campaign = fixture();
+  campaign.channels = [{ slug: "eddie", user: { username: "Eddie" } }];
+  const [reward] = normalizeCampaign(campaign);
+  assert.equal(reward.campaignUrl, "https://kick.com/eddie");
+  assert.equal(makeRewardEmbed(reward).data.url, "https://kick.com/eddie");
+});
+
+test("describes category-wide badge and emote drops with correct Polish wording", () => {
+  const emoteCampaign = fixture();
+  emoteCampaign.channels = [];
+  const [emote] = normalizeCampaign(emoteCampaign);
+  assert.equal(
+    makeRewardEmbed(emote).data.fields.find(field => field.name === "Kanały").value,
+    "Emotka do zdobycia na każdym kanale w tej kategorii"
+  );
+
+  const badgeCampaign = fixture();
+  badgeCampaign.channels = [];
+  badgeCampaign.rewards = [{ id: "badge-1", name: "MW4 Ghost Badge", required_units: 50 }];
+  const [badge] = normalizeCampaign(badgeCampaign);
+  assert.equal(
+    makeRewardEmbed(badge).data.fields.find(field => field.name === "Kanały").value,
+    "Badge do zdobycia na każdym kanale w tej kategorii"
+  );
+});
+
 test("posts Kick messages without role pings and uses nonce duplicate protection", async () => {
   const [reward] = normalizeCampaign(fixture());
   const sent = [];
   const channel = { send: async payload => { sent.push(payload); return { id: "msg-1" }; } };
   await sendReward(channel, reward, "started");
-  assert.match(sent[0].content, /BADGE\/EMOTKA KICK/);
+  assert.match(sent[0].content, /EMOTKA KICK/);
+  assert.doesNotMatch(sent[0].content, /BADGE KICK/);
   assert.deepEqual(sent[0].allowedMentions, { parse: [] });
   assert.equal(sent[0].enforceNonce, true);
   assert.equal(sent[0].nonce.length, 25);
+});
+
+test("labels badge rewards separately and uses matching scheduled wording", async () => {
+  const campaign = fixture();
+  campaign.rewards = [{ id: "badge-1", name: "MW4 Ghost Badge", required_units: 50 }];
+  const [reward] = normalizeCampaign(campaign);
+  const sent = [];
+  const channel = { send: async payload => { sent.push(payload); return { id: "msg-badge" }; } };
+  await sendReward(channel, reward, "started");
+  await sendReward(channel, reward, "scheduled");
+  assert.match(sent[0].content, /BADGE KICK/);
+  assert.match(sent[1].content, /NADCHODZĄCY BADGE KICK/);
+  assert.doesNotMatch(sent[0].content, /EMOTKA KICK/);
 });
 
 test("refreshes an existing Kick post with full campaign and channel data without reposting", async () => {
