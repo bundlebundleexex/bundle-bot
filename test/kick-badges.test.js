@@ -1,7 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const axios = require("axios");
-const { normalizeCampaign, makeRewardEmbed, sendReward, getKickCategoryUrl, refreshRewardMessage, getCampaigns } = require("../kick-badges");
+const { normalizeCampaign, makeRewardEmbed, sendReward, getKickCategoryUrl, refreshRewardMessage, getCampaigns, check } = require("../kick-badges");
 
 function fixture() {
   return {
@@ -92,6 +92,34 @@ test("posts Kick messages without role pings and uses nonce duplicate protection
   assert.deepEqual(sent[0].allowedMentions, { parse: [] });
   assert.equal(sent[0].enforceNonce, true);
   assert.equal(sent[0].nonce.length, 25);
+});
+
+test("puts each reward in its own post and moves oversized channel lists to follow-ups", async () => {
+  const campaign = fixture();
+  campaign.channels = Array.from({ length: 240 }, (_, index) => ({
+    slug: `channel-${index + 1}`,
+    user: { username: `Channel${index + 1}` }
+  }));
+  campaign.rewards = [{ id: "large-list-emote", name: "Large List Emote", required_units: 30 }];
+  const [reward] = normalizeCampaign(campaign);
+  const sent = [];
+  const channel = { send: async payload => {
+    sent.push(payload);
+    return { id: `message-${sent.length}` };
+  } };
+
+  const result = await sendReward(channel, reward, "started");
+  const allFields = sent.flatMap(payload => payload.embeds).flatMap(embed => embed.data.fields || []);
+  const allLinks = allFields.map(field => field.value).join("\n");
+  for (let index = 1; index <= 240; index++) {
+    assert.ok(allLinks.includes(`[Channel${index}](https://kick.com/channel-${index})`));
+  }
+  assert.ok(sent.length > 1);
+  assert.equal(result.messageIds.length, sent.length);
+  assert.match(sent[0].content, /EMOTKA KICK/);
+  assert.ok(sent.slice(1).every(payload => payload.content === ""));
+  assert.ok(sent.every(payload => payload.embeds.length === 1));
+  assert.ok(sent.every(payload => payload.embeds[0].data.fields.length <= 5));
 });
 
 test("labels badge rewards separately and uses matching scheduled wording", async () => {
@@ -194,5 +222,68 @@ test("recognizes all seven named active Kick badge/emote rewards with their UTC 
   const moonEnd = rewards.find(reward => reward.name === "1000X MOON Emote").campaignEnd;
   assert.match(makeRewardEmbed(rewards.find(reward => reward.name === "1000X MOON Emote")).data.description, /Koniec:\*\* 3 lis 2026, 13:30/);
   assert.equal(moonEnd, "2026-11-03T12:30:00.000Z");
+});
+
+test("unwraps Kick API list responses nested under data", async () => {
+  const originalGet = axios.get;
+  const records = [fixture()];
+  axios.get = async () => ({ data: { data: { campaigns: records } } });
+  try {
+    assert.deepEqual(await getCampaigns(), records);
+  } finally {
+    axios.get = originalGet;
+  }
+});
+
+test("scans every campaign reward and posts each badge/emote separately", async t => {
+  const futureStart = new Date(Date.now() - 60_000).toISOString();
+  const futureEnd = new Date(Date.now() + 86_400_000).toISOString();
+  const campaigns = [
+    { kick_id: "lol", name: "LOL", starts_at: futureStart, ends_at: futureEnd,
+      category: { name: "League of Legends", slug: "league-of-legends" },
+      rewards: [{ id: "lol-1", name: "Chat Emote - True Damage", required_units: 30 }] },
+    { kick_id: "mw4", name: "Modern Warfare 4", starts_at: futureStart, ends_at: futureEnd,
+      category: { name: "Call of Duty: Modern Warfare 4", slug: "call-of-duty-modern-warfare-4" },
+      rewards: [{ id: "mw4-1", name: "MW4 Ghost Badge", required_units: 3000 }] },
+    { kick_id: "moon", name: "MOON Trading", starts_at: futureStart, ends_at: futureEnd,
+      category: { name: "Crypto & Trading", slug: "crypto-and-trading" },
+      channels: Array.from({ length: 240 }, (_, index) => ({ slug: `moon-${index}`, user: { username: `Moon${index}` } })),
+      rewards: [
+        { id: "moon-1", name: "1000X MOON Emote", required_units: 60 },
+        { id: "moon-2", name: "God Candle Emote", required_units: 120 },
+        { id: "moon-3", name: "TJR To The Moon Emote", required_units: 300 }
+      ] },
+    { kick_id: "talk", name: "KICK Talk Ed VS Ethan", starts_at: futureStart, ends_at: futureEnd,
+      category: { name: "Just Chatting", slug: "just-chatting" },
+      rewards: [
+        { id: "talk-1", name: "Ethan Emote", required_units: 60 },
+        { id: "talk-2", name: "Eddie Emote", required_units: 120 },
+        { id: "talk-3", name: "Eddie VS Ethan", required_units: 180 }
+      ] }
+  ];
+  t.mock.method(axios, "get", async () => ({ data: campaigns }));
+  const sent = [];
+  const channel = { send: async payload => {
+    sent.push(payload);
+    return { id: `message-${sent.length}` };
+  } };
+  const client = { channels: { fetch: async () => channel } };
+  const savedData = {};
+
+  await check(client, savedData, () => {});
+
+  const rewardPosts = sent.filter(payload => payload.content);
+  assert.equal(rewardPosts.length, 7);
+  assert.deepEqual(rewardPosts.map(payload => payload.embeds[0].data.title), [
+    "🎭 Chat Emote - True Damage",
+    "🎖️ MW4 Ghost Badge",
+    "🎭 1000X MOON Emote",
+    "🎭 God Candle Emote",
+    "🎭 TJR To The Moon Emote",
+    "🎭 Ethan Emote",
+    "🎭 Eddie Emote"
+  ]);
+  assert.ok(sent.every(payload => payload.embeds.length === 1));
+  assert.equal(Object.keys(savedData.kickDropRewardStates).length, 7);
 });
 

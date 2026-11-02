@@ -17,6 +17,16 @@ const EXTRA_GAME_REWARD_TYPES = new Set([
   "LOOT"
 ]);
 
+function slugifyGameCategory(value) {
+  return String(value || "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 function formatDate(value) {
   if (!value) return "brak danych";
   const date = new Date(value);
@@ -106,7 +116,10 @@ function flattenCampaignBenefits(campaign) {
         campaignEnd: drop.end_at || campaign.end_at,
         campaignUrl: `https://dashboard.twitch.tv/viewer-rewards/drops?id=${campaign.twitch_id}`,
         gameName: campaign.game?.display_name || campaign.game?.name || "Twitch",
-        gameSlug: campaign.game?.slug || "",
+        gameSlug: slugifyGameCategory(
+          campaign.game?.slug || campaign.game?.category_slug ||
+          campaign.game?.name || campaign.game?.display_name
+        ),
         channels: allowedChannels,
         description: campaign.description || ""
       });
@@ -150,9 +163,7 @@ function getAccessDescription(reward) {
 }
 
 function getWhereToWatch(reward) {
-  const categoryUrl = reward.gameSlug
-    ? `https://www.twitch.tv/directory/category/${encodeURIComponent(reward.gameSlug)}?filter=drops`
-    : null;
+  const categoryUrl = getTwitchCategoryDropsUrl(reward);
   const channels = (Array.isArray(reward.channels) ? reward.channels : [])
     .filter(channel => channel?.name);
   if (channels.length) {
@@ -172,6 +183,13 @@ function getWhereToWatch(reward) {
   }
 
   return `w kategorii: ${reward.gameName}`;
+}
+
+function getTwitchCategoryDropsUrl(reward) {
+  const slug = reward.gameSlug || slugifyGameCategory(reward.gameName);
+  return slug
+    ? `https://www.twitch.tv/directory/category/${encodeURIComponent(slug)}?filter=drops`
+    : null;
 }
 
 function getAllowedChannelLinks(reward) {
@@ -208,9 +226,7 @@ function splitChannelLinks(reward, maxLength = 3500) {
 }
 
 function getAccessLine(reward) {
-  const categoryUrl = reward.gameSlug
-    ? `https://www.twitch.tv/directory/category/${encodeURIComponent(reward.gameSlug)}?filter=drops`
-    : null;
+  const categoryUrl = getTwitchCategoryDropsUrl(reward);
   const channelCount = getAllowedChannelLinks(reward).length;
   const location = channelCount
     ? `${channelCount === 1 ? "na kanale biorącym udział" : "na kanałach biorących udział"} (pełna lista poniżej)${categoryUrl ? ` · [kanały z włączonymi dropami](${categoryUrl})` : ""}`
@@ -234,7 +250,9 @@ function makeRewardEmbed(reward) {
       ? `sub${item.subs > 1 ? ` x${item.subs}` : ""}${item.minutes > 0 ? ` + ${item.minutes} min oglądania` : ""}`
       : `${item.minutes} min oglądania`}`);
   const description = [
-    `**Kategoria:** ${reward.gameName}`,
+    `**Kategoria:** ${getTwitchCategoryDropsUrl(reward)
+      ? `[${reward.gameName}](${getTwitchCategoryDropsUrl(reward)})`
+      : reward.gameName}`,
     getAccessLine(reward),
     `**Start:** ${formatDate(reward.campaignStart)}`,
     `**Koniec:** ${formatDate(reward.campaignEnd)}`,

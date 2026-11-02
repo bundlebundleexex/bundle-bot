@@ -150,7 +150,7 @@ test("includes other active and scheduled rewards of the same category as a curi
   }];
   const description = makeRewardEmbed(emote).data.description;
   assert.doesNotMatch(description, /\*\*Kampania:\*\*/);
-  assert.match(description, /\*\*Kategoria:\*\* Test Game/);
+  assert.match(description, /\*\*Kategoria:\*\* \[Test Game\]\(https:\/\/www\.twitch\.tv\/directory\/category\/test-game\?filter=drops\)/);
   assert.match(description, /Dodatkowo dla tej kategorii/);
   assert.match(description, /Upcoming skin/);
   assert.match(description, /przedmiot do gry/);
@@ -168,6 +168,17 @@ test("links specific channels by name and category-wide drops to the Twitch cate
     "na kanale: [ChannelOne](https://www.twitch.tv/channelone) · [kanały z włączonymi dropami](https://www.twitch.tv/directory/category/test-game?filter=drops)"
   );
   assert.match(getWhereToWatch({ ...emote, channels: [] }), /w kategorii: \[Test Game\]\(https:\/\/www\.twitch\.tv\/directory\/category\/test-game\?filter=drops\)/);
+});
+
+test("builds a Twitch category Drops link from its name when the API omits the slug", () => {
+  const campaign = campaignFixture();
+  campaign.game = { twitch_id: "game-vault", display_name: "Vaultbreakers" };
+  const [reward] = flattenCampaignRewards(campaign);
+  const embed = makeRewardEmbed(reward).data;
+  assert.equal(reward.gameSlug, "vaultbreakers");
+  assert.ok(embed.description.includes(
+    "[Vaultbreakers](https://www.twitch.tv/directory/category/vaultbreakers?filter=drops)"
+  ));
 });
 
 test("links every allowed channel instead of truncating the list", () => {
