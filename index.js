@@ -566,10 +566,6 @@ const STORES = [
     modulePath: "./stores/fanatical"
   },
   {
-    name: "GMG",
-    modulePath: "./stores/gmg"
-  },
-  {
     name: "IndieGala",
     modulePath: "./stores/indiegala"
   },
@@ -605,6 +601,12 @@ const STORES = [
   {
     name: "Kick Badges",
     modulePath: "./kick-badges"
+  },
+  {
+    // GMG can take up to the full store timeout, so keep it last. Its timeout
+    // stops the current scan to avoid leaving background browser tasks active.
+    name: "GMG",
+    modulePath: "./stores/gmg"
   }
 ];
 
