@@ -36,9 +36,7 @@ test("extracts only Kick badge/emote drops and watch duration", () => {
   assert.match(description, /\*\*Kampania:\*\* Chat Emote - True Damage/);
   assert.match(description, /\*\*Kategoria:\*\* \[League of Legends\]\(https:\/\/kick\.com\/category\/league-of-legends\/drops\)/);
   assert.match(description, /Darmowy — za oglądanie przez 30 min/);
-  const channelField = makeRewardEmbed(rewards[0]).data.fields.find(field => field.name === "Kanały");
-  assert.match(channelField.value, /\[ChannelOne\]\(https:\/\/kick\.com\/channelone\)/);
-  assert.match(channelField.value, /\[ChannelTwo\]\(https:\/\/kick\.com\/channeltwo\)/);
+  assert.match(embedData.description, /Dostępne dropy/);
   assert.equal(rewards[0].imageUrl, "https://ext.cdn.kick.com/drops/reward-image/emote.png");
   assert.equal(makeRewardEmbed(rewards[0]).data.footer.text, "Kick Emotka");
 });
@@ -54,32 +52,27 @@ test("links category slugs to Kick instead of the scraper's internal category pa
   );
 });
 
-test("links a channel-specific reward title directly to that channel", () => {
+test("links Kick rewards to the category page listing available drops", () => {
   const campaign = fixture();
   campaign.channels = [{ slug: "eddie", user: { username: "Eddie" } }];
   const [reward] = normalizeCampaign(campaign);
   assert.equal(reward.campaignUrl, "https://kick.com/eddie");
-  assert.equal(makeRewardEmbed(reward).data.url, "https://kick.com/eddie");
+  assert.equal(makeRewardEmbed(reward).data.url, "https://kick.com/category/league-of-legends/drops");
   assert.match(makeRewardEmbed(reward).data.description, /https:\/\/kick\.com\/category\/league-of-legends\/drops/);
 });
 
-test("describes category-wide badge and emote drops with correct Polish wording", () => {
+test("links category-wide drops to the Kick page listing available rewards", () => {
   const emoteCampaign = fixture();
   emoteCampaign.channels = [];
   const [emote] = normalizeCampaign(emoteCampaign);
-  assert.equal(
-    makeRewardEmbed(emote).data.fields.find(field => field.name === "Kanały").value,
-    "Emotka do zdobycia na każdym kanale w tej kategorii"
-  );
+  assert.equal(makeRewardEmbed(emote).data.url, "https://kick.com/category/league-of-legends/drops");
+  assert.match(makeRewardEmbed(emote).data.description, /\*\*Dostępne dropy:\*\* \[Zobacz na Kicku\]/);
 
   const badgeCampaign = fixture();
   badgeCampaign.channels = [];
   badgeCampaign.rewards = [{ id: "badge-1", name: "MW4 Ghost Badge", required_units: 50 }];
   const [badge] = normalizeCampaign(badgeCampaign);
-  assert.equal(
-    makeRewardEmbed(badge).data.fields.find(field => field.name === "Kanały").value,
-    "Badge do zdobycia na każdym kanale w tej kategorii"
-  );
+  assert.equal(makeRewardEmbed(badge).data.url, "https://kick.com/category/league-of-legends/drops");
 });
 
 test("posts Kick messages without role pings and uses nonce duplicate protection", async () => {
@@ -94,7 +87,7 @@ test("posts Kick messages without role pings and uses nonce duplicate protection
   assert.equal(sent[0].nonce.length, 25);
 });
 
-test("puts each reward in its own post and moves oversized channel lists to follow-ups", async () => {
+test("keeps Kick posts to one short message with a link to available drops", async () => {
   const campaign = fixture();
   campaign.channels = Array.from({ length: 240 }, (_, index) => ({
     slug: `channel-${index + 1}`,
@@ -108,18 +101,13 @@ test("puts each reward in its own post and moves oversized channel lists to foll
     return { id: `message-${sent.length}` };
   } };
 
-  const result = await sendReward(channel, reward, "started");
-  const allFields = sent.flatMap(payload => payload.embeds).flatMap(embed => embed.data.fields || []);
-  const allLinks = allFields.map(field => field.value).join("\n");
-  for (let index = 1; index <= 240; index++) {
-    assert.ok(allLinks.includes(`[Channel${index}](https://kick.com/channel-${index})`));
-  }
-  assert.ok(sent.length > 1);
-  assert.equal(result.messageIds.length, sent.length);
+  await sendReward(channel, reward, "started");
+  assert.equal(sent.length, 1);
   assert.match(sent[0].content, /EMOTKA KICK/);
-  assert.ok(sent.slice(1).every(payload => payload.content === ""));
-  assert.ok(sent.every(payload => payload.embeds.length === 1));
-  assert.ok(sent.every(payload => payload.embeds[0].data.fields.length <= 5));
+  assert.equal(sent[0].embeds.length, 1);
+  assert.equal(sent[0].embeds[0].data.url, "https://kick.com/category/league-of-legends/drops");
+  assert.match(sent[0].embeds[0].data.description, /Dostępne dropy/);
+  assert.ok(sent[0].embeds[0].data.description.length < 1000);
 });
 
 test("labels badge rewards separately and uses matching scheduled wording", async () => {
@@ -145,8 +133,22 @@ test("refreshes an existing Kick post with full campaign and channel data withou
   } } };
   assert.equal(await refreshRewardMessage(channel, state, reward), true);
   assert.equal(state.reward, reward);
-  assert.match(editPayload.embeds[0].data.fields[0].value, /ChannelOne/);
+  assert.match(editPayload.embeds[0].data.description, /Dostępne dropy/);
   assert.deepEqual(editPayload.allowedMentions, { parse: [] });
+});
+
+test("replaces old Kick channel continuation posts with the single-message layout", async () => {
+  const [reward] = normalizeCampaign(fixture());
+  const deleted = [];
+  const state = { messageId: "main", messageIds: ["main", "old-continuation"], reward: {} };
+  const channel = { messages: { fetch: async id => ({
+    edit: async () => {},
+    delete: async () => deleted.push(id)
+  }) } };
+  assert.equal(await refreshRewardMessage(channel, state, reward), true);
+  assert.deepEqual(deleted, ["old-continuation"]);
+  assert.deepEqual(state.messageIds, ["main"]);
+  assert.equal(state.messageFormatVersion, 2);
 });
 
 test("keeps separate Kick API records for one campaign so every reward is scanned", async () => {

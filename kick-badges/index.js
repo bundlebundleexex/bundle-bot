@@ -101,23 +101,6 @@ function getCampaignChannels(campaign) {
   return [...bySlug.values()];
 }
 
-function chunkChannelLinks(channels, maxLength = 950) {
-  const chunks = [];
-  let current = "";
-  for (const channel of channels) {
-    const line = `[${channel.name.replace(/[\[\]]/g, "")}](${channel.url})`;
-    const next = current ? `${current}, ${line}` : line;
-    if (next.length > maxLength && current) {
-      chunks.push(current);
-      current = line;
-    } else {
-      current = next;
-    }
-  }
-  if (current) chunks.push(current);
-  return chunks;
-}
-
 function extractRewardEntries(campaign) {
   const directRewards = Array.isArray(campaign.rewards) ? campaign.rewards : [];
   const drops = Array.isArray(campaign.drops) ? campaign.drops : [];
@@ -192,45 +175,18 @@ function makeRewardEmbed(reward) {
   const embed = new EmbedBuilder()
     .setColor(0x53fc18)
     .setTitle(`${reward.type === "EMOTE" ? "🎭" : "🎖️"} ${reward.name}`)
-    .setURL(reward.campaignUrl)
+    .setURL(reward.categoryUrl || reward.campaignUrl)
     .setDescription([
       `**Kampania:** ${reward.campaignName}`,
       `**Kategoria:** ${reward.categoryUrl ? `[${reward.gameName}](${reward.categoryUrl})` : reward.gameName}`,
       `**Dostęp:** Darmowy — za oglądanie przez ${reward.minutes} min na Kick`,
       `**Start:** ${formatDate(reward.campaignStart)}`,
-      `**Koniec:** ${formatDate(reward.campaignEnd)}`
-    ].join("\n"))
+      `**Koniec:** ${formatDate(reward.campaignEnd)}`,
+      reward.categoryUrl ? `**Dostępne dropy:** [Zobacz na Kicku](${reward.categoryUrl})` : null
+    ].filter(Boolean).join("\n"))
     .setFooter({ text: `Kick ${label}` })
     .setTimestamp();
-  const channelChunks = chunkChannelLinks(reward.campaignChannels || []);
-  if (channelChunks.length) {
-    channelChunks.slice(0, 5).forEach((chunk, index) => {
-      embed.addFields({
-        name: index === 0 ? "Kanały" : "Kanały (ciąg dalszy)",
-        value: chunk,
-        inline: false
-      });
-    });
-  } else {
-    embed.addFields({
-      name: "Kanały",
-      value: `${reward.type === "EMOTE" ? "Emotka" : "Badge"} do zdobycia na każdym kanale w tej kategorii`,
-      inline: false
-    });
-  }
   if (reward.imageUrl) embed.setThumbnail(reward.imageUrl);
-  return embed;
-}
-
-function makeChannelContinuationEmbed(reward, chunks, page, totalPages) {
-  const embed = new EmbedBuilder()
-    .setColor(0x53fc18)
-    .setTitle(`Kanały biorące udział — ${reward.name} (${page}/${totalPages})`);
-  chunks.forEach((chunk, index) => embed.addFields({
-    name: index === 0 ? "Kanały" : "Kanały (ciąg dalszy)",
-    value: chunk,
-    inline: false
-  }));
   return embed;
 }
 
@@ -248,15 +204,7 @@ async function sendReward(channel, reward, phase) {
   const isEmote = reward.type === "EMOTE";
   const heading = isEmote ? "EMOTKA KICK" : "BADGE KICK";
   const scheduledHeading = isEmote ? "NADCHODZĄCA EMOTKA KICK" : "NADCHODZĄCY BADGE KICK";
-  const channelChunks = chunkChannelLinks(reward.campaignChannels || []);
-  const continuationChunks = channelChunks.slice(5);
-  const chunksPerMessage = 5;
-  const continuationPages = [];
-  for (let index = 0; index < continuationChunks.length; index += chunksPerMessage) {
-    continuationPages.push(continuationChunks.slice(index, index + chunksPerMessage));
-  }
-  const messageIds = [];
-  const main = await channel.send({
+  return channel.send({
     content: isScheduled
       ? `🕒 **${scheduledHeading}**`
       : `${isEmote ? "🎭" : "🎖️"} **${heading}**`,
@@ -265,27 +213,6 @@ async function sendReward(channel, reward, phase) {
     enforceNonce: true,
     allowedMentions: { parse: [] }
   });
-  if (main?.id) messageIds.push(main.id);
-  for (let index = 0; index < continuationPages.length; index++) {
-    const nonce = crypto.createHash("sha256")
-      .update(`kick:${reward.key}:${phase}:channels:${index + 1}`)
-      .digest("hex")
-      .slice(0, 25);
-    const message = await channel.send({
-      content: "",
-      embeds: [makeChannelContinuationEmbed(
-        reward,
-        continuationPages[index],
-        index + 2,
-        continuationPages.length + 1
-      )],
-      nonce,
-      enforceNonce: true,
-      allowedMentions: { parse: [] }
-    });
-    if (message?.id) messageIds.push(message.id);
-  }
-  return { id: main?.id || messageIds[0] || null, messageIds };
 }
 
 async function refreshRewardMessage(channel, state, reward) {
@@ -296,9 +223,20 @@ async function refreshRewardMessage(channel, state, reward) {
       embeds: [makeRewardEmbed(reward)],
       allowedMentions: { parse: [] }
     });
+    for (const id of new Set(state.messageIds || [])) {
+      if (!id || id === state.messageId) continue;
+      try {
+        const continuation = await channel.messages.fetch(id);
+        await continuation.delete();
+      } catch (err) {
+        if (err.code !== 10008) console.log(`Kick Drops: nie udało się usunąć starej kontynuacji ${id}: ${err.message}`);
+      }
+    }
     state.reward = reward;
     state.startAt = reward.campaignStart;
     state.endAt = reward.campaignEnd;
+    state.messageIds = [state.messageId];
+    state.messageFormatVersion = 2;
     return true;
   } catch (err) {
     console.log(`Kick Drops: nie udało się odświeżyć wiadomości ${reward.name}: ${err.message}`);
@@ -360,7 +298,8 @@ module.exports.check = async (client, savedData, saveData) => {
         const phase = start > now ? "scheduled" : "started";
         if (existing?.status === phase) {
           alreadyKnown++;
-          if (JSON.stringify(existing.reward || {}) !== JSON.stringify(reward)) {
+          if (existing.messageFormatVersion !== 2 ||
+              JSON.stringify(existing.reward || {}) !== JSON.stringify(reward)) {
             if (await refreshRewardMessage(channel, existing, reward)) saveData();
           }
           continue;
@@ -377,7 +316,8 @@ module.exports.check = async (client, savedData, saveData) => {
             endAt: reward.campaignEnd,
             reward,
             messageId: message?.id || null,
-            messageIds: message?.messageIds || []
+            messageIds: message?.id ? [message.id] : [],
+            messageFormatVersion: 2
           };
           saveData();
           sent++;
@@ -399,7 +339,8 @@ module.exports.check = async (client, savedData, saveData) => {
         const message = await sendReward(channel, state.reward, "started");
         state.status = "started";
         state.messageId = message?.id || null;
-        state.messageIds = message?.messageIds || [];
+        state.messageIds = message?.id ? [message.id] : [];
+        state.messageFormatVersion = 2;
         saveData();
         sent++;
       }
@@ -414,7 +355,6 @@ module.exports.check = async (client, savedData, saveData) => {
 
 module.exports.normalizeCampaign = normalizeCampaign;
 module.exports.makeRewardEmbed = makeRewardEmbed;
-module.exports.makeChannelContinuationEmbed = makeChannelContinuationEmbed;
 module.exports.sendReward = sendReward;
 module.exports.refreshRewardMessage = refreshRewardMessage;
 module.exports.slugifyCategory = slugifyCategory;
