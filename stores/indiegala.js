@@ -172,6 +172,12 @@ module.exports.check = async (client, savedData, saveData) => {
         : new Date(Date.now() + remainingMs).toISOString();
       const previousEndAt = savedData.indiegalaBundleExpiries[bundle.link]?.endAt || null;
       const extension = isSignificantExtension(previousEndAt, observedEndAt);
+      if (previousEndAt && observedEndAt) {
+        const deltaHours = (Date.parse(observedEndAt) - Date.parse(previousEndAt)) / 3600000;
+        console.log(
+          `IndieGala renewal check: ${bundle.title} previous=${previousEndAt} current=${observedEndAt} delta=${deltaHours.toFixed(2)}h threshold=20h decision=${extension ? "post" : "skip"}`
+        );
+      }
 
       if (wasAnnounced && !previousEndAt) {
         if (observedEndAt) {

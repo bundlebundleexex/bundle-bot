@@ -135,3 +135,64 @@ test("keeps separate Kick API records for one campaign so every reward is scanne
   }
 });
 
+test("recognizes all seven named active Kick badge/emote rewards with their UTC campaign dates", () => {
+  const campaigns = [
+    {
+      kick_id: "lol-campaign",
+      name: "Chat Emote - True Damage",
+      starts_at: "2026-10-28T08:00:00Z",
+      ends_at: "2026-11-07T08:00:00Z",
+      category: { name: "League of Legends", slug: "league-of-legends" },
+      rewards: [{ id: "lol-emote", name: "Chat Emote - True Damage", required_units: 30 }]
+    },
+    {
+      kick_id: "mw4-campaign",
+      name: "Modern Warfare 4",
+      starts_at: "2026-10-23T00:00:00Z",
+      ends_at: "2026-11-23T00:00:00Z",
+      category: { name: "Call of Duty: Modern Warfare 4", slug: "call-of-duty-modern-warfare-4" },
+      rewards: [{ id: "mw4-badge", name: "MW4 Ghost Badge", required_units: 3000 }]
+    },
+    {
+      kick_id: "moon-campaign",
+      name: "MOON Trading",
+      starts_at: "2026-10-13T13:30:00Z",
+      ends_at: "2026-11-03T12:30:00Z",
+      category: { name: "Crypto & Trading", slug: "crypto-and-trading" },
+      rewards: [
+        { id: "moon-1", name: "1000X MOON Emote", required_units: 60 },
+        { id: "moon-2", name: "God Candle Emote", required_units: 120 },
+        { id: "moon-3", name: "TJR To The Moon Emote", required_units: 300 }
+      ]
+    },
+    {
+      kick_id: "talk-campaign",
+      name: "KICK Talk Ed VS Ethan",
+      starts_at: "2026-10-10T13:00:00Z",
+      ends_at: "2026-11-07T17:00:00Z",
+      category: { name: "Just Chatting", slug: "just-chatting" },
+      channels: [{ slug: "eddie", user: { username: "Eddie" } }],
+      rewards: [
+        { id: "ethan-emote", name: "Ethan Emote", required_units: 60 },
+        { id: "eddie-emote", name: "Eddie Emote", required_units: 120 },
+        { id: "other-reward", name: "Eddie VS Ethan", required_units: 180 }
+      ]
+    }
+  ];
+  const rewards = campaigns.flatMap(normalizeCampaign);
+  assert.deepEqual(rewards.map(reward => reward.name), [
+    "Chat Emote - True Damage",
+    "MW4 Ghost Badge",
+    "1000X MOON Emote",
+    "God Candle Emote",
+    "TJR To The Moon Emote",
+    "Ethan Emote",
+    "Eddie Emote"
+  ]);
+  assert.equal(rewards[0].campaignStart, "2026-10-28T08:00:00.000Z");
+  assert.match(makeRewardEmbed(rewards[0]).data.description, /Start:\*\* 28 paź 2026, 09:00/);
+  const moonEnd = rewards.find(reward => reward.name === "1000X MOON Emote").campaignEnd;
+  assert.match(makeRewardEmbed(rewards.find(reward => reward.name === "1000X MOON Emote")).data.description, /Koniec:\*\* 3 lis 2026, 13:30/);
+  assert.equal(moonEnd, "2026-11-03T12:30:00.000Z");
+});
+

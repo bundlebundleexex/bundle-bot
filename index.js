@@ -1003,6 +1003,7 @@ function startParentScheduler() {
 
 client.once("clientReady", async () => {
   console.log(`Logged in as ${client.user.tag}`);
+  console.log(`Build commit: ${process.env.RAILWAY_GIT_COMMIT_SHA || "unknown"}`);
 
   loadData();
 
