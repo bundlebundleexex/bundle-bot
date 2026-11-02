@@ -7,6 +7,7 @@ const API_ORIGIN = "https://ttvdrops.lovinator.space";
 const CHANNEL_ID = "1545521319284838602";
 const FREE_ROLE_ID = process.env.TWITCH_BADGE_FREE_ROLE_ID?.trim() || "1545400230504046602";
 const PAID_ROLE_ID = process.env.TWITCH_BADGE_PAID_ROLE_ID?.trim() || "1545511812148236378";
+const REWARD_MESSAGE_FORMAT_VERSION = 4;
 const PAGE_SIZE = 500;
 const DETAIL_CONCURRENCY = 10;
 const TARGET_TYPES = new Set(["BADGE", "EMOTE"]);
@@ -234,55 +235,6 @@ function getAllowedChannelLinks(reward) {
     });
 }
 
-function splitLinks(links, maxLength = 1000) {
-  const chunks = [];
-  let current = "";
-  for (const link of links) {
-    const next = current ? `${current}, ${link}` : link;
-    if (next.length > maxLength && current) {
-      chunks.push(current);
-      current = link;
-    } else {
-      current = next;
-    }
-  }
-  if (current) chunks.push(current);
-  return chunks;
-}
-
-function partitionDescriptionLinks(links, maxLength = 3900) {
-  const descriptionLinks = [];
-  let length = 0;
-  for (let index = 0; index < links.length; index++) {
-    const nextLength = links[index].length + (descriptionLinks.length ? 2 : 0);
-    if (length + nextLength > maxLength) {
-      return {
-        description: descriptionLinks.join(", "),
-        remaining: links.slice(index)
-      };
-    }
-    descriptionLinks.push(links[index]);
-    length += nextLength;
-  }
-  return { description: descriptionLinks.join(", "), remaining: [] };
-}
-
-function splitChannelNames(reward, maxLength = 1000) {
-  const chunks = [];
-  let current = "";
-  for (const name of getAllowedChannelNames(reward)) {
-    const next = current ? `${current}, ${name}` : name;
-    if (next.length > maxLength && current) {
-      chunks.push(current);
-      current = name;
-    } else {
-      current = next;
-    }
-  }
-  if (current) chunks.push(current);
-  return chunks;
-}
-
 function getEmbedTextLength(embed) {
   const data = embed.toJSON();
   return (data.title || "").length + (data.description || "").length +
@@ -290,7 +242,7 @@ function getEmbedTextLength(embed) {
     (data.fields || []).reduce((total, field) => total + field.name.length + field.value.length, 0);
 }
 
-function makeRewardEmbed(reward, remainingChannelLinks = [], usePlainChannelNames = false) {
+function makeRewardEmbed(reward) {
   const embed = new EmbedBuilder()
     .setColor(0x9146ff)
     .setTitle(`${reward.type === "EMOTE" ? "😀" : "🎖️"} ${reward.name}`)
@@ -299,23 +251,16 @@ function makeRewardEmbed(reward, remainingChannelLinks = [], usePlainChannelName
     .setTimestamp();
 
   if (reward.imageUrl) embed.setThumbnail(reward.imageUrl);
-  const { description: channelDescription, remaining } = partitionDescriptionLinks(remainingChannelLinks);
-  if (channelDescription) embed.setDescription(channelDescription);
-  const channelChunks = splitLinks(remaining);
-  if (channelChunks.length) {
-    channelChunks.forEach((chunk, index) => embed.addFields({
-      name: "\u200b",
-      value: chunk,
-      inline: false
-    }));
+  const channelLinks = getAllowedChannelLinks(reward).slice(0, 25);
+  const categoryUrl = getTwitchCategoryDropsUrl(reward);
+  const description = [];
+  if (channelLinks.length) {
+    description.push(`**Kanały biorące udział:** ${channelLinks.join(", ")}`);
+    if (categoryUrl) {
+      description.push(`[Zobacz streamerów nadających z aktywnymi dropami](${categoryUrl})`);
+    }
   }
-  if (usePlainChannelNames) {
-    splitChannelNames(reward).forEach((chunk, index) => embed.addFields({
-      name: "\u200b",
-      value: chunk,
-      inline: false
-    }));
-  }
+  if (description.length) embed.setDescription(description.join("\n\n"));
   return embed;
 }
 
@@ -331,7 +276,6 @@ function makeRewardContent(reward, phase) {
   const headline = isScheduled
     ? `🕒 **${scheduledHeadline}**`
     : `${reward.type === "EMOTE" ? "😀" : "🎖️"} **${liveHeadline}** <@&${roleId}>`;
-  const allChannelLinks = getAllowedChannelLinks(reward);
   const categoryUrl = getTwitchCategoryDropsUrl(reward);
   const extraDrops = (reward.relatedDrops || [])
     .filter(item => item.key !== reward.key && EXTRA_GAME_REWARD_TYPES.has(item.type));
@@ -352,22 +296,11 @@ function makeRewardContent(reward, phase) {
       : null
   ].filter(Boolean).join("\n");
 
-  for (let inlineCount = 0; inlineCount <= allChannelLinks.length; inlineCount++) {
-    const candidateContent = inlineCount
-      ? `${content}\n\n**Kanały biorące udział:** ${allChannelLinks.slice(0, inlineCount).join(", ")}`
-      : content;
-    if (candidateContent.length > 2000) break;
-    const candidateEmbed = makeRewardEmbed(reward, allChannelLinks.slice(inlineCount));
-    if (getEmbedTextLength(candidateEmbed) <= 6000) {
-      return { content: candidateContent, embed: candidateEmbed };
-    }
+  const embed = makeRewardEmbed(reward);
+  if (content.length > 2000 || getEmbedTextLength(embed) > 6000) {
+    throw new Error(`wiadomość kampanii ${reward.name} przekracza limity pojedynczej wiadomości Discorda`);
   }
-
-  const fallbackEmbed = makeRewardEmbed(reward, [], true);
-  if (getEmbedTextLength(fallbackEmbed) <= 6000) {
-    return { content, embed: fallbackEmbed };
-  }
-  throw new Error(`lista kanałów kampanii ${reward.name} przekracza limity pojedynczej wiadomości Discorda`);
+  return { content, embed };
 }
 
 async function sendReward(channel, reward, phase) {
@@ -411,7 +344,7 @@ async function refreshRewardMessage(channel, state, reward) {
     }
     state.reward = reward;
     state.messageIds = [state.messageId];
-    state.messageFormatVersion = 3;
+    state.messageFormatVersion = REWARD_MESSAGE_FORMAT_VERSION;
     return true;
   } catch (err) {
     console.log(`Twitch Drops: nie udało się skrócić wiadomości ${reward.name}: ${err.message}`);
@@ -577,12 +510,12 @@ module.exports.check = async (client, savedData, saveData) => {
               reward,
               messageId: message?.id || null,
               messageIds: message?.id ? [message.id] : [],
-              messageFormatVersion: 3
+              messageFormatVersion: REWARD_MESSAGE_FORMAT_VERSION
             };
             saveData();
             sentCount++;
           } else if (existing.status === "scheduled") {
-            if (existing.messageFormatVersion !== 3 ||
+            if (existing.messageFormatVersion !== REWARD_MESSAGE_FORMAT_VERSION ||
                 JSON.stringify(existing.reward || {}) !== JSON.stringify(reward)) {
               await refreshRewardMessage(channel, existing, reward);
             }
@@ -594,7 +527,7 @@ module.exports.check = async (client, savedData, saveData) => {
         }
 
         if (existing?.status === "started") {
-          if (existing.messageFormatVersion !== 3 ||
+          if (existing.messageFormatVersion !== REWARD_MESSAGE_FORMAT_VERSION ||
               JSON.stringify(existing.reward || {}) !== JSON.stringify(reward)) {
             await refreshRewardMessage(channel, existing, reward);
             saveData();
@@ -612,7 +545,7 @@ module.exports.check = async (client, savedData, saveData) => {
             reward,
             messageId: message?.id || null,
             messageIds: message?.id ? [message.id] : [],
-            messageFormatVersion: 3
+            messageFormatVersion: REWARD_MESSAGE_FORMAT_VERSION
           };
           if (!savedData.twitchDropRewardIds.includes(reward.key)) {
             savedData.twitchDropRewardIds.push(reward.key);
@@ -627,7 +560,7 @@ module.exports.check = async (client, savedData, saveData) => {
 
     for (const state of Object.values(rewardStates)) {
       if (!["started", "scheduled"].includes(state.status) || !state.reward ||
-          state.messageFormatVersion === 3) continue;
+          state.messageFormatVersion === REWARD_MESSAGE_FORMAT_VERSION) continue;
       if (await refreshRewardMessage(channel, state, state.reward)) saveData();
     }
 
@@ -644,7 +577,7 @@ module.exports.check = async (client, savedData, saveData) => {
       state.status = "started";
       state.messageId = message?.id || null;
       state.messageIds = message?.id ? [message.id] : [];
-      state.messageFormatVersion = 3;
+      state.messageFormatVersion = REWARD_MESSAGE_FORMAT_VERSION;
       if (!savedData.twitchDropRewardIds.includes(key)) {
         savedData.twitchDropRewardIds.push(key);
       }

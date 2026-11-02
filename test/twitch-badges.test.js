@@ -213,7 +213,7 @@ test("uses stable phase-specific Discord nonces for duplicate-send protection", 
   assert.equal(payloads[0].enforceNonce, true);
 });
 
-test("keeps every channel linked in one Discord post within Discord limits", async () => {
+test("shows 25 linked channels in the reward card and links to the active-drop directory", async () => {
   const [reward] = flattenCampaignRewards(campaignFixture());
   reward.channels = Array.from({ length: 138 }, (_, index) => ({
     name: `channelname${index + 1}`,
@@ -228,21 +228,20 @@ test("keeps every channel linked in one Discord post within Discord limits", asy
   await sendReward(channel, reward, "started");
   assert.equal(payloads.length, 1);
   assert.equal(payloads[0].embeds.length, 1);
-  const linkedChannels = `${payloads[0].content}\n${payloads[0].embeds[0].data.description || ""}\n${payloads[0].embeds[0].data.fields
-    .map(field => field.value)
-    .join("\n")}`;
-  for (let index = 1; index <= 138; index++) {
-    assert.ok(linkedChannels.includes(
+  const embed = payloads[0].embeds[0].data;
+  const channelDescription = embed.description || "";
+  for (let index = 1; index <= 25; index++) {
+    assert.ok(channelDescription.includes(
       `[Channel Name ${index}](https://twitch.tv/channelname${index})`
     ));
   }
+  assert.doesNotMatch(channelDescription, /Channel Name 26/);
+  assert.match(channelDescription, /\[Zobacz streamerów nadających z aktywnymi dropami\]\(https:\/\/www\.twitch\.tv\/directory\/category\/test-game\?filter=drops\)/);
   assert.equal(payloads.filter(payload => payload.content.includes("<@&")).length, 1);
-  assert.ok(payloads[0].embeds[0].data.fields.length < 25);
-  assert.ok(payloads[0].embeds[0].data.fields.length <= 4);
+  assert.equal((embed.fields || []).length, 0);
   assert.ok(payloads[0].content.length <= 2000);
-  const embed = payloads[0].embeds[0].data;
   const embedLength = (embed.title || "").length + (embed.description || "").length +
-    (embed.footer?.text || "").length + embed.fields.reduce((total, field) => total + field.name.length + field.value.length, 0);
+    (embed.footer?.text || "").length + (embed.fields || []).reduce((total, field) => total + field.name.length + field.value.length, 0);
   assert.ok(embedLength <= 6000, `embed length ${embedLength} is under Discord's 6000 character limit`);
 });
 
@@ -284,7 +283,7 @@ test("replaces old Twitch channel continuation posts with the single-message lay
   assert.equal(await refreshRewardMessage(channel, state, reward), true);
   assert.deepEqual(deleted, ["old-continuation"]);
   assert.deepEqual(state.messageIds, ["main"]);
-  assert.equal(state.messageFormatVersion, 3);
+  assert.equal(state.messageFormatVersion, 4);
 });
 
 test("sends each qualifying badge/emote as a separate message and deduplicates", async t => {
