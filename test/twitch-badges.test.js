@@ -185,9 +185,12 @@ test("links every allowed channel instead of truncating the list", () => {
 test("uses stable phase-specific Discord nonces for duplicate-send protection", async () => {
   const [reward] = flattenCampaignRewards(campaignFixture());
   const payloads = [];
-  const channel = { send: async payload => payloads.push(payload) };
+  const channel = { send: async payload => {
+    payloads.push(payload);
+    return { id: `message-${payloads.length}` };
+  } };
 
-  await Promise.all([
+  const results = await Promise.all([
     sendReward(channel, reward, "scheduled"),
     sendReward(channel, reward, "scheduled")
   ]);
@@ -195,6 +198,35 @@ test("uses stable phase-specific Discord nonces for duplicate-send protection", 
   assert.equal(payloads[0].nonce, payloads[1].nonce);
   assert.equal(payloads[0].nonce.length, 25);
   assert.equal(payloads[0].enforceNonce, true);
+  assert.equal(results[0].messageIds.length, 1);
+  assert.equal(results[1].messageIds.length, 1);
+});
+
+test("splits every allowed channel across Discord messages without extra role pings", async () => {
+  const [reward] = flattenCampaignRewards(campaignFixture());
+  reward.channels = Array.from({ length: 240 }, (_, index) => ({
+    name: `channel${index + 1}`,
+    display_name: `Channel ${index + 1}`
+  }));
+  const payloads = [];
+  const channel = { send: async payload => {
+    payloads.push(payload);
+    return { id: `message-${payloads.length}` };
+  } };
+
+  const sent = await sendReward(channel, reward, "started");
+  const linkedChannels = payloads.flatMap(payload => payload.embeds)
+    .map(embed => embed.data.description || "")
+    .join("\n");
+  for (let index = 1; index <= 240; index++) {
+    assert.match(linkedChannels, new RegExp(`\\[Channel ${index}\\]\\(https://www\\.twitch\\.tv/channel${index}\\)`));
+  }
+  assert.ok(payloads.length > 2, "long list is continued in separate messages");
+  assert.equal(sent.messageIds.length, payloads.length);
+  assert.equal(payloads.filter(payload => payload.content.includes("<@&")).length, 1);
+  assert.ok(payloads.every(payload => payload.embeds.every(embed =>
+    (embed.data.description || "").length <= 4096
+  )));
 });
 
 test("uses the requested medal icon and edits expired posts without pinging", async () => {
@@ -209,6 +241,19 @@ test("uses the requested medal icon and edits expired posts without pinging", as
   assert.equal(edited, true);
   assert.match(editPayload.content, /ZAKOŃCZONE/);
   assert.deepEqual(editPayload.allowedMentions, { parse: [] });
+});
+
+test("marks all channel-list continuation posts as ended", async () => {
+  const edited = [];
+  const channel = { messages: { fetch: async id => ({ edit: async payload => edited.push([id, payload]) }) } };
+  assert.equal(await editExpiredReward(channel, {
+    messageId: "primary",
+    messageIds: ["primary", "channels-2", "channels-3"],
+    reward: { type: "EMOTE" }
+  }), true);
+  assert.equal(edited.length, 3);
+  assert.match(edited[0][1].content, /EMOTKA TWITCH — ZAKOŃCZONE/);
+  assert.match(edited[2][1].content, /Kampania zakończona/);
 });
 
 test("sends each qualifying badge/emote as a separate message and deduplicates", async t => {
@@ -251,14 +296,14 @@ test("sends each qualifying badge/emote as a separate message and deduplicates",
 
   await check(client, savedData, saveData);
   assert.equal(sent.length, 2);
-  assert.ok(sent.every(payload => payload.embeds.length === 1));
+  assert.ok(sent.every(payload => payload.embeds.length >= 1));
   assert.match(sent[0].content, /NADCHODZĄCA EMOTKA TWITCH/);
   assert.doesNotMatch(sent[0].content, /<@&/);
   assert.match(sent[1].content, /NADCHODZĄCY BADGE TWITCH/);
   assert.deepEqual(sent[0].allowedMentions.roles, []);
   assert.match(sent[1].embeds[0].data.description, /Sub z Prime się nie liczy/);
-  assert.match(sent[1].embeds[0].data.description, /Płatny — za zakup subskrypcji na kanale/);
-  assert.match(sent[0].embeds[0].data.description, /ChannelOne/);
+  assert.match(sent[1].embeds[0].data.description, /Płatny — za zakup subskrypcji na kanale biorącym udział/);
+  assert.ok(sent[0].embeds.some(embed => (embed.data.description || "").includes("ChannelOne")));
   assert.doesNotMatch(sent[1].embeds[0].data.description, /Organizator|źródło|badge’a\]\(/i);
   assert.equal(sent[1].embeds[0].data.footer.text, "Twitch Badge");
 
