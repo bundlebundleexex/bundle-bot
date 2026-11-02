@@ -79,6 +79,7 @@ function ensureData(savedData) {
   savedData.digiphileCollections ??= [];
   savedData.digiphileEndedCollections ??= [];
   savedData.digiphileInvalidCollections ??= [];
+  savedData.digiphileCollectionExpiries ??= {};
 }
 
 function trimData(savedData) {
@@ -186,6 +187,30 @@ function isEndedCollection($, html) {
   );
 }
 
+function getCollectionEndDate($, html) {
+  const text = `${$("body").text()} ${String(html || "")}`.replace(/\s+/g, " ");
+  const match = text.match(/This collection (?:ends|ended) on\s+([A-Za-z]{3,9}\s+\d{1,2},?\s+\d{4}\s+at\s+\d{1,2}:\d{2}\s*(?:AM|PM))/i);
+  if (!match) return null;
+  const timestamp = Date.parse(match[1].replace(/\s+at\s+/i, " "));
+  return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : null;
+}
+
+function isExtendedEndDate(previousEndDate, currentEndDate) {
+  const previous = Date.parse(previousEndDate || "");
+  const current = Date.parse(currentEndDate || "");
+  return Number.isFinite(previous) && Number.isFinite(current) && current > previous;
+}
+
+function formatDate(value) {
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "Brak danych";
+  return new Intl.DateTimeFormat("pl-PL", {
+    timeZone: "Europe/Warsaw",
+    dateStyle: "medium",
+    timeStyle: "short"
+  }).format(date);
+}
+
 function formatPrice(value) {
   if (!Number.isFinite(value)) {
     return null;
@@ -257,15 +282,24 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
       );
     }
 
-    const freshLinks = uniqueLinks
-      .filter(url => !isKnown(savedData, url))
-      .slice(0, MAX_COLLECTIONS_PER_RUN);
+    const newLinks = uniqueLinks.filter(url => !isKnown(savedData, url));
+    const knownLinks = uniqueLinks.filter(url => isKnown(savedData, url));
+    const newBatch = newLinks.slice(0, MAX_COLLECTIONS_PER_RUN);
+    const knownCapacity = Math.max(0, MAX_COLLECTIONS_PER_RUN - newBatch.length);
+    const cursor = Number(savedData.digiphileRenewalCursor || 0) % Math.max(knownLinks.length, 1);
+    const knownBatch = knownLinks.length && knownCapacity
+      ? Array.from({ length: Math.min(knownCapacity, knownLinks.length) }, (_, index) => knownLinks[(cursor + index) % knownLinks.length])
+      : [];
+    savedData.digiphileRenewalCursor = knownLinks.length
+      ? (cursor + knownBatch.length) % knownLinks.length
+      : 0;
+    const linksToCheck = [...newBatch, ...knownBatch];
 
     console.log(
-      `🔗 Digiphile: znaleziono=${uniqueLinks.length} do_sprawdzenia=${freshLinks.length}`
+      `🔗 Digiphile: znaleziono=${uniqueLinks.length} do_sprawdzenia=${linksToCheck.length}`
     );
 
-    if (!freshLinks.length) {
+    if (!linksToCheck.length) {
       console.log("⏸ Digiphile: bez zmian");
 
       return;
@@ -279,7 +313,7 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
       failed: 0
     };
 
-    for (const url of freshLinks) {
+    for (const url of linksToCheck) {
       let pageHtml = "";
       let $ = null;
 
@@ -299,8 +333,14 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
           continue;
         }
 
+        const endDate = getCollectionEndDate($, pageHtml);
+        const wasAnnounced = isKnown(savedData, url);
+        const previousEndDate = savedData.digiphileCollectionExpiries[url]?.endAt || null;
+        const extension = isExtendedEndDate(previousEndDate, endDate);
+
         if (isEndedCollection($, pageHtml)) {
           console.log("⛔ Pominięta zakończona:", url);
+          if (endDate) savedData.digiphileCollectionExpiries[url] = { endAt: endDate };
           savedData.digiphileEndedCollections.push(url);
           stats.ended += 1;
           trimData(savedData);
@@ -309,13 +349,27 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
           continue;
         }
 
+        if (wasAnnounced && !previousEndDate) {
+          if (endDate) savedData.digiphileCollectionExpiries[url] = { endAt: endDate };
+          saveData();
+          continue;
+        }
+        if (previousEndDate && !extension) {
+          if (endDate) savedData.digiphileCollectionExpiries[url] = { endAt: endDate };
+          if (!wasAnnounced) savedData.digiphileCollections.push(url);
+          trimData(savedData);
+          saveData();
+          continue;
+        }
+        if (wasAnnounced && !extension) continue;
+
         const price = getPrice($);
         const image = getImage($);
 
         const embed = new EmbedBuilder()
           .setTitle(`🎮 ${title}`)
           .setURL(url)
-          .setColor(0x3498db)
+          .setColor(extension ? 0x2ecc71 : 0x3498db)
           .setFooter({
             text: "Digiphile Steam Collection 🎮"
           })
@@ -325,16 +379,30 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
           embed.setDescription(`💰 Cena od: **${price}**`);
         }
 
+        if (extension) {
+          embed.setDescription("Termin dostępności tej kolekcji został przedłużony.");
+          embed.addFields(
+            { name: "Poprzednio do", value: formatDate(previousEndDate), inline: true },
+            { name: "Nowy termin", value: formatDate(endDate), inline: true }
+          );
+        } else if (endDate) {
+          embed.addFields({ name: "⏳ Dostępne do", value: formatDate(endDate), inline: false });
+        }
+
         if (image) {
           embed.setImage(image);
         }
 
         await channel.send({
-          content: `🔥 **NOWA KOLEKCJA DIGIPHILE!** <@&${ROLE_ID}>`,
+          content: extension
+            ? "🔁 **KOLEKCJA PRZEDŁUŻONA — DIGIPHILE**"
+            : `🔥 **NOWA KOLEKCJA DIGIPHILE!** <@&${ROLE_ID}>`,
+          allowedMentions: extension ? { parse: [] } : { parse: [], roles: [ROLE_ID] },
           embeds: [embed]
         });
 
         savedData.digiphileCollections.push(url);
+        if (endDate) savedData.digiphileCollectionExpiries[url] = { endAt: endDate };
         stats.sent += 1;
         trimData(savedData);
         saveData();
@@ -374,3 +442,6 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
     console.log("🔥 Digiphile error:", err.message);
   }
 };
+
+module.exports.getCollectionEndDate = getCollectionEndDate;
+module.exports.isExtendedEndDate = isExtendedEndDate;

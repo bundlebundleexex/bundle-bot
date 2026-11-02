@@ -292,6 +292,25 @@ function isExpiredBundle(
   );
 }
 
+function getOfferRemainingMs(bodyText) {
+  const match = String(bodyText || "").match(
+    /offer ends\s*(?:(\d+)\s*d)?\s*(?:(\d+)\s*h)?\s*(?:(\d+)\s*m)?\s*(?:(\d+)\s*s)?/i
+  );
+  if (!match || !match.slice(1).some(Boolean)) return null;
+  const [, days = 0, hours = 0, minutes = 0, seconds = 0] = match;
+  return ((Number(days) * 24 + Number(hours)) * 60 + Number(minutes)) * 60000 + Number(seconds) * 1000;
+}
+
+function formatGMGDate(value) {
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return null;
+  return new Intl.DateTimeFormat("pl-PL", {
+    timeZone: "Europe/Warsaw",
+    dateStyle: "medium",
+    timeStyle: "short"
+  }).format(date);
+}
+
 const CURRENCY_PRICE_PATTERN =
   /(?:[€£$]\s*\d+(?:[.,]\d{1,2})?)|(?:\b(?:USD|EUR|GBP|AUD|CAD|PLN)\b\s*\d+(?:[.,]\d{1,2})?)|(?:\d+(?:[.,]\d{1,2})?\s*\b(?:USD|EUR|GBP|AUD|CAD|PLN)\b)/gi;
 
@@ -589,22 +608,21 @@ module.exports.check =
           savedData,
           saveData
         );
+      savedData.gmgBundleExpiries ??= {};
+      const newUrls = links.filter(url => !known.has(url));
+      const knownUrls = links.filter(url => known.has(url));
+      const renewalLimit = Math.max(1, Number(process.env.GMG_RENEWAL_CHECK_LIMIT || 5));
+      const renewalCursor = Number(savedData.gmgBundleRenewalCursor || 0) % Math.max(knownUrls.length, 1);
+      const checkedKnown = knownUrls.length
+        ? Array.from({ length: Math.min(renewalLimit, knownUrls.length) }, (_, index) => knownUrls[(renewalCursor + index) % knownUrls.length])
+        : [];
+      savedData.gmgBundleRenewalCursor = knownUrls.length
+        ? (renewalCursor + checkedKnown.length) % knownUrls.length
+        : 0;
+      const urlsToCheck = [...newUrls, ...checkedKnown];
 
-      for (const url of links) {
+      for (const url of urlsToCheck) {
         try {
-          if (
-            known.has(
-              url
-            )
-          ) {
-            console.log(
-              "⏸ GMG już zapisany:",
-              url
-            );
-
-            continue;
-          }
-
           const {
             data: bundleHtml
           } =
@@ -634,6 +652,10 @@ module.exports.check =
                 " "
               )
               .toLowerCase();
+          const remainingMs = getOfferRemainingMs(bodyText);
+          const observedEndAt = remainingMs === null
+            ? null
+            : new Date(Date.now() + remainingMs).toISOString();
 
           // =========================
           // EXPIRED
@@ -1019,24 +1041,36 @@ module.exports.check =
             title
           );
 
-          savedData.gmgBundles.push(
-            url
+          const wasAnnounced = known.has(url);
+          const previousEndAt = savedData.gmgBundleExpiries[url]?.endAt || null;
+          const previousEndMs = Date.parse(previousEndAt || "");
+          const observedEndMs = Date.parse(observedEndAt || "");
+          const extension = Boolean(
+            Number.isFinite(previousEndMs) &&
+            Number.isFinite(observedEndMs) &&
+            observedEndMs > previousEndMs + 2 * 60 * 1000
           );
 
-          savedData.gmgBundles =
-            [
-              ...new Set(
-                savedData.gmgBundles
-                  .map(normalizeBundleUrl)
-                  .filter(Boolean)
-              )
-            ].slice(-500);
+          if (wasAnnounced && !previousEndAt) {
+            if (observedEndAt) {
+              savedData.gmgBundleExpiries[url] = { endAt: observedEndAt, updatedAt: new Date().toISOString() };
+            }
+            saveData();
+            continue;
+          }
 
-          known.add(
-            url
-          );
-
-          saveData();
+          if (previousEndAt && !extension) {
+            if (observedEndAt) {
+              savedData.gmgBundleExpiries[url] = { endAt: observedEndAt, updatedAt: new Date().toISOString() };
+            }
+            if (!wasAnnounced) {
+              savedData.gmgBundles.push(url);
+              savedData.gmgBundles = [...new Set(savedData.gmgBundles)].slice(-500);
+              known.add(url);
+            }
+            saveData();
+            continue;
+          }
 
           const embed =
             new EmbedBuilder()
@@ -1049,7 +1083,7 @@ module.exports.check =
               )
 
               .setColor(
-                0x2ecc71
+                extension ? 0x2ecc71 : 0x3498db
               )
 
               .setDescription(
@@ -1058,6 +1092,9 @@ module.exports.check =
                     ? `💰 Cena od: **${price}**\n\n`
                     : ""
                 ) +
+                (extension
+                  ? "Termin dostępności tej oferty został przedłużony.\n\n"
+                  : "") +
                 description.substring(
                   0,
                   400
@@ -1071,6 +1108,15 @@ module.exports.check =
 
               .setTimestamp();
 
+          if (extension) {
+            embed.addFields(
+              { name: "Poprzednio do", value: formatGMGDate(previousEndAt), inline: true },
+              { name: "Nowy termin", value: formatGMGDate(observedEndAt), inline: true }
+            );
+          } else if (observedEndAt) {
+            embed.addFields({ name: "⏳ Dostępne do", value: formatGMGDate(observedEndAt), inline: false });
+          }
+
           if (image) {
             embed.setImage(
               image
@@ -1078,10 +1124,20 @@ module.exports.check =
           }
 
           await channel.send({
-            content: `🟢 **NOWY GREEN MAN GAMING BUNDLE!** <@&${ROLE_ID}>`,
-
+            content: extension
+              ? "🔁 **PAKIET PRZEDŁUŻONY — GREEN MAN GAMING**"
+              : `🟢 **NOWY GREEN MAN GAMING BUNDLE!** <@&${ROLE_ID}>`,
+            allowedMentions: extension ? { parse: [] } : { parse: [], roles: [ROLE_ID] },
             embeds: [embed]
           });
+
+          if (!wasAnnounced) savedData.gmgBundles.push(url);
+          savedData.gmgBundles = [...new Set(savedData.gmgBundles.map(normalizeBundleUrl).filter(Boolean))].slice(-500);
+          known.add(url);
+          if (observedEndAt) {
+            savedData.gmgBundleExpiries[url] = { endAt: observedEndAt, updatedAt: new Date().toISOString() };
+          }
+          saveData();
 
           console.log(
             "🚀 GMG wysłany"
@@ -1100,3 +1156,5 @@ module.exports.check =
       );
     }
   };
+module.exports.getOfferRemainingMs = getOfferRemainingMs;
+module.exports.formatGMGDate = formatGMGDate;

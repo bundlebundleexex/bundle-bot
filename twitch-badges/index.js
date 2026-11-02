@@ -190,7 +190,7 @@ function makeRewardEmbed(reward) {
 
   const embed = new EmbedBuilder()
     .setColor(0x9146ff)
-    .setTitle(`${reward.type === "EMOTE" ? "😀" : "🏅"} ${reward.name}`)
+    .setTitle(`${reward.type === "EMOTE" ? "😀" : "🎖️"} ${reward.name}`)
     .setURL(reward.campaignUrl)
     .setDescription(description)
     .setFooter({ text: "Twitch Badge" })
@@ -216,10 +216,10 @@ async function sendReward(channel, reward, phase) {
     // Discord rejects nonces longer than 25 characters.
     .slice(0, 25);
 
-  await channel.send({
+  return channel.send({
     content: isScheduled
       ? `🕒 **${scheduledHeadline}**`
-      : `${reward.type === "EMOTE" ? "😀" : "🏅"} **${liveHeadline}** <@&${roleId}>`,
+      : `${reward.type === "EMOTE" ? "😀" : "🎖️"} **${liveHeadline}** <@&${roleId}>`,
     embeds: [makeRewardEmbed(reward)],
     nonce,
     enforceNonce: true,
@@ -228,6 +228,22 @@ async function sendReward(channel, reward, phase) {
       roles: !isScheduled ? [roleId] : []
     }
   });
+}
+
+async function editExpiredReward(channel, state, platform = "TWITCH") {
+  if (!state?.messageId || !channel?.messages?.fetch) return false;
+  try {
+    const message = await channel.messages.fetch(state.messageId);
+    const label = state.reward?.type === "EMOTE" ? "EMOTKA" : "BADGE";
+    await message.edit({
+      content: `🏁 **${label} ${platform} — ZAKOŃCZONE**`,
+      allowedMentions: { parse: [] }
+    });
+    return true;
+  } catch (err) {
+    console.log(`${platform} Drops: nie udało się oznaczyć zakończonej wiadomości: ${err.message}`);
+    return false;
+  }
 }
 
 async function mapWithConcurrency(items, concurrency, mapper) {
@@ -264,8 +280,7 @@ module.exports.check = async (client, savedData, saveData) => {
   try {
     const summaries = await getCampaignSummaries();
     if (!summaries.length) {
-      console.log("Twitch Drops: brak aktywnych/nadchodzących kampanii — pomijam zapis");
-      return;
+      console.log("Twitch Drops: brak aktywnych/nadchodzących kampanii — sprawdzam zapisane kampanie");
     }
 
     if (!Array.isArray(savedData.twitchDropRewardIds)) savedData.twitchDropRewardIds = [];
@@ -359,21 +374,18 @@ module.exports.check = async (client, savedData, saveData) => {
         const isExpired = Number.isFinite(endAt) && endAt <= Date.now();
 
         if (isExpired) {
-          if (existing?.status === "scheduled") {
-            existing.status = "expired";
-            saveData();
-          }
           continue;
         }
 
         if (startsLater) {
           if (!existing) {
-            await sendReward(channel, reward, "scheduled");
+            const message = await sendReward(channel, reward, "scheduled");
             rewardStates[reward.key] = {
               status: "scheduled",
               startAt: reward.campaignStart,
               endAt: reward.campaignEnd,
-              reward
+              reward,
+              messageId: message?.id || null
             };
             saveData();
             sentCount++;
@@ -391,12 +403,13 @@ module.exports.check = async (client, savedData, saveData) => {
         }
 
         if (!existing || existing.status === "scheduled") {
-          await sendReward(channel, reward, "started");
+          const message = await sendReward(channel, reward, "started");
           rewardStates[reward.key] = {
             status: "started",
             startAt: reward.campaignStart,
             endAt: reward.campaignEnd,
-            reward
+            reward,
+            messageId: message?.id || null
           };
           if (!savedData.twitchDropRewardIds.includes(reward.key)) {
             savedData.twitchDropRewardIds.push(reward.key);
@@ -414,19 +427,44 @@ module.exports.check = async (client, savedData, saveData) => {
       const startAt = Date.parse(state.startAt || state.reward.campaignStart || "");
       const endAt = Date.parse(state.endAt || state.reward.campaignEnd || "");
       if (Number.isFinite(endAt) && endAt <= Date.now()) {
-        state.status = "expired";
-        saveData();
         continue;
       }
       if (!Number.isFinite(startAt) || startAt > Date.now()) continue;
 
-      await sendReward(channel, state.reward, "started");
+      const message = await sendReward(channel, state.reward, "started");
       state.status = "started";
+      state.messageId = message?.id || null;
       if (!savedData.twitchDropRewardIds.includes(key)) {
         savedData.twitchDropRewardIds.push(key);
       }
       saveData();
       sentCount++;
+    }
+
+    let recentMessages = null;
+    for (const state of Object.values(rewardStates)) {
+      if (!["started", "scheduled"].includes(state.status)) continue;
+      const endAt = Date.parse(state.endAt || state.reward?.campaignEnd || "");
+      if (!Number.isFinite(endAt) || endAt > Date.now()) continue;
+      if (!state.messageId && state.reward?.campaignUrl && channel.messages?.fetch) {
+        if (recentMessages === null) {
+          try {
+            recentMessages = await channel.messages.fetch({ limit: 100 });
+          } catch {
+            recentMessages = [];
+          }
+        }
+        const found = recentMessages.find(message =>
+          message.author?.id === client.user?.id &&
+          message.embeds?.some(embed =>
+            embed.url === state.reward.campaignUrl && embed.title?.endsWith(state.reward.name)
+          )
+        );
+        if (found) state.messageId = found.id;
+      }
+      await editExpiredReward(channel, state);
+      state.status = "expired";
+      saveData();
     }
 
     const currentIds = new Set(summaries.map(campaign => campaign.twitch_id));
@@ -452,3 +490,4 @@ module.exports.validateCampaignSnapshot = validateCampaignSnapshot;
 module.exports.makeRewardEmbed = makeRewardEmbed;
 module.exports.mapWithConcurrency = mapWithConcurrency;
 module.exports.sendReward = sendReward;
+module.exports.editExpiredReward = editExpiredReward;

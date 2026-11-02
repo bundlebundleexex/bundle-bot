@@ -601,6 +601,10 @@ const STORES = [
   {
     name: "Twitch Badges",
     modulePath: "./twitch-badges"
+  },
+  {
+    name: "Kick Badges",
+    modulePath: "./kick-badges"
   }
 ];
 

@@ -3,6 +3,10 @@ const { EmbedBuilder } = require("discord.js");
 
 const CHANNEL_ID = process.env.BUNDLE_CHANNEL_ID || "1531609869327667210";
 const ROLE_ID = "1371122206670852146";
+const PERMANENTLY_BLOCKED_SLUGS = new Set([
+  "batman-arkham-collection",
+  "neurovoider-deluxe-edition"
+]);
 
 const API_URL = "https://www.fanatical.com/api/algolia/bundles?altRank=false";
 
@@ -128,7 +132,6 @@ function getDateValue(bundle) {
     bundle.release_date ||
     bundle.published_at ||
     bundle.created_at ||
-    bundle.updated_at ||
     null
   );
 }
@@ -154,22 +157,55 @@ function parseFanaticalDate(value) {
 }
 
 function getDateKey(bundle) {
-  const date = parseFanaticalDate(getDateValue(bundle)) || new Date();
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
+  const date = parseFanaticalDate(getDateValue(bundle));
+  return date ? date.toISOString().replace(/\.\d{3}Z$/, "Z") : "unknown-start";
 }
 
 function getBundleKey(bundle) {
-  const slug = bundle.slug;
+  return `${bundle.slug}:${getDateKey(bundle)}:${getEndDateKey(bundle)}`;
+}
 
-  if (isPickMix(bundle)) {
-    return `${slug}:${getDateKey(bundle)}`;
-  }
+function getEndDateKey(bundle) {
+  const value = bundle.available_valid_to || bundle.available_valid_until || bundle.valid_to ||
+    bundle.valid_until || bundle.end_date || bundle.available_end_date || bundle.ends_at ||
+    bundle.expiry_date || bundle.expires_at || null;
+  const date = parseFanaticalDate(value);
+  if (!date) return "unknown-end";
+  return date.toISOString().replace(/\.\d{3}Z$/, "Z");
+}
 
-  return slug;
+function isPermanentlyBlocked(bundle) {
+  const slug = String(bundle.slug || "").toLowerCase();
+  const text = `${slug} ${String(bundle.name || "").toLowerCase()}`;
+  return PERMANENTLY_BLOCKED_SLUGS.has(slug) ||
+    /batman[ -:]?.{0,20}arkham.{0,20}collection|neurovoider.{0,20}deluxe/.test(text);
+}
+
+function hasSeenBundle(known, slug) {
+  return [...known].some(key => key === slug || key.startsWith(`${slug}:`));
+}
+
+function hasLegacyBundleKey(known, slug) {
+  return [...known].some(key => key === slug || new RegExp(`^${slug.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}:\\d{4}-\\d{2}-\\d{2}$`).test(key));
+}
+
+function findPreviousEndDate(known, slug) {
+  const dates = [...known]
+    .filter(key => key.startsWith(`${slug}:`))
+    .map(key => key.match(/:(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)$/)?.[1])
+    .filter(Boolean)
+    .sort((a, b) => Date.parse(b) - Date.parse(a));
+  return dates[0] || null;
+}
+
+function formatFanaticalDate(value) {
+  const date = parseFanaticalDate(value);
+  if (!date) return null;
+  return new Intl.DateTimeFormat("pl-PL", {
+    timeZone: "Europe/Warsaw",
+    dateStyle: "medium",
+    timeStyle: "short"
+  }).format(date);
 }
 
 function ensureData(savedData) {
@@ -223,7 +259,6 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
     let sent = 0;
     let recurring = 0;
 
-    const currentKeys = new Set();
     const candidates = [];
     const fresh = [];
 
@@ -235,7 +270,7 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
         continue;
       }
 
-      if (!isGameBundle(bundle)) {
+      if (isPermanentlyBlocked(bundle) || !isGameBundle(bundle)) {
         skipped++;
         continue;
       }
@@ -246,26 +281,41 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
         recurring++;
       }
 
-      currentKeys.add(bundleKey);
       candidates.push({
         bundle,
         bundleKey
       });
     }
 
-    pruneInactiveFanaticalBundles(savedData, currentKeys, saveData);
-
     const known = new Set(savedData.fanaticalBundles.map(String));
+    const queuedKeys = new Set();
 
     for (const item of candidates) {
       const { bundle, bundleKey } = item;
 
-      if (known.has(bundleKey)) {
+      if (known.has(bundleKey) || queuedKeys.has(bundleKey)) {
         duplicates++;
         continue;
       }
 
-      fresh.push(item);
+      if (hasLegacyBundleKey(known, bundle.slug)) {
+        // Migrate previous slug/day keys without announcing them as renewals.
+        known.add(bundleKey);
+        saveKnown(savedData, known, saveData);
+        duplicates++;
+        continue;
+      }
+
+      if (getEndDateKey(bundle) === "unknown-end" && hasSeenBundle(known, bundle.slug)) {
+        // No end date means we cannot confirm a renewal, so do not ping a known offer again.
+        known.add(bundleKey);
+        saveKnown(savedData, known, saveData);
+        duplicates++;
+        continue;
+      }
+
+      fresh.push({ ...item, isRenewal: hasSeenBundle(known, bundle.slug) });
+      queuedKeys.add(bundleKey);
     }
 
     if (!fresh.length) {
@@ -284,6 +334,14 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
       const price = getPrice(bundle);
       const image = getImage(bundle);
       const pickMix = isPickMix(bundle);
+      const endDate = getEndDateKey(bundle);
+      const previousEndDate = findPreviousEndDate(known, slug);
+      const isRenewal = Boolean(
+        item.isRenewal &&
+        previousEndDate &&
+        endDate !== "unknown-end" &&
+        Date.parse(endDate) > Date.parse(previousEndDate)
+      );
 
       try {
         console.log("🔥 NEW FANATICAL:", slug, `(${bundleKey})`);
@@ -291,8 +349,10 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
         const embed = new EmbedBuilder()
           .setTitle(`🔥 ${bundle.name}`)
           .setURL(url)
-          .setColor(pickMix ? 0xf39c12 : 0x2ecc71)
-          .setDescription(`💰 **Cena od:** ${price}`)
+          .setColor(isRenewal ? 0x2ecc71 : pickMix ? 0xf39c12 : 0x2ecc71)
+          .setDescription(isRenewal
+            ? "Termin dostępności tej oferty został przedłużony."
+            : "Nowy pakiet dostępny do kupienia.\nSprawdź zawartość i progi cenowe na stronie oferty.")
           .setFooter({
             text: pickMix
               ? "Fanatical Build Your Own Bundle 🧩"
@@ -300,12 +360,26 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
           })
           .setTimestamp();
 
+        embed.addFields({ name: "💰 Cena od", value: price, inline: true });
+
+        if (isRenewal) {
+          embed.addFields(
+            { name: "Poprzednio do", value: formatFanaticalDate(previousEndDate), inline: true },
+            { name: "Nowy termin", value: formatFanaticalDate(endDate), inline: true }
+          );
+        } else if (endDate !== "unknown-end") {
+          embed.addFields({ name: "⏳ Dostępne do", value: formatFanaticalDate(endDate), inline: false });
+        }
+
         if (image) {
           embed.setImage(image);
         }
 
         await channel.send({
-          content: `🔥 **NOWY FANATICAL BUNDLE!** <@&${ROLE_ID}>`,
+          content: isRenewal
+            ? "🔁 **PAKIET PRZEDŁUŻONY — FANATICAL**"
+            : `🔥 **NOWY FANATICAL BUNDLE!** <@&${ROLE_ID}>`,
+          allowedMentions: isRenewal ? { parse: [] } : { parse: [], roles: [ROLE_ID] },
           embeds: [embed]
         });
 
@@ -331,3 +405,9 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
     console.log("❌ Fanatical error:", err.response?.status || err.message);
   }
 };
+
+module.exports.getBundleKey = getBundleKey;
+module.exports.isPermanentlyBlocked = isPermanentlyBlocked;
+module.exports.hasSeenBundle = hasSeenBundle;
+module.exports.hasLegacyBundleKey = hasLegacyBundleKey;
+module.exports.findPreviousEndDate = findPreviousEndDate;

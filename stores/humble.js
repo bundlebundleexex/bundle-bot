@@ -119,6 +119,12 @@ function getBundleEndDate(product) {
   return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : null;
 }
 
+function isBundleExtension(previousEndDate, currentEndDate) {
+  const previousEnd = Date.parse(previousEndDate || "");
+  const currentEnd = Date.parse(currentEndDate || "");
+  return Number.isFinite(previousEnd) && Number.isFinite(currentEnd) && currentEnd > previousEnd;
+}
+
 function pruneInactiveHumbleBundles(savedData, currentLinks, saveData) {
   if (!currentLinks.length) return;
 
@@ -197,16 +203,11 @@ module.exports.check = async (client, savedData, saveData) => {
           const previousRecord = [...savedData.humbleBundleHistory]
             .reverse()
             .find(entry => normalizeBundleLink(entry.url) === normalizedLink);
-          const renewalRecord = previousRecord || similarBundle;
+          // A renewal must be the same listing; a similar title can be a new bundle.
+          const renewalRecord = previousRecord;
           const endDate = getBundleEndDate(product);
-          const previousEnd = Date.parse(renewalRecord?.expiresAt || "");
-          const extension = Boolean(
-            Number.isFinite(previousEnd) &&
-            previousEnd <= Date.now() + 24 * 60 * 60 * 1000 &&
-            endDate &&
-            Date.parse(endDate) > previousEnd
-          );
-          if (wasActive && !extension) continue;
+          const extension = isBundleExtension(renewalRecord?.expiresAt, endDate);
+          if ((wasActive || previousRecord) && !extension) continue;
 
           const description =
             product.short_marketing_blurb ||
@@ -219,6 +220,40 @@ module.exports.check = async (client, savedData, saveData) => {
             null;
 
           const price = extractLowestPrice(product);
+
+          const embed = new EmbedBuilder()
+            .setTitle(`🔥 ${title}`)
+            .setURL(link)
+            .setColor(extension ? 0x2ecc71 : 0xE67E22)
+            .setDescription(
+              `────────────────\n${trim(description)}${similarBundle ? `\n\nPodobny bundle był już wcześniej: **${similarBundle.title}** (${formatDate(similarBundle.firstSeenAt)}).` : ""}\n────────────────`
+            )
+            .addFields({
+              name: "💰 Cena minimalna",
+              value: price,
+              inline: false
+            })
+            .setFooter({ text: "Humble Game Bundle 🎮" })
+            .setTimestamp();
+
+          if (extension) {
+            embed.addFields(
+              { name: "Poprzednio do", value: formatDate(renewalRecord.expiresAt), inline: true },
+              { name: "Nowy termin", value: formatDate(endDate), inline: true }
+            );
+          } else if (endDate) {
+            embed.addFields({ name: "⏳ Dostępne do", value: formatDate(endDate), inline: false });
+          }
+
+          if (image) embed.setImage(image);
+
+          await channel.send({
+            content: extension
+              ? "🔁 **HUMBLE GAME BUNDLE PRZEDŁUŻONY**"
+              : `🔥 **NOWY HUMBLE GAME BUNDLE!** <@&${ROLE_ID}>`,
+            allowedMentions: extension ? { parse: [] } : { parse: [], roles: [ROLE_ID] },
+            embeds: [embed]
+          });
 
           if (!wasActive) savedData.humbleBundles.push(link);
           savedData.humbleBundles =
@@ -239,30 +274,6 @@ module.exports.check = async (client, savedData, saveData) => {
           }
           savedData.humbleBundleHistory = savedData.humbleBundleHistory.slice(-500);
           saveData();
-
-          const embed = new EmbedBuilder()
-            .setTitle(`🔥 ${title}`)
-            .setURL(link)
-            .setColor(0xE67E22)
-            .setDescription(
-              `────────────────\n${trim(description)}${similarBundle ? `\n\nPodobny bundle był już wcześniej: **${similarBundle.title}** (${formatDate(similarBundle.firstSeenAt)}).` : ""}\n────────────────`
-            )
-            .addFields({
-              name: "💰 Cena minimalna",
-              value: price,
-              inline: false
-            })
-            .setFooter({ text: "Humble Game Bundle 🎮" })
-            .setTimestamp();
-
-          if (image) embed.setImage(image);
-
-          await channel.send({
-            content: extension
-              ? "🔥 **HUMBLE GAME BUNDLE — PRZEDŁUŻONY**"
-              : `🔥 **NOWY HUMBLE GAME BUNDLE!** <@&${ROLE_ID}>`,
-            embeds: [embed]
-          });
 
           console.log("🚀 Humble GAME wysłany:", title);
         }
@@ -343,3 +354,5 @@ module.exports.check = async (client, savedData, saveData) => {
     console.log("🔥 Humble error:", err.message);
   }
 };
+
+module.exports.isBundleExtension = isBundleExtension;

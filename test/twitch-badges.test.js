@@ -9,7 +9,8 @@ const {
   validateCampaignSnapshot,
   makeRewardEmbed,
   check,
-  sendReward
+  sendReward,
+  editExpiredReward
 } = require("../twitch-badges");
 
 function campaignFixture() {
@@ -193,6 +194,20 @@ test("uses stable phase-specific Discord nonces for duplicate-send protection", 
   assert.equal(payloads[0].nonce, payloads[1].nonce);
   assert.equal(payloads[0].nonce.length, 25);
   assert.equal(payloads[0].enforceNonce, true);
+});
+
+test("uses the requested medal icon and edits expired posts without pinging", async () => {
+  const [badge] = flattenCampaignRewards(campaignFixture()).filter(reward => reward.type === "BADGE");
+  assert.match(makeRewardEmbed(badge).data.title, /^🎖️/);
+  let editPayload;
+  const channel = { messages: { fetch: async id => {
+    assert.equal(id, "message-123");
+    return { edit: async payload => { editPayload = payload; } };
+  } } };
+  const edited = await editExpiredReward(channel, { messageId: "message-123", reward: badge });
+  assert.equal(edited, true);
+  assert.match(editPayload.content, /ZAKOŃCZONE/);
+  assert.deepEqual(editPayload.allowedMentions, { parse: [] });
 });
 
 test("sends each qualifying badge/emote as a separate message and deduplicates", async t => {
