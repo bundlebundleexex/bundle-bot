@@ -250,6 +250,23 @@ function splitLinks(links, maxLength = 1000) {
   return chunks;
 }
 
+function partitionDescriptionLinks(links, maxLength = 3900) {
+  const descriptionLinks = [];
+  let length = 0;
+  for (let index = 0; index < links.length; index++) {
+    const nextLength = links[index].length + (descriptionLinks.length ? 2 : 0);
+    if (length + nextLength > maxLength) {
+      return {
+        description: descriptionLinks.join(", "),
+        remaining: links.slice(index)
+      };
+    }
+    descriptionLinks.push(links[index]);
+    length += nextLength;
+  }
+  return { description: descriptionLinks.join(", "), remaining: [] };
+}
+
 function splitChannelNames(reward, maxLength = 1000) {
   const chunks = [];
   let current = "";
@@ -282,7 +299,9 @@ function makeRewardEmbed(reward, remainingChannelLinks = [], usePlainChannelName
     .setTimestamp();
 
   if (reward.imageUrl) embed.setThumbnail(reward.imageUrl);
-  const channelChunks = splitLinks(remainingChannelLinks);
+  const { description: channelDescription, remaining } = partitionDescriptionLinks(remainingChannelLinks);
+  if (channelDescription) embed.setDescription(channelDescription);
+  const channelChunks = splitLinks(remaining);
   if (channelChunks.length) {
     channelChunks.forEach((chunk, index) => embed.addFields({
       name: "\u200b",

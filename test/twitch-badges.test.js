@@ -228,7 +228,7 @@ test("keeps every channel linked in one Discord post within Discord limits", asy
   await sendReward(channel, reward, "started");
   assert.equal(payloads.length, 1);
   assert.equal(payloads[0].embeds.length, 1);
-  const linkedChannels = `${payloads[0].content}\n${payloads[0].embeds[0].data.fields
+  const linkedChannels = `${payloads[0].content}\n${payloads[0].embeds[0].data.description || ""}\n${payloads[0].embeds[0].data.fields
     .map(field => field.value)
     .join("\n")}`;
   for (let index = 1; index <= 138; index++) {
@@ -238,6 +238,7 @@ test("keeps every channel linked in one Discord post within Discord limits", asy
   }
   assert.equal(payloads.filter(payload => payload.content.includes("<@&")).length, 1);
   assert.ok(payloads[0].embeds[0].data.fields.length < 25);
+  assert.ok(payloads[0].embeds[0].data.fields.length <= 4);
   assert.ok(payloads[0].content.length <= 2000);
   const embed = payloads[0].embeds[0].data;
   const embedLength = (embed.title || "").length + (embed.description || "").length +
@@ -333,7 +334,8 @@ test("sends each qualifying badge/emote as a separate message and deduplicates",
   assert.deepEqual(sent[0].allowedMentions.roles, []);
   assert.match(sent[1].content, /Sub z Prime się nie liczy/);
   assert.match(sent[1].content, /Płatny — za zakup subskrypcji na kanale biorącym udział/);
-  const firstRewardLinks = `${sent[0].content}\n${sent[0].embeds[0].data.fields.map(field => field.value).join("\n")}`;
+  const firstEmbed = sent[0].embeds[0].data;
+  const firstRewardLinks = `${sent[0].content}\n${firstEmbed.description || ""}\n${(firstEmbed.fields || []).map(field => field.value).join("\n")}`;
   assert.ok(firstRewardLinks.includes("[ChannelOne](https://twitch.tv/channelone)"));
   assert.doesNotMatch(sent[1].content, /Organizator|źródło|badge’a\]\(/i);
   assert.equal(sent[1].embeds[0].data.footer.text, "Twitch Badge");
