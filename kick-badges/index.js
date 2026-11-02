@@ -291,23 +291,36 @@ module.exports.check = async (client, savedData, saveData) => {
     const summaries = await getCampaigns();
     const channel = await client.channels.fetch(CHANNEL_ID);
     let sent = 0;
+    let rawRewards = 0;
+    let eligibleRewards = 0;
+    let alreadyKnown = 0;
+    let expiredRewards = 0;
 
     for (const campaign of summaries) {
+      rawRewards += extractRewardEntries(campaign).length;
       const rewards = normalizeCampaign(campaign);
+      eligibleRewards += rewards.length;
       for (const reward of rewards) {
         const existing = states[reward.key];
         const now = Date.now();
         const start = Date.parse(reward.campaignStart);
         const end = Date.parse(reward.campaignEnd);
-        if (end <= now) continue;
+        if (end <= now) {
+          expiredRewards++;
+          continue;
+        }
         const phase = start > now ? "scheduled" : "started";
         if (existing?.status === phase) {
+          alreadyKnown++;
           if (JSON.stringify(existing.reward || {}) !== JSON.stringify(reward)) {
             if (await refreshRewardMessage(channel, existing, reward)) saveData();
           }
           continue;
         }
-        if (existing?.status === "started") continue;
+        if (existing?.status === "started") {
+          alreadyKnown++;
+          continue;
+        }
         const message = await sendReward(channel, reward, phase);
         states[reward.key] = {
           status: phase,
@@ -337,7 +350,9 @@ module.exports.check = async (client, savedData, saveData) => {
         sent++;
       }
     }
-    console.log(`Kick Drops: kampanii=${summaries.length}, wysłano=${sent}`);
+    console.log(
+      `Kick Drops: kampanii=${summaries.length}, nagrody=${rawRewards}, badge/emotki=${eligibleRewards}, zapisane=${alreadyKnown}, wygasłe=${expiredRewards}, wysłano=${sent}`
+    );
   } catch (err) {
     console.log("Kick Drops error:", err.response?.status || err.message);
   }

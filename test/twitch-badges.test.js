@@ -165,9 +165,9 @@ test("links specific channels by name and category-wide drops to the Twitch cate
   const [emote] = flattenCampaignRewards(campaignFixture());
   assert.equal(
     getWhereToWatch(emote),
-    "na kanale: [ChannelOne](https://www.twitch.tv/channelone)"
+    "na kanale: [ChannelOne](https://www.twitch.tv/channelone) · [kanały z włączonymi dropami](https://www.twitch.tv/directory/category/test-game?filter=drops)"
   );
-  assert.match(getWhereToWatch({ ...emote, channels: [] }), /w kategorii: \[Test Game\]\(https:\/\/www\.twitch\.tv\/directory\/category\/test-game\)/);
+  assert.match(getWhereToWatch({ ...emote, channels: [] }), /w kategorii: \[Test Game\]\(https:\/\/www\.twitch\.tv\/directory\/category\/test-game\?filter=drops\)/);
 });
 
 test("links every allowed channel instead of truncating the list", () => {
@@ -175,9 +175,10 @@ test("links every allowed channel instead of truncating the list", () => {
     name: `channel${index + 1}`,
     display_name: `Channel ${index + 1}`
   }));
-  const location = getWhereToWatch({ channels });
-  assert.equal((location.match(/\]\(https:\/\/www\.twitch\.tv\//g) || []).length, 40);
+  const location = getWhereToWatch({ channels, gameSlug: "test-game", gameName: "Test Game" });
+  assert.equal((location.match(/\]\(https:\/\/www\.twitch\.tv\//g) || []).length, 41);
   assert.match(location, /Channel 40/);
+  assert.match(location, /directory\/category\/test-game\?filter=drops/);
   assert.doesNotMatch(location, /i jeszcze/);
 });
 

@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { EmbedBuilder } = require("discord.js");
+const { isSignificantExtension } = require("./renewal");
 
 const CHANNEL_ID = process.env.BUNDLE_CHANNEL_ID || "1531609869327667210";
 const ROLE_ID = "1371122206670852146";
@@ -170,9 +171,7 @@ async function getBundleEndDateFromPage(url) {
 }
 
 function isBundleExtension(previousEndDate, currentEndDate) {
-  const previousEnd = Date.parse(previousEndDate || "");
-  const currentEnd = Date.parse(currentEndDate || "");
-  return Number.isFinite(previousEnd) && Number.isFinite(currentEnd) && currentEnd > previousEnd;
+  return isSignificantExtension(previousEndDate, currentEndDate);
 }
 
 function pruneInactiveHumbleBundles(savedData, currentLinks, saveData) {

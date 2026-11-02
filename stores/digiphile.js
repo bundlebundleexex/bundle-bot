@@ -1,6 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const { EmbedBuilder } = require("discord.js");
+const { isSignificantExtension } = require("./renewal");
 
 const CHANNEL_ID = process.env.BUNDLE_CHANNEL_ID || "1531609869327667210";
 const ROLE_ID = "1371122206670852146";
@@ -196,9 +197,7 @@ function getCollectionEndDate($, html) {
 }
 
 function isExtendedEndDate(previousEndDate, currentEndDate) {
-  const previous = Date.parse(previousEndDate || "");
-  const current = Date.parse(currentEndDate || "");
-  return Number.isFinite(previous) && Number.isFinite(current) && current > previous;
+  return isSignificantExtension(previousEndDate, currentEndDate);
 }
 
 function formatDate(value) {
@@ -355,10 +354,12 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
           continue;
         }
         if (previousEndDate && !extension) {
-          if (endDate) savedData.digiphileCollectionExpiries[url] = { endAt: endDate };
-          if (!wasAnnounced) savedData.digiphileCollections.push(url);
-          trimData(savedData);
-          saveData();
+          if (!wasAnnounced) {
+            if (endDate) savedData.digiphileCollectionExpiries[url] = { endAt: endDate };
+            savedData.digiphileCollections.push(url);
+            trimData(savedData);
+            saveData();
+          }
           continue;
         }
         if (wasAnnounced && !extension) continue;

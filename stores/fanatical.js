@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { EmbedBuilder } = require("discord.js");
+const { isSignificantExtension } = require("./renewal");
 
 const CHANNEL_ID = process.env.BUNDLE_CHANNEL_ID || "1531609869327667210";
 const ROLE_ID = "1371122206670852146";
@@ -223,8 +224,10 @@ function pruneInactiveFanaticalBundles(savedData, currentKeys, saveData) {
     return;
   }
 
+  const activeSlugs = new Set([...currentKeys].map(key => String(key).split(":")[0]));
   const previous = savedData.fanaticalBundles.map(String);
-  const next = [...new Set(previous)].filter(key => currentKeys.has(key));
+  // Keep prior end-date keys for active slugs so renewal checks have a stable baseline.
+  const next = [...new Set(previous)].filter(key => activeSlugs.has(key.split(":")[0]));
 
   if (
     previous.length !== next.length ||
@@ -315,6 +318,17 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
         continue;
       }
 
+      const previousEndDate = findPreviousEndDate(known, bundle.slug);
+      const currentEndDate = getEndDateKey(bundle);
+      if (
+        previousEndDate &&
+        !isSignificantExtension(previousEndDate, currentEndDate)
+      ) {
+        // Keep the old baseline so repeated small date adjustments accumulate.
+        duplicates++;
+        continue;
+      }
+
       fresh.push({ ...item, isRenewal: hasSeenBundle(known, bundle.slug) });
       queuedKeys.add(bundleKey);
     }
@@ -341,7 +355,7 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
         item.isRenewal &&
         previousEndDate &&
         endDate !== "unknown-end" &&
-        Date.parse(endDate) > Date.parse(previousEndDate)
+        isSignificantExtension(previousEndDate, endDate)
       );
 
       try {
@@ -420,3 +434,4 @@ module.exports.hasLegacyBundleKey = hasLegacyBundleKey;
 module.exports.findPreviousEndDate = findPreviousEndDate;
 module.exports.parseFanaticalDate = parseFanaticalDate;
 module.exports.getEndDateKey = getEndDateKey;
+module.exports.pruneInactiveFanaticalBundles = pruneInactiveFanaticalBundles;

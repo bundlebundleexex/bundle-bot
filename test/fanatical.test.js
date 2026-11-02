@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { getBundleKey, isPermanentlyBlocked, hasSeenBundle, hasLegacyBundleKey, findPreviousEndDate } = require("../stores/fanatical");
+const { getBundleKey, isPermanentlyBlocked, hasSeenBundle, hasLegacyBundleKey, findPreviousEndDate, pruneInactiveFanaticalBundles } = require("../stores/fanatical");
 
 test("permanently blocks the two Fanatical bundles requested", () => {
   assert.equal(isPermanentlyBlocked({ slug: "batman-arkham-collection", name: "Batman: Arkham Collection" }), true);
@@ -28,5 +28,15 @@ test("reads the last known end date for a Fanatical bundle", () => {
     "some-bundle:2026-10-01T10:00:00Z:2026-10-17T10:00:00Z"
   ]);
   assert.equal(findPreviousEndDate(history, "some-bundle"), "2026-10-17T10:00:00Z");
+});
+
+test("keeps prior Fanatical end-date history while a bundle slug remains active", () => {
+  const previousDate = "some-bundle:2026-10-01T10:00:00Z:2026-10-10T10:00:00Z";
+  const inactive = "inactive-bundle:2026-10-01T10:00:00Z:2026-10-10T10:00:00Z";
+  const savedData = { fanaticalBundles: [previousDate, inactive] };
+  pruneInactiveFanaticalBundles(savedData, new Set([
+    "some-bundle:2026-10-01T10:00:00Z:2026-10-11T10:00:00Z"
+  ]), () => {});
+  assert.deepEqual(savedData.fanaticalBundles, [previousDate]);
 });
 

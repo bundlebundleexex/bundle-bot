@@ -1,6 +1,7 @@
 const axios = require("axios");
 
 const cheerio = require("cheerio");
+const { isSignificantExtension } = require("./renewal");
 
 const {
   EmbedBuilder
@@ -1043,13 +1044,7 @@ module.exports.check =
 
           const wasAnnounced = known.has(url);
           const previousEndAt = savedData.gmgBundleExpiries[url]?.endAt || null;
-          const previousEndMs = Date.parse(previousEndAt || "");
-          const observedEndMs = Date.parse(observedEndAt || "");
-          const extension = Boolean(
-            Number.isFinite(previousEndMs) &&
-            Number.isFinite(observedEndMs) &&
-            observedEndMs > previousEndMs + 2 * 60 * 1000
-          );
+          const extension = isSignificantExtension(previousEndAt, observedEndAt);
 
           if (wasAnnounced && !previousEndAt) {
             if (observedEndAt) {
@@ -1060,10 +1055,10 @@ module.exports.check =
           }
 
           if (previousEndAt && !extension) {
-            if (observedEndAt) {
-              savedData.gmgBundleExpiries[url] = { endAt: observedEndAt, updatedAt: new Date().toISOString() };
-            }
             if (!wasAnnounced) {
+              if (observedEndAt) {
+                savedData.gmgBundleExpiries[url] = { endAt: observedEndAt, updatedAt: new Date().toISOString() };
+              }
               savedData.gmgBundles.push(url);
               savedData.gmgBundles = [...new Set(savedData.gmgBundles)].slice(-500);
               known.add(url);

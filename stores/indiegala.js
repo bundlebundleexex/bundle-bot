@@ -1,6 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const { EmbedBuilder } = require("discord.js");
+const { isSignificantExtension } = require("./renewal");
 
 const CHANNEL_ID = process.env.BUNDLE_CHANNEL_ID || "1531609869327667210";
 // ROLE_ID już niepotrzebne, bo nie pingujemy
@@ -170,11 +171,7 @@ module.exports.check = async (client, savedData, saveData) => {
         ? null
         : new Date(Date.now() + remainingMs).toISOString();
       const previousEndAt = savedData.indiegalaBundleExpiries[bundle.link]?.endAt || null;
-      const previousEnd = Date.parse(previousEndAt || "");
-      const observedEnd = Date.parse(observedEndAt || "");
-      const extension = Number.isFinite(previousEnd) &&
-        Number.isFinite(observedEnd) &&
-        observedEnd > previousEnd + 2 * 60 * 1000;
+      const extension = isSignificantExtension(previousEndAt, observedEndAt);
 
       if (wasAnnounced && !previousEndAt) {
         if (observedEndAt) {
@@ -184,9 +181,11 @@ module.exports.check = async (client, savedData, saveData) => {
         continue;
       }
       if (previousEndAt && !extension) {
-        if (observedEndAt) savedData.indiegalaBundleExpiries[bundle.link] = { endAt: observedEndAt };
-        if (!wasAnnounced) savedData.indiegalaBundles.push(bundle.link);
-        saveData();
+        if (!wasAnnounced) {
+          if (observedEndAt) savedData.indiegalaBundleExpiries[bundle.link] = { endAt: observedEndAt };
+          savedData.indiegalaBundles.push(bundle.link);
+          saveData();
+        }
         continue;
       }
       if (wasAnnounced && !extension) continue;

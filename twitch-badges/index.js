@@ -150,6 +150,9 @@ function getAccessDescription(reward) {
 }
 
 function getWhereToWatch(reward) {
+  const categoryUrl = reward.gameSlug
+    ? `https://www.twitch.tv/directory/category/${encodeURIComponent(reward.gameSlug)}?filter=drops`
+    : null;
   const channels = (Array.isArray(reward.channels) ? reward.channels : [])
     .filter(channel => channel?.name);
   if (channels.length) {
@@ -158,11 +161,13 @@ function getWhereToWatch(reward) {
       return `[${label}](https://www.twitch.tv/${encodeURIComponent(channel.name)})`;
     });
     const label = channels.length === 1 ? "na kanale:" : "na kanałach:";
-    return `${label} ${links.join(", ")}`;
+    const categoryFilter = categoryUrl
+      ? ` · [kanały z włączonymi dropami](${categoryUrl})`
+      : "";
+    return `${label} ${links.join(", ")}${categoryFilter}`;
   }
 
-  if (reward.gameSlug) {
-    const categoryUrl = `https://www.twitch.tv/directory/category/${encodeURIComponent(reward.gameSlug)}`;
+  if (categoryUrl) {
     return `w kategorii: [${reward.gameName}](${categoryUrl})`;
   }
 
