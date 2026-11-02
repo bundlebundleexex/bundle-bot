@@ -8,6 +8,7 @@ const {
   getWhereToWatch,
   validateCampaignSnapshot,
   makeRewardEmbed,
+  makeRewardContent,
   check,
   sendReward,
   refreshRewardMessage,
@@ -101,7 +102,7 @@ test("formats watch and paid-sub requirements clearly", () => {
   assert.match(getAccessDescription(badge), /Płatny — za zakup subskrypcji/);
   assert.doesNotMatch(getAccessDescription(badge), /Prime/);
   badge.relatedDrops = [];
-  assert.match(makeRewardEmbed(badge).data.description, /\*\*Sub z Prime się nie liczy\.\*\*/);
+  assert.match(makeRewardContent(badge, "started").content, /\*\*Sub z Prime się nie liczy\.\*\*/);
 });
 
 test("prefers detailed Twitch campaign data when summaries disagree", () => {
@@ -149,7 +150,7 @@ test("includes other active and scheduled rewards of the same category as a curi
     campaignStart: new Date(Date.now() - 1000).toISOString(),
     campaignEnd: new Date(Date.now() + 7200000).toISOString()
   }];
-  const description = makeRewardEmbed(emote).data.description;
+  const description = makeRewardContent(emote, "started").content;
   assert.doesNotMatch(description, /\*\*Kampania:\*\*/);
   assert.match(description, /\*\*Kategoria:\*\* \[Test Game\]\(https:\/\/www\.twitch\.tv\/directory\/category\/test-game\?filter=drops\)/);
   assert.match(description, /Dodatkowo dla tej kategorii/);
@@ -166,7 +167,7 @@ test("links specific channels by name and category-wide drops to the Twitch cate
   const [emote] = flattenCampaignRewards(campaignFixture());
   assert.equal(
     getWhereToWatch(emote),
-    "na kanale: [ChannelOne](https://www.twitch.tv/channelone) · [kanały z włączonymi dropami](https://www.twitch.tv/directory/category/test-game?filter=drops)"
+    "na kanale: [ChannelOne](https://twitch.tv/channelone) · [kanały z włączonymi dropami](https://www.twitch.tv/directory/category/test-game?filter=drops)"
   );
   assert.match(getWhereToWatch({ ...emote, channels: [] }), /w kategorii: \[Test Game\]\(https:\/\/www\.twitch\.tv\/directory\/category\/test-game\?filter=drops\)/);
 });
@@ -175,9 +176,9 @@ test("builds a Twitch category Drops link from its name when the API omits the s
   const campaign = campaignFixture();
   campaign.game = { twitch_id: "game-vault", display_name: "Vaultbreakers" };
   const [reward] = flattenCampaignRewards(campaign);
-  const embed = makeRewardEmbed(reward).data;
+  const { content } = makeRewardContent(reward, "started");
   assert.equal(reward.gameSlug, "vaultbreakers");
-  assert.ok(embed.description.includes(
+  assert.ok(content.includes(
     "[Vaultbreakers](https://www.twitch.tv/directory/category/vaultbreakers?filter=drops)"
   ));
 });
@@ -188,7 +189,7 @@ test("links every allowed channel instead of truncating the list", () => {
     display_name: `Channel ${index + 1}`
   }));
   const location = getWhereToWatch({ channels, gameSlug: "test-game", gameName: "Test Game" });
-  assert.equal((location.match(/\]\(https:\/\/www\.twitch\.tv\//g) || []).length, 41);
+  assert.equal((location.match(/\]\(https:\/\/twitch\.tv\//g) || []).length, 40);
   assert.match(location, /Channel 40/);
   assert.match(location, /directory\/category\/test-game\?filter=drops/);
   assert.doesNotMatch(location, /i jeszcze/);
@@ -212,11 +213,11 @@ test("uses stable phase-specific Discord nonces for duplicate-send protection", 
   assert.equal(payloads[0].enforceNonce, true);
 });
 
-test("keeps every allowed Twitch channel in one Discord post without extra role pings", async () => {
+test("keeps every channel linked in one Discord post within Discord limits", async () => {
   const [reward] = flattenCampaignRewards(campaignFixture());
-  reward.channels = Array.from({ length: 240 }, (_, index) => ({
-    name: `channel${index + 1}`,
-    display_name: `Channel ${index + 1}`
+  reward.channels = Array.from({ length: 138 }, (_, index) => ({
+    name: `channelname${index + 1}`,
+    display_name: `Channel Name ${index + 1}`
   }));
   const payloads = [];
   const channel = { send: async payload => {
@@ -227,14 +228,21 @@ test("keeps every allowed Twitch channel in one Discord post without extra role 
   await sendReward(channel, reward, "started");
   assert.equal(payloads.length, 1);
   assert.equal(payloads[0].embeds.length, 1);
-  const linkedChannels = payloads[0].embeds[0].data.fields
+  const linkedChannels = `${payloads[0].content}\n${payloads[0].embeds[0].data.fields
     .map(field => field.value)
-    .join("\n");
-  for (let index = 1; index <= 240; index++) {
-    assert.ok(linkedChannels.includes(`Channel ${index}`));
+    .join("\n")}`;
+  for (let index = 1; index <= 138; index++) {
+    assert.ok(linkedChannels.includes(
+      `[Channel Name ${index}](https://twitch.tv/channelname${index})`
+    ));
   }
   assert.equal(payloads.filter(payload => payload.content.includes("<@&")).length, 1);
   assert.ok(payloads[0].embeds[0].data.fields.length < 25);
+  assert.ok(payloads[0].content.length <= 2000);
+  const embed = payloads[0].embeds[0].data;
+  const embedLength = (embed.title || "").length + (embed.description || "").length +
+    (embed.footer?.text || "").length + embed.fields.reduce((total, field) => total + field.name.length + field.value.length, 0);
+  assert.ok(embedLength <= 6000, `embed length ${embedLength} is under Discord's 6000 character limit`);
 });
 
 test("uses the requested medal icon and edits expired posts without pinging", async () => {
@@ -275,7 +283,7 @@ test("replaces old Twitch channel continuation posts with the single-message lay
   assert.equal(await refreshRewardMessage(channel, state, reward), true);
   assert.deepEqual(deleted, ["old-continuation"]);
   assert.deepEqual(state.messageIds, ["main"]);
-  assert.equal(state.messageFormatVersion, 2);
+  assert.equal(state.messageFormatVersion, 3);
 });
 
 test("sends each qualifying badge/emote as a separate message and deduplicates", async t => {
@@ -323,10 +331,11 @@ test("sends each qualifying badge/emote as a separate message and deduplicates",
   assert.doesNotMatch(sent[0].content, /<@&/);
   assert.match(sent[1].content, /NADCHODZĄCY BADGE TWITCH/);
   assert.deepEqual(sent[0].allowedMentions.roles, []);
-  assert.match(sent[1].embeds[0].data.description, /Sub z Prime się nie liczy/);
-  assert.match(sent[1].embeds[0].data.description, /Płatny — za zakup subskrypcji na kanale biorącym udział/);
-  assert.ok(sent[0].embeds[0].data.fields.some(field => field.value.includes("ChannelOne")));
-  assert.doesNotMatch(sent[1].embeds[0].data.description, /Organizator|źródło|badge’a\]\(/i);
+  assert.match(sent[1].content, /Sub z Prime się nie liczy/);
+  assert.match(sent[1].content, /Płatny — za zakup subskrypcji na kanale biorącym udział/);
+  const firstRewardLinks = `${sent[0].content}\n${sent[0].embeds[0].data.fields.map(field => field.value).join("\n")}`;
+  assert.ok(firstRewardLinks.includes("[ChannelOne](https://twitch.tv/channelone)"));
+  assert.doesNotMatch(sent[1].content, /Organizator|źródło|badge’a\]\(/i);
   assert.equal(sent[1].embeds[0].data.footer.text, "Twitch Badge");
 
   fixture.start_at = new Date(Date.now() - 60000).toISOString();

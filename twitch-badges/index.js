@@ -167,10 +167,7 @@ function getWhereToWatch(reward) {
   const channels = (Array.isArray(reward.channels) ? reward.channels : [])
     .filter(channel => channel?.name);
   if (channels.length) {
-    const links = channels.map(channel => {
-      const label = channel.display_name || channel.name;
-      return `[${label}](https://www.twitch.tv/${encodeURIComponent(channel.name)})`;
-    });
+    const links = getAllowedChannelLinks(reward);
     const label = channels.length === 1 ? "na kanale:" : "na kanałach:";
     const categoryFilter = categoryUrl
       ? ` · [kanały z włączonymi dropami](${categoryUrl})`
@@ -205,11 +202,58 @@ function getAllowedChannelNames(reward) {
     .map(channel => String(channel.display_name || channel.name).replace(/[\r\n,]/g, " "));
 }
 
-function splitChannelNames(reward, maxLength = 1000) {
-  const names = getAllowedChannelNames(reward);
+function getAccessLine(reward) {
+  const categoryUrl = getTwitchCategoryDropsUrl(reward);
+  const channelCount = getAllowedChannelNames(reward).length;
+  const location = channelCount
+    ? `${channelCount === 1 ? "na kanale biorącym udział" : "na kanałach biorących udział"}${categoryUrl ? ` · [kanały z włączonymi dropami](${categoryUrl})` : ""}`
+    : categoryUrl
+      ? `w kategorii: [${reward.gameName}](${categoryUrl})`
+      : `w kategorii: ${reward.gameName}`;
+  if (reward.subs > 0) {
+    const subs = reward.subs === 1 ? "zakup subskrypcji" : `zakup ${reward.subs} subskrypcji`;
+    const extraWatch = reward.minutes > 0 ? ` oraz oglądanie przez ${reward.minutes} min` : "";
+    return `**Dostęp:** Płatny — za ${subs}${extraWatch} ${location}`;
+  }
+  return `**Dostęp:** Darmowy — za oglądanie przez ${reward.minutes} min ${location}`;
+}
+
+function getAllowedChannelLinks(reward) {
+  const seen = new Set();
+  return (Array.isArray(reward.channels) ? reward.channels : [])
+    .filter(channel => channel?.name)
+    .filter(channel => {
+      const key = String(channel.name).toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .map(channel => {
+      const label = String(channel.display_name || channel.name).replace(/[\[\]]/g, "");
+      return `[${label}](https://twitch.tv/${encodeURIComponent(channel.name)})`;
+    });
+}
+
+function splitLinks(links, maxLength = 1000) {
   const chunks = [];
   let current = "";
-  for (const name of names) {
+  for (const link of links) {
+    const next = current ? `${current}, ${link}` : link;
+    if (next.length > maxLength && current) {
+      chunks.push(current);
+      current = link;
+    } else {
+      current = next;
+    }
+  }
+  if (current) chunks.push(current);
+  return chunks;
+}
+
+function splitChannelNames(reward, maxLength = 1000) {
+  const chunks = [];
+  let current = "";
+  for (const name of getAllowedChannelNames(reward)) {
     const next = current ? `${current}, ${name}` : name;
     if (next.length > maxLength && current) {
       chunks.push(current);
@@ -222,23 +266,54 @@ function splitChannelNames(reward, maxLength = 1000) {
   return chunks;
 }
 
-function getAccessLine(reward) {
-  const categoryUrl = getTwitchCategoryDropsUrl(reward);
-  const channelCount = getAllowedChannelNames(reward).length;
-  const location = channelCount
-    ? `${channelCount === 1 ? "na kanale biorącym udział" : "na kanałach biorących udział"} (pełna lista poniżej)${categoryUrl ? ` · [kanały z włączonymi dropami](${categoryUrl})` : ""}`
-    : categoryUrl
-      ? `w kategorii: [${reward.gameName}](${categoryUrl})`
-      : `w kategorii: ${reward.gameName}`;
-  if (reward.subs > 0) {
-    const subs = reward.subs === 1 ? "zakup subskrypcji" : `zakup ${reward.subs} subskrypcji`;
-    const extraWatch = reward.minutes > 0 ? ` oraz oglądanie przez ${reward.minutes} min` : "";
-    return `**Dostęp:** Płatny — za ${subs}${extraWatch} ${location}`;
-  }
-  return `**Dostęp:** Darmowy — za oglądanie przez ${reward.minutes} min ${location}`;
+function getEmbedTextLength(embed) {
+  const data = embed.toJSON();
+  return (data.title || "").length + (data.description || "").length +
+    (data.footer?.text || "").length + (data.author?.name || "").length +
+    (data.fields || []).reduce((total, field) => total + field.name.length + field.value.length, 0);
 }
 
-function makeRewardEmbed(reward) {
+function makeRewardEmbed(reward, remainingChannelLinks = [], usePlainChannelNames = false) {
+  const embed = new EmbedBuilder()
+    .setColor(0x9146ff)
+    .setTitle(`${reward.type === "EMOTE" ? "😀" : "🎖️"} ${reward.name}`)
+    .setURL(reward.campaignUrl)
+    .setFooter({ text: "Twitch Badge" })
+    .setTimestamp();
+
+  if (reward.imageUrl) embed.setThumbnail(reward.imageUrl);
+  const channelChunks = splitLinks(remainingChannelLinks);
+  if (channelChunks.length) {
+    channelChunks.forEach((chunk, index) => embed.addFields({
+      name: "\u200b",
+      value: chunk,
+      inline: false
+    }));
+  }
+  if (usePlainChannelNames) {
+    splitChannelNames(reward).forEach((chunk, index) => embed.addFields({
+      name: "\u200b",
+      value: chunk,
+      inline: false
+    }));
+  }
+  return embed;
+}
+
+function makeRewardContent(reward, phase) {
+  const isScheduled = phase === "scheduled";
+  const roleId = reward.subs > 0 ? PAID_ROLE_ID : FREE_ROLE_ID;
+  const scheduledHeadline = reward.type === "EMOTE"
+    ? "NADCHODZĄCA EMOTKA TWITCH"
+    : "NADCHODZĄCY BADGE TWITCH";
+  const liveHeadline = reward.type === "EMOTE"
+    ? "EMOTKA TWITCH DOSTĘPNA DO ZDOBYCIA!"
+    : "BADGE TWITCH DOSTĘPNY DO ZDOBYCIA!";
+  const headline = isScheduled
+    ? `🕒 **${scheduledHeadline}**`
+    : `${reward.type === "EMOTE" ? "😀" : "🎖️"} **${liveHeadline}** <@&${roleId}>`;
+  const allChannelLinks = getAllowedChannelLinks(reward);
+  const categoryUrl = getTwitchCategoryDropsUrl(reward);
   const extraDrops = (reward.relatedDrops || [])
     .filter(item => item.key !== reward.key && EXTRA_GAME_REWARD_TYPES.has(item.type));
   const related = extraDrops
@@ -246,10 +321,9 @@ function makeRewardEmbed(reward) {
     .map(item => `• **${item.name}** (${getRewardTypeLabel(item.type)}) — ${Date.parse(item.campaignStart) > Date.now() ? `zaplanowane od ${formatDate(item.campaignStart)}, ` : ""}${item.subs > 0
       ? `sub${item.subs > 1 ? ` x${item.subs}` : ""}${item.minutes > 0 ? ` + ${item.minutes} min oglądania` : ""}`
       : `${item.minutes} min oglądania`}`);
-  const description = [
-    `**Kategoria:** ${getTwitchCategoryDropsUrl(reward)
-      ? `[${reward.gameName}](${getTwitchCategoryDropsUrl(reward)})`
-      : reward.gameName}`,
+  const content = [
+    headline,
+    `**Kategoria:** ${categoryUrl ? `[${reward.gameName}](${categoryUrl})` : reward.gameName}`,
     getAccessLine(reward),
     `**Start:** ${formatDate(reward.campaignStart)}`,
     `**Koniec:** ${formatDate(reward.campaignEnd)}`,
@@ -259,45 +333,39 @@ function makeRewardEmbed(reward) {
       : null
   ].filter(Boolean).join("\n");
 
-  const embed = new EmbedBuilder()
-    .setColor(0x9146ff)
-    .setTitle(`${reward.type === "EMOTE" ? "😀" : "🎖️"} ${reward.name}`)
-    .setURL(reward.campaignUrl)
-    .setDescription(description)
-    .setFooter({ text: "Twitch Badge" })
-    .setTimestamp();
-
-  if (reward.imageUrl) embed.setThumbnail(reward.imageUrl);
-  const channelChunks = splitChannelNames(reward);
-  if (channelChunks.length) {
-    channelChunks.forEach((chunk, index) => embed.addFields({
-      name: index === 0 ? "Kanały biorące udział" : "Kanały (ciąg dalszy)",
-      value: chunk,
-      inline: false
-    }));
+  for (let inlineCount = 0; inlineCount <= allChannelLinks.length; inlineCount++) {
+    const candidateContent = inlineCount
+      ? `${content}\n\n**Kanały biorące udział:** ${allChannelLinks.slice(0, inlineCount).join(", ")}`
+      : content;
+    if (candidateContent.length > 2000) break;
+    const candidateEmbed = makeRewardEmbed(reward, allChannelLinks.slice(inlineCount));
+    if (getEmbedTextLength(candidateEmbed) <= 6000) {
+      return { content: candidateContent, embed: candidateEmbed };
+    }
   }
-  return embed;
+
+  const fallbackEmbed = makeRewardEmbed(reward, [], true);
+  if (getEmbedTextLength(fallbackEmbed) <= 6000) {
+    return { content, embed: fallbackEmbed };
+  }
+  throw new Error(`lista kanałów kampanii ${reward.name} przekracza limity pojedynczej wiadomości Discorda`);
 }
 
 async function sendReward(channel, reward, phase) {
   const isScheduled = phase === "scheduled";
   const roleId = reward.subs > 0 ? PAID_ROLE_ID : FREE_ROLE_ID;
-  const scheduledHeadline = reward.type === "EMOTE"
-    ? "NADCHODZĄCA EMOTKA TWITCH"
-    : "NADCHODZĄCY BADGE TWITCH";
-  const liveHeadline = reward.type === "EMOTE"
-    ? "EMOTKA TWITCH DOSTĘPNA DO ZDOBYCIA!"
-    : "BADGE TWITCH DOSTĘPNY DO ZDOBYCIA!";
   const nonce = crypto
     .createHash("sha256")
     .update(`${reward.key}:${phase}`)
     .digest("hex")
     .slice(0, 25);
+  const { content, embed } = makeRewardContent(reward, phase);
+  if (getEmbedTextLength(embed) > 6000) {
+    throw new Error(`lista kanałów kampanii ${reward.name} przekracza limit pojedynczej wiadomości Discorda`);
+  }
   return channel.send({
-    content: isScheduled
-      ? `🕒 **${scheduledHeadline}**`
-      : `${reward.type === "EMOTE" ? "😀" : "🎖️"} **${liveHeadline}** <@&${roleId}>`,
-    embeds: [makeRewardEmbed(reward)],
+    content,
+    embeds: [embed],
     nonce,
     enforceNonce: true,
     allowedMentions: {
@@ -311,7 +379,8 @@ async function refreshRewardMessage(channel, state, reward) {
   if (!state?.messageId || !channel?.messages?.fetch) return false;
   try {
     const message = await channel.messages.fetch(state.messageId);
-    await message.edit({ embeds: [makeRewardEmbed(reward)], allowedMentions: { parse: [] } });
+    const { content, embed } = makeRewardContent(reward, state.status);
+    await message.edit({ content, embeds: [embed], allowedMentions: { parse: [] } });
     for (const id of new Set(state.messageIds || [])) {
       if (!id || id === state.messageId) continue;
       try {
@@ -323,7 +392,7 @@ async function refreshRewardMessage(channel, state, reward) {
     }
     state.reward = reward;
     state.messageIds = [state.messageId];
-    state.messageFormatVersion = 2;
+    state.messageFormatVersion = 3;
     return true;
   } catch (err) {
     console.log(`Twitch Drops: nie udało się skrócić wiadomości ${reward.name}: ${err.message}`);
@@ -489,12 +558,12 @@ module.exports.check = async (client, savedData, saveData) => {
               reward,
               messageId: message?.id || null,
               messageIds: message?.id ? [message.id] : [],
-              messageFormatVersion: 2
+              messageFormatVersion: 3
             };
             saveData();
             sentCount++;
           } else if (existing.status === "scheduled") {
-            if (existing.messageFormatVersion !== 2 ||
+            if (existing.messageFormatVersion !== 3 ||
                 JSON.stringify(existing.reward || {}) !== JSON.stringify(reward)) {
               await refreshRewardMessage(channel, existing, reward);
             }
@@ -506,7 +575,7 @@ module.exports.check = async (client, savedData, saveData) => {
         }
 
         if (existing?.status === "started") {
-          if (existing.messageFormatVersion !== 2 ||
+          if (existing.messageFormatVersion !== 3 ||
               JSON.stringify(existing.reward || {}) !== JSON.stringify(reward)) {
             await refreshRewardMessage(channel, existing, reward);
             saveData();
@@ -524,7 +593,7 @@ module.exports.check = async (client, savedData, saveData) => {
             reward,
             messageId: message?.id || null,
             messageIds: message?.id ? [message.id] : [],
-            messageFormatVersion: 2
+            messageFormatVersion: 3
           };
           if (!savedData.twitchDropRewardIds.includes(reward.key)) {
             savedData.twitchDropRewardIds.push(reward.key);
@@ -539,7 +608,7 @@ module.exports.check = async (client, savedData, saveData) => {
 
     for (const state of Object.values(rewardStates)) {
       if (!["started", "scheduled"].includes(state.status) || !state.reward ||
-          state.messageFormatVersion === 2) continue;
+          state.messageFormatVersion === 3) continue;
       if (await refreshRewardMessage(channel, state, state.reward)) saveData();
     }
 
@@ -556,7 +625,7 @@ module.exports.check = async (client, savedData, saveData) => {
       state.status = "started";
       state.messageId = message?.id || null;
       state.messageIds = message?.id ? [message.id] : [];
-      state.messageFormatVersion = 2;
+      state.messageFormatVersion = 3;
       if (!savedData.twitchDropRewardIds.includes(key)) {
         savedData.twitchDropRewardIds.push(key);
       }
@@ -609,6 +678,7 @@ module.exports.flattenCampaignRewards = flattenCampaignRewards;
 module.exports.flattenCampaignBenefits = flattenCampaignBenefits;
 module.exports.getAccessDescription = getAccessDescription;
 module.exports.getWhereToWatch = getWhereToWatch;
+module.exports.makeRewardContent = makeRewardContent;
 module.exports.validateCampaignSnapshot = validateCampaignSnapshot;
 module.exports.makeRewardEmbed = makeRewardEmbed;
 module.exports.mapWithConcurrency = mapWithConcurrency;
