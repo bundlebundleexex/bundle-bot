@@ -102,7 +102,7 @@ test("formats watch and paid-sub requirements clearly", () => {
   assert.match(getAccessDescription(badge), /Płatny — za zakup subskrypcji/);
   assert.doesNotMatch(getAccessDescription(badge), /Prime/);
   badge.relatedDrops = [];
-  assert.match(makeRewardContent(badge, "started").content, /\*\*Sub z Prime się nie liczy\.\*\*/);
+  assert.match(makeRewardContent(badge, "started").embed.data.description, /\*\*Sub z Prime się nie liczy\.\*\*/);
 });
 
 test("prefers detailed Twitch campaign data when summaries disagree", () => {
@@ -150,7 +150,7 @@ test("includes other active and scheduled rewards of the same category as a curi
     campaignStart: new Date(Date.now() - 1000).toISOString(),
     campaignEnd: new Date(Date.now() + 7200000).toISOString()
   }];
-  const description = makeRewardContent(emote, "started").content;
+  const description = makeRewardContent(emote, "started").embed.data.description;
   assert.doesNotMatch(description, /\*\*Kampania:\*\*/);
   assert.match(description, /\*\*Kategoria:\*\* \[Test Game\]\(https:\/\/www\.twitch\.tv\/directory\/category\/test-game\?filter=drops\)/);
   assert.match(description, /Dodatkowo dla tej kategorii/);
@@ -176,9 +176,9 @@ test("builds a Twitch category Drops link from its name when the API omits the s
   const campaign = campaignFixture();
   campaign.game = { twitch_id: "game-vault", display_name: "Vaultbreakers" };
   const [reward] = flattenCampaignRewards(campaign);
-  const { content } = makeRewardContent(reward, "started");
+  const { embed } = makeRewardContent(reward, "started");
   assert.equal(reward.gameSlug, "vaultbreakers");
-  assert.ok(content.includes(
+  assert.ok(embed.data.description.includes(
     "[Vaultbreakers](https://www.twitch.tv/directory/category/vaultbreakers?filter=drops)"
   ));
 });
@@ -229,6 +229,12 @@ test("shows 25 linked channels in the reward card and links to the active-drop d
   assert.equal(payloads.length, 1);
   assert.equal(payloads[0].embeds.length, 1);
   const embed = payloads[0].embeds[0].data;
+  assert.match(payloads[0].content, /TWITCH DOSTĘPNA DO ZDOBYCIA/);
+  assert.doesNotMatch(payloads[0].content, /Kategoria|Dostęp|Start|Koniec/);
+  assert.match(embed.description, /\*\*Kategoria:\*\*/);
+  assert.match(embed.description, /\*\*Dostęp:\*\*/);
+  assert.match(embed.description, /\*\*Start:\*\*/);
+  assert.match(embed.description, /\*\*Koniec:\*\*/);
   const channelDescription = embed.description || "";
   for (let index = 1; index <= 25; index++) {
     assert.ok(channelDescription.includes(
@@ -283,7 +289,7 @@ test("replaces old Twitch channel continuation posts with the single-message lay
   assert.equal(await refreshRewardMessage(channel, state, reward), true);
   assert.deepEqual(deleted, ["old-continuation"]);
   assert.deepEqual(state.messageIds, ["main"]);
-  assert.equal(state.messageFormatVersion, 4);
+  assert.equal(state.messageFormatVersion, 5);
 });
 
 test("sends each qualifying badge/emote as a separate message and deduplicates", async t => {
@@ -331,8 +337,8 @@ test("sends each qualifying badge/emote as a separate message and deduplicates",
   assert.doesNotMatch(sent[0].content, /<@&/);
   assert.match(sent[1].content, /NADCHODZĄCY BADGE TWITCH/);
   assert.deepEqual(sent[0].allowedMentions.roles, []);
-  assert.match(sent[1].content, /Sub z Prime się nie liczy/);
-  assert.match(sent[1].content, /Płatny — za zakup subskrypcji na kanale biorącym udział/);
+  assert.match(sent[1].embeds[0].data.description, /Sub z Prime się nie liczy/);
+  assert.match(sent[1].embeds[0].data.description, /Płatny — za zakup subskrypcji na kanale biorącym udział/);
   const firstEmbed = sent[0].embeds[0].data;
   const firstRewardLinks = `${sent[0].content}\n${firstEmbed.description || ""}\n${(firstEmbed.fields || []).map(field => field.value).join("\n")}`;
   assert.ok(firstRewardLinks.includes("[ChannelOne](https://twitch.tv/channelone)"));

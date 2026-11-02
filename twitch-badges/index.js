@@ -7,7 +7,7 @@ const API_ORIGIN = "https://ttvdrops.lovinator.space";
 const CHANNEL_ID = "1545521319284838602";
 const FREE_ROLE_ID = process.env.TWITCH_BADGE_FREE_ROLE_ID?.trim() || "1545400230504046602";
 const PAID_ROLE_ID = process.env.TWITCH_BADGE_PAID_ROLE_ID?.trim() || "1545511812148236378";
-const REWARD_MESSAGE_FORMAT_VERSION = 4;
+const REWARD_MESSAGE_FORMAT_VERSION = 5;
 const PAGE_SIZE = 500;
 const DETAIL_CONCURRENCY = 10;
 const TARGET_TYPES = new Set(["BADGE", "EMOTE"]);
@@ -207,7 +207,7 @@ function getAccessLine(reward) {
   const categoryUrl = getTwitchCategoryDropsUrl(reward);
   const channelCount = getAllowedChannelNames(reward).length;
   const location = channelCount
-    ? `${channelCount === 1 ? "na kanale biorącym udział" : "na kanałach biorących udział"}${categoryUrl ? ` · [kanały z włączonymi dropami](${categoryUrl})` : ""}`
+    ? `${channelCount === 1 ? "na kanale biorącym udział" : "na kanałach biorących udział"} (lista poniżej)`
     : categoryUrl
       ? `w kategorii: [${reward.gameName}](${categoryUrl})`
       : `w kategorii: ${reward.gameName}`;
@@ -253,14 +253,36 @@ function makeRewardEmbed(reward) {
   if (reward.imageUrl) embed.setThumbnail(reward.imageUrl);
   const channelLinks = getAllowedChannelLinks(reward).slice(0, 25);
   const categoryUrl = getTwitchCategoryDropsUrl(reward);
-  const description = [];
+  const details = [
+    `**Kategoria:** ${categoryUrl ? `[${reward.gameName}](${categoryUrl})` : reward.gameName}`,
+    getAccessLine(reward),
+    `**Start:** ${formatDate(reward.campaignStart)}`,
+    `**Koniec:** ${formatDate(reward.campaignEnd)}`,
+    reward.subs > 0 ? "**Sub z Prime się nie liczy.**" : null
+  ].filter(Boolean);
+
+  const extraDrops = (reward.relatedDrops || [])
+    .filter(item => item.key !== reward.key && EXTRA_GAME_REWARD_TYPES.has(item.type));
+  const related = extraDrops.slice(0, 5).map(item => {
+    const timing = Date.parse(item.campaignStart) > Date.now()
+      ? `zaplanowane od ${formatDate(item.campaignStart)}, `
+      : "";
+    const requirement = item.subs > 0
+      ? `sub${item.subs > 1 ? ` x${item.subs}` : ""}${item.minutes > 0 ? ` + ${item.minutes} min oglądania` : ""}`
+      : `${item.minutes} min oglądania`;
+    return `• **${item.name}** (${getRewardTypeLabel(item.type)}) — ${timing}${requirement}`;
+  });
+  if (related.length) {
+    details.push(`**Dodatkowo dla tej kategorii:**\n${related.join("\n")}${extraDrops.length > 5 ? `\n…i jeszcze ${extraDrops.length - 5}` : ""}`);
+  }
+
   if (channelLinks.length) {
-    description.push(`**Kanały biorące udział:** ${channelLinks.join(", ")}`);
+    details.push(`**Kanały biorące udział:** ${channelLinks.join(", ")}`);
     if (categoryUrl) {
-      description.push(`[Zobacz streamerów nadających z aktywnymi dropami](${categoryUrl})`);
+      details.push(`[Zobacz streamerów nadających z aktywnymi dropami](${categoryUrl})`);
     }
   }
-  if (description.length) embed.setDescription(description.join("\n\n"));
+  embed.setDescription(details.join("\n"));
   return embed;
 }
 
@@ -276,25 +298,7 @@ function makeRewardContent(reward, phase) {
   const headline = isScheduled
     ? `🕒 **${scheduledHeadline}**`
     : `${reward.type === "EMOTE" ? "😀" : "🎖️"} **${liveHeadline}** <@&${roleId}>`;
-  const categoryUrl = getTwitchCategoryDropsUrl(reward);
-  const extraDrops = (reward.relatedDrops || [])
-    .filter(item => item.key !== reward.key && EXTRA_GAME_REWARD_TYPES.has(item.type));
-  const related = extraDrops
-    .slice(0, 5)
-    .map(item => `• **${item.name}** (${getRewardTypeLabel(item.type)}) — ${Date.parse(item.campaignStart) > Date.now() ? `zaplanowane od ${formatDate(item.campaignStart)}, ` : ""}${item.subs > 0
-      ? `sub${item.subs > 1 ? ` x${item.subs}` : ""}${item.minutes > 0 ? ` + ${item.minutes} min oglądania` : ""}`
-      : `${item.minutes} min oglądania`}`);
-  const content = [
-    headline,
-    `**Kategoria:** ${categoryUrl ? `[${reward.gameName}](${categoryUrl})` : reward.gameName}`,
-    getAccessLine(reward),
-    `**Start:** ${formatDate(reward.campaignStart)}`,
-    `**Koniec:** ${formatDate(reward.campaignEnd)}`,
-    reward.subs > 0 ? "**Sub z Prime się nie liczy.**" : null,
-    related.length
-      ? `\n**Dodatkowo dla tej kategorii:**\n${related.join("\n")}${extraDrops.length > 5 ? `\n…i jeszcze ${extraDrops.length - 5}` : ""}`
-      : null
-  ].filter(Boolean).join("\n");
+  const content = headline;
 
   const embed = makeRewardEmbed(reward);
   if (content.length > 2000 || getEmbedTextLength(embed) > 6000) {
