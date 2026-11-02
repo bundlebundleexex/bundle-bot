@@ -31,11 +31,10 @@ test("extracts only Kick badge/emote drops and watch duration", () => {
   assert.equal(rewards[0].minutes, 30);
   assert.equal(rewards[0].gameName, "League of Legends");
   const embedData = makeRewardEmbed(rewards[0]).data;
-  assert.equal(embedData.url, "https://kick.com/category/league-of-legends");
-  assert.equal(embedData.url.includes("/drops"), false);
+  assert.equal(embedData.url, "https://kick.com/category/league-of-legends/drops");
   const description = embedData.description;
   assert.match(description, /\*\*Kampania:\*\* Chat Emote - True Damage/);
-  assert.match(description, /\*\*Kategoria:\*\* \[League of Legends\]\(https:\/\/kick\.com\/category\/league-of-legends\)/);
+  assert.match(description, /\*\*Kategoria:\*\* \[League of Legends\]\(https:\/\/kick\.com\/category\/league-of-legends\/drops\)/);
   assert.match(description, /Darmowy — za oglądanie przez 30 min/);
   const channelField = makeRewardEmbed(rewards[0]).data.fields.find(field => field.name === "Kanały");
   assert.match(channelField.value, /\[ChannelOne\]\(https:\/\/kick\.com\/channelone\)/);
@@ -61,6 +60,7 @@ test("links a channel-specific reward title directly to that channel", () => {
   const [reward] = normalizeCampaign(campaign);
   assert.equal(reward.campaignUrl, "https://kick.com/eddie");
   assert.equal(makeRewardEmbed(reward).data.url, "https://kick.com/eddie");
+  assert.match(makeRewardEmbed(reward).data.description, /https:\/\/kick\.com\/category\/league-of-legends\/drops/);
 });
 
 test("describes category-wide badge and emote drops with correct Polish wording", () => {

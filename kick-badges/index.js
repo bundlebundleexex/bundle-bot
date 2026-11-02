@@ -66,6 +66,11 @@ function getKickCategoryUrl(category, name, slug) {
   return categorySlug ? `https://kick.com/category/${encodeURIComponent(categorySlug)}` : null;
 }
 
+function getKickCategoryDropsUrl(categoryUrl) {
+  if (!categoryUrl) return null;
+  return categoryUrl.replace(/\/+$/, "").replace(/\/drops$/i, "") + "/drops";
+}
+
 function getCampaignChannels(campaign) {
   const rawChannels = [campaign.channels, campaign.allowed_channels, campaign.participating_channels]
     .find(Array.isArray) || [];
@@ -142,6 +147,7 @@ function normalizeCampaign(campaign) {
     ? firstValue(category.slug, category.category_slug, category.kick_slug, slugifyCategory(gameName))
     : slugifyCategory(gameName);
   const categoryUrl = getKickCategoryUrl(category, gameName, gameSlug);
+  const categoryDropsUrl = getKickCategoryDropsUrl(categoryUrl);
   const channels = getCampaignChannels(campaign);
   const result = [];
   for (const reward of extractRewardEntries(campaign)) {
@@ -174,8 +180,8 @@ function normalizeCampaign(campaign) {
       gameName,
       campaignUrl: channels.length === 1
         ? channels[0].url
-        : categoryUrl || "https://kick.com/drops",
-      categoryUrl
+        : categoryDropsUrl || "https://kick.com/drops",
+      categoryUrl: categoryDropsUrl
     });
   }
   return result;
