@@ -4,8 +4,21 @@ const {
   getActiveFreePromo,
   getAliases,
   isKnown,
-  mergeCandidates
+  mergeCandidates,
+  formatDate,
+  formatPromoWindow
 } = require("../stores/epic");
+
+test("formats Epic promo start and end in Polish local time without a remaining-time counter", () => {
+  const window = formatPromoWindow({
+    startDate: "2026-10-29T15:00:00Z",
+    endDate: "2026-11-05T16:00:00Z"
+  });
+  assert.match(window, /Dostępny od: 29\.10\.2026, 16:00/);
+  assert.match(window, /Dostępny do: 05\.11\.2026, 17:00/);
+  assert.doesNotMatch(window, /zostało|pozostało/i);
+  assert.equal(formatDate("2026-11-05T16:00:00Z"), "05.11.2026, 17:00");
+});
 
 test("uses the individual promo discount instead of a zero catalog price", () => {
   const now = new Date("2026-10-29T16:15:00Z");

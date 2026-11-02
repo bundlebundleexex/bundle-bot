@@ -47,13 +47,11 @@ function formatDate(dateString) {
   }).format(date);
 }
 
-function getHoursLeft(dateString) {
-  if (!dateString) return null;
-
-  const date = new Date(dateString);
-  if (Number.isNaN(date.getTime())) return null;
-
-  return Math.max(0, Math.floor((date - Date.now()) / 3600000));
+function formatPromoWindow(promo) {
+  return [
+    `Dostępny od: ${formatDate(promo?.startDate)}`,
+    `Dostępny do: ${formatDate(promo?.endDate)}`
+  ].join("\n");
 }
 
 function normalizeTitle(title) {
@@ -420,7 +418,6 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
       try {
         const { game, slug, aliases, activePromo } = item;
         const image = getImage(game);
-        const hoursLeft = getHoursLeft(activePromo.endDate);
         const url = getStoreUrl(slug);
 
         const embed = new EmbedBuilder()
@@ -428,12 +425,7 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
           .setURL(url)
           .setColor("#2f3136")
           .setFooter({ text: "Epic Games" })
-          .setDescription(
-            `PC
-Gratis do: ${formatDate(activePromo.endDate)}${
-  hoursLeft !== null ? `\nZostalo: ${hoursLeft}h` : ""
-}`
-          )
+          .setDescription(`PC\n${formatPromoWindow(activePromo)}`)
           .setTimestamp();
 
         if (image) embed.setImage(image);
@@ -472,3 +464,5 @@ module.exports.isPromoFree = isPromoFree;
 module.exports.getAliases = getAliases;
 module.exports.isKnown = isKnown;
 module.exports.mergeCandidates = mergeCandidates;
+module.exports.formatDate = formatDate;
+module.exports.formatPromoWindow = formatPromoWindow;
