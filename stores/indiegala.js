@@ -1,7 +1,6 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const { EmbedBuilder } = require("discord.js");
-const { isSignificantExtension } = require("./renewal");
 
 const CHANNEL_ID = process.env.BUNDLE_CHANNEL_ID || "1531609869327667210";
 // ROLE_ID już niepotrzebne, bo nie pingujemy
@@ -134,16 +133,8 @@ module.exports.check = async (client, savedData, saveData) => {
 
     const knownLinks = new Set(savedData.indiegalaBundles);
     const newBundles = uniqueBundles.filter(bundle => !knownLinks.has(bundle.link));
-    const knownBundles = uniqueBundles.filter(bundle => knownLinks.has(bundle.link));
-    const renewalLimit = Math.max(1, Number(process.env.INDIEGALA_RENEWAL_CHECK_LIMIT || 5));
-    const cursor = Number(savedData.indiegalaRenewalCursor || 0) % Math.max(knownBundles.length, 1);
-    const sampledKnown = knownBundles.length
-      ? Array.from({ length: Math.min(renewalLimit, knownBundles.length) }, (_, index) => knownBundles[(cursor + index) % knownBundles.length])
-      : [];
-    savedData.indiegalaRenewalCursor = knownBundles.length
-      ? (cursor + sampledKnown.length) % knownBundles.length
-      : 0;
-    const bundlesToCheck = [...newBundles, ...sampledKnown];
+    // IndieGala renewal notices are disabled. Process only unseen offers.
+    const bundlesToCheck = newBundles;
 
     const channel = await client.channels.fetch(CHANNEL_ID);
 
@@ -170,33 +161,7 @@ module.exports.check = async (client, savedData, saveData) => {
       const observedEndAt = remainingMs === null
         ? null
         : new Date(Date.now() + remainingMs).toISOString();
-      const previousEndAt = savedData.indiegalaBundleExpiries[bundle.link]?.endAt || null;
-      const extension = isSignificantExtension(previousEndAt, observedEndAt);
-      if (previousEndAt && observedEndAt) {
-        const deltaHours = (Date.parse(observedEndAt) - Date.parse(previousEndAt)) / 3600000;
-        console.log(
-          `IndieGala renewal check: ${bundle.title} previous=${previousEndAt} current=${observedEndAt} delta=${deltaHours.toFixed(2)}h threshold=20h decision=${extension ? "post" : "skip"}`
-        );
-      }
-
-      if (wasAnnounced && !previousEndAt) {
-        if (observedEndAt) {
-          savedData.indiegalaBundleExpiries[bundle.link] = { endAt: observedEndAt };
-        }
-        saveData();
-        continue;
-      }
-      if (previousEndAt && !extension) {
-        if (!wasAnnounced) {
-          if (observedEndAt) savedData.indiegalaBundleExpiries[bundle.link] = { endAt: observedEndAt };
-          savedData.indiegalaBundles.push(bundle.link);
-          saveData();
-        }
-        continue;
-      }
-      if (wasAnnounced && !extension) continue;
-
-      console.log(extension ? "🔁 Przedłużony IndieGala bundle:" : "🔥 Nowy IndieGala bundle:", bundle.title);
+      console.log("🔥 Nowy IndieGala bundle:", bundle.title);
 
       const priceMatch = bodyText.match(/\$\d+(\.\d+)?/);
       const price = priceMatch ? priceMatch[0] : "Check page";
@@ -204,26 +169,19 @@ module.exports.check = async (client, savedData, saveData) => {
       const embed = new EmbedBuilder()
         .setTitle(`🎁 ${bundle.title}`)
         .setURL(bundle.link)
-        .setColor(extension ? 0x2ecc71 : 0x9b59b6)
-        .setDescription(`${extension ? "Termin dostępności tej oferty został przedłużony.\n\n" : ""}💰 Cena: **${price}**\n\n${trim(description)}`)
+        .setColor(0x9b59b6)
+        .setDescription(`💰 Cena: **${price}**\n\n${trim(description)}`)
         .setFooter({ text: "IndieGala Bundle 🎮" })
         .setTimestamp();
 
-      if (extension) {
-        embed.addFields(
-          { name: "Poprzednio do", value: formatDate(previousEndAt), inline: true },
-          { name: "Nowy termin", value: formatDate(observedEndAt), inline: true }
-        );
-      } else if (observedEndAt) {
+      if (observedEndAt) {
         embed.addFields({ name: "⏳ Dostępne do", value: formatDate(observedEndAt), inline: false });
       }
 
       if (image) embed.setImage(image);
 
       await channel.send({
-        content: extension
-          ? "🔁 **PAKIET PRZEDŁUŻONY — INDIEGALA**"
-          : "🎉 **NOWY INDIEGALA BUNDLE!**",
+        content: "🎉 **NOWY INDIEGALA BUNDLE!**",
         allowedMentions: { parse: [] },
         embeds: [embed]
       });
