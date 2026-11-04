@@ -57,32 +57,6 @@ function normalizeBundleUrl(href) {
   }
 }
 
-function pruneInactiveIndiegalaBundles(savedData, currentLinks, saveData) {
-  if (!currentLinks.length) return;
-
-  const current = new Set(currentLinks);
-  const previous = savedData.indiegalaBundles || [];
-  const next = [
-    ...new Set(
-      previous
-        .map(normalizeBundleUrl)
-        .filter(link => link && current.has(link))
-    )
-  ];
-
-  if (
-    previous.length !== next.length ||
-    previous.some((link, index) => link !== next[index])
-  ) {
-    savedData.indiegalaBundles = next;
-    saveData();
-
-    console.log(
-      `🧹 IndieGala: wyczyszczono nieaktywne bundle=${previous.length - next.length}`
-    );
-  }
-}
-
 module.exports.check = async (client, savedData, saveData) => {
   try {
     console.log("🔎 IndieGala: sprawdzam HTML...");
@@ -123,13 +97,12 @@ module.exports.check = async (client, savedData, saveData) => {
 
     console.log(`✨ IndieGala: znaleziono ${uniqueBundles.length} bundle`);
 
-    savedData.indiegalaBundles ??= [];
+    savedData.indiegalaBundles = [...new Set(
+      (Array.isArray(savedData.indiegalaBundles) ? savedData.indiegalaBundles : [])
+        .map(normalizeBundleUrl)
+        .filter(Boolean)
+    )];
     savedData.indiegalaBundleExpiries ??= {};
-    pruneInactiveIndiegalaBundles(
-      savedData,
-      uniqueBundles.map(bundle => bundle.link),
-      saveData
-    );
 
     const knownLinks = new Set(savedData.indiegalaBundles);
     const newBundles = uniqueBundles.filter(bundle => !knownLinks.has(bundle.link));
@@ -187,7 +160,7 @@ module.exports.check = async (client, savedData, saveData) => {
       });
 
       if (!wasAnnounced) savedData.indiegalaBundles.push(bundle.link);
-      savedData.indiegalaBundles = [...new Set(savedData.indiegalaBundles)].slice(-100);
+      savedData.indiegalaBundles = [...new Set(savedData.indiegalaBundles)];
       if (observedEndAt) savedData.indiegalaBundleExpiries[bundle.link] = { endAt: observedEndAt };
       saveData();
 
