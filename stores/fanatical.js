@@ -8,6 +8,11 @@ const PERMANENTLY_BLOCKED_SLUGS = new Set([
   "batman-arkham-collection",
   "neurovoider-deluxe-edition"
 ]);
+// This recurring Pick-and-Mix was marked as seen during legacy-key migration,
+// but the user confirmed it was never posted. Announce it once when it appears.
+const ONE_TIME_ANNOUNCEMENT_REPAIRS = new Set([
+  "platinum-collection-build-your-own-bundle"
+]);
 
 const API_URL = "https://www.fanatical.com/api/algolia/bundles?altRank=false";
 
@@ -256,6 +261,9 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
     }
 
     ensureData(savedData);
+    if (!Array.isArray(savedData.fanaticalAnnouncementRepairSlugs)) {
+      savedData.fanaticalAnnouncementRepairSlugs = [];
+    }
 
     let checked = 0;
     let skipped = 0;
@@ -296,13 +304,16 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
 
     for (const item of candidates) {
       const { bundle, bundleKey } = item;
+      const repairAnnouncement =
+        ONE_TIME_ANNOUNCEMENT_REPAIRS.has(bundle.slug) &&
+        !savedData.fanaticalAnnouncementRepairSlugs.includes(bundle.slug);
 
-      if (known.has(bundleKey) || queuedKeys.has(bundleKey)) {
+      if ((!repairAnnouncement && known.has(bundleKey)) || queuedKeys.has(bundleKey)) {
         duplicates++;
         continue;
       }
 
-      if (hasLegacyBundleKey(known, bundle.slug)) {
+      if (!repairAnnouncement && hasLegacyBundleKey(known, bundle.slug)) {
         // Migrate previous slug/day keys without announcing them as renewals.
         known.add(bundleKey);
         saveKnown(savedData, known, saveData);
@@ -310,7 +321,7 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
         continue;
       }
 
-      if (getEndDateKey(bundle) === "unknown-end" && hasSeenBundle(known, bundle.slug)) {
+      if (!repairAnnouncement && getEndDateKey(bundle) === "unknown-end" && hasSeenBundle(known, bundle.slug)) {
         // No end date means we cannot confirm a renewal, so do not ping a known offer again.
         known.add(bundleKey);
         saveKnown(savedData, known, saveData);
@@ -321,6 +332,7 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
       const previousEndDate = findPreviousEndDate(known, bundle.slug);
       const currentEndDate = getEndDateKey(bundle);
       if (
+        !repairAnnouncement &&
         previousEndDate &&
         !isSignificantExtension(previousEndDate, currentEndDate)
       ) {
@@ -329,7 +341,11 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
         continue;
       }
 
-      fresh.push({ ...item, isRenewal: hasSeenBundle(known, bundle.slug) });
+      fresh.push({
+        ...item,
+        isRenewal: repairAnnouncement ? false : hasSeenBundle(known, bundle.slug),
+        repairAnnouncement
+      });
       queuedKeys.add(bundleKey);
     }
 
@@ -405,6 +421,11 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
         });
 
         known.add(bundleKey);
+        if (item.repairAnnouncement) {
+          savedData.fanaticalAnnouncementRepairSlugs = [
+            ...new Set([...savedData.fanaticalAnnouncementRepairSlugs, slug])
+          ];
+        }
         saveKnown(savedData, known, saveData);
 
         sent++;
