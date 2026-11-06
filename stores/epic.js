@@ -450,35 +450,66 @@ async function fetchEpicElements(signal) {
 }
 
 function mergeCandidates(candidates) {
-  const byKey = new Map();
+  const groups = [];
 
   for (const candidate of candidates) {
     const slug = cleanSlug(candidate.slug || getSlug(candidate.game)) || "";
-    const key = slug
-      ? `slug:${slug.toLowerCase()}`
-      : candidate.game.namespace
-        ? `namespace:${candidate.game.namespace}`
-        : candidate.game.id
-          ? `id:${candidate.game.id}`
-          : `title:${normalizeTitle(candidate.game.title)}`;
+    const title = normalizeTitle(candidate.game.title);
+    const identity = {
+      ...candidate,
+      slug: slug || null,
+      aliases: [...new Set(candidate.aliases || [])],
+      _normalizedTitle: title
+    };
 
-    if (!key) continue;
-
-    if (!byKey.has(key)) {
-      byKey.set(key, candidate);
+    if (!title && !slug && !candidate.game.namespace && !candidate.game.id) {
       continue;
     }
 
-    const current = byKey.get(key);
-    const currentEnd = Date.parse(current.activePromo.endDate || "");
-    const candidateEnd = Date.parse(candidate.activePromo.endDate || "");
+    const matches = groups.filter(group =>
+      (title && group._normalizedTitle === title) ||
+      (slug && group.slug?.toLowerCase() === slug.toLowerCase()) ||
+      (candidate.game.namespace && group.game.namespace === candidate.game.namespace) ||
+      (candidate.game.id && group.game.id === candidate.game.id)
+    );
 
-    if (candidateEnd > currentEnd || (!current.slug && candidate.slug)) {
-      byKey.set(key, candidate);
+    if (!matches.length) {
+      groups.push(identity);
+      continue;
     }
+
+    const all = [identity, ...matches];
+    const official = all.filter(item => !item.source);
+    const pool = official.length ? official : all;
+    const selected = pool.reduce((best, item) => {
+      if (!best) return item;
+      // Keep the official Epic feed's date when it is available. For regional
+      // copies of that official record, preserve the existing latest-end rule.
+      if (official.length) {
+        return Date.parse(item.activePromo?.endDate || "") >
+          Date.parse(best.activePromo?.endDate || "") ? item : best;
+      }
+      // For duplicate third-party records, prefer the one that resolved to an
+      // Epic product URL and avoid extending the claim window on a conflict.
+      if (Boolean(item.slug) !== Boolean(best.slug)) return item.slug ? item : best;
+      return Date.parse(item.activePromo?.endDate || "") <
+        Date.parse(best.activePromo?.endDate || "") ? item : best;
+    }, null);
+
+    selected.aliases = [...new Set(all.flatMap(item => item.aliases || []))];
+    selected.slug ||= slug || matches.find(item => item.slug)?.slug || null;
+    selected.game.keyImages = selected.game.keyImages?.length
+      ? selected.game.keyImages
+      : all.find(item => item.game.keyImages?.length)?.game.keyImages || [];
+
+    for (const match of matches) {
+      const index = groups.indexOf(match);
+      if (index !== -1) groups.splice(index, 1);
+    }
+    groups.push(selected);
   }
 
-  return [...byKey.values()];
+  return groups.map(({ _normalizedTitle, ...candidate }) => candidate);
 }
 
 module.exports.check = async (client, savedData, saveData, options = {}) => {
@@ -492,6 +523,7 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
     const known = new Set(savedData.epicGames.map(String));
     const now = new Date();
     const candidates = [];
+    const officialActiveTitles = new Set();
     const skipReasons = {};
     const skippedTitles = {};
     const stats = {
@@ -518,6 +550,7 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
         }
 
         stats.activeFree++;
+        officialActiveTitles.add(normalizeTitle(result.title));
 
         const slug = getSlug(game);
         const aliases = getAliases(game, slug, result.activePromo);
@@ -562,6 +595,14 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
           const claimUrl = await resolveClaimUrl(item);
           const slug = getSlugFromUrl(claimUrl);
           const candidate = makeGamerPowerCandidate(item, slug, claimUrl);
+
+          // Epic's own promotion feed is authoritative for its dates. A second
+          // source can report a later or stale end time for the same product;
+          // never let that create another announcement when Epic already lists it.
+          if (officialActiveTitles.has(normalizeTitle(candidate.game.title))) {
+            stats.known++;
+            return;
+          }
 
           if (isKnown(candidate.aliases, known)) {
             stats.known++;
