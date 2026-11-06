@@ -8,6 +8,8 @@ const ROLE_ID = process.env.EPIC_ROLE_ID || "1371121977628295390";
 
 const API_BASE =
   "https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions";
+const GAMERPOWER_API =
+  "https://www.gamerpower.com/api/giveaways?platform=epic-games-store&type=game";
 
 const API_REQUESTS = [
   { locale: "pl-PL", country: "PL", allowCountries: "PL" },
@@ -48,10 +50,85 @@ function formatDate(dateString) {
 }
 
 function formatPromoWindow(promo) {
-  return [
-    `Dostępny od: ${formatDate(promo?.startDate)}`,
-    `Dostępny do: ${formatDate(promo?.endDate)}`
-  ].join("\n");
+  const lines = [];
+  if (promo?.startDate) lines.push(`Dostępny od: ${formatDate(promo.startDate)}`);
+  if (promo?.endDate) lines.push(`Dostępny do: ${formatDate(promo.endDate)}`);
+  return lines.join("\n") || "Brak potwierdzonego terminu";
+}
+
+function parseUtcDate(value) {
+  if (!value || value === "N/A") return null;
+  // GamerPower returns UTC timestamps without a timezone suffix.
+  const normalized = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(value)
+    ? `${value.replace(" ", "T")}Z`
+    : value;
+  const date = new Date(normalized);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function cleanGiveawayTitle(title) {
+  return String(title || "")
+    .replace(/\s*\((?:epic games(?: store)?)\)\s*giveaways?\s*$/i, "")
+    .replace(/\s+(?:epic games(?: store)?)\s+giveaways?\s*$/i, "")
+    .trim();
+}
+
+function isEpicGameGiveaway(item, now) {
+  const platforms = String(item?.platforms || "").toLowerCase();
+  const type = String(item?.type || "").toLowerCase();
+  const end = parseUtcDate(item?.end_date);
+
+  return (
+    String(item?.status || "").toLowerCase() === "active" &&
+    type === "game" &&
+    platforms.includes("epic games store") &&
+    Boolean(item?.title) &&
+    Boolean(end && end > now)
+  );
+}
+
+async function fetchGamerPowerGiveaways(signal) {
+  const response = await axiosInstance.get(GAMERPOWER_API, { signal });
+  if (!Array.isArray(response.data)) {
+    throw new Error("GamerPower returned an unexpected response");
+  }
+  return response.data;
+}
+
+async function resolveClaimUrl(item) {
+  const candidates = [item?.open_giveaway_url, item?.open_giveaway, item?.claim_url];
+
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    try {
+      const response = await axiosInstance.get(candidate, {
+        maxRedirects: 5,
+        responseType: "text"
+      });
+      const finalUrl = response.request?.res?.responseUrl;
+      const hostname = finalUrl ? new URL(finalUrl).hostname.toLowerCase() : "";
+      if (
+        finalUrl &&
+        (hostname === "epicgames.com" || hostname.endsWith(".epicgames.com"))
+      ) {
+        return finalUrl;
+      }
+    } catch {
+      // Keep looking for a usable claim link; the giveaway can still be linked
+      // to its GamerPower listing below.
+    }
+  }
+
+  return item?.gamerpower_url || item?.open_giveaway_url || item?.open_giveaway || null;
+}
+
+function getSlugFromUrl(url) {
+  try {
+    const match = new URL(url).pathname.match(/\/p\/([^/?#]+)/i);
+    return cleanSlug(match?.[1]);
+  } catch {
+    return null;
+  }
 }
 
 function normalizeTitle(title) {
@@ -175,8 +252,23 @@ function isPromoActive(promo, now) {
 
 function isPromoFree(game, promo) {
   // The catalog price can be zero because of a different offer on the same game.
-  // Only the promotion's own discount tells us whether this specific window is free.
-  return promo?.discountSetting?.discountPercentage === 0;
+  // Epic's giveaway feed normally reports 0 for a free-game promotion (the
+  // percentage of the original price still payable). Some catalog records use
+  // the conventional 100%-off value instead, so accept that only when the
+  // game's current catalog price independently confirms a zero payable price.
+  const percentage = Number(promo?.discountSetting?.discountPercentage);
+  if (percentage === 0) return true;
+
+  const totalPrice = game?.price?.totalPrice;
+  const originalPrice = Number(totalPrice?.originalPrice);
+  const discountPrice = Number(totalPrice?.discountPrice);
+
+  return (
+    percentage === 100 &&
+    Number.isFinite(originalPrice) &&
+    originalPrice > 0 &&
+    discountPrice === 0
+  );
 }
 
 function getActiveFreePromo(game, now) {
@@ -270,6 +362,30 @@ function inspectGame(game, now) {
   }
 
   return { skip: false, activePromo, title };
+}
+
+function makeGamerPowerCandidate(item, slug, claimUrl) {
+  const endDate = parseUtcDate(item.end_date).toISOString();
+  const title = cleanGiveawayTitle(item.title);
+  const game = {
+    id: `gamerpower-${item.id}`,
+    title,
+    offerType: "BASE_GAME",
+    productSlug: slug,
+    urlSlug: slug,
+    keyImages: [
+      { type: "OfferImageWide", url: item.image || item.thumbnail }
+    ].filter(image => image.url),
+    promotions: {},
+    claimUrl,
+    gamerPowerUrl: item.gamerpower_url,
+    description: item.description || ""
+  };
+  const activePromo = { startDate: null, endDate };
+  const aliases = getAliases(game, slug, activePromo);
+  if (item.id) aliases.push(`epic:gamerpower:${item.id}:${endDate}`);
+
+  return { game, slug, aliases, activePromo, source: "GamerPower" };
 }
 
 async function fetchEpicElements(signal) {
@@ -393,10 +509,50 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
       }
     }
 
+    let gamerPowerCount = 0;
+    try {
+      const giveaways = await fetchGamerPowerGiveaways(options.signal);
+      const activeGiveaways = giveaways.filter(item => isEpicGameGiveaway(item, now));
+      gamerPowerCount = activeGiveaways.length;
+
+      const supplemental = await Promise.allSettled(
+        activeGiveaways.map(async item => {
+          const endDate = parseUtcDate(item.end_date).toISOString();
+          const sourceKey = item.id
+            ? `epic:gamerpower:${item.id}:${endDate}`
+            : null;
+          if (sourceKey && known.has(sourceKey)) {
+            stats.known++;
+            return;
+          }
+
+          const claimUrl = await resolveClaimUrl(item);
+          const slug = getSlugFromUrl(claimUrl);
+          const candidate = makeGamerPowerCandidate(item, slug, claimUrl);
+
+          if (isKnown(candidate.aliases, known)) {
+            stats.known++;
+            return;
+          }
+
+          candidates.push(candidate);
+        })
+      );
+
+      for (const result of supplemental) {
+        if (result.status === "rejected") {
+          console.log("Epic GamerPower item skipped:", result.reason?.message);
+        }
+      }
+    } catch (err) {
+      if (err.name === "CanceledError" || err.code === "ERR_CANCELED") throw err;
+      console.log("Epic GamerPower source failed:", err.response?.status || err.message);
+    }
+
     const fresh = mergeCandidates(candidates);
 
     console.log(
-      `Epic: sources=${ok}/${API_REQUESTS.length} all=${stats.all} activeFree=${stats.activeFree} known=${stats.known} new=${fresh.length} skipped=${stats.skipped}`
+      `Epic: officialSources=${ok}/${API_REQUESTS.length} officialAll=${stats.all} officialFree=${stats.activeFree} GamerPower=${gamerPowerCount} known=${stats.known} new=${fresh.length} skipped=${stats.skipped}`
     );
 
     if (Object.keys(skipReasons).length) {
@@ -418,14 +574,17 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
       try {
         const { game, slug, aliases, activePromo } = item;
         const image = getImage(game);
-        const url = getStoreUrl(slug);
+        const url = slug ? getStoreUrl(slug) : game.claimUrl || getStoreUrl(slug);
+        const sourceAttribution = item.source === "GamerPower"
+          ? `\n\nŹródło dodatkowe: [GamerPower](${game.gamerPowerUrl || "https://www.gamerpower.com/"})`
+          : "";
 
         const embed = new EmbedBuilder()
           .setTitle(game.title)
           .setURL(url)
           .setColor("#2f3136")
-          .setFooter({ text: "Epic Games" })
-          .setDescription(`PC\n${formatPromoWindow(activePromo)}`)
+          .setFooter({ text: item.source === "GamerPower" ? "Epic Games • dane: GamerPower" : "Epic Games" })
+          .setDescription(`PC\n${formatPromoWindow(activePromo)}${sourceAttribution}`)
           .setTimestamp();
 
         if (image) embed.setImage(image);
