@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { EmbedBuilder } = require("discord.js");
+const cheerio = require("cheerio");
 const { isSignificantExtension } = require("./renewal");
 
 const CHANNEL_ID = process.env.BUNDLE_CHANNEL_ID || "1531609869327667210";
@@ -25,6 +26,46 @@ function formatDate(dateString) {
     minute: "2-digit",
     hour12: false
   }).format(date);
+}
+
+function findChoiceImage(data, html) {
+  const candidates = [];
+  const walk = (value, path = "", depth = 0) => {
+    if (depth > 14 || value == null) return;
+    if (typeof value === "string") {
+      const url = value.replace(/&amp;/g, "&").replace(/\\\//g, "/");
+      if (/^(https?:)?\/\//i.test(url) && /(?:imgix|humblebundle|\.png(?:\?|$)|\.jpe?g(?:\?|$)|\.webp(?:\?|$))/i.test(url)) {
+        const keyPath = path.toLowerCase();
+        if (!/(logo|avatar|profile|badge|icon)/i.test(keyPath)) {
+          let score = 0;
+          if (/high.?res|hero|header|cover|featured/i.test(keyPath)) score += 60;
+          if (/tile|image|artwork|background/i.test(keyPath)) score += 30;
+          if (/hb\.imgix\.net|humblebundle/i.test(url)) score += 20;
+          if (/\/offers\/|\/item\/|\/game\//i.test(path)) score += 5;
+          candidates.push({ url: url.startsWith("//") ? `https:${url}` : url, score });
+        }
+      }
+      return;
+    }
+    if (Array.isArray(value)) {
+      for (const entry of value) walk(entry, path, depth + 1);
+      return;
+    }
+    if (typeof value === "object") {
+      for (const [key, child] of Object.entries(value)) {
+        walk(child, path ? `${path}.${key}` : key, depth + 1);
+      }
+    }
+  };
+
+  walk(data);
+  candidates.sort((a, b) => b.score - a.score);
+  if (candidates[0]?.url) return candidates[0].url;
+
+  const $ = cheerio.load(html || "");
+  const metaImage = $("meta[property='og:image']").attr("content") ||
+    $("meta[name='twitter:image']").attr("content");
+  return metaImage?.replace(/&amp;/g, "&") || null;
 }
 
 function extractLowestPrice(product) {
@@ -365,6 +406,7 @@ module.exports.check = async (client, savedData, saveData) => {
     const endDateRaw =
       membershipJson.navbarOptions?.["activeContentEndDate|datetime"];
     const priceObj = membershipJson["baseSubscriptionPrice|money"];
+    const choiceImage = findChoiceImage(membershipJson, membershipHtml);
 
     if (!machineName) {
       console.log("❌ Humble Choice: brak machineName");
@@ -398,6 +440,8 @@ module.exports.check = async (client, savedData, saveData) => {
       )
       .setFooter({ text: "Humble Choice 🎮" })
       .setTimestamp();
+
+    if (choiceImage) embed.setImage(choiceImage);
 
     await channel.send({
       content: `🔥 **NOWY HUMBLE CHOICE!** <@&${ROLE_ID}>`,

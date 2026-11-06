@@ -168,7 +168,7 @@
       "expiresAt": "2026-11-24T04:00:00.000Z"
     }
   ],
-  "humbleChoice": "october_2026_choice",
+  "humbleChoice": "november_2026_choice",
   "fanaticalBundles": [
     "build-your-own-legendary-bundle:2026-10-22",
     "build-your-own-slayer-bundle:2026-10-27",
@@ -234,7 +234,9 @@
     "epic:slug:sorry-were-closed-724c86:2026-11-05T16:00:00.000Z",
     "epic:id:4e469c7d8bbf49bcabc2c07127d3d946:2026-11-05T16:00:00.000Z",
     "epic:namespace:489af623d8284d518502f8ee9d33b828:2026-11-05T16:00:00.000Z",
-    "4e469c7d8bbf49bcabc2c07127d3d946_2026-10-29T15:00:00.000Z_2026-11-05T16:00:00.000Z"
+    "4e469c7d8bbf49bcabc2c07127d3d946_2026-10-29T15:00:00.000Z_2026-11-05T16:00:00.000Z",
+    "epic:title:gmh good morning human:2026-11-08T23:59:00.000Z",
+    "epic:slug:good-morning-human-6d0b45:2026-11-08T23:59:00.000Z"
   ],
   "epicDeals": [],
   "freeDeals": [],

@@ -2,6 +2,7 @@ const axios = require("axios");
 const http = require("http");
 const https = require("https");
 const { EmbedBuilder } = require("discord.js");
+const cheerio = require("cheerio");
 
 const CHANNEL_ID = process.env.EPIC_CHANNEL_ID || "1531289390360428564";
 const ROLE_ID = process.env.EPIC_ROLE_ID || "1371121977628295390";
@@ -98,28 +99,60 @@ async function fetchGamerPowerGiveaways(signal) {
 async function resolveClaimUrl(item) {
   const candidates = [item?.open_giveaway_url, item?.open_giveaway, item?.claim_url];
 
-  for (const candidate of candidates) {
-    if (!candidate) continue;
+  const tryOfficialTarget = async candidate => {
+    if (!candidate) return null;
     try {
       const response = await axiosInstance.get(candidate, {
         maxRedirects: 5,
         responseType: "text"
       });
-      const finalUrl = response.request?.res?.responseUrl;
+      const finalUrl =
+        response.request?.res?.responseUrl ||
+        response.request?._redirectable?._currentUrl;
       const hostname = finalUrl ? new URL(finalUrl).hostname.toLowerCase() : "";
       if (
         finalUrl &&
-        (hostname === "epicgames.com" || hostname.endsWith(".epicgames.com"))
+        (hostname === "epicgames.com" || hostname.endsWith(".epicgames.com")) &&
+        /\/p\//i.test(new URL(finalUrl).pathname)
       ) {
         return finalUrl;
       }
     } catch {
-      // Keep looking for a usable claim link; the giveaway can still be linked
-      // to its GamerPower listing below.
+      // Try the next public claim link.
+    }
+    return null;
+  };
+
+  for (const candidate of candidates) {
+    const officialUrl = await tryOfficialTarget(candidate);
+    if (officialUrl) return officialUrl;
+  }
+
+  // The API's claim URL can be a JavaScript/meta-refresh link. Read the public
+  // listing and follow its Claim button to recover the canonical Epic product URL.
+  if (item?.gamerpower_url) {
+    try {
+      const response = await axiosInstance.get(item.gamerpower_url, {
+        responseType: "text"
+      });
+      const $ = cheerio.load(response.data);
+      const links = $("a[href]")
+        .map((_, element) => $(element).attr("href"))
+        .get()
+        .filter(href => href && /gamerpower\.com\/open\//i.test(href));
+
+      for (const link of links) {
+        const officialUrl = await tryOfficialTarget(
+          new URL(link, item.gamerpower_url).href
+        );
+        if (officialUrl) return officialUrl;
+      }
+    } catch {
+      // Fall through to the direct claim redirect below.
     }
   }
 
-  return item?.gamerpower_url || item?.open_giveaway_url || item?.open_giveaway || null;
+  return item?.open_giveaway_url || item?.open_giveaway || item?.claim_url || null;
 }
 
 function getSlugFromUrl(url) {
@@ -575,16 +608,12 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
         const { game, slug, aliases, activePromo } = item;
         const image = getImage(game);
         const url = slug ? getStoreUrl(slug) : game.claimUrl || getStoreUrl(slug);
-        const sourceAttribution = item.source === "GamerPower"
-          ? `\n\nŹródło dodatkowe: [GamerPower](${game.gamerPowerUrl || "https://www.gamerpower.com/"})`
-          : "";
-
         const embed = new EmbedBuilder()
           .setTitle(game.title)
           .setURL(url)
           .setColor("#2f3136")
-          .setFooter({ text: item.source === "GamerPower" ? "Epic Games • dane: GamerPower" : "Epic Games" })
-          .setDescription(`PC\n${formatPromoWindow(activePromo)}${sourceAttribution}`)
+          .setFooter({ text: "Epic Games" })
+          .setDescription(`PC\n${formatPromoWindow(activePromo)}`)
           .setTimestamp();
 
         if (image) embed.setImage(image);
