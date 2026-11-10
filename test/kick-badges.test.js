@@ -1,6 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const axios = require("axios");
+const botData = require("../data.json");
 const { normalizeCampaign, makeRewardEmbed, sendReward, getKickCategoryUrl, refreshRewardMessage, getCampaigns, check } = require("../kick-badges");
 
 function fixture() {
@@ -224,6 +225,165 @@ test("recognizes all seven named active Kick badge/emote rewards with their UTC 
   const moonEnd = rewards.find(reward => reward.name === "1000X MOON Emote").campaignEnd;
   assert.match(makeRewardEmbed(rewards.find(reward => reward.name === "1000X MOON Emote")).data.description, /Koniec:\*\* 3 lis 2026, 13:30/);
   assert.equal(moonEnd, "2026-11-03T12:30:00.000Z");
+});
+
+test("classifies current Kick examples and excludes non-badge campaign rewards", () => {
+  const campaigns = [
+    {
+      kick_id: "talk-campaign",
+      name: "KICK Talk Ed VS Ethan",
+      starts_at: "2026-10-10T13:00:00Z",
+      ends_at: "2026-11-14T17:00:00Z",
+      category: { name: "Just Chatting", slug: "just-chatting" },
+      rewards: [
+        { id: "ethan", name: "Ethan Emote", required_units: 60 },
+        { id: "eddie", name: "Eddie Emote", required_units: 120 },
+        { id: "versus", name: "Eddie VS Ethan", required_units: 180 }
+      ]
+    },
+    {
+      kick_id: "pentakill-campaign",
+      name: "Chat Emote - Pentakill",
+      starts_at: "2026-11-07T08:00:00Z",
+      ends_at: "2026-11-13T08:00:00Z",
+      category: { name: "League of Legends", slug: "league-of-legends" },
+      rewards: [{ id: "pentakill", name: "Chat Emote - Pentakill", required_units: 30 }]
+    },
+    {
+      kick_id: "mw4-campaign",
+      name: "Modern Warfare 4",
+      starts_at: "2026-10-23T00:00:00Z",
+      ends_at: "2026-11-23T00:00:00Z",
+      category: { name: "Call of Duty: Modern Warfare 4", slug: "call-of-duty-modern-warfare-4" },
+      rewards: [{ id: "mw4", name: "MW4 Ghost Badge", required_units: 3000 }]
+    },
+    {
+      kick_id: "rotk-campaign",
+      name: "ROTK X KICK November",
+      starts_at: "2026-11-09T00:00:00Z",
+      ends_at: "2026-11-30T00:00:00Z",
+      category: { name: "Return Of The King", slug: "return-of-the-king" },
+      rewards: [
+        { id: "beanie", name: "Kick Beanie", required_units: 120 },
+        { id: "helmet", name: "Kick X Rotk Helmet", required_units: 2100 }
+      ]
+    },
+    {
+      kick_id: "fortnite-campaign",
+      name: "Treasure Hunt",
+      starts_at: "2026-11-10T00:00:00Z",
+      ends_at: "2026-11-18T00:00:00Z",
+      category: { name: "Fortnite", slug: "fortnite" },
+      rewards: [
+        { id: "potion", name: "Chest Potion", required_units: 240 },
+        { id: "bomb", name: "Chest Bomb", required_units: 540 },
+        { id: "golden", name: "Chest Golden K", required_units: 840 }
+      ]
+    }
+  ];
+
+  const rewards = campaigns.flatMap(normalizeCampaign);
+  assert.deepEqual(rewards.map(reward => reward.name), [
+    "Ethan Emote", "Eddie Emote", "Chat Emote - Pentakill", "MW4 Ghost Badge"
+  ]);
+  assert.deepEqual(rewards.map(reward => reward.type), ["EMOTE", "EMOTE", "EMOTE", "BADGE"]);
+});
+
+test("honors the persistent Kick ignore list for non-badge campaign rewards", () => {
+  assert.equal(botData.kickDropIgnoredRewards.length, 8);
+  for (const ignored of botData.kickDropIgnoredRewards) {
+    const campaign = {
+      kick_id: ignored.campaignId,
+      name: "Known campaign",
+      starts_at: "2026-11-01T00:00:00Z",
+      ends_at: "2026-12-01T00:00:00Z",
+      category: { name: "Test category", slug: "test-category" },
+      rewards: [{ id: "ignored-reward", name: ignored.name, required_units: 60 }]
+    };
+    assert.deepEqual(normalizeCampaign(campaign, botData.kickDropIgnoredRewards), [], ignored.name);
+  }
+});
+
+test("updates extended Kick campaigns in their existing posts without reposting", async t => {
+  const campaign = {
+    kick_id: "talk-campaign",
+    name: "KICK Talk Ed VS Ethan",
+    starts_at: "2026-10-10T13:00:00Z",
+    ends_at: "2026-11-14T17:00:00Z",
+    category: { name: "Just Chatting", slug: "just-chatting" },
+    channels: [{ slug: "eddie", user: { username: "Eddie" } }],
+    rewards: [
+      { id: "ethan", name: "Ethan Emote", required_units: 60 },
+      { id: "eddie", name: "Eddie Emote", required_units: 120 }
+    ]
+  };
+  t.mock.method(axios, "get", async () => ({ data: [campaign] }));
+  const rewards = normalizeCampaign(campaign);
+  const oldStates = Object.fromEntries(rewards.map((reward, index) => [reward.key, {
+    status: "started",
+    startAt: reward.campaignStart,
+    endAt: "2026-11-07T17:00:00.000Z",
+    reward: { ...reward, campaignEnd: "2026-11-07T17:00:00.000Z" },
+    messageId: `old-message-${index}`,
+    messageIds: [`old-message-${index}`],
+    messageFormatVersion: 2
+  }]));
+  const edits = [];
+  const sent = [];
+  const channel = {
+    send: async payload => { sent.push(payload); return { id: "new-message" }; },
+    messages: { fetch: async id => ({
+      edit: async payload => edits.push({ id, payload }),
+      delete: async () => {}
+    }) }
+  };
+  const client = { channels: { fetch: async () => channel } };
+
+  await check(client, { kickDropRewardStates: oldStates }, () => {});
+
+  assert.equal(sent.length, 0);
+  assert.deepEqual(edits.map(edit => edit.id), ["old-message-0", "old-message-1"]);
+  assert.ok(edits.every(edit => /14 lis 2026, 18:00/.test(edit.payload.embeds[0].data.description)));
+});
+
+test("reactivated expired Kick reward refreshes its old post instead of duplicating it", async t => {
+  const campaign = {
+    kick_id: "extended-campaign",
+    name: "Extended Drop",
+    starts_at: "2026-10-10T13:00:00Z",
+    ends_at: new Date(Date.now() + 86_400_000).toISOString(),
+    category: { name: "Just Chatting", slug: "just-chatting" },
+    rewards: [{ id: "emote", name: "Test Emote", required_units: 60 }]
+  };
+  t.mock.method(axios, "get", async () => ({ data: [campaign] }));
+  const [reward] = normalizeCampaign(campaign);
+  const state = {
+    status: "expired",
+    startAt: reward.campaignStart,
+    endAt: "2026-11-07T17:00:00.000Z",
+    reward: { ...reward, campaignEnd: "2026-11-07T17:00:00.000Z" },
+    messageId: "old-message",
+    messageIds: ["old-message"],
+    messageFormatVersion: 2
+  };
+  const sent = [];
+  let editCount = 0;
+  let editedMessage;
+  const channel = {
+    send: async payload => { sent.push(payload); return { id: "new-message" }; },
+    messages: { fetch: async () => ({ edit: async payload => { editCount++; editedMessage = payload; }, delete: async () => {} }) }
+  };
+
+  await check({ channels: { fetch: async () => channel } }, {
+    kickDropRewardStates: { [reward.key]: state }
+  }, () => {});
+
+  assert.equal(sent.length, 0);
+  assert.equal(editCount, 1);
+  assert.match(editedMessage.content, /EMOTKA KICK/);
+  assert.doesNotMatch(editedMessage.content, /ZAKOŃCZONE/);
+  assert.equal(state.status, "started");
+  assert.equal(state.endAt, reward.campaignEnd);
 });
 
 test("unwraps Kick API list responses nested under data", async () => {

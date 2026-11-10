@@ -1642,6 +1642,48 @@
     "e4f226c6-c9c3-4d99-9c13-e0050e004f9a": "2026-10-08T11:07:54.309Z",
     "dfa9c27f-877b-417a-8a49-279ecf0fbb15": "2026-10-06T18:31:09.379Z"
   },
+  "kickDropIgnoredRewards": [
+    {
+      "campaignId": "01M4FJM2JJQJBYSYWN23TEYFBR",
+      "name": "Eddie VS Ethan",
+      "reason": "Nagroda kampanii, nie badge ani emotka"
+    },
+    {
+      "campaignId": "01M6M59P444368ND3HPV9TZD97",
+      "name": "Kick Beanie",
+      "reason": "Przedmiot kosmetyczny do gry"
+    },
+    {
+      "campaignId": "01M6M59P444368ND3HPV9TZD97",
+      "name": "Kick eye patch",
+      "reason": "Przedmiot kosmetyczny do gry"
+    },
+    {
+      "campaignId": "01M6M59P444368ND3HPV9TZD97",
+      "name": "Kick Offroader",
+      "reason": "Przedmiot kosmetyczny do gry"
+    },
+    {
+      "campaignId": "01M6M59P444368ND3HPV9TZD97",
+      "name": "Kick X Rotk Helmet",
+      "reason": "Przedmiot kosmetyczny do gry"
+    },
+    {
+      "campaignId": "01M71B4D4VA0G9N3Q0QXH73Q78",
+      "name": "Chest Potion",
+      "reason": "Przedmiot do gry Fortnite"
+    },
+    {
+      "campaignId": "01M71B4D4VA0G9N3Q0QXH73Q78",
+      "name": "Chest Bomb",
+      "reason": "Przedmiot do gry Fortnite"
+    },
+    {
+      "campaignId": "01M71B4D4VA0G9N3Q0QXH73Q78",
+      "name": "Chest Golden K",
+      "reason": "Przedmiot do gry Fortnite"
+    }
+  ],
   "kickDropRewardStates": {
     "01M4C2N182ZPR01C6GJ4K0TB1F:01M4C2B83QAS2THR5078H9JSMT": {
       "status": "started",

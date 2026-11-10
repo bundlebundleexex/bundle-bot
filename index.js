@@ -74,6 +74,17 @@ const DATA_PATH = fs.existsSync("/data")
   ? "/data/data.json"
   : path.join(__dirname, "data.json");
 
+const DEFAULT_KICK_DROP_IGNORED_REWARDS = [
+  { campaignId: "01M4FJM2JJQJBYSYWN23TEYFBR", name: "Eddie VS Ethan", reason: "Nagroda kampanii, nie badge ani emotka" },
+  { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick Beanie", reason: "Przedmiot kosmetyczny do gry" },
+  { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick eye patch", reason: "Przedmiot kosmetyczny do gry" },
+  { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick Offroader", reason: "Przedmiot kosmetyczny do gry" },
+  { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick X Rotk Helmet", reason: "Przedmiot kosmetyczny do gry" },
+  { campaignId: "01M71B4D4VA0G9N3Q0QXH73Q78", name: "Chest Potion", reason: "Przedmiot do gry Fortnite" },
+  { campaignId: "01M71B4D4VA0G9N3Q0QXH73Q78", name: "Chest Bomb", reason: "Przedmiot do gry Fortnite" },
+  { campaignId: "01M71B4D4VA0G9N3Q0QXH73Q78", name: "Chest Golden K", reason: "Przedmiot do gry Fortnite" }
+];
+
 // ==========================
 // STATE
 // ==========================
@@ -494,12 +505,31 @@ function ensureDataShape() {
     steamGames: [],
     amazon: [],
     deals0: [],
+    kickDropIgnoredRewards: DEFAULT_KICK_DROP_IGNORED_REWARDS,
+    kickDropRewardStates: {},
     runtime: {}
   };
 
   for (const [key, value] of Object.entries(defaults)) {
     if (savedData[key] === undefined) {
       savedData[key] = Array.isArray(value) ? [] : value;
+      changed = true;
+    }
+  }
+
+  if (!Array.isArray(savedData.kickDropIgnoredRewards)) {
+    savedData.kickDropIgnoredRewards = [];
+    changed = true;
+  }
+  const ignoredRewards = savedData.kickDropIgnoredRewards;
+  const ignoredKeys = new Set(ignoredRewards.map(item =>
+    `${item?.campaignId || ""}:${String(item?.name || "").trim().toLowerCase()}`
+  ));
+  for (const item of DEFAULT_KICK_DROP_IGNORED_REWARDS) {
+    const key = `${item.campaignId}:${item.name.toLowerCase()}`;
+    if (!ignoredKeys.has(key)) {
+      ignoredRewards.push(item);
+      ignoredKeys.add(key);
       changed = true;
     }
   }

@@ -116,7 +116,8 @@ function extractRewardEntries(campaign) {
   return [...directRewards, ...nested];
 }
 
-function normalizeCampaign(campaign) {
+function normalizeCampaign(campaign, ignoredRewards = []) {
+  const ignoreList = Array.isArray(ignoredRewards) ? ignoredRewards : [];
   const id = getCampaignId(campaign);
   const start = getCampaignStart(campaign);
   const end = getCampaignEnd(campaign);
@@ -135,6 +136,11 @@ function normalizeCampaign(campaign) {
   const result = [];
   for (const reward of extractRewardEntries(campaign)) {
     const name = firstValue(reward.name, reward.title, reward.display_name);
+    const ignored = ignoreList.some(item =>
+      String(item?.campaignId || "") === id &&
+      String(item?.name || "").trim().toLowerCase() === String(name || "").trim().toLowerCase()
+    );
+    if (ignored) continue;
     const rawType = String(firstValue(reward.distribution_type, reward.reward_type, reward.type, "")).toLowerCase();
     const text = `${name || ""} ${reward.description || ""} ${reward.rule_name || ""} ${rawType}`.toLowerCase();
     const isEmote = /emote|emoticon|chat emote/.test(text);
@@ -200,14 +206,8 @@ function formatDate(value) {
 
 async function sendReward(channel, reward, phase) {
   const nonce = crypto.createHash("sha256").update(`kick:${reward.key}:${phase}`).digest("hex").slice(0, 25);
-  const isScheduled = phase === "scheduled";
-  const isEmote = reward.type === "EMOTE";
-  const heading = isEmote ? "EMOTKA KICK" : "BADGE KICK";
-  const scheduledHeading = isEmote ? "NADCHODZĄCA EMOTKA KICK" : "NADCHODZĄCY BADGE KICK";
   return channel.send({
-    content: isScheduled
-      ? `🕒 **${scheduledHeading}**`
-      : `${isEmote ? "🎭" : "🎖️"} **${heading}**`,
+    content: rewardMessageContent(reward, phase),
     embeds: [makeRewardEmbed(reward)],
     nonce,
     enforceNonce: true,
@@ -215,14 +215,26 @@ async function sendReward(channel, reward, phase) {
   });
 }
 
-async function refreshRewardMessage(channel, state, reward) {
+function rewardMessageContent(reward, phase) {
+  const isScheduled = phase === "scheduled";
+  const isEmote = reward.type === "EMOTE";
+  const heading = isEmote ? "EMOTKA KICK" : "BADGE KICK";
+  const scheduledHeading = isEmote ? "NADCHODZĄCA EMOTKA KICK" : "NADCHODZĄCY BADGE KICK";
+  return isScheduled
+    ? `🕒 **${scheduledHeading}**`
+    : `${isEmote ? "🎭" : "🎖️"} **${heading}**`;
+}
+
+async function refreshRewardMessage(channel, state, reward, phase = null) {
   if (!state?.messageId || !channel?.messages?.fetch) return false;
   try {
     const message = await channel.messages.fetch(state.messageId);
-    await message.edit({
+    const update = {
       embeds: [makeRewardEmbed(reward)],
       allowedMentions: { parse: [] }
-    });
+    };
+    if (phase) update.content = rewardMessageContent(reward, phase);
+    await message.edit(update);
     for (const id of new Set(state.messageIds || [])) {
       if (!id || id === state.messageId) continue;
       try {
@@ -268,6 +280,9 @@ module.exports.check = async (client, savedData, saveData) => {
   try {
     savedData.kickDropRewardStates ??= {};
     const states = savedData.kickDropRewardStates;
+    const ignoredRewards = Array.isArray(savedData.kickDropIgnoredRewards)
+      ? savedData.kickDropIgnoredRewards
+      : [];
     const summaries = await getCampaigns();
     const channel = await client.channels.fetch(CHANNEL_ID);
     let sent = 0;
@@ -280,7 +295,7 @@ module.exports.check = async (client, savedData, saveData) => {
       let rewards;
       try {
         rawRewards += extractRewardEntries(campaign).length;
-        rewards = normalizeCampaign(campaign);
+        rewards = normalizeCampaign(campaign, ignoredRewards);
       } catch (err) {
         console.log(`Kick Drops: pomijam nieprawidłową kampanię ${campaign?.name || campaign?.id || "bez nazwy"}: ${err.message}`);
         continue;
@@ -301,6 +316,17 @@ module.exports.check = async (client, savedData, saveData) => {
           if (existing.messageFormatVersion !== 2 ||
               JSON.stringify(existing.reward || {}) !== JSON.stringify(reward)) {
             if (await refreshRewardMessage(channel, existing, reward)) saveData();
+          }
+          continue;
+        }
+        // A campaign can be extended after a scan already marked it expired.
+        // Reuse its original Discord post when the same campaign/reward becomes
+        // active again; do not announce the extension as a second new drop.
+        if (existing?.status === "expired" && phase === "started" && existing.messageId) {
+          alreadyKnown++;
+          if (await refreshRewardMessage(channel, existing, reward, "started")) {
+            existing.status = "started";
+            saveData();
           }
           continue;
         }
