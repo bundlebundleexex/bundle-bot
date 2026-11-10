@@ -79,10 +79,13 @@ const DEFAULT_KICK_DROP_IGNORED_REWARDS = [
   { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick Beanie", reason: "Przedmiot kosmetyczny do gry" },
   { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick eye patch", reason: "Przedmiot kosmetyczny do gry" },
   { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick Offroader", reason: "Przedmiot kosmetyczny do gry" },
-  { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick X Rotk Helmet", reason: "Przedmiot kosmetyczny do gry" },
-  { campaignId: "01M71B4D4VA0G9N3Q0QXH73Q78", name: "Chest Potion", reason: "Przedmiot do gry Fortnite" },
-  { campaignId: "01M71B4D4VA0G9N3Q0QXH73Q78", name: "Chest Bomb", reason: "Przedmiot do gry Fortnite" },
-  { campaignId: "01M71B4D4VA0G9N3Q0QXH73Q78", name: "Chest Golden K", reason: "Przedmiot do gry Fortnite" }
+  { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick X Rotk Helmet", reason: "Przedmiot kosmetyczny do gry" }
+];
+
+const DEFAULT_KICK_DROP_REWARD_TYPE_OVERRIDES = [
+  { campaignId: "01M71B4D4VA0G9N3Q0QXH73Q78", name: "Chest Potion", type: "EMOTE", reason: "Emotka czatu Kick według weryfikacji użytkownika" },
+  { campaignId: "01M71B4D4VA0G9N3Q0QXH73Q78", name: "Chest Bomb", type: "EMOTE", reason: "Emotka czatu Kick według weryfikacji użytkownika" },
+  { campaignId: "01M71B4D4VA0G9N3Q0QXH73Q78", name: "Chest Golden K", type: "EMOTE", reason: "Emotka czatu Kick według weryfikacji użytkownika" }
 ];
 
 // ==========================
@@ -506,6 +509,7 @@ function ensureDataShape() {
     amazon: [],
     deals0: [],
     kickDropIgnoredRewards: DEFAULT_KICK_DROP_IGNORED_REWARDS,
+    kickDropRewardTypeOverrides: DEFAULT_KICK_DROP_REWARD_TYPE_OVERRIDES,
     kickDropRewardStates: {},
     runtime: {}
   };
@@ -522,14 +526,41 @@ function ensureDataShape() {
     changed = true;
   }
   const ignoredRewards = savedData.kickDropIgnoredRewards;
-  const ignoredKeys = new Set(ignoredRewards.map(item =>
+  const chatEmoteNames = new Set(DEFAULT_KICK_DROP_REWARD_TYPE_OVERRIDES.map(item =>
+    `${item.campaignId}:${item.name.toLowerCase()}`
+  ));
+  const filteredIgnoredRewards = ignoredRewards.filter(item =>
+    !chatEmoteNames.has(`${item?.campaignId || ""}:${String(item?.name || "").trim().toLowerCase()}`)
+  );
+  if (filteredIgnoredRewards.length !== ignoredRewards.length) {
+    savedData.kickDropIgnoredRewards = filteredIgnoredRewards;
+    changed = true;
+  }
+  const ignoredRewardsAfterMigration = savedData.kickDropIgnoredRewards;
+  const ignoredKeys = new Set(ignoredRewardsAfterMigration.map(item =>
     `${item?.campaignId || ""}:${String(item?.name || "").trim().toLowerCase()}`
   ));
   for (const item of DEFAULT_KICK_DROP_IGNORED_REWARDS) {
     const key = `${item.campaignId}:${item.name.toLowerCase()}`;
     if (!ignoredKeys.has(key)) {
-      ignoredRewards.push(item);
+      ignoredRewardsAfterMigration.push(item);
       ignoredKeys.add(key);
+      changed = true;
+    }
+  }
+
+  if (!Array.isArray(savedData.kickDropRewardTypeOverrides)) {
+    savedData.kickDropRewardTypeOverrides = [];
+    changed = true;
+  }
+  const overrideKeys = new Set(savedData.kickDropRewardTypeOverrides.map(item =>
+    `${item?.campaignId || ""}:${String(item?.name || "").trim().toLowerCase()}`
+  ));
+  for (const item of DEFAULT_KICK_DROP_REWARD_TYPE_OVERRIDES) {
+    const key = `${item.campaignId}:${item.name.toLowerCase()}`;
+    if (!overrideKeys.has(key)) {
+      savedData.kickDropRewardTypeOverrides.push(item);
+      overrideKeys.add(key);
       changed = true;
     }
   }

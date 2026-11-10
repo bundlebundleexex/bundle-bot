@@ -116,8 +116,9 @@ function extractRewardEntries(campaign) {
   return [...directRewards, ...nested];
 }
 
-function normalizeCampaign(campaign, ignoredRewards = []) {
+function normalizeCampaign(campaign, ignoredRewards = [], rewardTypeOverrides = []) {
   const ignoreList = Array.isArray(ignoredRewards) ? ignoredRewards : [];
+  const typeOverrides = Array.isArray(rewardTypeOverrides) ? rewardTypeOverrides : [];
   const id = getCampaignId(campaign);
   const start = getCampaignStart(campaign);
   const end = getCampaignEnd(campaign);
@@ -141,10 +142,14 @@ function normalizeCampaign(campaign, ignoredRewards = []) {
       String(item?.name || "").trim().toLowerCase() === String(name || "").trim().toLowerCase()
     );
     if (ignored) continue;
+    const typeOverride = typeOverrides.find(item =>
+      String(item?.campaignId || "") === id &&
+      String(item?.name || "").trim().toLowerCase() === String(name || "").trim().toLowerCase()
+    );
     const rawType = String(firstValue(reward.distribution_type, reward.reward_type, reward.type, "")).toLowerCase();
     const text = `${name || ""} ${reward.description || ""} ${reward.rule_name || ""} ${rawType}`.toLowerCase();
-    const isEmote = /emote|emoticon|chat emote/.test(text);
-    const isBadge = /badge/.test(text);
+    const isEmote = typeOverride?.type === "EMOTE" || /emote|emoticon|chat emote/.test(text);
+    const isBadge = typeOverride?.type === "BADGE" || /badge/.test(text);
     if (!name || (!isEmote && !isBadge)) continue;
 
     const minutes = getRewardMinutes(reward, campaign);
@@ -283,6 +288,9 @@ module.exports.check = async (client, savedData, saveData) => {
     const ignoredRewards = Array.isArray(savedData.kickDropIgnoredRewards)
       ? savedData.kickDropIgnoredRewards
       : [];
+    const rewardTypeOverrides = Array.isArray(savedData.kickDropRewardTypeOverrides)
+      ? savedData.kickDropRewardTypeOverrides
+      : [];
     const summaries = await getCampaigns();
     const channel = await client.channels.fetch(CHANNEL_ID);
     let sent = 0;
@@ -295,7 +303,7 @@ module.exports.check = async (client, savedData, saveData) => {
       let rewards;
       try {
         rawRewards += extractRewardEntries(campaign).length;
-        rewards = normalizeCampaign(campaign, ignoredRewards);
+        rewards = normalizeCampaign(campaign, ignoredRewards, rewardTypeOverrides);
       } catch (err) {
         console.log(`Kick Drops: pomijam nieprawidłową kampanię ${campaign?.name || campaign?.id || "bez nazwy"}: ${err.message}`);
         continue;

@@ -197,7 +197,7 @@ test("recognizes all seven named active Kick badge/emote rewards with their UTC 
       ]
     },
     {
-      kick_id: "talk-campaign",
+      kick_id: "01M4FJM2JJQJBYSYWN23TEYFBR",
       name: "KICK Talk Ed VS Ethan",
       starts_at: "2026-10-10T13:00:00Z",
       ends_at: "2026-11-07T17:00:00Z",
@@ -227,10 +227,10 @@ test("recognizes all seven named active Kick badge/emote rewards with their UTC 
   assert.equal(moonEnd, "2026-11-03T12:30:00.000Z");
 });
 
-test("classifies current Kick examples and excludes non-badge campaign rewards", () => {
+test("classifies current Kick examples and excludes non-badge campaign rewards", async () => {
   const campaigns = [
     {
-      kick_id: "talk-campaign",
+      kick_id: "01M4FJM2JJQJBYSYWN23TEYFBR",
       name: "KICK Talk Ed VS Ethan",
       starts_at: "2026-10-10T13:00:00Z",
       ends_at: "2026-11-14T17:00:00Z",
@@ -258,18 +258,20 @@ test("classifies current Kick examples and excludes non-badge campaign rewards",
       rewards: [{ id: "mw4", name: "MW4 Ghost Badge", required_units: 3000 }]
     },
     {
-      kick_id: "rotk-campaign",
+      kick_id: "01M6M59P444368ND3HPV9TZD97",
       name: "ROTK X KICK November",
       starts_at: "2026-11-09T00:00:00Z",
       ends_at: "2026-11-30T00:00:00Z",
       category: { name: "Return Of The King", slug: "return-of-the-king" },
       rewards: [
         { id: "beanie", name: "Kick Beanie", required_units: 120 },
+        { id: "eyepatch", name: "Kick eye patch", required_units: 300 },
+        { id: "offroader", name: "Kick Offroader", required_units: 720 },
         { id: "helmet", name: "Kick X Rotk Helmet", required_units: 2100 }
       ]
     },
     {
-      kick_id: "fortnite-campaign",
+      kick_id: "01M71B4D4VA0G9N3Q0QXH73Q78",
       name: "Treasure Hunt",
       starts_at: "2026-11-10T00:00:00Z",
       ends_at: "2026-11-18T00:00:00Z",
@@ -282,15 +284,28 @@ test("classifies current Kick examples and excludes non-badge campaign rewards",
     }
   ];
 
-  const rewards = campaigns.flatMap(normalizeCampaign);
+  const rewards = campaigns.flatMap(campaign => normalizeCampaign(
+    campaign,
+    botData.kickDropIgnoredRewards,
+    botData.kickDropRewardTypeOverrides
+  ));
   assert.deepEqual(rewards.map(reward => reward.name), [
-    "Ethan Emote", "Eddie Emote", "Chat Emote - Pentakill", "MW4 Ghost Badge"
+    "Ethan Emote", "Eddie Emote", "Chat Emote - Pentakill", "MW4 Ghost Badge",
+    "Chest Potion", "Chest Bomb", "Chest Golden K"
   ]);
-  assert.deepEqual(rewards.map(reward => reward.type), ["EMOTE", "EMOTE", "EMOTE", "BADGE"]);
+  assert.deepEqual(rewards.map(reward => reward.type), [
+    "EMOTE", "EMOTE", "EMOTE", "BADGE", "EMOTE", "EMOTE", "EMOTE"
+  ]);
+  const fortniteEmotes = rewards.filter(reward => reward.gameName === "Fortnite");
+  const sent = [];
+  const channel = { send: async payload => { sent.push(payload); return { id: `msg-${sent.length}` }; } };
+  for (const reward of fortniteEmotes) await sendReward(channel, reward, "started");
+  assert.equal(sent.length, 3);
+  assert.ok(sent.every(payload => /EMOTKA KICK/.test(payload.content)));
 });
 
 test("honors the persistent Kick ignore list for non-badge campaign rewards", () => {
-  assert.equal(botData.kickDropIgnoredRewards.length, 8);
+  assert.equal(botData.kickDropIgnoredRewards.length, 5);
   for (const ignored of botData.kickDropIgnoredRewards) {
     const campaign = {
       kick_id: ignored.campaignId,
@@ -302,6 +317,7 @@ test("honors the persistent Kick ignore list for non-badge campaign rewards", ()
     };
     assert.deepEqual(normalizeCampaign(campaign, botData.kickDropIgnoredRewards), [], ignored.name);
   }
+  assert.equal(botData.kickDropRewardTypeOverrides.length, 3);
 });
 
 test("updates extended Kick campaigns in their existing posts without reposting", async t => {

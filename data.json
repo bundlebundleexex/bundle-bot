@@ -1667,21 +1667,26 @@
       "campaignId": "01M6M59P444368ND3HPV9TZD97",
       "name": "Kick X Rotk Helmet",
       "reason": "Przedmiot kosmetyczny do gry"
-    },
+    }
+  ],
+  "kickDropRewardTypeOverrides": [
     {
       "campaignId": "01M71B4D4VA0G9N3Q0QXH73Q78",
       "name": "Chest Potion",
-      "reason": "Przedmiot do gry Fortnite"
+      "type": "EMOTE",
+      "reason": "Emotka czatu Kick według weryfikacji użytkownika"
     },
     {
       "campaignId": "01M71B4D4VA0G9N3Q0QXH73Q78",
       "name": "Chest Bomb",
-      "reason": "Przedmiot do gry Fortnite"
+      "type": "EMOTE",
+      "reason": "Emotka czatu Kick według weryfikacji użytkownika"
     },
     {
       "campaignId": "01M71B4D4VA0G9N3Q0QXH73Q78",
       "name": "Chest Golden K",
-      "reason": "Przedmiot do gry Fortnite"
+      "type": "EMOTE",
+      "reason": "Emotka czatu Kick według weryfikacji użytkownika"
     }
   ],
   "kickDropRewardStates": {
