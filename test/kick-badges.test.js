@@ -166,7 +166,7 @@ test("keeps separate Kick API records for one campaign so every reward is scanne
   }
 });
 
-test("recognizes all seven named active Kick badge/emote rewards with their UTC campaign dates", () => {
+test("recognizes named Kick badge/emote rewards and the verified Eddie VS Ethan emote", () => {
   const campaigns = [
     {
       kick_id: "lol-campaign",
@@ -200,7 +200,7 @@ test("recognizes all seven named active Kick badge/emote rewards with their UTC 
       kick_id: "01M4FJM2JJQJBYSYWN23TEYFBR",
       name: "KICK Talk Ed VS Ethan",
       starts_at: "2026-10-10T13:00:00Z",
-      ends_at: "2026-11-07T17:00:00Z",
+      ends_at: "2026-11-14T17:00:00Z",
       category: { name: "Just Chatting", slug: "just-chatting" },
       channels: [{ slug: "eddie", user: { username: "Eddie" } }],
       rewards: [
@@ -210,7 +210,11 @@ test("recognizes all seven named active Kick badge/emote rewards with their UTC 
       ]
     }
   ];
-  const rewards = campaigns.flatMap(normalizeCampaign);
+  const rewards = campaigns.flatMap(campaign => normalizeCampaign(
+    campaign,
+    botData.kickDropIgnoredRewards,
+    botData.kickDropRewardTypeOverrides
+  ));
   assert.deepEqual(rewards.map(reward => reward.name), [
     "Chat Emote - True Damage",
     "MW4 Ghost Badge",
@@ -218,8 +222,10 @@ test("recognizes all seven named active Kick badge/emote rewards with their UTC 
     "God Candle Emote",
     "TJR To The Moon Emote",
     "Ethan Emote",
-    "Eddie Emote"
+    "Eddie Emote",
+    "Eddie VS Ethan"
   ]);
+  assert.equal(rewards.find(reward => reward.name === "Eddie VS Ethan").type, "EMOTE");
   assert.equal(rewards[0].campaignStart, "2026-10-28T08:00:00.000Z");
   assert.match(makeRewardEmbed(rewards[0]).data.description, /Start:\*\* 28 paź 2026, 09:00/);
   const moonEnd = rewards.find(reward => reward.name === "1000X MOON Emote").campaignEnd;
@@ -290,22 +296,23 @@ test("classifies current Kick examples and excludes non-badge campaign rewards",
     botData.kickDropRewardTypeOverrides
   ));
   assert.deepEqual(rewards.map(reward => reward.name), [
-    "Ethan Emote", "Eddie Emote", "Chat Emote - Pentakill", "MW4 Ghost Badge",
-    "Chest Potion", "Chest Bomb", "Chest Golden K"
+    "Ethan Emote", "Eddie Emote", "Eddie VS Ethan", "Chat Emote - Pentakill",
+    "MW4 Ghost Badge", "Chest Potion", "Chest Bomb", "Chest Golden K"
   ]);
   assert.deepEqual(rewards.map(reward => reward.type), [
-    "EMOTE", "EMOTE", "EMOTE", "BADGE", "EMOTE", "EMOTE", "EMOTE"
+    "EMOTE", "EMOTE", "EMOTE", "EMOTE", "BADGE", "EMOTE", "EMOTE", "EMOTE"
   ]);
   const fortniteEmotes = rewards.filter(reward => reward.gameName === "Fortnite");
   const sent = [];
   const channel = { send: async payload => { sent.push(payload); return { id: `msg-${sent.length}` }; } };
+  await sendReward(channel, rewards.find(reward => reward.name === "Eddie VS Ethan"), "started");
   for (const reward of fortniteEmotes) await sendReward(channel, reward, "started");
-  assert.equal(sent.length, 3);
+  assert.equal(sent.length, 4);
   assert.ok(sent.every(payload => /EMOTKA KICK/.test(payload.content)));
 });
 
 test("honors the persistent Kick ignore list for non-badge campaign rewards", () => {
-  assert.equal(botData.kickDropIgnoredRewards.length, 5);
+  assert.equal(botData.kickDropIgnoredRewards.length, 4);
   for (const ignored of botData.kickDropIgnoredRewards) {
     const campaign = {
       kick_id: ignored.campaignId,
@@ -317,7 +324,7 @@ test("honors the persistent Kick ignore list for non-badge campaign rewards", ()
     };
     assert.deepEqual(normalizeCampaign(campaign, botData.kickDropIgnoredRewards), [], ignored.name);
   }
-  assert.equal(botData.kickDropRewardTypeOverrides.length, 3);
+  assert.equal(botData.kickDropRewardTypeOverrides.length, 4);
 });
 
 test("updates extended Kick campaigns in their existing posts without reposting", async t => {
@@ -357,7 +364,9 @@ test("updates extended Kick campaigns in their existing posts without reposting"
 
   await check(client, { kickDropRewardStates: oldStates }, () => {});
 
-  assert.equal(sent.length, 0);
+  assert.equal(sent.length, 2);
+  assert.ok(sent.every(payload => /EMOTKA KICK PRZEDŁUŻONA/.test(payload.content)));
+  assert.ok(sent.every(payload => payload.allowedMentions?.parse?.length === 0));
   assert.deepEqual(edits.map(edit => edit.id), ["old-message-0", "old-message-1"]);
   assert.ok(edits.every(edit => /14 lis 2026, 18:00/.test(edit.payload.embeds[0].data.description)));
 });
@@ -394,12 +403,99 @@ test("reactivated expired Kick reward refreshes its old post instead of duplicat
     kickDropRewardStates: { [reward.key]: state }
   }, () => {});
 
-  assert.equal(sent.length, 0);
+  assert.equal(sent.length, 1);
+  assert.match(sent[0].content, /EMOTKA KICK PRZEDŁUŻONA/);
   assert.equal(editCount, 1);
   assert.match(editedMessage.content, /EMOTKA KICK/);
   assert.doesNotMatch(editedMessage.content, /ZAKOŃCZONE/);
   assert.equal(state.status, "started");
   assert.equal(state.endAt, reward.campaignEnd);
+});
+
+test("posts one no-ping Kick renewal notice only when the end moves by at least 20 hours", async t => {
+  const campaign = {
+    kick_id: "renewal-campaign",
+    name: "Renewed Emote Campaign",
+    starts_at: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+    ends_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+    category: { name: "Just Chatting", slug: "just-chatting" },
+    rewards: [
+      { id: "renewed-emote", name: "Renewed Emote", required_units: 60 },
+      { id: "short-renewal", name: "Short Renewal Emote", required_units: 120 }
+    ]
+  };
+  t.mock.method(axios, "get", async () => ({ data: [campaign] }));
+  const [reward, shortReward] = normalizeCampaign(campaign);
+  const makeOldState = (item, hours) => {
+    const previousEnd = new Date(Date.parse(item.campaignEnd) - hours * 60 * 60 * 1000).toISOString();
+    return {
+      status: "started",
+      startAt: item.campaignStart,
+      endAt: previousEnd,
+      reward: { ...item, campaignEnd: previousEnd },
+      messageId: `original-${item.key}`,
+      messageIds: [`original-${item.key}`],
+      messageFormatVersion: 2
+    };
+  };
+  const state = makeOldState(reward, 25);
+  const shortState = makeOldState(shortReward, 19);
+  const sent = [];
+  const channel = {
+    send: async payload => { sent.push(payload); return { id: `notice-${sent.length}` }; },
+    messages: { fetch: async () => ({ edit: async () => {}, delete: async () => {} }) }
+  };
+  const client = { channels: { fetch: async () => channel } };
+  const data = { kickDropRewardStates: { [reward.key]: state, [shortReward.key]: shortState } };
+
+  await check(client, data, () => {});
+  await check(client, data, () => {});
+
+  assert.equal(sent.length, 1);
+  assert.match(sent[0].content, /EMOTKA KICK PRZEDŁUŻONA/);
+  assert.deepEqual(sent[0].allowedMentions, { parse: [] });
+  assert.equal(state.lastRenewalNotifiedEndAt, reward.campaignEnd);
+  assert.equal(shortState.lastRenewalNotifiedEndAt, undefined);
+});
+
+test("recovers an existing Kick post from channel history when saved state is missing", async t => {
+  const campaign = {
+    kick_id: "history-campaign",
+    name: "History Campaign",
+    starts_at: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+    ends_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    category: { name: "Just Chatting", slug: "just-chatting" },
+    rewards: [{ id: "history-emote", name: "History Emote", required_units: 60 }]
+  };
+  t.mock.method(axios, "get", async () => ({ data: [campaign] }));
+  const [reward] = normalizeCampaign(campaign);
+  const previousEnd = new Date(Date.parse(reward.campaignEnd) - 25 * 60 * 60 * 1000).toISOString();
+  const priorReward = { ...reward, campaignEnd: previousEnd };
+  const priorMessage = {
+    id: "old-discord-post",
+    author: { id: "bundlebot-id" },
+    createdTimestamp: Date.now() - 1000,
+    content: "🎭 **EMOTKA KICK**",
+    embeds: [makeRewardEmbed(priorReward).data],
+    edit: async payload => { priorMessage.embeds = payload.embeds; },
+    delete: async () => {}
+  };
+  const sent = [];
+  const channel = {
+    send: async payload => { sent.push(payload); return { id: "duplicate" }; },
+    messages: { fetch: async query => typeof query === "string"
+      ? priorMessage
+      : new Map([[priorMessage.id, priorMessage]]) }
+  };
+  const data = { kickDropRewardStates: {} };
+
+  await check({ user: { id: "bundlebot-id" }, channels: { fetch: async () => channel } }, data, () => {});
+
+  assert.equal(sent.length, 1);
+  assert.match(sent[0].content, /EMOTKA KICK PRZEDŁUŻONA/);
+  assert.deepEqual(sent[0].allowedMentions, { parse: [] });
+  assert.equal(data.kickDropRewardStates[reward.key].messageId, "old-discord-post");
+  assert.equal(data.kickDropRewardStates[reward.key].lastRenewalNotifiedEndAt, reward.campaignEnd);
 });
 
 test("unwraps Kick API list responses nested under data", async () => {
@@ -431,7 +527,7 @@ test("scans every campaign reward and posts each badge/emote separately", async 
         { id: "moon-2", name: "God Candle Emote", required_units: 120 },
         { id: "moon-3", name: "TJR To The Moon Emote", required_units: 300 }
       ] },
-    { kick_id: "talk", name: "KICK Talk Ed VS Ethan", starts_at: futureStart, ends_at: futureEnd,
+    { kick_id: "01M4FJM2JJQJBYSYWN23TEYFBR", name: "KICK Talk Ed VS Ethan", starts_at: futureStart, ends_at: futureEnd,
       category: { name: "Just Chatting", slug: "just-chatting" },
       rewards: [
         { id: "talk-1", name: "Ethan Emote", required_units: 60 },
@@ -446,12 +542,15 @@ test("scans every campaign reward and posts each badge/emote separately", async 
     return { id: `message-${sent.length}` };
   } };
   const client = { channels: { fetch: async () => channel } };
-  const savedData = {};
+  const savedData = {
+    kickDropIgnoredRewards: botData.kickDropIgnoredRewards,
+    kickDropRewardTypeOverrides: botData.kickDropRewardTypeOverrides
+  };
 
   await check(client, savedData, () => {});
 
   const rewardPosts = sent.filter(payload => payload.content);
-  assert.equal(rewardPosts.length, 7);
+  assert.equal(rewardPosts.length, 8);
   assert.deepEqual(rewardPosts.map(payload => payload.embeds[0].data.title), [
     "🎭 Chat Emote - True Damage",
     "🎖️ MW4 Ghost Badge",
@@ -459,9 +558,10 @@ test("scans every campaign reward and posts each badge/emote separately", async 
     "🎭 God Candle Emote",
     "🎭 TJR To The Moon Emote",
     "🎭 Ethan Emote",
-    "🎭 Eddie Emote"
+    "🎭 Eddie Emote",
+    "🎭 Eddie VS Ethan"
   ]);
   assert.ok(sent.every(payload => payload.embeds.length === 1));
-  assert.equal(Object.keys(savedData.kickDropRewardStates).length, 7);
+  assert.equal(Object.keys(savedData.kickDropRewardStates).length, 8);
 });
 

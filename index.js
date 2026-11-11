@@ -75,7 +75,6 @@ const DATA_PATH = fs.existsSync("/data")
   : path.join(__dirname, "data.json");
 
 const DEFAULT_KICK_DROP_IGNORED_REWARDS = [
-  { campaignId: "01M4FJM2JJQJBYSYWN23TEYFBR", name: "Eddie VS Ethan", reason: "Nagroda kampanii, nie badge ani emotka" },
   { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick Beanie", reason: "Przedmiot kosmetyczny do gry" },
   { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick eye patch", reason: "Przedmiot kosmetyczny do gry" },
   { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick Offroader", reason: "Przedmiot kosmetyczny do gry" },
@@ -83,9 +82,18 @@ const DEFAULT_KICK_DROP_IGNORED_REWARDS = [
 ];
 
 const DEFAULT_KICK_DROP_REWARD_TYPE_OVERRIDES = [
+  { campaignId: "01M4FJM2JJQJBYSYWN23TEYFBR", name: "Eddie VS Ethan", type: "EMOTE", reason: "Emotka czatu Kick — potwierdzona w weryfikacji nagrody" },
   { campaignId: "01M71B4D4VA0G9N3Q0QXH73Q78", name: "Chest Potion", type: "EMOTE", reason: "Emotka czatu Kick według weryfikacji użytkownika" },
   { campaignId: "01M71B4D4VA0G9N3Q0QXH73Q78", name: "Chest Bomb", type: "EMOTE", reason: "Emotka czatu Kick według weryfikacji użytkownika" },
   { campaignId: "01M71B4D4VA0G9N3Q0QXH73Q78", name: "Chest Golden K", type: "EMOTE", reason: "Emotka czatu Kick według weryfikacji użytkownika" }
+];
+
+const DEFAULT_KICK_DROP_RENEWAL_BASELINES = [
+  {
+    campaignId: "01M4FJM2JJQJBYSYWN23TEYFBR",
+    currentEndAt: "2026-11-14T17:00:00.000Z",
+    previousEndAt: "2026-11-07T17:00:00.000Z"
+  }
 ];
 
 // ==========================
@@ -510,6 +518,7 @@ function ensureDataShape() {
     deals0: [],
     kickDropIgnoredRewards: DEFAULT_KICK_DROP_IGNORED_REWARDS,
     kickDropRewardTypeOverrides: DEFAULT_KICK_DROP_REWARD_TYPE_OVERRIDES,
+    kickDropRenewalBaselines: DEFAULT_KICK_DROP_RENEWAL_BASELINES,
     kickDropRewardStates: {},
     runtime: {}
   };
@@ -561,6 +570,33 @@ function ensureDataShape() {
     if (!overrideKeys.has(key)) {
       savedData.kickDropRewardTypeOverrides.push(item);
       overrideKeys.add(key);
+      changed = true;
+    }
+  }
+
+  if (!Array.isArray(savedData.kickDropRenewalBaselines)) {
+    savedData.kickDropRenewalBaselines = [];
+    changed = true;
+  }
+  const renewalBaselineKeys = new Set(savedData.kickDropRenewalBaselines.map(item =>
+    `${item?.campaignId || ""}:${item?.currentEndAt || ""}`
+  ));
+  for (const item of DEFAULT_KICK_DROP_RENEWAL_BASELINES) {
+    const key = `${item.campaignId}:${item.currentEndAt}`;
+    if (!renewalBaselineKeys.has(key)) {
+      savedData.kickDropRenewalBaselines.push(item);
+      renewalBaselineKeys.add(key);
+      changed = true;
+    }
+  }
+
+  for (const state of Object.values(savedData.kickDropRewardStates || {})) {
+    const reward = state?.reward;
+    const baseline = savedData.kickDropRenewalBaselines.find(item =>
+      item?.campaignId === reward?.campaignId && item?.currentEndAt === reward?.campaignEnd
+    )?.previousEndAt;
+    if (baseline && !state.renewalBaselineEndAt && !state.lastRenewalNotifiedEndAt) {
+      state.renewalBaselineEndAt = baseline;
       changed = true;
     }
   }

@@ -1644,11 +1644,6 @@
   },
   "kickDropIgnoredRewards": [
     {
-      "campaignId": "01M4FJM2JJQJBYSYWN23TEYFBR",
-      "name": "Eddie VS Ethan",
-      "reason": "Nagroda kampanii, nie badge ani emotka"
-    },
-    {
       "campaignId": "01M6M59P444368ND3HPV9TZD97",
       "name": "Kick Beanie",
       "reason": "Przedmiot kosmetyczny do gry"
@@ -1671,6 +1666,12 @@
   ],
   "kickDropRewardTypeOverrides": [
     {
+      "campaignId": "01M4FJM2JJQJBYSYWN23TEYFBR",
+      "name": "Eddie VS Ethan",
+      "type": "EMOTE",
+      "reason": "Emotka czatu Kick — potwierdzona w weryfikacji nagrody"
+    },
+    {
       "campaignId": "01M71B4D4VA0G9N3Q0QXH73Q78",
       "name": "Chest Potion",
       "type": "EMOTE",
@@ -1687,6 +1688,13 @@
       "name": "Chest Golden K",
       "type": "EMOTE",
       "reason": "Emotka czatu Kick według weryfikacji użytkownika"
+    }
+  ],
+  "kickDropRenewalBaselines": [
+    {
+      "campaignId": "01M4FJM2JJQJBYSYWN23TEYFBR",
+      "currentEndAt": "2026-11-14T17:00:00.000Z",
+      "previousEndAt": "2026-11-07T17:00:00.000Z"
     }
   ],
   "kickDropRewardStates": {
@@ -1709,16 +1717,16 @@
         "campaignUrl": "https://kick.com/category/call-of-duty-modern-warfare-4/drops",
         "categoryUrl": "https://kick.com/category/call-of-duty-modern-warfare-4/drops"
       },
-      "messageId": "1566900869377560637",
+      "messageId": "1570094705734324258",
       "messageIds": [
-        "1566900869377560637"
+        "1570094705734324258"
       ],
       "messageFormatVersion": 2
     },
     "01M4FJM2JJQJBYSYWN23TEYFBR:01M4FJ8KVH3ZTHJ4N4J63X4GJD": {
       "status": "started",
       "startAt": "2026-10-10T13:00:00.000Z",
-      "endAt": "2026-11-07T17:00:00.000Z",
+      "endAt": "2026-11-14T17:00:00.000Z",
       "reward": {
         "key": "01M4FJM2JJQJBYSYWN23TEYFBR:01M4FJ8KVH3ZTHJ4N4J63X4GJD",
         "campaignId": "01M4FJM2JJQJBYSYWN23TEYFBR",
@@ -1734,21 +1742,22 @@
         "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m4fj8kvh3zthj4n4j63x4gjd-01m4fj8kw3jj5d24v8wn6ncqa6.png",
         "minutes": 60,
         "campaignStart": "2026-10-10T13:00:00.000Z",
-        "campaignEnd": "2026-11-07T17:00:00.000Z",
+        "campaignEnd": "2026-11-14T17:00:00.000Z",
         "gameName": "Just Chatting",
         "campaignUrl": "https://kick.com/eddie",
         "categoryUrl": "https://kick.com/category/just-chatting/drops"
       },
-      "messageId": "1566900870959075481",
+      "messageId": "1570094707529351330",
       "messageIds": [
-        "1566900870959075481"
+        "1570094707529351330"
       ],
-      "messageFormatVersion": 2
+      "messageFormatVersion": 2,
+      "renewalBaselineEndAt": "2026-11-07T17:00:00.000Z"
     },
     "01M4FJM2JJQJBYSYWN23TEYFBR:01M4FJ8KYBM5G0TY4B4KAMWJKW": {
       "status": "started",
       "startAt": "2026-10-10T13:00:00.000Z",
-      "endAt": "2026-11-07T17:00:00.000Z",
+      "endAt": "2026-11-14T17:00:00.000Z",
       "reward": {
         "key": "01M4FJM2JJQJBYSYWN23TEYFBR:01M4FJ8KYBM5G0TY4B4KAMWJKW",
         "campaignId": "01M4FJM2JJQJBYSYWN23TEYFBR",
@@ -1764,1823 +1773,334 @@
         "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m4fj8kybm5g0ty4b4kamwjkw-01m4fj99ymj67qfcs32tec5qvn.png",
         "minutes": 120,
         "campaignStart": "2026-10-10T13:00:00.000Z",
-        "campaignEnd": "2026-11-07T17:00:00.000Z",
+        "campaignEnd": "2026-11-14T17:00:00.000Z",
         "gameName": "Just Chatting",
         "campaignUrl": "https://kick.com/eddie",
         "categoryUrl": "https://kick.com/category/just-chatting/drops"
       },
-      "messageId": "1566900872343068704",
+      "messageId": "1570094709257273365",
       "messageIds": [
-        "1566900872343068704"
+        "1570094709257273365"
       ],
-      "messageFormatVersion": 2
+      "messageFormatVersion": 2,
+      "renewalBaselineEndAt": "2026-11-07T17:00:00.000Z"
     },
-    "01M4QAHE05CXQ1G5SQ2YGSGNM2:01M4Q9XRH2AWAHZN8NE1BSAYPX": {
+    "01M4VW169236GHGNK090F8NA8T:01M4VVGB0CH1ECVDZ3J39KTJEJ": {
       "status": "started",
-      "startAt": "2026-10-13T13:30:00.000Z",
-      "endAt": "2026-11-03T12:30:00.000Z",
+      "startAt": "2026-11-07T08:00:00.000Z",
+      "endAt": "2026-11-13T08:00:00.000Z",
       "reward": {
-        "key": "01M4QAHE05CXQ1G5SQ2YGSGNM2:01M4Q9XRH2AWAHZN8NE1BSAYPX",
-        "campaignId": "01M4QAHE05CXQ1G5SQ2YGSGNM2",
-        "campaignName": "MOON Trading",
-        "campaignChannels": [
-          {
-            "name": "sustain",
-            "url": "https://kick.com/sustain"
-          },
-          {
-            "name": "J0K3R7777777",
-            "url": "https://kick.com/j0k3r7777777"
-          },
-          {
-            "name": "b4ng",
-            "url": "https://kick.com/b4ng"
-          },
-          {
-            "name": "funnyhoodvidz",
-            "url": "https://kick.com/funnyhoodvidz"
-          },
-          {
-            "name": "BlondeRabbit",
-            "url": "https://kick.com/blonderabbit"
-          },
-          {
-            "name": "prudent",
-            "url": "https://kick.com/prudent"
-          },
-          {
-            "name": "ChuckyBTZ",
-            "url": "https://kick.com/chuckybtz"
-          },
-          {
-            "name": "wino87",
-            "url": "https://kick.com/wino87"
-          },
-          {
-            "name": "Doge",
-            "url": "https://kick.com/doge"
-          },
-          {
-            "name": "ZenMasterEU",
-            "url": "https://kick.com/zenmastereu"
-          },
-          {
-            "name": "schneckyirl",
-            "url": "https://kick.com/schneckyirl"
-          },
-          {
-            "name": "Tuvachi",
-            "url": "https://kick.com/tuvachi"
-          },
-          {
-            "name": "sebi",
-            "url": "https://kick.com/sebi"
-          },
-          {
-            "name": "nickcleveland",
-            "url": "https://kick.com/nickcleveland"
-          },
-          {
-            "name": "correct",
-            "url": "https://kick.com/correct"
-          },
-          {
-            "name": "IVANB",
-            "url": "https://kick.com/ivanb"
-          },
-          {
-            "name": "dcampion",
-            "url": "https://kick.com/dcampion"
-          },
-          {
-            "name": "shiibbbster",
-            "url": "https://kick.com/shiibbbster"
-          },
-          {
-            "name": "ffrizy",
-            "url": "https://kick.com/ffrizy"
-          },
-          {
-            "name": "CUSTOMK",
-            "url": "https://kick.com/customk"
-          },
-          {
-            "name": "rumleren",
-            "url": "https://kick.com/rumleren"
-          },
-          {
-            "name": "RealFish",
-            "url": "https://kick.com/realfish"
-          },
-          {
-            "name": "scrapes",
-            "url": "https://kick.com/scrapes"
-          },
-          {
-            "name": "Alfajor",
-            "url": "https://kick.com/alfajor"
-          },
-          {
-            "name": "Elderbreaks",
-            "url": "https://kick.com/elderbreaks"
-          },
-          {
-            "name": "zmann",
-            "url": "https://kick.com/zmann"
-          },
-          {
-            "name": "D0KT0R3N",
-            "url": "https://kick.com/d0kt0r3n"
-          },
-          {
-            "name": "SlotsGuru",
-            "url": "https://kick.com/slotsguru"
-          },
-          {
-            "name": "urosh",
-            "url": "https://kick.com/urosh"
-          },
-          {
-            "name": "MarionS",
-            "url": "https://kick.com/marions"
-          },
-          {
-            "name": "Ded1ce",
-            "url": "https://kick.com/ded1ce"
-          },
-          {
-            "name": "TrendyALLin",
-            "url": "https://kick.com/trendyallin"
-          },
-          {
-            "name": "Vector",
-            "url": "https://kick.com/vector"
-          },
-          {
-            "name": "spin",
-            "url": "https://kick.com/spin"
-          },
-          {
-            "name": "keithlocks",
-            "url": "https://kick.com/keithlocks"
-          },
-          {
-            "name": "landero111",
-            "url": "https://kick.com/landero111"
-          },
-          {
-            "name": "ThatsAnton",
-            "url": "https://kick.com/thatsanton"
-          },
-          {
-            "name": "RedCorn",
-            "url": "https://kick.com/redcorn"
-          },
-          {
-            "name": "Volcano",
-            "url": "https://kick.com/volcano"
-          },
-          {
-            "name": "Wymzi",
-            "url": "https://kick.com/wymzi"
-          },
-          {
-            "name": "Tyceno",
-            "url": "https://kick.com/tyceno"
-          },
-          {
-            "name": "KingeeN",
-            "url": "https://kick.com/kingeen"
-          },
-          {
-            "name": "xdardi",
-            "url": "https://kick.com/xdardi"
-          },
-          {
-            "name": "aitooth",
-            "url": "https://kick.com/aitooth"
-          },
-          {
-            "name": "Eevee",
-            "url": "https://kick.com/eevee"
-          },
-          {
-            "name": "tsunamijkee",
-            "url": "https://kick.com/tsunamijkee"
-          },
-          {
-            "name": "zernovkaxd",
-            "url": "https://kick.com/zernovkaxd"
-          },
-          {
-            "name": "lucky_sl0ts",
-            "url": "https://kick.com/lucky_sl0ts"
-          },
-          {
-            "name": "ToastyyGambles",
-            "url": "https://kick.com/toastyygambles"
-          },
-          {
-            "name": "SoyPan",
-            "url": "https://kick.com/soypan"
-          },
-          {
-            "name": "Brunenger",
-            "url": "https://kick.com/brunenger"
-          },
-          {
-            "name": "Afterstay",
-            "url": "https://kick.com/afterstay"
-          },
-          {
-            "name": "Gena88",
-            "url": "https://kick.com/gena88"
-          },
-          {
-            "name": "GET_SOME",
-            "url": "https://kick.com/get_some"
-          },
-          {
-            "name": "Furp",
-            "url": "https://kick.com/furp"
-          },
-          {
-            "name": "levrock26",
-            "url": "https://kick.com/levrock26"
-          },
-          {
-            "name": "Pappakubasso",
-            "url": "https://kick.com/pappakubasso"
-          },
-          {
-            "name": "SantuLP",
-            "url": "https://kick.com/santulp"
-          },
-          {
-            "name": "realGafi",
-            "url": "https://kick.com/realgafi"
-          },
-          {
-            "name": "Bandz",
-            "url": "https://kick.com/bandz"
-          },
-          {
-            "name": "Crisplayboy",
-            "url": "https://kick.com/crisplayboy"
-          },
-          {
-            "name": "eboy",
-            "url": "https://kick.com/eboy"
-          },
-          {
-            "name": "V1nment",
-            "url": "https://kick.com/v1nment"
-          },
-          {
-            "name": "LOCOV2",
-            "url": "https://kick.com/locov2"
-          },
-          {
-            "name": "vodkafunky",
-            "url": "https://kick.com/vodkafunky"
-          },
-          {
-            "name": "Mafiantv",
-            "url": "https://kick.com/mafiantv"
-          },
-          {
-            "name": "okyyy",
-            "url": "https://kick.com/okyyy"
-          },
-          {
-            "name": "Aukkeelive",
-            "url": "https://kick.com/aukkeelive"
-          },
-          {
-            "name": "DGENTV",
-            "url": "https://kick.com/dgentv"
-          },
-          {
-            "name": "TJR",
-            "url": "https://kick.com/tjr"
-          },
-          {
-            "name": "leanguy777",
-            "url": "https://kick.com/leanguy777"
-          },
-          {
-            "name": "LannyLive",
-            "url": "https://kick.com/lannylive"
-          },
-          {
-            "name": "KappaPrideSummoner",
-            "url": "https://kick.com/kappapridesummoner"
-          },
-          {
-            "name": "Buladas",
-            "url": "https://kick.com/buladas"
-          },
-          {
-            "name": "oliverforslin",
-            "url": "https://kick.com/oliverforslin"
-          },
-          {
-            "name": "loru777",
-            "url": "https://kick.com/loru777"
-          },
-          {
-            "name": "SyndicateSlotz",
-            "url": "https://kick.com/syndicateslotz"
-          },
-          {
-            "name": "EBGaming",
-            "url": "https://kick.com/ebgaming"
-          },
-          {
-            "name": "HoodieHeff",
-            "url": "https://kick.com/hoodieheff"
-          },
-          {
-            "name": "KONDRATCAS",
-            "url": "https://kick.com/kondratcas"
-          },
-          {
-            "name": "Serguy55",
-            "url": "https://kick.com/serguy55"
-          },
-          {
-            "name": "Scoobyz88",
-            "url": "https://kick.com/scoobyz88"
-          },
-          {
-            "name": "JoeyMoose",
-            "url": "https://kick.com/joeymoose"
-          },
-          {
-            "name": "ParengCashper",
-            "url": "https://kick.com/parengcashper"
-          },
-          {
-            "name": "Adeftwastaken",
-            "url": "https://kick.com/adeftwastaken"
-          },
-          {
-            "name": "DMVDegens",
-            "url": "https://kick.com/dmvdegens"
-          },
-          {
-            "name": "AyeshaPlaysFTW",
-            "url": "https://kick.com/ayeshaplaysftw"
-          },
-          {
-            "name": "losludopa",
-            "url": "https://kick.com/losludopa"
-          },
-          {
-            "name": "ALLonBLACK1919",
-            "url": "https://kick.com/allonblack1919"
-          },
-          {
-            "name": "BrownBoiYT",
-            "url": "https://kick.com/brownboiyt"
-          },
-          {
-            "name": "KukuDota2",
-            "url": "https://kick.com/kukudota2"
-          },
-          {
-            "name": "enzotense",
-            "url": "https://kick.com/enzotense"
-          },
-          {
-            "name": "WagerWizardsOfficial",
-            "url": "https://kick.com/wagerwizardsofficial"
-          },
-          {
-            "name": "SultanGamba",
-            "url": "https://kick.com/sultangamba"
-          },
-          {
-            "name": "Crakkpot",
-            "url": "https://kick.com/crakkpot"
-          },
-          {
-            "name": "RogueWidow",
-            "url": "https://kick.com/roguewidow"
-          },
-          {
-            "name": "VehlaGuys",
-            "url": "https://kick.com/vehlaguys"
-          },
-          {
-            "name": "paolo_tuninetti",
-            "url": "https://kick.com/paolo_tuninetti"
-          },
-          {
-            "name": "bonkaLIVE",
-            "url": "https://kick.com/bonkalive"
-          },
-          {
-            "name": "Tinodota",
-            "url": "https://kick.com/tinodota"
-          },
-          {
-            "name": "poloesports",
-            "url": "https://kick.com/poloesports"
-          },
-          {
-            "name": "PrinceSisonGaming",
-            "url": "https://kick.com/princesisongaming"
-          },
-          {
-            "name": "tommydeadman",
-            "url": "https://kick.com/tommydeadman"
-          },
-          {
-            "name": "DanielDawggydawgz",
-            "url": "https://kick.com/danieldawggydawgz"
-          },
-          {
-            "name": "PezSlaps",
-            "url": "https://kick.com/pezslaps"
-          },
-          {
-            "name": "KengkoyFps",
-            "url": "https://kick.com/kengkoyfps"
-          },
-          {
-            "name": "SlotsTitans",
-            "url": "https://kick.com/slotstitans"
-          },
-          {
-            "name": "Krammz",
-            "url": "https://kick.com/krammz"
-          },
-          {
-            "name": "Taeeemooon",
-            "url": "https://kick.com/taeeemooon"
-          },
-          {
-            "name": "GeloSanity",
-            "url": "https://kick.com/gelosanity"
-          },
-          {
-            "name": "KandiMunda",
-            "url": "https://kick.com/kandimunda"
-          },
-          {
-            "name": "gabayofficial",
-            "url": "https://kick.com/gabayofficial"
-          },
-          {
-            "name": "heymargaux",
-            "url": "https://kick.com/heymargaux"
-          },
-          {
-            "name": "Adrianozendejas32",
-            "url": "https://kick.com/adrianozendejas32"
-          },
-          {
-            "name": "BallySlots",
-            "url": "https://kick.com/ballyslots"
-          },
-          {
-            "name": "Jayyvl",
-            "url": "https://kick.com/jayyvl"
-          },
-          {
-            "name": "TygoGambles",
-            "url": "https://kick.com/tygogambles"
-          },
-          {
-            "name": "SokoGambles",
-            "url": "https://kick.com/sokogambles"
-          },
-          {
-            "name": "Barumabado",
-            "url": "https://kick.com/barumabado"
-          },
-          {
-            "name": "RubenGambles",
-            "url": "https://kick.com/rubengambles"
-          },
-          {
-            "name": "Sangtar",
-            "url": "https://kick.com/sangtar"
-          },
-          {
-            "name": "RIPS",
-            "url": "https://kick.com/rips"
-          },
-          {
-            "name": "Dynamikyt",
-            "url": "https://kick.com/dynamikyt"
-          },
-          {
-            "name": "UrbanGamers",
-            "url": "https://kick.com/urbangamers"
-          },
-          {
-            "name": "PabloEsccobar",
-            "url": "https://kick.com/pabloesccobar"
-          },
-          {
-            "name": "BonoHamilton",
-            "url": "https://kick.com/bonohamilton"
-          },
-          {
-            "name": "Ramplays",
-            "url": "https://kick.com/ramplays"
-          },
-          {
-            "name": "CryptoCosta",
-            "url": "https://kick.com/cryptocosta"
-          },
-          {
-            "name": "ATxStron",
-            "url": "https://kick.com/atxstron"
-          },
-          {
-            "name": "xeri",
-            "url": "https://kick.com/xeri"
-          },
-          {
-            "name": "CoreZh",
-            "url": "https://kick.com/corezh"
-          },
-          {
-            "name": "luhdelro",
-            "url": "https://kick.com/luhdelro"
-          },
-          {
-            "name": "VinxiiVinci",
-            "url": "https://kick.com/vinxiivinci"
-          },
-          {
-            "name": "PlayIncredible",
-            "url": "https://kick.com/playincredible"
-          },
-          {
-            "name": "JackBlack020",
-            "url": "https://kick.com/jackblack020"
-          },
-          {
-            "name": "RevizleOfficial",
-            "url": "https://kick.com/revizleofficial"
-          },
-          {
-            "name": "chooserich",
-            "url": "https://kick.com/chooserich"
-          },
-          {
-            "name": "piovincenzo",
-            "url": "https://kick.com/piovincenzo"
-          },
-          {
-            "name": "jussylive",
-            "url": "https://kick.com/jussylive"
-          },
-          {
-            "name": "verixtv",
-            "url": "https://kick.com/verixtv"
-          },
-          {
-            "name": "moonleverage",
-            "url": "https://kick.com/moonleverage"
-          },
-          {
-            "name": "putingkabalyer0",
-            "url": "https://kick.com/putingkabalyer0"
-          }
-        ],
-        "name": "1000X MOON Emote",
-        "type": "EMOTE",
-        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m4q9xrh2awahzn8ne1bsaypx-01m4q9xrhhne0c5jbqpfzwtn9f.png",
-        "minutes": 60,
-        "campaignStart": "2026-10-13T13:30:00.000Z",
-        "campaignEnd": "2026-11-03T12:30:00.000Z",
-        "gameName": "Crypto & Trading",
-        "campaignUrl": "https://kick.com/category/crypto-and-trading/drops",
-        "categoryUrl": "https://kick.com/category/crypto-and-trading/drops"
-      },
-      "messageId": "1566900875170156575",
-      "messageIds": [
-        "1566900875170156575"
-      ],
-      "messageFormatVersion": 2
-    },
-    "01M4QAHE05CXQ1G5SQ2YGSGNM2:01M4Q9Z94B6DBR0C9ZVKQ5F8QN": {
-      "status": "started",
-      "startAt": "2026-10-13T13:30:00.000Z",
-      "endAt": "2026-11-03T12:30:00.000Z",
-      "reward": {
-        "key": "01M4QAHE05CXQ1G5SQ2YGSGNM2:01M4Q9Z94B6DBR0C9ZVKQ5F8QN",
-        "campaignId": "01M4QAHE05CXQ1G5SQ2YGSGNM2",
-        "campaignName": "MOON Trading",
-        "campaignChannels": [
-          {
-            "name": "sustain",
-            "url": "https://kick.com/sustain"
-          },
-          {
-            "name": "J0K3R7777777",
-            "url": "https://kick.com/j0k3r7777777"
-          },
-          {
-            "name": "b4ng",
-            "url": "https://kick.com/b4ng"
-          },
-          {
-            "name": "funnyhoodvidz",
-            "url": "https://kick.com/funnyhoodvidz"
-          },
-          {
-            "name": "BlondeRabbit",
-            "url": "https://kick.com/blonderabbit"
-          },
-          {
-            "name": "prudent",
-            "url": "https://kick.com/prudent"
-          },
-          {
-            "name": "ChuckyBTZ",
-            "url": "https://kick.com/chuckybtz"
-          },
-          {
-            "name": "wino87",
-            "url": "https://kick.com/wino87"
-          },
-          {
-            "name": "Doge",
-            "url": "https://kick.com/doge"
-          },
-          {
-            "name": "ZenMasterEU",
-            "url": "https://kick.com/zenmastereu"
-          },
-          {
-            "name": "schneckyirl",
-            "url": "https://kick.com/schneckyirl"
-          },
-          {
-            "name": "Tuvachi",
-            "url": "https://kick.com/tuvachi"
-          },
-          {
-            "name": "sebi",
-            "url": "https://kick.com/sebi"
-          },
-          {
-            "name": "nickcleveland",
-            "url": "https://kick.com/nickcleveland"
-          },
-          {
-            "name": "correct",
-            "url": "https://kick.com/correct"
-          },
-          {
-            "name": "IVANB",
-            "url": "https://kick.com/ivanb"
-          },
-          {
-            "name": "dcampion",
-            "url": "https://kick.com/dcampion"
-          },
-          {
-            "name": "shiibbbster",
-            "url": "https://kick.com/shiibbbster"
-          },
-          {
-            "name": "ffrizy",
-            "url": "https://kick.com/ffrizy"
-          },
-          {
-            "name": "CUSTOMK",
-            "url": "https://kick.com/customk"
-          },
-          {
-            "name": "rumleren",
-            "url": "https://kick.com/rumleren"
-          },
-          {
-            "name": "RealFish",
-            "url": "https://kick.com/realfish"
-          },
-          {
-            "name": "scrapes",
-            "url": "https://kick.com/scrapes"
-          },
-          {
-            "name": "Alfajor",
-            "url": "https://kick.com/alfajor"
-          },
-          {
-            "name": "Elderbreaks",
-            "url": "https://kick.com/elderbreaks"
-          },
-          {
-            "name": "zmann",
-            "url": "https://kick.com/zmann"
-          },
-          {
-            "name": "D0KT0R3N",
-            "url": "https://kick.com/d0kt0r3n"
-          },
-          {
-            "name": "SlotsGuru",
-            "url": "https://kick.com/slotsguru"
-          },
-          {
-            "name": "urosh",
-            "url": "https://kick.com/urosh"
-          },
-          {
-            "name": "MarionS",
-            "url": "https://kick.com/marions"
-          },
-          {
-            "name": "Ded1ce",
-            "url": "https://kick.com/ded1ce"
-          },
-          {
-            "name": "TrendyALLin",
-            "url": "https://kick.com/trendyallin"
-          },
-          {
-            "name": "Vector",
-            "url": "https://kick.com/vector"
-          },
-          {
-            "name": "spin",
-            "url": "https://kick.com/spin"
-          },
-          {
-            "name": "keithlocks",
-            "url": "https://kick.com/keithlocks"
-          },
-          {
-            "name": "landero111",
-            "url": "https://kick.com/landero111"
-          },
-          {
-            "name": "ThatsAnton",
-            "url": "https://kick.com/thatsanton"
-          },
-          {
-            "name": "RedCorn",
-            "url": "https://kick.com/redcorn"
-          },
-          {
-            "name": "Volcano",
-            "url": "https://kick.com/volcano"
-          },
-          {
-            "name": "Wymzi",
-            "url": "https://kick.com/wymzi"
-          },
-          {
-            "name": "Tyceno",
-            "url": "https://kick.com/tyceno"
-          },
-          {
-            "name": "KingeeN",
-            "url": "https://kick.com/kingeen"
-          },
-          {
-            "name": "xdardi",
-            "url": "https://kick.com/xdardi"
-          },
-          {
-            "name": "aitooth",
-            "url": "https://kick.com/aitooth"
-          },
-          {
-            "name": "Eevee",
-            "url": "https://kick.com/eevee"
-          },
-          {
-            "name": "tsunamijkee",
-            "url": "https://kick.com/tsunamijkee"
-          },
-          {
-            "name": "zernovkaxd",
-            "url": "https://kick.com/zernovkaxd"
-          },
-          {
-            "name": "lucky_sl0ts",
-            "url": "https://kick.com/lucky_sl0ts"
-          },
-          {
-            "name": "ToastyyGambles",
-            "url": "https://kick.com/toastyygambles"
-          },
-          {
-            "name": "SoyPan",
-            "url": "https://kick.com/soypan"
-          },
-          {
-            "name": "Brunenger",
-            "url": "https://kick.com/brunenger"
-          },
-          {
-            "name": "Afterstay",
-            "url": "https://kick.com/afterstay"
-          },
-          {
-            "name": "Gena88",
-            "url": "https://kick.com/gena88"
-          },
-          {
-            "name": "GET_SOME",
-            "url": "https://kick.com/get_some"
-          },
-          {
-            "name": "Furp",
-            "url": "https://kick.com/furp"
-          },
-          {
-            "name": "levrock26",
-            "url": "https://kick.com/levrock26"
-          },
-          {
-            "name": "Pappakubasso",
-            "url": "https://kick.com/pappakubasso"
-          },
-          {
-            "name": "SantuLP",
-            "url": "https://kick.com/santulp"
-          },
-          {
-            "name": "realGafi",
-            "url": "https://kick.com/realgafi"
-          },
-          {
-            "name": "Bandz",
-            "url": "https://kick.com/bandz"
-          },
-          {
-            "name": "Crisplayboy",
-            "url": "https://kick.com/crisplayboy"
-          },
-          {
-            "name": "eboy",
-            "url": "https://kick.com/eboy"
-          },
-          {
-            "name": "V1nment",
-            "url": "https://kick.com/v1nment"
-          },
-          {
-            "name": "LOCOV2",
-            "url": "https://kick.com/locov2"
-          },
-          {
-            "name": "vodkafunky",
-            "url": "https://kick.com/vodkafunky"
-          },
-          {
-            "name": "Mafiantv",
-            "url": "https://kick.com/mafiantv"
-          },
-          {
-            "name": "okyyy",
-            "url": "https://kick.com/okyyy"
-          },
-          {
-            "name": "Aukkeelive",
-            "url": "https://kick.com/aukkeelive"
-          },
-          {
-            "name": "DGENTV",
-            "url": "https://kick.com/dgentv"
-          },
-          {
-            "name": "TJR",
-            "url": "https://kick.com/tjr"
-          },
-          {
-            "name": "leanguy777",
-            "url": "https://kick.com/leanguy777"
-          },
-          {
-            "name": "LannyLive",
-            "url": "https://kick.com/lannylive"
-          },
-          {
-            "name": "KappaPrideSummoner",
-            "url": "https://kick.com/kappapridesummoner"
-          },
-          {
-            "name": "Buladas",
-            "url": "https://kick.com/buladas"
-          },
-          {
-            "name": "oliverforslin",
-            "url": "https://kick.com/oliverforslin"
-          },
-          {
-            "name": "loru777",
-            "url": "https://kick.com/loru777"
-          },
-          {
-            "name": "SyndicateSlotz",
-            "url": "https://kick.com/syndicateslotz"
-          },
-          {
-            "name": "EBGaming",
-            "url": "https://kick.com/ebgaming"
-          },
-          {
-            "name": "HoodieHeff",
-            "url": "https://kick.com/hoodieheff"
-          },
-          {
-            "name": "KONDRATCAS",
-            "url": "https://kick.com/kondratcas"
-          },
-          {
-            "name": "Serguy55",
-            "url": "https://kick.com/serguy55"
-          },
-          {
-            "name": "Scoobyz88",
-            "url": "https://kick.com/scoobyz88"
-          },
-          {
-            "name": "JoeyMoose",
-            "url": "https://kick.com/joeymoose"
-          },
-          {
-            "name": "ParengCashper",
-            "url": "https://kick.com/parengcashper"
-          },
-          {
-            "name": "Adeftwastaken",
-            "url": "https://kick.com/adeftwastaken"
-          },
-          {
-            "name": "DMVDegens",
-            "url": "https://kick.com/dmvdegens"
-          },
-          {
-            "name": "AyeshaPlaysFTW",
-            "url": "https://kick.com/ayeshaplaysftw"
-          },
-          {
-            "name": "losludopa",
-            "url": "https://kick.com/losludopa"
-          },
-          {
-            "name": "ALLonBLACK1919",
-            "url": "https://kick.com/allonblack1919"
-          },
-          {
-            "name": "BrownBoiYT",
-            "url": "https://kick.com/brownboiyt"
-          },
-          {
-            "name": "KukuDota2",
-            "url": "https://kick.com/kukudota2"
-          },
-          {
-            "name": "enzotense",
-            "url": "https://kick.com/enzotense"
-          },
-          {
-            "name": "WagerWizardsOfficial",
-            "url": "https://kick.com/wagerwizardsofficial"
-          },
-          {
-            "name": "SultanGamba",
-            "url": "https://kick.com/sultangamba"
-          },
-          {
-            "name": "Crakkpot",
-            "url": "https://kick.com/crakkpot"
-          },
-          {
-            "name": "RogueWidow",
-            "url": "https://kick.com/roguewidow"
-          },
-          {
-            "name": "VehlaGuys",
-            "url": "https://kick.com/vehlaguys"
-          },
-          {
-            "name": "paolo_tuninetti",
-            "url": "https://kick.com/paolo_tuninetti"
-          },
-          {
-            "name": "bonkaLIVE",
-            "url": "https://kick.com/bonkalive"
-          },
-          {
-            "name": "Tinodota",
-            "url": "https://kick.com/tinodota"
-          },
-          {
-            "name": "poloesports",
-            "url": "https://kick.com/poloesports"
-          },
-          {
-            "name": "PrinceSisonGaming",
-            "url": "https://kick.com/princesisongaming"
-          },
-          {
-            "name": "tommydeadman",
-            "url": "https://kick.com/tommydeadman"
-          },
-          {
-            "name": "DanielDawggydawgz",
-            "url": "https://kick.com/danieldawggydawgz"
-          },
-          {
-            "name": "PezSlaps",
-            "url": "https://kick.com/pezslaps"
-          },
-          {
-            "name": "KengkoyFps",
-            "url": "https://kick.com/kengkoyfps"
-          },
-          {
-            "name": "SlotsTitans",
-            "url": "https://kick.com/slotstitans"
-          },
-          {
-            "name": "Krammz",
-            "url": "https://kick.com/krammz"
-          },
-          {
-            "name": "Taeeemooon",
-            "url": "https://kick.com/taeeemooon"
-          },
-          {
-            "name": "GeloSanity",
-            "url": "https://kick.com/gelosanity"
-          },
-          {
-            "name": "KandiMunda",
-            "url": "https://kick.com/kandimunda"
-          },
-          {
-            "name": "gabayofficial",
-            "url": "https://kick.com/gabayofficial"
-          },
-          {
-            "name": "heymargaux",
-            "url": "https://kick.com/heymargaux"
-          },
-          {
-            "name": "Adrianozendejas32",
-            "url": "https://kick.com/adrianozendejas32"
-          },
-          {
-            "name": "BallySlots",
-            "url": "https://kick.com/ballyslots"
-          },
-          {
-            "name": "Jayyvl",
-            "url": "https://kick.com/jayyvl"
-          },
-          {
-            "name": "TygoGambles",
-            "url": "https://kick.com/tygogambles"
-          },
-          {
-            "name": "SokoGambles",
-            "url": "https://kick.com/sokogambles"
-          },
-          {
-            "name": "Barumabado",
-            "url": "https://kick.com/barumabado"
-          },
-          {
-            "name": "RubenGambles",
-            "url": "https://kick.com/rubengambles"
-          },
-          {
-            "name": "Sangtar",
-            "url": "https://kick.com/sangtar"
-          },
-          {
-            "name": "RIPS",
-            "url": "https://kick.com/rips"
-          },
-          {
-            "name": "Dynamikyt",
-            "url": "https://kick.com/dynamikyt"
-          },
-          {
-            "name": "UrbanGamers",
-            "url": "https://kick.com/urbangamers"
-          },
-          {
-            "name": "PabloEsccobar",
-            "url": "https://kick.com/pabloesccobar"
-          },
-          {
-            "name": "BonoHamilton",
-            "url": "https://kick.com/bonohamilton"
-          },
-          {
-            "name": "Ramplays",
-            "url": "https://kick.com/ramplays"
-          },
-          {
-            "name": "CryptoCosta",
-            "url": "https://kick.com/cryptocosta"
-          },
-          {
-            "name": "ATxStron",
-            "url": "https://kick.com/atxstron"
-          },
-          {
-            "name": "xeri",
-            "url": "https://kick.com/xeri"
-          },
-          {
-            "name": "CoreZh",
-            "url": "https://kick.com/corezh"
-          },
-          {
-            "name": "luhdelro",
-            "url": "https://kick.com/luhdelro"
-          },
-          {
-            "name": "VinxiiVinci",
-            "url": "https://kick.com/vinxiivinci"
-          },
-          {
-            "name": "PlayIncredible",
-            "url": "https://kick.com/playincredible"
-          },
-          {
-            "name": "JackBlack020",
-            "url": "https://kick.com/jackblack020"
-          },
-          {
-            "name": "RevizleOfficial",
-            "url": "https://kick.com/revizleofficial"
-          },
-          {
-            "name": "chooserich",
-            "url": "https://kick.com/chooserich"
-          },
-          {
-            "name": "piovincenzo",
-            "url": "https://kick.com/piovincenzo"
-          },
-          {
-            "name": "jussylive",
-            "url": "https://kick.com/jussylive"
-          },
-          {
-            "name": "verixtv",
-            "url": "https://kick.com/verixtv"
-          },
-          {
-            "name": "moonleverage",
-            "url": "https://kick.com/moonleverage"
-          },
-          {
-            "name": "putingkabalyer0",
-            "url": "https://kick.com/putingkabalyer0"
-          }
-        ],
-        "name": "God Candle Emote",
-        "type": "EMOTE",
-        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m4q9z94b6dbr0c9zvkq5f8qn-01m4q9z94v5qjjn9ghpsvee5rk.png",
-        "minutes": 120,
-        "campaignStart": "2026-10-13T13:30:00.000Z",
-        "campaignEnd": "2026-11-03T12:30:00.000Z",
-        "gameName": "Crypto & Trading",
-        "campaignUrl": "https://kick.com/category/crypto-and-trading/drops",
-        "categoryUrl": "https://kick.com/category/crypto-and-trading/drops"
-      },
-      "messageId": "1566900877032431631",
-      "messageIds": [
-        "1566900877032431631"
-      ],
-      "messageFormatVersion": 2
-    },
-    "01M4QAHE05CXQ1G5SQ2YGSGNM2:01M4QA0B66PTP54WGM5JY9MB3H": {
-      "status": "started",
-      "startAt": "2026-10-13T13:30:00.000Z",
-      "endAt": "2026-11-03T12:30:00.000Z",
-      "reward": {
-        "key": "01M4QAHE05CXQ1G5SQ2YGSGNM2:01M4QA0B66PTP54WGM5JY9MB3H",
-        "campaignId": "01M4QAHE05CXQ1G5SQ2YGSGNM2",
-        "campaignName": "MOON Trading",
-        "campaignChannels": [
-          {
-            "name": "sustain",
-            "url": "https://kick.com/sustain"
-          },
-          {
-            "name": "J0K3R7777777",
-            "url": "https://kick.com/j0k3r7777777"
-          },
-          {
-            "name": "b4ng",
-            "url": "https://kick.com/b4ng"
-          },
-          {
-            "name": "funnyhoodvidz",
-            "url": "https://kick.com/funnyhoodvidz"
-          },
-          {
-            "name": "BlondeRabbit",
-            "url": "https://kick.com/blonderabbit"
-          },
-          {
-            "name": "prudent",
-            "url": "https://kick.com/prudent"
-          },
-          {
-            "name": "ChuckyBTZ",
-            "url": "https://kick.com/chuckybtz"
-          },
-          {
-            "name": "wino87",
-            "url": "https://kick.com/wino87"
-          },
-          {
-            "name": "Doge",
-            "url": "https://kick.com/doge"
-          },
-          {
-            "name": "ZenMasterEU",
-            "url": "https://kick.com/zenmastereu"
-          },
-          {
-            "name": "schneckyirl",
-            "url": "https://kick.com/schneckyirl"
-          },
-          {
-            "name": "Tuvachi",
-            "url": "https://kick.com/tuvachi"
-          },
-          {
-            "name": "sebi",
-            "url": "https://kick.com/sebi"
-          },
-          {
-            "name": "nickcleveland",
-            "url": "https://kick.com/nickcleveland"
-          },
-          {
-            "name": "correct",
-            "url": "https://kick.com/correct"
-          },
-          {
-            "name": "IVANB",
-            "url": "https://kick.com/ivanb"
-          },
-          {
-            "name": "dcampion",
-            "url": "https://kick.com/dcampion"
-          },
-          {
-            "name": "shiibbbster",
-            "url": "https://kick.com/shiibbbster"
-          },
-          {
-            "name": "ffrizy",
-            "url": "https://kick.com/ffrizy"
-          },
-          {
-            "name": "CUSTOMK",
-            "url": "https://kick.com/customk"
-          },
-          {
-            "name": "rumleren",
-            "url": "https://kick.com/rumleren"
-          },
-          {
-            "name": "RealFish",
-            "url": "https://kick.com/realfish"
-          },
-          {
-            "name": "scrapes",
-            "url": "https://kick.com/scrapes"
-          },
-          {
-            "name": "Alfajor",
-            "url": "https://kick.com/alfajor"
-          },
-          {
-            "name": "Elderbreaks",
-            "url": "https://kick.com/elderbreaks"
-          },
-          {
-            "name": "zmann",
-            "url": "https://kick.com/zmann"
-          },
-          {
-            "name": "D0KT0R3N",
-            "url": "https://kick.com/d0kt0r3n"
-          },
-          {
-            "name": "SlotsGuru",
-            "url": "https://kick.com/slotsguru"
-          },
-          {
-            "name": "urosh",
-            "url": "https://kick.com/urosh"
-          },
-          {
-            "name": "MarionS",
-            "url": "https://kick.com/marions"
-          },
-          {
-            "name": "Ded1ce",
-            "url": "https://kick.com/ded1ce"
-          },
-          {
-            "name": "TrendyALLin",
-            "url": "https://kick.com/trendyallin"
-          },
-          {
-            "name": "Vector",
-            "url": "https://kick.com/vector"
-          },
-          {
-            "name": "spin",
-            "url": "https://kick.com/spin"
-          },
-          {
-            "name": "keithlocks",
-            "url": "https://kick.com/keithlocks"
-          },
-          {
-            "name": "landero111",
-            "url": "https://kick.com/landero111"
-          },
-          {
-            "name": "ThatsAnton",
-            "url": "https://kick.com/thatsanton"
-          },
-          {
-            "name": "RedCorn",
-            "url": "https://kick.com/redcorn"
-          },
-          {
-            "name": "Volcano",
-            "url": "https://kick.com/volcano"
-          },
-          {
-            "name": "Wymzi",
-            "url": "https://kick.com/wymzi"
-          },
-          {
-            "name": "Tyceno",
-            "url": "https://kick.com/tyceno"
-          },
-          {
-            "name": "KingeeN",
-            "url": "https://kick.com/kingeen"
-          },
-          {
-            "name": "xdardi",
-            "url": "https://kick.com/xdardi"
-          },
-          {
-            "name": "aitooth",
-            "url": "https://kick.com/aitooth"
-          },
-          {
-            "name": "Eevee",
-            "url": "https://kick.com/eevee"
-          },
-          {
-            "name": "tsunamijkee",
-            "url": "https://kick.com/tsunamijkee"
-          },
-          {
-            "name": "zernovkaxd",
-            "url": "https://kick.com/zernovkaxd"
-          },
-          {
-            "name": "lucky_sl0ts",
-            "url": "https://kick.com/lucky_sl0ts"
-          },
-          {
-            "name": "ToastyyGambles",
-            "url": "https://kick.com/toastyygambles"
-          },
-          {
-            "name": "SoyPan",
-            "url": "https://kick.com/soypan"
-          },
-          {
-            "name": "Brunenger",
-            "url": "https://kick.com/brunenger"
-          },
-          {
-            "name": "Afterstay",
-            "url": "https://kick.com/afterstay"
-          },
-          {
-            "name": "Gena88",
-            "url": "https://kick.com/gena88"
-          },
-          {
-            "name": "GET_SOME",
-            "url": "https://kick.com/get_some"
-          },
-          {
-            "name": "Furp",
-            "url": "https://kick.com/furp"
-          },
-          {
-            "name": "levrock26",
-            "url": "https://kick.com/levrock26"
-          },
-          {
-            "name": "Pappakubasso",
-            "url": "https://kick.com/pappakubasso"
-          },
-          {
-            "name": "SantuLP",
-            "url": "https://kick.com/santulp"
-          },
-          {
-            "name": "realGafi",
-            "url": "https://kick.com/realgafi"
-          },
-          {
-            "name": "Bandz",
-            "url": "https://kick.com/bandz"
-          },
-          {
-            "name": "Crisplayboy",
-            "url": "https://kick.com/crisplayboy"
-          },
-          {
-            "name": "eboy",
-            "url": "https://kick.com/eboy"
-          },
-          {
-            "name": "V1nment",
-            "url": "https://kick.com/v1nment"
-          },
-          {
-            "name": "LOCOV2",
-            "url": "https://kick.com/locov2"
-          },
-          {
-            "name": "vodkafunky",
-            "url": "https://kick.com/vodkafunky"
-          },
-          {
-            "name": "Mafiantv",
-            "url": "https://kick.com/mafiantv"
-          },
-          {
-            "name": "okyyy",
-            "url": "https://kick.com/okyyy"
-          },
-          {
-            "name": "Aukkeelive",
-            "url": "https://kick.com/aukkeelive"
-          },
-          {
-            "name": "DGENTV",
-            "url": "https://kick.com/dgentv"
-          },
-          {
-            "name": "TJR",
-            "url": "https://kick.com/tjr"
-          },
-          {
-            "name": "leanguy777",
-            "url": "https://kick.com/leanguy777"
-          },
-          {
-            "name": "LannyLive",
-            "url": "https://kick.com/lannylive"
-          },
-          {
-            "name": "KappaPrideSummoner",
-            "url": "https://kick.com/kappapridesummoner"
-          },
-          {
-            "name": "Buladas",
-            "url": "https://kick.com/buladas"
-          },
-          {
-            "name": "oliverforslin",
-            "url": "https://kick.com/oliverforslin"
-          },
-          {
-            "name": "loru777",
-            "url": "https://kick.com/loru777"
-          },
-          {
-            "name": "SyndicateSlotz",
-            "url": "https://kick.com/syndicateslotz"
-          },
-          {
-            "name": "EBGaming",
-            "url": "https://kick.com/ebgaming"
-          },
-          {
-            "name": "HoodieHeff",
-            "url": "https://kick.com/hoodieheff"
-          },
-          {
-            "name": "KONDRATCAS",
-            "url": "https://kick.com/kondratcas"
-          },
-          {
-            "name": "Serguy55",
-            "url": "https://kick.com/serguy55"
-          },
-          {
-            "name": "Scoobyz88",
-            "url": "https://kick.com/scoobyz88"
-          },
-          {
-            "name": "JoeyMoose",
-            "url": "https://kick.com/joeymoose"
-          },
-          {
-            "name": "ParengCashper",
-            "url": "https://kick.com/parengcashper"
-          },
-          {
-            "name": "Adeftwastaken",
-            "url": "https://kick.com/adeftwastaken"
-          },
-          {
-            "name": "DMVDegens",
-            "url": "https://kick.com/dmvdegens"
-          },
-          {
-            "name": "AyeshaPlaysFTW",
-            "url": "https://kick.com/ayeshaplaysftw"
-          },
-          {
-            "name": "losludopa",
-            "url": "https://kick.com/losludopa"
-          },
-          {
-            "name": "ALLonBLACK1919",
-            "url": "https://kick.com/allonblack1919"
-          },
-          {
-            "name": "BrownBoiYT",
-            "url": "https://kick.com/brownboiyt"
-          },
-          {
-            "name": "KukuDota2",
-            "url": "https://kick.com/kukudota2"
-          },
-          {
-            "name": "enzotense",
-            "url": "https://kick.com/enzotense"
-          },
-          {
-            "name": "WagerWizardsOfficial",
-            "url": "https://kick.com/wagerwizardsofficial"
-          },
-          {
-            "name": "SultanGamba",
-            "url": "https://kick.com/sultangamba"
-          },
-          {
-            "name": "Crakkpot",
-            "url": "https://kick.com/crakkpot"
-          },
-          {
-            "name": "RogueWidow",
-            "url": "https://kick.com/roguewidow"
-          },
-          {
-            "name": "VehlaGuys",
-            "url": "https://kick.com/vehlaguys"
-          },
-          {
-            "name": "paolo_tuninetti",
-            "url": "https://kick.com/paolo_tuninetti"
-          },
-          {
-            "name": "bonkaLIVE",
-            "url": "https://kick.com/bonkalive"
-          },
-          {
-            "name": "Tinodota",
-            "url": "https://kick.com/tinodota"
-          },
-          {
-            "name": "poloesports",
-            "url": "https://kick.com/poloesports"
-          },
-          {
-            "name": "PrinceSisonGaming",
-            "url": "https://kick.com/princesisongaming"
-          },
-          {
-            "name": "tommydeadman",
-            "url": "https://kick.com/tommydeadman"
-          },
-          {
-            "name": "DanielDawggydawgz",
-            "url": "https://kick.com/danieldawggydawgz"
-          },
-          {
-            "name": "PezSlaps",
-            "url": "https://kick.com/pezslaps"
-          },
-          {
-            "name": "KengkoyFps",
-            "url": "https://kick.com/kengkoyfps"
-          },
-          {
-            "name": "SlotsTitans",
-            "url": "https://kick.com/slotstitans"
-          },
-          {
-            "name": "Krammz",
-            "url": "https://kick.com/krammz"
-          },
-          {
-            "name": "Taeeemooon",
-            "url": "https://kick.com/taeeemooon"
-          },
-          {
-            "name": "GeloSanity",
-            "url": "https://kick.com/gelosanity"
-          },
-          {
-            "name": "KandiMunda",
-            "url": "https://kick.com/kandimunda"
-          },
-          {
-            "name": "gabayofficial",
-            "url": "https://kick.com/gabayofficial"
-          },
-          {
-            "name": "heymargaux",
-            "url": "https://kick.com/heymargaux"
-          },
-          {
-            "name": "Adrianozendejas32",
-            "url": "https://kick.com/adrianozendejas32"
-          },
-          {
-            "name": "BallySlots",
-            "url": "https://kick.com/ballyslots"
-          },
-          {
-            "name": "Jayyvl",
-            "url": "https://kick.com/jayyvl"
-          },
-          {
-            "name": "TygoGambles",
-            "url": "https://kick.com/tygogambles"
-          },
-          {
-            "name": "SokoGambles",
-            "url": "https://kick.com/sokogambles"
-          },
-          {
-            "name": "Barumabado",
-            "url": "https://kick.com/barumabado"
-          },
-          {
-            "name": "RubenGambles",
-            "url": "https://kick.com/rubengambles"
-          },
-          {
-            "name": "Sangtar",
-            "url": "https://kick.com/sangtar"
-          },
-          {
-            "name": "RIPS",
-            "url": "https://kick.com/rips"
-          },
-          {
-            "name": "Dynamikyt",
-            "url": "https://kick.com/dynamikyt"
-          },
-          {
-            "name": "UrbanGamers",
-            "url": "https://kick.com/urbangamers"
-          },
-          {
-            "name": "PabloEsccobar",
-            "url": "https://kick.com/pabloesccobar"
-          },
-          {
-            "name": "BonoHamilton",
-            "url": "https://kick.com/bonohamilton"
-          },
-          {
-            "name": "Ramplays",
-            "url": "https://kick.com/ramplays"
-          },
-          {
-            "name": "CryptoCosta",
-            "url": "https://kick.com/cryptocosta"
-          },
-          {
-            "name": "ATxStron",
-            "url": "https://kick.com/atxstron"
-          },
-          {
-            "name": "xeri",
-            "url": "https://kick.com/xeri"
-          },
-          {
-            "name": "CoreZh",
-            "url": "https://kick.com/corezh"
-          },
-          {
-            "name": "luhdelro",
-            "url": "https://kick.com/luhdelro"
-          },
-          {
-            "name": "VinxiiVinci",
-            "url": "https://kick.com/vinxiivinci"
-          },
-          {
-            "name": "PlayIncredible",
-            "url": "https://kick.com/playincredible"
-          },
-          {
-            "name": "JackBlack020",
-            "url": "https://kick.com/jackblack020"
-          },
-          {
-            "name": "RevizleOfficial",
-            "url": "https://kick.com/revizleofficial"
-          },
-          {
-            "name": "chooserich",
-            "url": "https://kick.com/chooserich"
-          },
-          {
-            "name": "piovincenzo",
-            "url": "https://kick.com/piovincenzo"
-          },
-          {
-            "name": "jussylive",
-            "url": "https://kick.com/jussylive"
-          },
-          {
-            "name": "verixtv",
-            "url": "https://kick.com/verixtv"
-          },
-          {
-            "name": "moonleverage",
-            "url": "https://kick.com/moonleverage"
-          },
-          {
-            "name": "putingkabalyer0",
-            "url": "https://kick.com/putingkabalyer0"
-          }
-        ],
-        "name": "TJR To The Moon Emote",
-        "type": "EMOTE",
-        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m4qa0b66ptp54wgm5jy9mb3h-01m4qa0b6m9dzy8nssfppvb1x1.png",
-        "minutes": 300,
-        "campaignStart": "2026-10-13T13:30:00.000Z",
-        "campaignEnd": "2026-11-03T12:30:00.000Z",
-        "gameName": "Crypto & Trading",
-        "campaignUrl": "https://kick.com/category/crypto-and-trading/drops",
-        "categoryUrl": "https://kick.com/category/crypto-and-trading/drops"
-      },
-      "messageId": "1566900879079116871",
-      "messageIds": [
-        "1566900879079116871"
-      ],
-      "messageFormatVersion": 2
-    },
-    "01M4VVWFB4T8MA9JXAQ3SBFA36:01M4VVFGQB4KSXF141DRYGB70S": {
-      "status": "started",
-      "startAt": "2026-10-28T08:00:00.000Z",
-      "endAt": "2026-11-07T08:00:00.000Z",
-      "reward": {
-        "key": "01M4VVWFB4T8MA9JXAQ3SBFA36:01M4VVFGQB4KSXF141DRYGB70S",
-        "campaignId": "01M4VVWFB4T8MA9JXAQ3SBFA36",
-        "campaignName": "Chat Emote - True Damage",
+        "key": "01M4VW169236GHGNK090F8NA8T:01M4VVGB0CH1ECVDZ3J39KTJEJ",
+        "campaignId": "01M4VW169236GHGNK090F8NA8T",
+        "campaignName": "Chat Emote - Pentakill",
         "campaignChannels": [],
-        "name": "Chat Emote - True Damage",
+        "name": "Chat Emote - Pentakill",
         "type": "EMOTE",
-        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m4vvfgqb4ksxf141drygb70s-01m4vvfgr44t2h5ft09gp99xbe.png",
+        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m4vvgb0ch1ecvdz3j39ktjej-01m4vvgb16e5q0y0nfetw08kwm.png",
         "minutes": 30,
-        "campaignStart": "2026-10-28T08:00:00.000Z",
-        "campaignEnd": "2026-11-07T08:00:00.000Z",
+        "campaignStart": "2026-11-07T08:00:00.000Z",
+        "campaignEnd": "2026-11-13T08:00:00.000Z",
         "gameName": "League of Legends",
         "campaignUrl": "https://kick.com/category/league-of-legends/drops",
         "categoryUrl": "https://kick.com/category/league-of-legends/drops"
       },
-      "messageId": "1566900899987853436",
+      "messageId": "1570094710477824042",
       "messageIds": [
-        "1566900899987853436"
+        "1570094710477824042"
       ],
       "messageFormatVersion": 2
+    },
+    "01M71B4D4VA0G9N3Q0QXH73Q78:01M6ZQDZDEW41YP42GR71MEH6P": {
+      "status": "started",
+      "startAt": "2026-11-10T00:00:00.000Z",
+      "endAt": "2026-11-18T00:00:00.000Z",
+      "reward": {
+        "key": "01M71B4D4VA0G9N3Q0QXH73Q78:01M6ZQDZDEW41YP42GR71MEH6P",
+        "campaignId": "01M71B4D4VA0G9N3Q0QXH73Q78",
+        "campaignName": "Treasure Hunt",
+        "campaignChannels": [],
+        "name": "Chest Potion Emote",
+        "type": "EMOTE",
+        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m6zqdzdew41yp42gr71meh6p-01m6zqdzdshz5swe7jv838yqh3.png",
+        "minutes": 300,
+        "campaignStart": "2026-11-10T00:00:00.000Z",
+        "campaignEnd": "2026-11-18T00:00:00.000Z",
+        "gameName": "Fortnite",
+        "campaignUrl": "https://kick.com/category/fortnite/drops",
+        "categoryUrl": "https://kick.com/category/fortnite/drops"
+      },
+      "messageId": "1570094711665070252",
+      "messageIds": [
+        "1570094711665070252"
+      ],
+      "messageFormatVersion": 2
+    },
+    "01M71B4D4VA0G9N3Q0QXH73Q78:01M71AA5SGZNSAH86EAC4M5X7E": {
+      "status": "started",
+      "startAt": "2026-11-10T00:00:00.000Z",
+      "endAt": "2026-11-18T00:00:00.000Z",
+      "reward": {
+        "key": "01M71B4D4VA0G9N3Q0QXH73Q78:01M71AA5SGZNSAH86EAC4M5X7E",
+        "campaignId": "01M71B4D4VA0G9N3Q0QXH73Q78",
+        "campaignName": "Treasure Hunt",
+        "campaignChannels": [],
+        "name": "Chest Bomb Emote",
+        "type": "EMOTE",
+        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m71aa5sgznsah86eac4m5x7e-01m71aa5swv37b6pxa3pkyv1by.png",
+        "minutes": 600,
+        "campaignStart": "2026-11-10T00:00:00.000Z",
+        "campaignEnd": "2026-11-18T00:00:00.000Z",
+        "gameName": "Fortnite",
+        "campaignUrl": "https://kick.com/category/fortnite/drops",
+        "categoryUrl": "https://kick.com/category/fortnite/drops"
+      },
+      "messageId": "1570094712768167988",
+      "messageIds": [
+        "1570094712768167988"
+      ],
+      "messageFormatVersion": 2
+    },
+    "01M71B4D4VA0G9N3Q0QXH73Q78:01M71ABGRGN18DV0WF2D3PVH2M": {
+      "status": "started",
+      "startAt": "2026-11-10T00:00:00.000Z",
+      "endAt": "2026-11-18T00:00:00.000Z",
+      "reward": {
+        "key": "01M71B4D4VA0G9N3Q0QXH73Q78:01M71ABGRGN18DV0WF2D3PVH2M",
+        "campaignId": "01M71B4D4VA0G9N3Q0QXH73Q78",
+        "campaignName": "Treasure Hunt",
+        "campaignChannels": [],
+        "name": "Chest Golden K Emote",
+        "type": "EMOTE",
+        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m71abgrgn18dv0wf2d3pvh2m-01m71abgs01e3bhr2z0f7p3sd6.png",
+        "minutes": 900,
+        "campaignStart": "2026-11-10T00:00:00.000Z",
+        "campaignEnd": "2026-11-18T00:00:00.000Z",
+        "gameName": "Fortnite",
+        "campaignUrl": "https://kick.com/category/fortnite/drops",
+        "categoryUrl": "https://kick.com/category/fortnite/drops"
+      },
+      "messageId": "1570094733026394145",
+      "messageIds": [
+        "1570094733026394145"
+      ],
+      "messageFormatVersion": 2
+    },
+    "01M73SZYH8PT7WT3ED9VF0MN0A:01M73SMRECY9D3YRH94C1MZ6SJ": {
+      "status": "started",
+      "startAt": "2026-11-10T23:00:00.000Z",
+      "endAt": "2026-11-12T20:00:00.000Z",
+      "reward": {
+        "key": "01M73SZYH8PT7WT3ED9VF0MN0A:01M73SMRECY9D3YRH94C1MZ6SJ",
+        "campaignId": "01M73SZYH8PT7WT3ED9VF0MN0A",
+        "campaignName": "Fat Camp 2",
+        "campaignChannels": [
+          {
+            "name": "Cuffem",
+            "url": "https://kick.com/cuffem"
+          },
+          {
+            "name": "sweatergxd",
+            "url": "https://kick.com/sweatergxd"
+          },
+          {
+            "name": "MexicanAndy",
+            "url": "https://kick.com/mexicanandy"
+          },
+          {
+            "name": "AdinRoss",
+            "url": "https://kick.com/adinross"
+          },
+          {
+            "name": "Remzee",
+            "url": "https://kick.com/remzee"
+          },
+          {
+            "name": "Jordan",
+            "url": "https://kick.com/jordan"
+          },
+          {
+            "name": "n3on",
+            "url": "https://kick.com/n3on"
+          },
+          {
+            "name": "4_inches",
+            "url": "https://kick.com/4_inches"
+          },
+          {
+            "name": "Jayjeezy96",
+            "url": "https://kick.com/jayjeezy96"
+          }
+        ],
+        "name": "Gorlock Wide Emote",
+        "type": "EMOTE",
+        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m73smrecy9d3yrh94c1mz6sj-01m73smreqzyw521zh0gewxy6h.png",
+        "minutes": 360,
+        "campaignStart": "2026-11-10T23:00:00.000Z",
+        "campaignEnd": "2026-11-12T20:00:00.000Z",
+        "gameName": "Special Events",
+        "campaignUrl": "https://kick.com/category/special-events/drops",
+        "categoryUrl": "https://kick.com/category/special-events/drops"
+      },
+      "messageId": "1570094734683414643",
+      "messageIds": [
+        "1570094734683414643"
+      ],
+      "messageFormatVersion": 2
+    },
+    "01M73SZYH8PT7WT3ED9VF0MN0A:01M73SNDC0BPC0921DKBHTYHC6": {
+      "status": "started",
+      "startAt": "2026-11-10T23:00:00.000Z",
+      "endAt": "2026-11-12T20:00:00.000Z",
+      "reward": {
+        "key": "01M73SZYH8PT7WT3ED9VF0MN0A:01M73SNDC0BPC0921DKBHTYHC6",
+        "campaignId": "01M73SZYH8PT7WT3ED9VF0MN0A",
+        "campaignName": "Fat Camp 2",
+        "campaignChannels": [
+          {
+            "name": "Cuffem",
+            "url": "https://kick.com/cuffem"
+          },
+          {
+            "name": "sweatergxd",
+            "url": "https://kick.com/sweatergxd"
+          },
+          {
+            "name": "MexicanAndy",
+            "url": "https://kick.com/mexicanandy"
+          },
+          {
+            "name": "AdinRoss",
+            "url": "https://kick.com/adinross"
+          },
+          {
+            "name": "Remzee",
+            "url": "https://kick.com/remzee"
+          },
+          {
+            "name": "Jordan",
+            "url": "https://kick.com/jordan"
+          },
+          {
+            "name": "n3on",
+            "url": "https://kick.com/n3on"
+          },
+          {
+            "name": "4_inches",
+            "url": "https://kick.com/4_inches"
+          },
+          {
+            "name": "Jayjeezy96",
+            "url": "https://kick.com/jayjeezy96"
+          }
+        ],
+        "name": "Cuffem Wide Emote",
+        "type": "EMOTE",
+        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m73sndc0bpc0921dkbhtyhc6-01m73sndcafm960xpwzfazfdjc.png",
+        "minutes": 120,
+        "campaignStart": "2026-11-10T23:00:00.000Z",
+        "campaignEnd": "2026-11-12T20:00:00.000Z",
+        "gameName": "Special Events",
+        "campaignUrl": "https://kick.com/category/special-events/drops",
+        "categoryUrl": "https://kick.com/category/special-events/drops"
+      },
+      "messageId": "1570094736289702009",
+      "messageIds": [
+        "1570094736289702009"
+      ],
+      "messageFormatVersion": 2
+    },
+    "01M73SZYH8PT7WT3ED9VF0MN0A:01M73SQ3CQSHBWY96C91MFE0CF": {
+      "status": "started",
+      "startAt": "2026-11-10T23:00:00.000Z",
+      "endAt": "2026-11-12T20:00:00.000Z",
+      "reward": {
+        "key": "01M73SZYH8PT7WT3ED9VF0MN0A:01M73SQ3CQSHBWY96C91MFE0CF",
+        "campaignId": "01M73SZYH8PT7WT3ED9VF0MN0A",
+        "campaignName": "Fat Camp 2",
+        "campaignChannels": [
+          {
+            "name": "Cuffem",
+            "url": "https://kick.com/cuffem"
+          },
+          {
+            "name": "sweatergxd",
+            "url": "https://kick.com/sweatergxd"
+          },
+          {
+            "name": "MexicanAndy",
+            "url": "https://kick.com/mexicanandy"
+          },
+          {
+            "name": "AdinRoss",
+            "url": "https://kick.com/adinross"
+          },
+          {
+            "name": "Remzee",
+            "url": "https://kick.com/remzee"
+          },
+          {
+            "name": "Jordan",
+            "url": "https://kick.com/jordan"
+          },
+          {
+            "name": "n3on",
+            "url": "https://kick.com/n3on"
+          },
+          {
+            "name": "4_inches",
+            "url": "https://kick.com/4_inches"
+          },
+          {
+            "name": "Jayjeezy96",
+            "url": "https://kick.com/jayjeezy96"
+          }
+        ],
+        "name": "NoNeckJay Wide Emote",
+        "type": "EMOTE",
+        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m73sq3cqshbwy96c91mfe0cf-01m73sq3d242bta2a5dx2w0r7n.png",
+        "minutes": 240,
+        "campaignStart": "2026-11-10T23:00:00.000Z",
+        "campaignEnd": "2026-11-12T20:00:00.000Z",
+        "gameName": "Special Events",
+        "campaignUrl": "https://kick.com/category/special-events/drops",
+        "categoryUrl": "https://kick.com/category/special-events/drops"
+      },
+      "messageId": "1570094737698988257",
+      "messageIds": [
+        "1570094737698988257"
+      ],
+      "messageFormatVersion": 2
+    },
+    "01M4FJM2JJQJBYSYWN23TEYFBR:01M4FJGJZWHJA1VPTSAMWV3T19": {
+      "status": "started",
+      "startAt": "2026-10-10T13:00:00.000Z",
+      "endAt": "2026-11-14T17:00:00.000Z",
+      "reward": {
+        "key": "01M4FJM2JJQJBYSYWN23TEYFBR:01M4FJGJZWHJA1VPTSAMWV3T19",
+        "campaignId": "01M4FJM2JJQJBYSYWN23TEYFBR",
+        "campaignName": "KICK Talk Ed VS Ethan",
+        "campaignChannels": [
+          {
+            "name": "Eddie",
+            "url": "https://kick.com/eddie"
+          }
+        ],
+        "name": "Eddie VS Ethan",
+        "type": "EMOTE",
+        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m4fjgjzwhja1vptsamwv3t19-01m4fjgk0acf3t8c51nahw4948.png",
+        "minutes": 180,
+        "campaignStart": "2026-10-10T13:00:00.000Z",
+        "campaignEnd": "2026-11-14T17:00:00.000Z",
+        "gameName": "Just Chatting",
+        "campaignUrl": "https://kick.com/eddie",
+        "categoryUrl": "https://kick.com/category/just-chatting/drops"
+      },
+      "messageId": "1570095986351542364",
+      "messageIds": [
+        "1570095986351542364"
+      ],
+      "messageFormatVersion": 2,
+      "renewalBaselineEndAt": "2026-11-07T17:00:00.000Z"
     }
   },
   "indiegalaBundleExpiries": {
