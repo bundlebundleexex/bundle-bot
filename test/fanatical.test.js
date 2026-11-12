@@ -1,6 +1,20 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { getBundleKey, isPermanentlyBlocked, hasSeenBundle, hasLegacyBundleKey, findPreviousEndDate, pruneInactiveFanaticalBundles } = require("../stores/fanatical");
+const { getBundleKey, isPermanentlyBlocked, isGameBundle, hasSeenBundle, hasLegacyBundleKey, findPreviousEndDate, pruneInactiveFanaticalBundles } = require("../stores/fanatical");
+
+test("does not treat Fanatical book bundles as game bundles", () => {
+  assert.equal(isGameBundle({
+    slug: "mass-effect-and-dragon-age-build-your-own-bioware-book-bundle",
+    name: "Mass Effect and Dragon Age Build your own BioWare Book Bundle",
+    display_type: "bundle"
+  }), false);
+  assert.equal(isGameBundle({
+    slug: "bioware-rpg-bundle",
+    name: "BioWare RPG Bundle",
+    display_type: "bundle",
+    drm: ["steam"]
+  }), true);
+});
 
 test("permanently blocks the two Fanatical bundles requested", () => {
   assert.equal(isPermanentlyBlocked({ slug: "batman-arkham-collection", name: "Batman: Arkham Collection" }), true);

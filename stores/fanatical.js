@@ -81,7 +81,7 @@ function isBlockedNonGame(bundle) {
   if (bundle.mystery) return true;
   if (/mystery|random key|random-key/.test(text)) return true;
 
-  return /(comic|comics|manga|ebook|ebooks|course|courses|certification|masterclass|elearning|education|zenva|python|excel|robotics|llm|machine learning|ai bundle|art bundle|graphics and design|design bundle|business|security|cloud|network|programming|coding|code bundle|developer|dev bundle|game dev|game devs|c#|\.net|asset|assets|voice pack|template|manual|guidebook|software)/.test(
+  return /(book bundle|books bundle|\bbooks?\b|comic|comics|manga|ebook|ebooks|course|courses|certification|masterclass|elearning|education|zenva|python|excel|robotics|llm|machine learning|ai bundle|art bundle|graphics and design|design bundle|business|security|cloud|network|programming|coding|code bundle|developer|dev bundle|game dev|game devs|c#|\.net|asset|assets|voice pack|template|manual|guidebook|software)/.test(
     text
   );
 }
@@ -450,6 +450,7 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
 
 module.exports.getBundleKey = getBundleKey;
 module.exports.isPermanentlyBlocked = isPermanentlyBlocked;
+module.exports.isGameBundle = isGameBundle;
 module.exports.hasSeenBundle = hasSeenBundle;
 module.exports.hasLegacyBundleKey = hasLegacyBundleKey;
 module.exports.findPreviousEndDate = findPreviousEndDate;
