@@ -24,11 +24,14 @@ function getCampaignId(campaign) {
 }
 
 function getCampaignStart(campaign) {
-  return asDate(firstValue(campaign.starts_at, campaign.start_at, campaign.startsAt));
+  // Kick's live Drops API currently uses `start`/`end`; other snapshots and
+  // older responses use the *_at / camelCase variants. Accept all of them so
+  // a valid campaign is not discarded before its rewards are inspected.
+  return asDate(firstValue(campaign.starts_at, campaign.start_at, campaign.startsAt, campaign.start));
 }
 
 function getCampaignEnd(campaign) {
-  return asDate(firstValue(campaign.ends_at, campaign.end_at, campaign.endsAt));
+  return asDate(firstValue(campaign.ends_at, campaign.end_at, campaign.endsAt, campaign.end));
 }
 
 function getRewardMinutes(reward, campaign) {
@@ -45,6 +48,33 @@ function getRewardMinutes(reward, campaign) {
   const description = `${reward.rule_name || ""} ${reward.description || ""} ${campaign.rule_name || ""}`;
   const match = description.match(/(?:watch|oglądw*)\D{0,20}(\d+)\s*(?:minutes|minut|min)?/i);
   return match ? Number(match[1]) : 0;
+}
+
+function getRewardType(reward, name, typeOverride) {
+  if (typeOverride?.type === "EMOTE" || typeOverride?.type === "BADGE") return typeOverride.type;
+
+  // The Kick campaign endpoint does not currently expose a consistent type
+  // field. Read the common API spellings (including nested metadata) before
+  // falling back to the reward's visible text.
+  const typeValues = [];
+  const visit = (value, depth = 0) => {
+    if (!value || typeof value !== "object" || depth > 4) return;
+    for (const [key, child] of Object.entries(value)) {
+      if (/^(?:type|kind|reward_?type|distribution_?type|benefit_?type|reward_?kind|asset_?type)$/i.test(key)) {
+        if (typeof child === "string") typeValues.push(child);
+      }
+      // extractRewardEntries attaches the parent drop for its watch rule;
+      // don't let a sibling benefit's type leak into this reward's type.
+      if (key === "drop") continue;
+      if (child && typeof child === "object") visit(child, depth + 1);
+    }
+  };
+  visit(reward);
+  const rawType = typeValues.join(" ").toLowerCase();
+  const text = `${name || ""} ${reward.description || ""} ${reward.rule_name || ""} ${reward.drop?.description || ""} ${reward.drop?.rule_name || ""} ${reward.display_type || ""} ${rawType}`.toLowerCase();
+  if (/emote|emoticon|chat\s*emote|chat\s*emoji/.test(text)) return "EMOTE";
+  if (/badge/.test(text)) return "BADGE";
+  return null;
 }
 
 function slugifyCategory(value) {
@@ -149,10 +179,9 @@ function normalizeCampaign(campaign, ignoredRewards = [], rewardTypeOverrides = 
       String(item?.campaignId || "") === id &&
       String(item?.name || "").trim().toLowerCase() === String(name || "").trim().toLowerCase()
     );
-    const rawType = String(firstValue(reward.distribution_type, reward.reward_type, reward.type, "")).toLowerCase();
-    const text = `${name || ""} ${reward.description || ""} ${reward.rule_name || ""} ${rawType}`.toLowerCase();
-    const isEmote = typeOverride?.type === "EMOTE" || /emote|emoticon|chat emote/.test(text);
-    const isBadge = typeOverride?.type === "BADGE" || /badge/.test(text);
+    const rewardType = getRewardType(reward, name, typeOverride);
+    const isEmote = rewardType === "EMOTE";
+    const isBadge = rewardType === "BADGE";
     if (!name || (!isEmote && !isBadge)) continue;
 
     const minutes = getRewardMinutes(reward, campaign);
@@ -446,12 +475,32 @@ module.exports.check = async (client, savedData, saveData) => {
     let alreadyKnown = 0;
     let expiredRewards = 0;
     let recentRewardMessages = null;
+    const unclassifiedRewards = [];
 
     for (const campaign of summaries) {
       let rewards;
       try {
-        rawRewards += extractRewardEntries(campaign).length;
+        const entries = extractRewardEntries(campaign);
+        rawRewards += entries.length;
         rewards = normalizeCampaign(campaign, ignoredRewards, rewardTypeOverrides);
+        if (getCampaignStart(campaign) && getCampaignEnd(campaign)) {
+          for (const item of entries) {
+            const name = firstValue(item.name, item.title, item.display_name);
+            if (!name || getRewardMinutes(item, campaign) <= 0) continue;
+            const ignored = ignoredRewards.some(entry =>
+              String(entry?.campaignId || "") === getCampaignId(campaign) &&
+              String(entry?.name || "").trim().toLowerCase() === String(name).trim().toLowerCase()
+            );
+            if (ignored) continue;
+            const override = rewardTypeOverrides.find(entry =>
+              String(entry?.campaignId || "") === getCampaignId(campaign) &&
+              String(entry?.name || "").trim().toLowerCase() === String(name).trim().toLowerCase()
+            );
+            if (!getRewardType(item, name, override)) {
+              unclassifiedRewards.push(`${firstValue(campaign.name, campaign.title, "Kick")}: ${name}`);
+            }
+          }
+        }
       } catch (err) {
         console.log(`Kick Drops: pomijam nieprawidłową kampanię ${campaign?.name || campaign?.id || "bez nazwy"}: ${err.message}`);
         continue;
@@ -578,8 +627,11 @@ module.exports.check = async (client, savedData, saveData) => {
       }
     }
     console.log(
-      `Kick Drops: kampanii=${summaries.length}, nagrody=${rawRewards}, badge/emotki=${eligibleRewards}, zapisane=${alreadyKnown}, wygasłe=${expiredRewards}, wysłano=${sent}`
+      `Kick Drops: kampanii=${summaries.length}, nagrody=${rawRewards}, badge/emotki=${eligibleRewards}, bez typu=${unclassifiedRewards.length}, zapisane=${alreadyKnown}, wygasłe=${expiredRewards}, wysłano=${sent}`
     );
+    if (unclassifiedRewards.length) {
+      console.log(`Kick Drops: nagrody bez typu (do weryfikacji): ${[...new Set(unclassifiedRewards)].slice(0, 10).join(" | ")}`);
+    }
   } catch (err) {
     console.log("Kick Drops error:", err.response?.status || err.message);
   }

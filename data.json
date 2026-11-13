@@ -3,21 +3,18 @@
     "https://www.humblebundle.com/games/15th-anniversary-scifi-exposure",
     "https://www.humblebundle.com/games/marmalade-games-ultimate-digital-game-night",
     "https://www.humblebundle.com/games/flat2vr-bundle",
-    "https://www.humblebundle.com/games/hambles-fright-or-fight-halloween-bundle",
     "https://www.humblebundle.com/games/puzzlers-to-puzzle-you",
-    "https://www.humblebundle.com/games/gals-and-pals-pqube-japanese-games",
     "https://www.humblebundle.com/games/phunkier-physics",
-    "https://www.humblebundle.com/games/beyond-reality-scifi-survival-vr-collection",
-    "https://www.humblebundle.com/games/indie-fighters",
-    "https://www.humblebundle.com/games/twisted-trilogies-and-terrors-dark-visual-novels",
-    "https://www.humblebundle.com/games/factory-must-grow",
-    "https://www.humblebundle.com/games/cozy-after-dark-showcase-bundle",
-    "https://www.humblebundle.com/games/serenity-forge-emotional-impact-bundle",
-    "https://www.humblebundle.com/games/double-fine-publisher-bundle",
     "https://www.humblebundle.com/games/tactical-mindset-bundle",
     "https://www.humblebundle.com/games/horror-trifectas",
-    "https://www.humblebundle.com/games/maximum-entertainment-indie-hits",
-    "https://www.humblebundle.com/games/crimes-and-curiosity-bundle-s2-games"
+    "https://www.humblebundle.com/games/crimes-and-curiosity-bundle-s2-games",
+    "https://www.humblebundle.com/games/resident-evil-biohazard-unleashed-2026",
+    "https://www.humblebundle.com/games/1111-singles-day-celebration-chinese-gaming",
+    "https://www.humblebundle.com/games/hambles-farming-games-collection",
+    "https://www.humblebundle.com/games/unhinged-unsettling-visual-novels",
+    "https://www.humblebundle.com/games/generation-zero-complete-bundle-2026",
+    "https://www.humblebundle.com/games/non-non-nonograms",
+    "https://www.humblebundle.com/games/beholder-10th-anniversary-alawar-collection"
   ],
   "humbleBundleHistory": [
     {
@@ -166,6 +163,55 @@
       "firstSeenAt": "2026-11-02T19:43:54.927Z",
       "lastSeenAt": "2026-11-02T19:43:54.927Z",
       "expiresAt": "2026-11-24T04:00:00.000Z"
+    },
+    {
+      "title": "Resident Evil: Biohazard Unleashed",
+      "url": "https://www.humblebundle.com/games/resident-evil-biohazard-unleashed-2026",
+      "firstSeenAt": "2026-11-13T20:30:50.567Z",
+      "lastSeenAt": "2026-11-13T20:30:50.567Z",
+      "expiresAt": "2026-12-03T05:00:00.000Z"
+    },
+    {
+      "title": "11.11 Singles Day - Celebration of Chinese Gaming!",
+      "url": "https://www.humblebundle.com/games/1111-singles-day-celebration-chinese-gaming",
+      "firstSeenAt": "2026-11-13T20:30:51.518Z",
+      "lastSeenAt": "2026-11-13T20:30:51.518Z",
+      "expiresAt": "2026-12-02T05:00:00.000Z"
+    },
+    {
+      "title": "Hamble's Farming Games Collection",
+      "url": "https://www.humblebundle.com/games/hambles-farming-games-collection",
+      "firstSeenAt": "2026-11-13T20:30:54.764Z",
+      "lastSeenAt": "2026-11-13T20:30:54.764Z",
+      "expiresAt": "2026-11-27T05:00:00.000Z"
+    },
+    {
+      "title": "Unhinged & Unsettling Visual Novels",
+      "url": "https://www.humblebundle.com/games/unhinged-unsettling-visual-novels",
+      "firstSeenAt": "2026-11-13T20:30:56.592Z",
+      "lastSeenAt": "2026-11-13T20:30:56.592Z",
+      "expiresAt": "2026-11-28T05:00:00.000Z"
+    },
+    {
+      "title": "Generation Zero: Complete Bundle 2026",
+      "url": "https://www.humblebundle.com/games/generation-zero-complete-bundle-2026",
+      "firstSeenAt": "2026-11-13T20:30:57.893Z",
+      "lastSeenAt": "2026-11-13T20:30:57.893Z",
+      "expiresAt": "2026-12-05T02:00:00.000Z"
+    },
+    {
+      "title": "Non Non Nonograms!",
+      "url": "https://www.humblebundle.com/games/non-non-nonograms",
+      "firstSeenAt": "2026-11-13T20:31:00.415Z",
+      "lastSeenAt": "2026-11-13T20:31:00.415Z",
+      "expiresAt": "2026-11-28T05:00:00.000Z"
+    },
+    {
+      "title": "Beholder 10th Anniversary: The Alawar Collection",
+      "url": "https://www.humblebundle.com/games/beholder-10th-anniversary-alawar-collection",
+      "firstSeenAt": "2026-11-13T20:31:02.848Z",
+      "lastSeenAt": "2026-11-13T20:31:02.848Z",
+      "expiresAt": "2026-12-01T05:00:00.000Z"
     }
   ],
   "humbleChoice": "november_2026_choice",
@@ -202,7 +248,8 @@
     "mass-effect-and-dragon-age-build-your-own-bioware-book-bundle",
     "build-your-own-birthday-bonanza-bundle:2026-11-06T14:00:00Z:2026-12-11T08:00:00Z",
     "platinum-collection-build-your-own-bundle:2026-11-05T14:00:00Z:2026-12-03T13:59:00Z",
-    "build-your-own-idler-bundle:2026-11-12T14:00:00Z:2026-12-17T08:00:00Z"
+    "build-your-own-idler-bundle:2026-11-12T14:00:00Z:2026-12-17T08:00:00Z",
+    "build-your-own-play-on-the-go-elite-collection:2026-11-13T14:00:00Z:2026-12-18T08:00:00Z"
   ],
   "gmgBundles": [
     "https://www.greenmangamingbundles.com/bundles/lego-dc-vs-marvel-collection-bundle",
@@ -281,7 +328,7 @@
   ],
   "runtime": {
     "lastStoreRunAt": {
-      "Amazon": 1794571103749
+      "Amazon": 1794601887107
     }
   },
   "digiphileEndedCollections": [
@@ -315,7 +362,8 @@
     "7fd0b5de-69c5-4f30-924e-59adaa29a362:dcb2efcc-d794-11f1-8521-0a58a9feac02:ad06772c-d794-11f1-b6f6-0a58a9feac02",
     "7fd0b5de-69c5-4f30-924e-59adaa29a362:e877a3d9-d794-11f1-9b23-0a58a9feac02:bc4eee5a-d794-11f1-9111-0a58a9feac02",
     "3e27da93-de21-4977-91db-e889991c7ff1:b205eb5c-d24f-11f1-a440-0a58a9feac02:3a6ee97e-d6eb-11f1-a83f-0a58a9feac02",
-    "3e27da93-de21-4977-91db-e889991c7ff1:b205eb5c-d24f-11f1-a440-0a58a9feac02:e0cbe407-d6ea-11f1-96c0-0a58a9feac02"
+    "3e27da93-de21-4977-91db-e889991c7ff1:b205eb5c-d24f-11f1-a440-0a58a9feac02:e0cbe407-d6ea-11f1-96c0-0a58a9feac02",
+    "0abec32e-4bfc-46f8-b3ca-90703658639a:bc94a189-c7fc-11f1-a43c-0a58a9feac02:cfcf41a0-c7fc-11f1-9701-0a58a9feac02"
   ],
   "twitchDropRewardStates": {
     "882ccb61-0d4c-4fe6-a5c5-3156e8a033ab:1d75c3ef-d482-11f1-99dc-0a58a9feac02:698115f0-d487-11f1-8281-0a58a9feac02": {
@@ -464,7 +512,7 @@
       "messageFormatVersion": 5
     },
     "8fbafdec-31ee-4878-a9ca-9ebbe07ca74d:f4ea4a2b-c4e0-11f1-9641-0a58a9feac02:20e82c33-c4e1-11f1-9c0f-0a58a9feac02": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-10-23T17:00:00Z",
       "endAt": "2026-11-13T17:59:59.999Z",
       "reward": {
@@ -1565,7 +1613,7 @@
       "messageFormatVersion": 5
     },
     "556b21e6-9e53-471e-ad40-730910c6c6f5:90048bf6-c7fc-11f1-96f9-0a58a9feac02:aa4751b5-c7fc-11f1-a654-0a58a9feac02": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-11-07T16:00:00Z",
       "endAt": "2026-11-13T15:59:59.999Z",
       "reward": {
@@ -1766,6 +1814,35 @@
         "1570400841742159873"
       ],
       "messageFormatVersion": 5
+    },
+    "0abec32e-4bfc-46f8-b3ca-90703658639a:bc94a189-c7fc-11f1-a43c-0a58a9feac02:cfcf41a0-c7fc-11f1-9701-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-11-13T16:00:00Z",
+      "endAt": "2026-11-15T15:59:59.999Z",
+      "reward": {
+        "key": "0abec32e-4bfc-46f8-b3ca-90703658639a:bc94a189-c7fc-11f1-a43c-0a58a9feac02:cfcf41a0-c7fc-11f1-9701-0a58a9feac02",
+        "type": "BADGE",
+        "name": "K/DA Fan",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/cfcf41a0-c7fc-11f1-9701-0a58a9feac02.png",
+        "minutes": 30,
+        "subs": 0,
+        "dropName": "K/DA Chat Badge",
+        "campaignName": "K/DA Chat Badge",
+        "campaignId": "0abec32e-4bfc-46f8-b3ca-90703658639a",
+        "campaignStart": "2026-11-13T16:00:00Z",
+        "campaignEnd": "2026-11-15T15:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=0abec32e-4bfc-46f8-b3ca-90703658639a",
+        "gameName": "League of Legends",
+        "gameSlug": "league-of-legends",
+        "channels": [],
+        "description": "Watch the 2026 League of Legends World Championship to unlock your favorite bands' chat badges on Twitch!",
+        "relatedDrops": []
+      },
+      "messageId": "1570898924795990077",
+      "messageIds": [
+        "1570898924795990077"
+      ],
+      "messageFormatVersion": 5
     }
   },
   "twitchDropCampaignVersions": {
@@ -1778,7 +1855,6 @@
     "2cc95940-886e-42a2-9dee-23269cabfa47": "2026-10-29T06:02:13.122Z",
     "3fbad26b-3224-4246-ad9d-0a2c56e39d2b": "2026-10-28T15:01:38.672Z",
     "d6a79a3e-fd63-43ed-906d-3a8443cd8184": "2026-10-27T19:44:52.672Z",
-    "8fbafdec-31ee-4878-a9ca-9ebbe07ca74d": "2026-10-23T17:43:05.057Z",
     "b42d9f22-e860-4f26-bdd8-bd0a6b8a4b9f": "2026-10-23T12:54:49.461Z",
     "2519eaa5-981e-4861-8b03-361dd002cfa4": "2026-10-22T17:11:45.258Z",
     "2592aee8-8a94-469d-8731-db914c197367": "2026-10-22T10:01:34.072Z",
@@ -1788,7 +1864,6 @@
     "69f32da3-7abf-4716-b051-085a879cb112": "2026-10-22T00:01:46.186Z",
     "3ed1adc1-8f12-4d18-82ac-fd543f08722d": "2026-10-21T21:01:41.534Z",
     "90273492-0fd5-46d0-b1cf-60084d901adf": "2026-10-18T15:02:03.427Z",
-    "d8e74682-74d7-4def-8f2b-034d982d03c1": "2026-10-16T15:01:36.085Z",
     "b66c6ae7-42bc-4e67-b0ad-8ab0d9897d26": "2026-10-14T19:01:26.782Z",
     "64bc1f39-ec81-4066-969a-4297a0afff67": "2026-11-12T10:31:19.787Z",
     "b9049836-9e19-4695-b099-650ac9c736bf": "2026-11-12T09:01:35.804Z",
@@ -1796,7 +1871,6 @@
     "a8b29630-1150-4bab-bdf5-176062225b55": "2026-11-12T00:02:13.259Z",
     "6af2bd14-ca96-46a9-a492-41dac025c409": "2026-11-11T23:01:44.622Z",
     "6f160a57-3752-47a3-84d6-a0032195f978": "2026-11-11T17:01:41.417Z",
-    "68c51d29-d8fa-4b46-a30e-93d013d36f61": "2026-11-11T16:02:11.167Z",
     "2c5e5162-f8bb-478a-a78a-610f7036f729": "2026-11-11T16:02:10.730Z",
     "105f31ff-4815-45a7-9bce-71695fcdc21c": "2026-11-11T15:01:40.366Z",
     "c81e1c5b-b7b1-4308-9098-5505cec75f69": "2026-11-11T08:02:08.611Z",
@@ -1806,8 +1880,6 @@
     "f625d3b1-7daf-4fb2-9e52-102e4ff97f9e": "2026-11-10T21:31:46.240Z",
     "4eeaa002-6d1c-4a43-a195-a1b3de88b3c4": "2026-11-10T18:02:00.298Z",
     "f2d96e03-08ba-40b3-a0e6-05e02ce1c039": "2026-11-10T16:01:58.103Z",
-    "3fa90209-0c10-45ba-9758-186b4c9d1ef5": "2026-11-10T16:01:57.849Z",
-    "0aeb0b1c-62c6-452b-aa83-26959c3d52c1": "2026-11-10T16:01:57.632Z",
     "9e51208e-329c-46a7-9109-a6262743a055": "2026-11-10T15:02:27.687Z",
     "c67997fb-e0e5-4678-afe7-aea6528bc126": "2026-11-10T12:01:55.240Z",
     "b48884ce-bb67-4d72-99cb-0e800492f721": "2026-11-10T11:02:24.783Z",
@@ -1823,23 +1895,14 @@
     "2c567f66-9717-480b-b451-c7f9e80c16fe": "2026-11-09T08:02:08.565Z",
     "b1f5b0fc-ed53-41c5-86b8-067b3a0a11b2": "2026-11-09T04:02:11.399Z",
     "fe0929b2-3be3-4bec-b970-9df72b2982ab": "2026-11-09T00:02:10.120Z",
-    "556b21e6-9e53-471e-ad40-730910c6c6f5": "2026-11-07T16:02:22.187Z",
     "f8f01b79-8d12-4d05-99c4-dabee7759897": "2026-11-07T11:01:55.380Z",
     "968791a4-0188-4af8-8edc-8d6e92b941bb": "2026-11-07T07:01:59.567Z",
     "53c80198-fa33-485d-9cc7-2af5c4771602": "2026-11-06T18:01:59.786Z",
-    "803db39a-51d5-4c6a-8413-3fb582ab8aac": "2026-11-06T17:02:04.393Z",
-    "3638d056-5cae-4f9c-870d-55b7ad50a8a4": "2026-11-06T17:02:04.024Z",
-    "64953fce-e028-4856-98f9-acac6f7e95f4": "2026-11-06T17:02:04.156Z",
     "df576175-0f22-467e-8ba7-955603a16567": "2026-11-06T16:31:46.452Z",
-    "ef4f64f6-7a35-4d2a-897b-41ef817ad18d": "2026-11-06T15:02:13.857Z",
-    "38d7e4f1-7737-4482-93d1-ce9c20c6b0c6": "2026-11-06T15:02:12.009Z",
-    "c328eccb-9098-4ad8-a487-a637816196af": "2026-11-06T15:02:13.162Z",
-    "fcddef70-46d6-4ff6-b1a0-c8dc7ed21fdc": "2026-11-06T15:02:14.131Z",
     "7fd0b5de-69c5-4f30-924e-59adaa29a362": "2026-11-06T12:02:12.893Z",
     "55e0b074-0393-4be3-8586-3fb8b65b80e0": "2026-11-06T08:02:07.466Z",
     "d31f0a01-c61e-4170-bf68-60c9132efaaf": "2026-11-06T06:02:01.038Z",
     "a0e134ff-e391-46bc-9ac6-0b1b2c826795": "2026-11-06T05:01:29.334Z",
-    "0bfcc7fb-d3e0-4718-9098-9e58c44b9c49": "2026-11-05T14:01:56.137Z",
     "eb9156b6-649e-4e03-9cd1-989d9a89717e": "2026-11-05T13:01:33.906Z",
     "94263f50-6ae7-45a8-bd72-5f612c5b1243": "2026-11-05T12:32:16.508Z",
     "7dc538f3-cfb6-4346-850c-058b900b9777": "2026-11-05T08:17:09.094Z",
@@ -1859,20 +1922,47 @@
     "62dd594c-cfac-4892-8078-0939ac798bc5": "2026-11-13T11:02:12.522Z",
     "13c7c040-e40b-40c8-b041-3ddb14098683": "2026-11-13T11:02:12.091Z",
     "5895dfbc-6083-4d01-a4cc-5217bc02dfe8": "2026-11-13T11:02:12.226Z",
-    "68590093-81f7-432c-b613-d43020c61dca": "2026-11-13T11:02:12.796Z",
     "1f68edff-b53c-4030-a8d4-daa700db50da": "2026-11-13T10:01:40.038Z",
     "3692aff1-55ba-49f9-aa8a-db9ec32eb1e9": "2026-11-13T10:01:40.409Z",
     "7755dd9f-b2aa-4745-8250-b76587881383": "2026-11-13T02:02:26.595Z",
     "9e7de515-966f-4965-8fc5-70aa2c91131b": "2026-11-13T00:31:31.968Z",
     "27edc93c-a3ff-459f-9c17-7d5cd175c2fd": "2026-11-13T00:01:17.207Z",
-    "5053ec5b-8c30-4e21-87c9-d29db02eaca1": "2026-11-12T20:02:15.830Z",
-    "c05cc269-2e7f-4657-b3b9-b8cef7426cfa": "2026-11-12T18:02:15.215Z",
-    "1fb68249-d356-4813-8828-a562bc739153": "2026-11-12T18:02:14.578Z",
-    "9f6420e8-d46a-446a-8fbd-73193396671b": "2026-11-12T18:02:14.915Z",
     "b8b6ea03-90ad-4426-a095-87283d6b8b2e": "2026-11-12T17:01:45.489Z",
-    "fdceaa42-10eb-4f45-ad61-62f2b3beb378": "2026-11-12T14:02:14.219Z",
-    "62fc3b75-04f2-4ddc-adf6-1cf7269400c1": "2026-11-12T12:02:03.761Z",
-    "2965fe2b-6ebb-4547-929c-e70112337fda": "2026-11-12T15:47:07.572Z"
+    "2965fe2b-6ebb-4547-929c-e70112337fda": "2026-11-12T15:47:07.572Z",
+    "0c95e10b-4ab2-4777-b7db-1d5617035dc8": "2026-11-13T20:01:34.725Z",
+    "9fb013a1-3155-4a30-858c-dc8f75e25b94": "2026-11-13T19:02:03.177Z",
+    "0cadcb05-0cc3-4da2-a440-8d6b595fb5e6": "2026-11-13T18:01:37.013Z",
+    "ab64eaf2-50c4-4c75-a229-b22d70b6a4c4": "2026-11-13T18:01:37.346Z",
+    "adefb716-9f04-4a58-b782-23277f13d87c": "2026-11-13T18:01:37.673Z",
+    "0b252c3c-83bc-42fd-b01c-4c70f8ce8bd9": "2026-11-13T18:01:36.794Z",
+    "1a0b9038-7c83-4949-b559-4f64011e315e": "2026-11-13T17:32:15.213Z",
+    "651e805b-40c4-405a-a0f8-f0134217f046": "2026-11-13T17:01:56.982Z",
+    "c0f8da20-52fa-4c61-80b4-d48ff28cf306": "2026-11-13T17:01:57.403Z",
+    "671c1ec5-a1fe-4fe4-9581-fc1b02ebf276": "2026-11-13T17:01:57.341Z",
+    "77f1b5a5-b1f1-4973-b252-65beb58b6693": "2026-11-13T16:31:43.725Z",
+    "db15c44a-da52-4294-8d02-81091d08a3de": "2026-11-13T16:31:43.847Z",
+    "e634fbd7-bc8e-42b4-b960-d1a89d99965d": "2026-11-13T16:01:30.202Z",
+    "89928a5f-910f-4be9-b46c-f652d60df981": "2026-11-13T16:01:29.376Z",
+    "0abec32e-4bfc-46f8-b3ca-90703658639a": "2026-11-13T16:01:29.068Z",
+    "abbf79f8-49a8-401a-b2eb-13389d7ebf52": "2026-11-13T16:01:29.566Z",
+    "e0813b21-25d6-42e9-85e7-e64761e9159e": "2026-11-13T16:01:29.902Z",
+    "b3b7f221-9897-4f39-be29-9b58fbea4806": "2026-11-13T15:32:18.154Z",
+    "903bdd2c-ec10-4bfb-b55a-7614349e2a7f": "2026-11-13T15:02:11.126Z",
+    "55fd2e54-b491-41e8-acb9-0c7f503d5aa3": "2026-11-13T15:32:17.894Z",
+    "17398ab2-8f44-4199-a177-cc862fb24ab2": "2026-11-13T15:02:09.105Z",
+    "5e0a0cab-2650-4eea-baed-e84fa2a70da2": "2026-11-13T15:02:10.722Z",
+    "288b218b-6e89-469a-bcf1-0176b1006af5": "2026-11-13T15:02:09.741Z",
+    "291dd3a3-5876-482e-a594-923b4a55f935": "2026-11-13T15:02:10.132Z",
+    "18bbdb90-e83b-4a8e-9587-417442c88880": "2026-11-13T15:02:09.391Z",
+    "29085353-6c0f-46f2-a1f8-79894a5d7f67": "2026-11-13T15:02:09.876Z",
+    "4ec976cc-62e2-4ba6-b10f-6a69313e09cb": "2026-11-13T15:02:10.422Z",
+    "166beece-c0b2-4241-b955-0926eccf8af2": "2026-11-13T14:01:30.271Z",
+    "f2bf1aeb-5833-4fe9-a330-dba1f4248eb3": "2026-11-13T14:01:30.537Z",
+    "d5832a25-01fa-4bae-bc3d-f669dfdc55e5": "2026-11-13T12:01:38.887Z",
+    "3e87f645-f151-4292-8a2b-9f0817e8e58a": "2026-11-13T12:01:38.521Z",
+    "06d7e4d2-74a8-45f2-8a46-428186ed6560": "2026-11-13T12:01:38.144Z",
+    "6a7a897d-616f-4226-ae75-91846afbe2b3": "2026-11-13T12:16:42.834Z",
+    "35d08416-f37d-40f1-b2d3-87dbe8059a75": "2026-11-13T17:01:56.610Z"
   },
   "kickDropIgnoredRewards": [
     {
@@ -1920,6 +2010,12 @@
       "name": "Chest Golden K",
       "type": "EMOTE",
       "reason": "Emotka czatu Kick według weryfikacji użytkownika"
+    },
+    {
+      "campaignId": "01M79FMH9B7APWQSHNETBDK3D8",
+      "name": "Safezone Greed Cx",
+      "type": "EMOTE",
+      "reason": "Nagroda Safezone Miami zgłoszona jako emotka czatu; Kick API nie udostępnia pola typu"
     }
   ],
   "kickDropRenewalBaselines": [
@@ -2371,6 +2467,41 @@
       "messageId": "1570725080470659097",
       "messageIds": [
         "1570725080470659097"
+      ],
+      "messageFormatVersion": 2
+    },
+    "01M79FMH9B7APWQSHNETBDK3D8:01M79FGGJFQSNX6SFTZNTWYAVC": {
+      "status": "started",
+      "startAt": "2026-11-13T20:00:00.000Z",
+      "endAt": "2026-11-18T16:00:00.000Z",
+      "renewalBaselineEndAt": null,
+      "reward": {
+        "key": "01M79FMH9B7APWQSHNETBDK3D8:01M79FGGJFQSNX6SFTZNTWYAVC",
+        "campaignId": "01M79FMH9B7APWQSHNETBDK3D8",
+        "campaignName": "Safezone Miami",
+        "campaignChannels": [
+          {
+            "name": "iceposeidon",
+            "url": "https://kick.com/iceposeidon2"
+          },
+          {
+            "name": "Magnaboy",
+            "url": "https://kick.com/magnaboy"
+          }
+        ],
+        "name": "Safezone Greed Cx",
+        "type": "EMOTE",
+        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m79fggjfqsnx6sftzntwyavc-01m79fggjxpzk1ve1gkbtakd6q.png",
+        "minutes": 300,
+        "campaignStart": "2026-11-13T20:00:00.000Z",
+        "campaignEnd": "2026-11-18T16:00:00.000Z",
+        "gameName": "IRL",
+        "campaignUrl": "https://kick.com/category/irl/drops",
+        "categoryUrl": "https://kick.com/category/irl/drops"
+      },
+      "messageId": "1570898939144839269",
+      "messageIds": [
+        "1570898939144839269"
       ],
       "messageFormatVersion": 2
     }

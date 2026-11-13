@@ -324,7 +324,33 @@ test("honors the persistent Kick ignore list for non-badge campaign rewards", ()
     };
     assert.deepEqual(normalizeCampaign(campaign, botData.kickDropIgnoredRewards), [], ignored.name);
   }
-  assert.equal(botData.kickDropRewardTypeOverrides.length, 4);
+  assert.equal(botData.kickDropRewardTypeOverrides.length, 5);
+});
+
+test("classifies the Safezone Miami watch reward as a Kick chat emote", () => {
+  const campaign = {
+    id: "01M79FMH9B7APWQSHNETBDK3D8",
+    name: "Safezone Miami",
+    // These are the field names returned by Kick's live campaign endpoint.
+    start: "2026-11-13T20:00:00Z",
+    end: "2026-11-18T16:00:00Z",
+    category: { id: 8549, name: "IRL", slug: "irl" },
+    rewards: [{
+      id: "01M79FGGJFQSNX6SFTZNTWYAVC",
+      name: "Safezone Greed Cx",
+      required_units: 300,
+      image_url: "drops/reward-image/safezone-greed-cx.png"
+    }]
+  };
+  const [reward] = normalizeCampaign(
+    campaign,
+    botData.kickDropIgnoredRewards,
+    botData.kickDropRewardTypeOverrides
+  );
+  assert.equal(reward.name, "Safezone Greed Cx");
+  assert.equal(reward.type, "EMOTE");
+  assert.equal(reward.minutes, 300);
+  assert.equal(reward.gameName, "IRL");
 });
 
 test("updates extended Kick campaigns in their existing posts without reposting", async t => {

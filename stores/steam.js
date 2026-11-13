@@ -77,7 +77,9 @@ async function fetchSearchPage() {
 
   try {
 
-    const count = 100;
+    // Steam currently caps `items` at 25 even if count=100 is requested.
+    // Advancing by 100 therefore skipped three quarters of every page.
+    const count = 25;
     const maxPages = 20;
     let html = "";
     let totalCount = null;
@@ -172,10 +174,7 @@ async function fetchSearchPage() {
 
   } catch (err) {
 
-    console.log(
-      "âťŚ fetchSearchPage:",
-      err.message
-    );
+    console.log("Steam search request failed:", err.response?.status || err.message);
 
     return null;
   }
@@ -448,9 +447,7 @@ async function check(
 
   try {
 
-    console.log(
-      "đźź¦ Steam Giveaway Scan..."
-    );
+    console.log("Steam: sprawdzam aktualne promocje Free to Keep...");
 
     savedData.steamGames ??=
       [];
@@ -472,11 +469,13 @@ async function check(
     const html =
       await fetchSearchPage();
 
-    if (!html) {
+    if (html === null) {
+      console.log("Steam: nie udało się pobrać wyników; skan przerwany, aby nie uznać błędu za brak ofert");
+      return;
+    }
 
-      console.log(
-        "âťŚ No HTML"
-      );
+    if (!html.trim()) {
+      console.log("Steam: wyszukiwarka zwróciła 0 kandydatów; brak aktywnych wyników do sprawdzenia");
 
       return;
     }
