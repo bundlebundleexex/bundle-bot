@@ -2,8 +2,10 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const {
   getActiveFreePromo,
+  isEpicGameGiveaway,
   getAliases,
   isKnown,
+  hasKnownOfficialTitle,
   mergeCandidates,
   formatDate,
   formatPromoWindow
@@ -94,6 +96,29 @@ test("merges official and supplemental copies of the same game and keeps Epic's 
   assert.equal(merged[0].activePromo.endDate, "2026-11-12T16:00:00.000Z");
   assert.equal(merged[0].source, undefined);
   assert.equal(merged[0].aliases.length, 2);
+});
+
+test("does not let GamerPower repost a title already announced from Epic with a different end date", () => {
+  const known = new Set([
+    "epic:title:flotsam:2026-11-12T16:00:00.000Z",
+    "epic:slug:flotsam-266287:2026-11-12T16:00:00.000Z"
+  ]);
+  assert.equal(hasKnownOfficialTitle("Flotsam", known), true);
+  assert.equal(hasKnownOfficialTitle("Different Game", known), false);
+});
+
+test("rejects expired GamerPower giveaways before constructing a supplemental post", () => {
+  const now = new Date("2026-11-13T12:00:00Z");
+  const expired = {
+    status: "Active",
+    type: "Game",
+    platforms: "Epic Games Store",
+    title: "Flotsam",
+    end_date: "2026-11-12 23:59:00"
+  };
+  const active = { ...expired, end_date: "2026-11-14 23:59:00" };
+  assert.equal(isEpicGameGiveaway(expired, now), false);
+  assert.equal(isEpicGameGiveaway(active, now), true);
 });
 
 test("recognizes previously saved promo aliases when only the end date changed", () => {

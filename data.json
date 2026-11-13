@@ -199,18 +199,24 @@
     "build-your-own-slayer-bundle:2026-10-27T14:00:00Z:2026-12-01T08:00:00Z",
     "monsters-den-collection-bundle:2024-12-30T16:00:00Z:3001-01-01T00:00:00Z",
     "build-your-own-resident-evil-bundle-demonic-edition:2026-10-30T14:00:00Z:2026-11-19T08:00:00Z",
-    "mass-effect-and-dragon-age-build-your-own-bioware-book-bundle"
+    "mass-effect-and-dragon-age-build-your-own-bioware-book-bundle",
+    "build-your-own-birthday-bonanza-bundle:2026-11-06T14:00:00Z:2026-12-11T08:00:00Z",
+    "platinum-collection-build-your-own-bundle:2026-11-05T14:00:00Z:2026-12-03T13:59:00Z",
+    "build-your-own-idler-bundle:2026-11-12T14:00:00Z:2026-12-17T08:00:00Z"
   ],
   "gmgBundles": [
     "https://www.greenmangamingbundles.com/bundles/lego-dc-vs-marvel-collection-bundle",
-    "https://www.greenmangamingbundles.com/bundles/hidden-gems-bundle"
+    "https://www.greenmangamingbundles.com/bundles/hidden-gems-bundle",
+    "https://www.greenmangamingbundles.com/bundles/girls-just-wanna-have-guns-bundle",
+    "https://www.greenmangamingbundles.com/bundles/masterful-remasters-bundle-volume-ii"
   ],
   "indiegalaBundles": [
     "https://www.indiegala.com/bundle/wicked-stardust-bundle",
     "https://www.indiegala.com/bundle/power-halt-bundle",
     "https://www.indiegala.com/bundle/witches-and-candy-bundle",
     "https://www.indiegala.com/bundle/hentai-balloons2",
-    "https://www.indiegala.com/bundle/pixel-traditions5-bundle"
+    "https://www.indiegala.com/bundle/pixel-traditions5-bundle",
+    "https://www.indiegala.com/bundle/lusty-lab-bundle"
   ],
   "digiphileCollections": [
     "https://www.digiphile.co/collections/orcatober-aquatic-horrors",
@@ -239,7 +245,21 @@
     "epic:title:gmh good morning human:2026-11-08T23:59:00.000Z",
     "epic:slug:good-morning-human-6d0b45:2026-11-08T23:59:00.000Z",
     "epic:title:flotsam:2026-11-12T16:00:00.000Z",
-    "epic:slug:flotsam-266287:2026-11-12T16:00:00.000Z"
+    "epic:slug:flotsam-266287:2026-11-12T16:00:00.000Z",
+    "epic:title:idle champions of the forgotten realms:2026-11-12T16:00:00.000Z",
+    "epic:title:idle champions of the forgotten realms:2026-11-05T16:00:00.000Z:2026-11-12T16:00:00.000Z",
+    "epic:window:idle champions of the forgotten realms|2026-11-05T16:00:00.000Z",
+    "epic:slug:idle-champions-of-the-forgotten-realms:2026-11-12T16:00:00.000Z",
+    "epic:id:a9748abde1c94b66aae5250bb9fc5503:2026-11-12T16:00:00.000Z",
+    "epic:namespace:7e508f543b05465abe3a935960eb70ac:2026-11-12T16:00:00.000Z",
+    "a9748abde1c94b66aae5250bb9fc5503_2026-11-05T16:00:00.000Z_2026-11-12T16:00:00.000Z",
+    "epic:title:knightica:2026-11-19T16:00:00.000Z",
+    "epic:title:knightica:2026-11-12T16:00:00.000Z:2026-11-19T16:00:00.000Z",
+    "epic:window:knightica|2026-11-12T16:00:00.000Z",
+    "epic:slug:knightica-3be45c:2026-11-19T16:00:00.000Z",
+    "epic:id:9975548b6d404a94b8a9bdb34cad49e9:2026-11-19T16:00:00.000Z",
+    "epic:namespace:02d659f31e1c43a78c43fd9fd9edc089:2026-11-19T16:00:00.000Z",
+    "9975548b6d404a94b8a9bdb34cad49e9_2026-11-12T16:00:00.000Z_2026-11-19T16:00:00.000Z"
   ],
   "epicDeals": [],
   "freeDeals": [],
@@ -261,7 +281,7 @@
   ],
   "runtime": {
     "lastStoreRunAt": {
-      "Amazon": 1793648663830
+      "Amazon": 1794571103749
     }
   },
   "digiphileEndedCollections": [
@@ -272,7 +292,8 @@
     "https://www.digiphile.co/collections/planet-coaster-free-game-plus",
     "https://www.digiphile.co/collections/indie-boomer-shooters",
     "https://www.digiphile.co/collections/boomer-shooter-blueprint",
-    "https://www.digiphile.co/collections/orcatober-aquatic-horrors"
+    "https://www.digiphile.co/collections/orcatober-aquatic-horrors",
+    "https://www.digiphile.co/collections/social-multiplayer-games-collection-digiphile"
   ],
   "digiphileInvalidCollections": [],
   "twitchDropRewardIds": [
@@ -287,7 +308,14 @@
     "3ed1adc1-8f12-4d18-82ac-fd543f08722d:5ef9661a-ccb9-11f1-b47a-0a58a9feac02:afc9b0fe-1e6b-11f1-8cf7-9a121026d2ee",
     "b66c6ae7-42bc-4e67-b0ad-8ab0d9897d26:26fee398-c759-11f1-a917-0a58a9feac02:37ea3450-c759-11f1-9665-0a58a9feac02",
     "773f4909-b958-455c-be7a-641ade4067c5:a470c029-c0b1-11f1-8d61-0a58a9feac02:843870a1-c0b1-11f1-9e5d-0a58a9feac02",
-    "773f4909-b958-455c-be7a-641ade4067c5:174a731a-c0b1-11f1-8dd0-0a58a9feac02:62d8c0e1-c0b1-11f1-937a-0a58a9feac02"
+    "773f4909-b958-455c-be7a-641ade4067c5:174a731a-c0b1-11f1-8dd0-0a58a9feac02:62d8c0e1-c0b1-11f1-937a-0a58a9feac02",
+    "556b21e6-9e53-471e-ad40-730910c6c6f5:90048bf6-c7fc-11f1-96f9-0a58a9feac02:aa4751b5-c7fc-11f1-a654-0a58a9feac02",
+    "7fd0b5de-69c5-4f30-924e-59adaa29a362:5192449d-d794-11f1-858f-0a58a9feac02:8afc3c7d-d794-11f1-b284-0a58a9feac02",
+    "7fd0b5de-69c5-4f30-924e-59adaa29a362:cf606881-d794-11f1-997e-0a58a9feac02:9cbe9657-d794-11f1-a900-0a58a9feac02",
+    "7fd0b5de-69c5-4f30-924e-59adaa29a362:dcb2efcc-d794-11f1-8521-0a58a9feac02:ad06772c-d794-11f1-b6f6-0a58a9feac02",
+    "7fd0b5de-69c5-4f30-924e-59adaa29a362:e877a3d9-d794-11f1-9b23-0a58a9feac02:bc4eee5a-d794-11f1-9111-0a58a9feac02",
+    "3e27da93-de21-4977-91db-e889991c7ff1:b205eb5c-d24f-11f1-a440-0a58a9feac02:3a6ee97e-d6eb-11f1-a83f-0a58a9feac02",
+    "3e27da93-de21-4977-91db-e889991c7ff1:b205eb5c-d24f-11f1-a440-0a58a9feac02:e0cbe407-d6ea-11f1-96c0-0a58a9feac02"
   ],
   "twitchDropRewardStates": {
     "882ccb61-0d4c-4fe6-a5c5-3156e8a033ab:1d75c3ef-d482-11f1-99dc-0a58a9feac02:698115f0-d487-11f1-8281-0a58a9feac02": {
@@ -320,7 +348,7 @@
       "messageFormatVersion": 5
     },
     "f7f57488-112f-40c8-b63a-0f3cac98f2c6:e56b422d-d239-11f1-b116-0a58a9feac02:532e15b0-d239-11f1-b8aa-0a58a9feac02": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-10-31T07:00:00Z",
       "endAt": "2026-11-09T07:58:59.999Z",
       "reward": {
@@ -349,7 +377,7 @@
       "messageFormatVersion": 5
     },
     "ee4a624d-8452-4396-8925-7da45ee2671a:7d5b70c8-c7fc-11f1-a2fb-0a58a9feac02:f8d45eee-c759-11f1-9557-0a58a9feac02": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-10-27T16:00:00Z",
       "endAt": "2026-11-07T15:59:59.999Z",
       "reward": {
@@ -378,7 +406,7 @@
       "messageFormatVersion": 5
     },
     "e8b7af11-0544-4a76-99e7-4807e4f3f35f:12bc36e9-d14e-11f1-be13-0a58a9feac02:4cdbd5a2-d14e-11f1-8a48-0a58a9feac02": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-10-26T14:54:34Z",
       "endAt": "2026-11-09T13:59:59.999Z",
       "reward": {
@@ -407,7 +435,7 @@
       "messageFormatVersion": 5
     },
     "e8b7af11-0544-4a76-99e7-4807e4f3f35f:0d0c7712-d14e-11f1-8959-0a58a9feac02:32db5a6c-d14e-11f1-a73b-0a58a9feac02": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-10-26T14:54:34Z",
       "endAt": "2026-11-09T13:59:59.999Z",
       "reward": {
@@ -465,7 +493,7 @@
       "messageFormatVersion": 5
     },
     "381d286a-8959-4bb1-a95e-dbd2ecf944a1:c8a4e1a5-ccca-11f1-ae7b-0a58a9feac02:c3a7ce72-cccd-11f1-9a12-0a58a9feac02": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-10-22T16:00:00Z",
       "endAt": "2026-11-06T12:58:59.999Z",
       "reward": {
@@ -1479,7 +1507,7 @@
       "messageFormatVersion": 5
     },
     "773f4909-b958-455c-be7a-641ade4067c5:a470c029-c0b1-11f1-8d61-0a58a9feac02:843870a1-c0b1-11f1-9e5d-0a58a9feac02": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-10-08T17:00:00Z",
       "endAt": "2026-11-05T16:59:59.999Z",
       "reward": {
@@ -1508,7 +1536,7 @@
       "messageFormatVersion": 5
     },
     "773f4909-b958-455c-be7a-641ade4067c5:174a731a-c0b1-11f1-8dd0-0a58a9feac02:62d8c0e1-c0b1-11f1-937a-0a58a9feac02": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-10-08T17:00:00Z",
       "endAt": "2026-11-05T16:59:59.999Z",
       "reward": {
@@ -1535,113 +1563,316 @@
         "1566900859676262425"
       ],
       "messageFormatVersion": 5
+    },
+    "556b21e6-9e53-471e-ad40-730910c6c6f5:90048bf6-c7fc-11f1-96f9-0a58a9feac02:aa4751b5-c7fc-11f1-a654-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-11-07T16:00:00Z",
+      "endAt": "2026-11-13T15:59:59.999Z",
+      "reward": {
+        "key": "556b21e6-9e53-471e-ad40-730910c6c6f5:90048bf6-c7fc-11f1-96f9-0a58a9feac02:aa4751b5-c7fc-11f1-a654-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Pentakill Fan",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/aa4751b5-c7fc-11f1-a654-0a58a9feac02.png",
+        "minutes": 30,
+        "subs": 0,
+        "dropName": "Pentakill Chat Badge",
+        "campaignName": "Pentakill Chat Badge",
+        "campaignId": "556b21e6-9e53-471e-ad40-730910c6c6f5",
+        "campaignStart": "2026-11-07T16:00:00Z",
+        "campaignEnd": "2026-11-13T15:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=556b21e6-9e53-471e-ad40-730910c6c6f5",
+        "gameName": "League of Legends",
+        "gameSlug": "league-of-legends",
+        "channels": [],
+        "description": "Watch the 2026 League of Legends World Championship to unlock your favorite bands' chat badges on Twitch!",
+        "relatedDrops": []
+      },
+      "messageId": "1570400830740504707",
+      "messageIds": [
+        "1570400830740504707"
+      ],
+      "messageFormatVersion": 5
+    },
+    "7fd0b5de-69c5-4f30-924e-59adaa29a362:5192449d-d794-11f1-858f-0a58a9feac02:8afc3c7d-d794-11f1-b284-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-11-06T12:00:00Z",
+      "endAt": "2026-11-27T11:59:59.999Z",
+      "reward": {
+        "key": "7fd0b5de-69c5-4f30-924e-59adaa29a362:5192449d-d794-11f1-858f-0a58a9feac02:8afc3c7d-d794-11f1-b284-0a58a9feac02",
+        "type": "BADGE",
+        "name": "KawaiiDozer",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/8afc3c7d-d794-11f1-b284-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "KawaiiDozer",
+        "campaignName": "Payday 3 update",
+        "campaignId": "7fd0b5de-69c5-4f30-924e-59adaa29a362",
+        "campaignStart": "2026-11-06T12:00:00Z",
+        "campaignEnd": "2026-11-27T11:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=7fd0b5de-69c5-4f30-924e-59adaa29a362",
+        "gameName": "PAYDAY 3",
+        "gameSlug": "payday-3",
+        "channels": [],
+        "description": "The PAYDAY gang is back again! Support your favorite PAYDAY 3 creators and grab yourself some exclusive chat badges featuring Joy, Pearl, Clover, and the KawaiiDozer. Gift a sub to unlock the KawaiiDozer, or keep watching the streams to get the rest of the crew!",
+        "relatedDrops": []
+      },
+      "messageId": "1570400833978241104",
+      "messageIds": [
+        "1570400833978241104"
+      ],
+      "messageFormatVersion": 5
+    },
+    "7fd0b5de-69c5-4f30-924e-59adaa29a362:cf606881-d794-11f1-997e-0a58a9feac02:9cbe9657-d794-11f1-a900-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-11-06T12:00:00Z",
+      "endAt": "2026-11-27T11:59:59.999Z",
+      "reward": {
+        "key": "7fd0b5de-69c5-4f30-924e-59adaa29a362:cf606881-d794-11f1-997e-0a58a9feac02:9cbe9657-d794-11f1-a900-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Clover",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/9cbe9657-d794-11f1-a900-0a58a9feac02.png",
+        "minutes": 30,
+        "subs": 0,
+        "dropName": "Clover",
+        "campaignName": "Payday 3 update",
+        "campaignId": "7fd0b5de-69c5-4f30-924e-59adaa29a362",
+        "campaignStart": "2026-11-06T12:00:00Z",
+        "campaignEnd": "2026-11-27T11:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=7fd0b5de-69c5-4f30-924e-59adaa29a362",
+        "gameName": "PAYDAY 3",
+        "gameSlug": "payday-3",
+        "channels": [],
+        "description": "The PAYDAY gang is back again! Support your favorite PAYDAY 3 creators and grab yourself some exclusive chat badges featuring Joy, Pearl, Clover, and the KawaiiDozer. Gift a sub to unlock the KawaiiDozer, or keep watching the streams to get the rest of the crew!",
+        "relatedDrops": []
+      },
+      "messageId": "1570400835366690877",
+      "messageIds": [
+        "1570400835366690877"
+      ],
+      "messageFormatVersion": 5
+    },
+    "7fd0b5de-69c5-4f30-924e-59adaa29a362:dcb2efcc-d794-11f1-8521-0a58a9feac02:ad06772c-d794-11f1-b6f6-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-11-06T12:00:00Z",
+      "endAt": "2026-11-27T11:59:59.999Z",
+      "reward": {
+        "key": "7fd0b5de-69c5-4f30-924e-59adaa29a362:dcb2efcc-d794-11f1-8521-0a58a9feac02:ad06772c-d794-11f1-b6f6-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Pearl",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/ad06772c-d794-11f1-b6f6-0a58a9feac02.png",
+        "minutes": 60,
+        "subs": 0,
+        "dropName": "Pearl",
+        "campaignName": "Payday 3 update",
+        "campaignId": "7fd0b5de-69c5-4f30-924e-59adaa29a362",
+        "campaignStart": "2026-11-06T12:00:00Z",
+        "campaignEnd": "2026-11-27T11:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=7fd0b5de-69c5-4f30-924e-59adaa29a362",
+        "gameName": "PAYDAY 3",
+        "gameSlug": "payday-3",
+        "channels": [],
+        "description": "The PAYDAY gang is back again! Support your favorite PAYDAY 3 creators and grab yourself some exclusive chat badges featuring Joy, Pearl, Clover, and the KawaiiDozer. Gift a sub to unlock the KawaiiDozer, or keep watching the streams to get the rest of the crew!",
+        "relatedDrops": []
+      },
+      "messageId": "1570400836683694131",
+      "messageIds": [
+        "1570400836683694131"
+      ],
+      "messageFormatVersion": 5
+    },
+    "7fd0b5de-69c5-4f30-924e-59adaa29a362:e877a3d9-d794-11f1-9b23-0a58a9feac02:bc4eee5a-d794-11f1-9111-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-11-06T12:00:00Z",
+      "endAt": "2026-11-27T11:59:59.999Z",
+      "reward": {
+        "key": "7fd0b5de-69c5-4f30-924e-59adaa29a362:e877a3d9-d794-11f1-9b23-0a58a9feac02:bc4eee5a-d794-11f1-9111-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Joy",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/bc4eee5a-d794-11f1-9111-0a58a9feac02.png",
+        "minutes": 90,
+        "subs": 0,
+        "dropName": "Joy",
+        "campaignName": "Payday 3 update",
+        "campaignId": "7fd0b5de-69c5-4f30-924e-59adaa29a362",
+        "campaignStart": "2026-11-06T12:00:00Z",
+        "campaignEnd": "2026-11-27T11:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=7fd0b5de-69c5-4f30-924e-59adaa29a362",
+        "gameName": "PAYDAY 3",
+        "gameSlug": "payday-3",
+        "channels": [],
+        "description": "The PAYDAY gang is back again! Support your favorite PAYDAY 3 creators and grab yourself some exclusive chat badges featuring Joy, Pearl, Clover, and the KawaiiDozer. Gift a sub to unlock the KawaiiDozer, or keep watching the streams to get the rest of the crew!",
+        "relatedDrops": []
+      },
+      "messageId": "1570400838139252767",
+      "messageIds": [
+        "1570400838139252767"
+      ],
+      "messageFormatVersion": 5
+    },
+    "3e27da93-de21-4977-91db-e889991c7ff1:b205eb5c-d24f-11f1-a440-0a58a9feac02:3a6ee97e-d6eb-11f1-a83f-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-11-04T16:00:00Z",
+      "endAt": "2026-12-01T07:58:59.999Z",
+      "reward": {
+        "key": "3e27da93-de21-4977-91db-e889991c7ff1:b205eb5c-d24f-11f1-a440-0a58a9feac02:3a6ee97e-d6eb-11f1-a83f-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Alliance Badge",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/3a6ee97e-d6eb-11f1-a83f-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "Horde and Alliance Badges",
+        "campaignName": "Horde and Alliance Badges",
+        "campaignId": "3e27da93-de21-4977-91db-e889991c7ff1",
+        "campaignStart": "2026-11-04T16:00:00Z",
+        "campaignEnd": "2026-12-01T07:58:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=3e27da93-de21-4977-91db-e889991c7ff1",
+        "gameName": "World of Warcraft",
+        "gameSlug": "world-of-warcraft",
+        "channels": [],
+        "description": "Subscribe or Gift a Sub to a World of Warcraft streamer during the launch of WoW: Forever to earn the Horde and Alliance chat badges!",
+        "relatedDrops": []
+      },
+      "messageId": "1570400840567754814",
+      "messageIds": [
+        "1570400840567754814"
+      ],
+      "messageFormatVersion": 5
+    },
+    "3e27da93-de21-4977-91db-e889991c7ff1:b205eb5c-d24f-11f1-a440-0a58a9feac02:e0cbe407-d6ea-11f1-96c0-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-11-04T16:00:00Z",
+      "endAt": "2026-12-01T07:58:59.999Z",
+      "reward": {
+        "key": "3e27da93-de21-4977-91db-e889991c7ff1:b205eb5c-d24f-11f1-a440-0a58a9feac02:e0cbe407-d6ea-11f1-96c0-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Horde Badge",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/e0cbe407-d6ea-11f1-96c0-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "Horde and Alliance Badges",
+        "campaignName": "Horde and Alliance Badges",
+        "campaignId": "3e27da93-de21-4977-91db-e889991c7ff1",
+        "campaignStart": "2026-11-04T16:00:00Z",
+        "campaignEnd": "2026-12-01T07:58:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=3e27da93-de21-4977-91db-e889991c7ff1",
+        "gameName": "World of Warcraft",
+        "gameSlug": "world-of-warcraft",
+        "channels": [],
+        "description": "Subscribe or Gift a Sub to a World of Warcraft streamer during the launch of WoW: Forever to earn the Horde and Alliance chat badges!",
+        "relatedDrops": []
+      },
+      "messageId": "1570400841742159873",
+      "messageIds": [
+        "1570400841742159873"
+      ],
+      "messageFormatVersion": 5
     }
   },
   "twitchDropCampaignVersions": {
-    "7b4f2dfd-82bc-4f22-aace-91fdcda9b6cb": "2026-11-02T18:02:18.277Z",
-    "cb761797-30bd-4801-922a-fafce0993b50": "2026-11-02T18:02:18.627Z",
-    "fd642856-9dd2-4d3c-bdbb-4c37e5c81dde": "2026-11-02T17:01:53.031Z",
-    "b998b1ae-b02d-492c-81aa-2548939608b8": "2026-11-02T15:01:56.475Z",
-    "5a95b2e1-245a-41ba-8005-377c7dd562bb": "2026-11-02T15:01:56.094Z",
-    "b0d4b354-a52a-40ea-a218-24ce9c9d4d59": "2026-11-02T15:01:56.386Z",
-    "d6b17d87-04e6-427e-9115-5b5a77fed538": "2026-11-02T14:02:15.665Z",
-    "9991f882-f217-48ec-89eb-66c5c9c1d3af": "2026-11-02T14:46:38.496Z",
-    "bbc0c968-a61e-4d96-8102-dcc3276906af": "2026-11-02T12:02:15.410Z",
-    "eff0c5d9-023b-485f-ab57-f1dcae451e26": "2026-11-02T11:01:39.814Z",
-    "14536cf7-1042-4ce1-9ad6-7ccfae79d9a8": "2026-11-02T10:02:09.028Z",
-    "90bbb67a-e267-48ba-aca7-51b8f2469bd7": "2026-11-02T09:01:33.850Z",
     "882ccb61-0d4c-4fe6-a5c5-3156e8a033ab": "2026-11-02T07:01:36.718Z",
-    "e8473923-6a07-4c8d-a147-d76a249c15a6": "2026-11-02T05:46:56.204Z",
-    "3219d0d7-61cb-4e43-b211-32a500e2bed6": "2026-11-02T04:01:56.699Z",
-    "35087877-9b5e-440c-a7d8-fcb5e0ce00c5": "2026-11-02T00:01:59.582Z",
-    "e188b8bf-9e72-45f2-94d9-84daf68302c2": "2026-11-02T00:02:00.301Z",
-    "6a67127c-6c97-4499-8eb0-7e0c4a92f53b": "2026-11-02T00:02:00.100Z",
     "bb7b5e2e-8e95-4dc0-adda-95ac84afe2f7": "2026-11-01T06:01:32.063Z",
-    "9574d558-1368-4b7a-b46e-c2cfe6f75a82": "2026-11-01T00:01:40.225Z",
-    "cd0181a3-ac58-400c-9f2b-9d04df752ee0": "2026-10-31T17:53:20.335Z",
-    "b32523bf-9deb-44df-a330-92c056385842": "2026-10-31T13:01:57.403Z",
-    "6b1d7942-ec4d-49de-b545-ec3c7609e67a": "2026-10-31T20:16:29.318Z",
-    "b84f0d5a-2469-455f-8497-37472ccbc2c7": "2026-10-31T09:16:56.837Z",
-    "f7f57488-112f-40c8-b63a-0f3cac98f2c6": "2026-10-31T07:01:49.281Z",
-    "9863461e-b75e-4766-a8a5-25bbd654da06": "2026-10-30T16:02:09.132Z",
-    "77af691f-125c-4e1b-b6f0-4d164bd5bf1c": "2026-10-30T16:02:08.948Z",
     "73d9b4ef-a628-432d-8d1d-198d9ce15350": "2026-10-30T16:02:08.850Z",
-    "bbcf1935-8dd7-4495-bc63-b80c04766c84": "2026-10-30T15:01:58.669Z",
-    "02903700-8742-4d14-bd24-e6140e193ea5": "2026-10-30T15:01:56.564Z",
-    "b9587cf9-bc42-48c0-a97f-7d6eeca3a68d": "2026-10-30T15:01:58.384Z",
-    "065eb655-cc82-4c06-9c71-d8778ecc092c": "2026-10-30T15:01:56.868Z",
-    "c4ce24e9-8d61-43c1-a036-7335e62a928b": "2026-10-30T15:01:59.110Z",
-    "4639ddda-11fa-42b9-a808-03edf1f6b9bc": "2026-10-30T15:01:57.016Z",
     "e5de4c1a-c015-4b69-b1fd-d07786986c25": "2026-10-30T14:02:17.487Z",
-    "d3c2ae0f-a80b-4b81-a507-ad17974b4dec": "2026-10-30T11:01:49.992Z",
-    "4e5cf37b-4160-45f5-888f-d9f9dc22698f": "2026-10-30T10:02:21.668Z",
     "5f277031-448e-4eb2-8817-45f56779633c": "2026-10-30T07:01:48.862Z",
-    "a40fa4aa-bdca-4b6f-8858-6a3f5aaf3484": "2026-10-29T22:02:24.371Z",
-    "97a92b77-c12b-42d9-996c-9d7cf0136ba8": "2026-10-29T18:46:45.950Z",
-    "d631fdcf-ac14-4697-92b6-2d4e9ba77854": "2026-10-29T17:01:44.122Z",
-    "92ad4ead-7be0-4536-9d28-cef9e749adea": "2026-10-29T14:16:22.897Z",
-    "97e14443-0090-4a91-ab42-01cce98d8d56": "2026-10-29T14:02:15.810Z",
     "be794431-8dd5-4b79-bf11-53bb600711cb": "2026-10-29T14:02:16.186Z",
-    "7004540d-63ba-4aa4-98b1-99a8bede9750": "2026-10-29T12:02:11.439Z",
-    "2274bda1-377a-4d98-a7c6-837b08ab7fd0": "2026-10-29T09:16:50.788Z",
     "2cc95940-886e-42a2-9dee-23269cabfa47": "2026-10-29T06:02:13.122Z",
-    "f050c37b-b3e4-4511-aac6-7f90a48c7597": "2026-10-29T04:46:38.056Z",
-    "c3c97476-d77d-42d9-b550-d0cce948b18a": "2026-10-28T22:02:17.059Z",
-    "92bf2ceb-419d-4841-b64b-6e73d3ecb693": "2026-10-28T17:01:41.302Z",
-    "9c45c558-e191-4980-96af-83a4c811c25a": "2026-10-28T17:01:41.389Z",
     "3fbad26b-3224-4246-ad9d-0a2c56e39d2b": "2026-10-28T15:01:38.672Z",
-    "766aee60-373e-487e-b8c8-4516cdd25042": "2026-10-28T10:02:11.176Z",
-    "2890acf3-fc66-4310-920e-f09980832da4": "2026-10-28T08:02:09.704Z",
-    "4731b3dc-e266-4f24-826e-a85feb44428d": "2026-10-28T07:01:31.129Z",
-    "7e53b036-f71b-4d07-a71a-578ed77c9332": "2026-10-28T02:01:56.005Z",
     "d6a79a3e-fd63-43ed-906d-3a8443cd8184": "2026-10-27T19:44:52.672Z",
-    "ee4a624d-8452-4396-8925-7da45ee2671a": "2026-10-27T19:44:52.936Z",
-    "ed2154c8-041b-41c7-9448-ba074bc21d7f": "2026-10-27T15:52:49.349Z",
-    "8f49901e-4cf9-46d9-a559-441e396959da": "2026-10-26T23:52:46.914Z",
-    "119b5c68-114e-4085-bb93-db563cba5f4c": "2026-10-26T20:04:56.360Z",
-    "e8b7af11-0544-4a76-99e7-4807e4f3f35f": "2026-10-26T20:04:57.688Z",
-    "e05a3f77-585a-48c0-9adb-3e60e5e75863": "2026-10-26T14:16:59.219Z",
-    "56cf9e35-6322-4484-9f9b-7002092f1ac2": "2026-10-25T10:02:06.341Z",
-    "eb8ad6af-ae8e-453f-9324-004e23f65a1a": "2026-10-23T17:43:05.815Z",
     "8fbafdec-31ee-4878-a9ca-9ebbe07ca74d": "2026-10-23T17:43:05.057Z",
     "b42d9f22-e860-4f26-bdd8-bd0a6b8a4b9f": "2026-10-23T12:54:49.461Z",
     "2519eaa5-981e-4861-8b03-361dd002cfa4": "2026-10-22T17:11:45.258Z",
-    "437a3bed-7c38-4136-91e3-04cc9ce618b5": "2026-10-22T16:01:51.583Z",
-    "381d286a-8959-4bb1-a95e-dbd2ecf944a1": "2026-10-22T16:01:51.073Z",
-    "97b4a33f-43a1-4166-bcda-f58b534b2c9b": "2026-10-22T16:01:52.115Z",
     "2592aee8-8a94-469d-8731-db914c197367": "2026-10-22T10:01:34.072Z",
     "a9c2f298-5a53-439a-9a8c-41b4d88937e1": "2026-10-22T10:01:34.297Z",
     "17de3088-e3f3-423d-aa84-101002ac41df": "2026-10-22T10:01:33.885Z",
     "4b249954-342f-4a19-bfa1-0421ecf735a4": "2026-10-22T02:01:58.456Z",
-    "d3dea6a7-cb4e-4226-8906-54d7feee8bbe": "2026-10-22T01:01:24.245Z",
     "69f32da3-7abf-4716-b051-085a879cb112": "2026-10-22T00:01:46.186Z",
-    "f584b1fa-8acd-4d7e-b78d-d395b2d8243c": "2026-10-21T18:01:46.494Z",
     "3ed1adc1-8f12-4d18-82ac-fd543f08722d": "2026-10-21T21:01:41.534Z",
-    "e4f567f2-4eab-4dae-9995-c46e769b0c7a": "2026-10-21T02:01:57.156Z",
-    "587f7e5a-6994-4add-8c58-ef4bcfc70bc6": "2026-10-22T18:02:16.467Z",
-    "37fd344f-0050-4fbf-84ac-fe5648fc0cd9": "2026-10-20T16:01:58.486Z",
-    "aefa907c-43d5-4187-beed-4576c246ef7b": "2026-10-20T13:32:06.689Z",
-    "1b0b6519-5cfb-4894-816c-0bf6bd29cd26": "2026-10-20T09:02:00.177Z",
     "90273492-0fd5-46d0-b1cf-60084d901adf": "2026-10-18T15:02:03.427Z",
-    "9f42c463-846b-4e57-8dac-6e735a687c13": "2026-10-18T05:31:47.567Z",
     "d8e74682-74d7-4def-8f2b-034d982d03c1": "2026-10-16T15:01:36.085Z",
-    "321f2214-c73d-4989-91fb-4b0364985a25": "2026-10-16T03:32:20.794Z",
-    "486811da-8b4c-4212-951d-1a8caa34b5bc": "2026-10-16T07:02:13.165Z",
-    "de187dc2-1549-44a6-8fe1-118efd83a38a": "2026-10-16T02:31:30.728Z",
-    "cc08d25f-f80b-44f1-831f-c97bbbedc5fe": "2026-10-15T06:02:13.843Z",
-    "98f17628-ca8f-431d-9779-f898645b03d3": "2026-10-15T05:47:06.470Z",
-    "853eaf12-2ecb-446c-b382-717c278f8af2": "2026-10-15T02:01:21.561Z",
     "b66c6ae7-42bc-4e67-b0ad-8ab0d9897d26": "2026-10-14T19:01:26.782Z",
-    "1a262fb8-ab5d-4dbe-9284-bdc17aabe5c9": "2026-10-14T17:02:03.058Z",
-    "d6d56572-09ce-4204-bd92-a86436ed2f25": "2026-10-13T17:01:20.945Z",
-    "8ee4cc17-5fd4-4d29-8147-14ec12477c45": "2026-10-13T17:01:20.572Z",
-    "fc782035-c5b0-4790-a5dd-c57f12469331": "2026-10-13T12:01:17.515Z",
-    "6cd9dfd0-ac14-4405-97fc-49f191925268": "2026-10-09T12:32:23.570Z",
-    "2af30b0f-945d-434b-9deb-8161fdae8229": "2026-10-09T12:02:10.656Z",
-    "773f4909-b958-455c-be7a-641ade4067c5": "2026-10-08T17:43:05.732Z",
-    "379ef4ec-630e-4680-be66-afa041847757": "2026-10-08T13:08:10.753Z",
-    "e4f226c6-c9c3-4d99-9c13-e0050e004f9a": "2026-10-08T11:07:54.309Z",
-    "dfa9c27f-877b-417a-8a49-279ecf0fbb15": "2026-10-06T18:31:09.379Z"
+    "64bc1f39-ec81-4066-969a-4297a0afff67": "2026-11-12T10:31:19.787Z",
+    "b9049836-9e19-4695-b099-650ac9c736bf": "2026-11-12T09:01:35.804Z",
+    "21cf91ef-20d7-11f0-ac3d-0a58a9feac02": "2026-11-12T03:01:41.387Z",
+    "a8b29630-1150-4bab-bdf5-176062225b55": "2026-11-12T00:02:13.259Z",
+    "6af2bd14-ca96-46a9-a492-41dac025c409": "2026-11-11T23:01:44.622Z",
+    "6f160a57-3752-47a3-84d6-a0032195f978": "2026-11-11T17:01:41.417Z",
+    "68c51d29-d8fa-4b46-a30e-93d013d36f61": "2026-11-11T16:02:11.167Z",
+    "2c5e5162-f8bb-478a-a78a-610f7036f729": "2026-11-11T16:02:10.730Z",
+    "105f31ff-4815-45a7-9bce-71695fcdc21c": "2026-11-11T15:01:40.366Z",
+    "c81e1c5b-b7b1-4308-9098-5505cec75f69": "2026-11-11T08:02:08.611Z",
+    "c4ce70e7-0f5e-48e6-9cc0-e71272244966": "2026-11-11T08:02:08.263Z",
+    "3dd46351-a277-4276-8702-01f02882dbcc": "2026-11-11T02:01:57.857Z",
+    "a0a98fc0-ccc4-435c-bff4-877b5dc33902": "2026-11-11T01:01:27.521Z",
+    "f625d3b1-7daf-4fb2-9e52-102e4ff97f9e": "2026-11-10T21:31:46.240Z",
+    "4eeaa002-6d1c-4a43-a195-a1b3de88b3c4": "2026-11-10T18:02:00.298Z",
+    "f2d96e03-08ba-40b3-a0e6-05e02ce1c039": "2026-11-10T16:01:58.103Z",
+    "3fa90209-0c10-45ba-9758-186b4c9d1ef5": "2026-11-10T16:01:57.849Z",
+    "0aeb0b1c-62c6-452b-aa83-26959c3d52c1": "2026-11-10T16:01:57.632Z",
+    "9e51208e-329c-46a7-9109-a6262743a055": "2026-11-10T15:02:27.687Z",
+    "c67997fb-e0e5-4678-afe7-aea6528bc126": "2026-11-10T12:01:55.240Z",
+    "b48884ce-bb67-4d72-99cb-0e800492f721": "2026-11-10T11:02:24.783Z",
+    "6c9d7437-f6a9-4949-8b46-b2cb5b0d34cc": "2026-11-10T02:01:30.889Z",
+    "e35e85d5-d647-4906-a3df-5a4d0620a58b": "2026-11-10T02:01:31.653Z",
+    "ce1d6b04-a088-4e28-8bcf-a6db477b8a7b": "2026-11-09T21:01:50.446Z",
+    "e34ea037-2edd-4cd0-bf72-2cf6a1799ae0": "2026-11-09T16:02:11.163Z",
+    "9205d5a4-acdb-47ad-84e0-756fe28aa515": "2026-11-09T15:01:48.620Z",
+    "c43c3164-ed55-43b4-97bb-74285cce4bbd": "2026-11-09T14:02:19.367Z",
+    "0ffa233a-60b9-41e2-b284-2a1c4fb47cb2": "2026-11-09T14:46:39.253Z",
+    "f4b471b4-9ab9-4c69-83cc-93ca52cd2663": "2026-11-09T11:31:56.493Z",
+    "f126a55c-acae-4369-ae75-69278bc6a724": "2026-11-09T13:47:11.575Z",
+    "2c567f66-9717-480b-b451-c7f9e80c16fe": "2026-11-09T08:02:08.565Z",
+    "b1f5b0fc-ed53-41c5-86b8-067b3a0a11b2": "2026-11-09T04:02:11.399Z",
+    "fe0929b2-3be3-4bec-b970-9df72b2982ab": "2026-11-09T00:02:10.120Z",
+    "556b21e6-9e53-471e-ad40-730910c6c6f5": "2026-11-07T16:02:22.187Z",
+    "f8f01b79-8d12-4d05-99c4-dabee7759897": "2026-11-07T11:01:55.380Z",
+    "968791a4-0188-4af8-8edc-8d6e92b941bb": "2026-11-07T07:01:59.567Z",
+    "53c80198-fa33-485d-9cc7-2af5c4771602": "2026-11-06T18:01:59.786Z",
+    "803db39a-51d5-4c6a-8413-3fb582ab8aac": "2026-11-06T17:02:04.393Z",
+    "3638d056-5cae-4f9c-870d-55b7ad50a8a4": "2026-11-06T17:02:04.024Z",
+    "64953fce-e028-4856-98f9-acac6f7e95f4": "2026-11-06T17:02:04.156Z",
+    "df576175-0f22-467e-8ba7-955603a16567": "2026-11-06T16:31:46.452Z",
+    "ef4f64f6-7a35-4d2a-897b-41ef817ad18d": "2026-11-06T15:02:13.857Z",
+    "38d7e4f1-7737-4482-93d1-ce9c20c6b0c6": "2026-11-06T15:02:12.009Z",
+    "c328eccb-9098-4ad8-a487-a637816196af": "2026-11-06T15:02:13.162Z",
+    "fcddef70-46d6-4ff6-b1a0-c8dc7ed21fdc": "2026-11-06T15:02:14.131Z",
+    "7fd0b5de-69c5-4f30-924e-59adaa29a362": "2026-11-06T12:02:12.893Z",
+    "55e0b074-0393-4be3-8586-3fb8b65b80e0": "2026-11-06T08:02:07.466Z",
+    "d31f0a01-c61e-4170-bf68-60c9132efaaf": "2026-11-06T06:02:01.038Z",
+    "a0e134ff-e391-46bc-9ac6-0b1b2c826795": "2026-11-06T05:01:29.334Z",
+    "0bfcc7fb-d3e0-4718-9098-9e58c44b9c49": "2026-11-05T14:01:56.137Z",
+    "eb9156b6-649e-4e03-9cd1-989d9a89717e": "2026-11-05T13:01:33.906Z",
+    "94263f50-6ae7-45a8-bd72-5f612c5b1243": "2026-11-05T12:32:16.508Z",
+    "7dc538f3-cfb6-4346-850c-058b900b9777": "2026-11-05T08:17:09.094Z",
+    "171c990c-5259-4670-93d0-58fd6e167342": "2026-11-05T02:47:07.811Z",
+    "3e27da93-de21-4977-91db-e889991c7ff1": "2026-11-04T16:01:40.778Z",
+    "fab904fd-96c0-4b4c-8775-d2cb829f4563": "2026-11-04T14:01:39.973Z",
+    "e8c223e0-ea31-4313-ac42-f4fa3d589bc1": "2026-11-04T11:02:06.577Z",
+    "9844bbb4-2a3f-4525-80a6-e1b7c314d50c": "2026-11-04T03:01:49.051Z",
+    "c1b9bd2e-98cd-4ffe-b748-c2b3e48c5ecf": "2026-11-04T23:46:37.618Z",
+    "e3a69270-1546-4966-8bcf-2af97c5a0a0b": "2026-11-03T19:01:51.608Z",
+    "bc94afa2-12e9-47aa-8200-6b860fd49c9b": "2026-11-05T20:17:07.985Z",
+    "83430dc1-1cf2-4da0-b645-3aa07dbbf406": "2026-11-03T16:02:13.833Z",
+    "20ad1ac0-78f4-4e4f-aadf-e59d8840b295": "2026-11-03T14:03:16.426Z",
+    "ae1677a9-1c2c-4e62-8009-33d57583ee4f": "2026-11-03T13:32:01.715Z",
+    "96bdfce5-e774-457f-aa8f-f693144ee50f": "2026-11-03T10:02:16.504Z",
+    "a013ca5d-a41b-4ead-a282-c78f6c2c3183": "2026-11-06T10:17:17.110Z",
+    "62dd594c-cfac-4892-8078-0939ac798bc5": "2026-11-13T11:02:12.522Z",
+    "13c7c040-e40b-40c8-b041-3ddb14098683": "2026-11-13T11:02:12.091Z",
+    "5895dfbc-6083-4d01-a4cc-5217bc02dfe8": "2026-11-13T11:02:12.226Z",
+    "68590093-81f7-432c-b613-d43020c61dca": "2026-11-13T11:02:12.796Z",
+    "1f68edff-b53c-4030-a8d4-daa700db50da": "2026-11-13T10:01:40.038Z",
+    "3692aff1-55ba-49f9-aa8a-db9ec32eb1e9": "2026-11-13T10:01:40.409Z",
+    "7755dd9f-b2aa-4745-8250-b76587881383": "2026-11-13T02:02:26.595Z",
+    "9e7de515-966f-4965-8fc5-70aa2c91131b": "2026-11-13T00:31:31.968Z",
+    "27edc93c-a3ff-459f-9c17-7d5cd175c2fd": "2026-11-13T00:01:17.207Z",
+    "5053ec5b-8c30-4e21-87c9-d29db02eaca1": "2026-11-12T20:02:15.830Z",
+    "c05cc269-2e7f-4657-b3b9-b8cef7426cfa": "2026-11-12T18:02:15.215Z",
+    "1fb68249-d356-4813-8828-a562bc739153": "2026-11-12T18:02:14.578Z",
+    "9f6420e8-d46a-446a-8fbd-73193396671b": "2026-11-12T18:02:14.915Z",
+    "b8b6ea03-90ad-4426-a095-87283d6b8b2e": "2026-11-12T17:01:45.489Z",
+    "fdceaa42-10eb-4f45-ad61-62f2b3beb378": "2026-11-12T14:02:14.219Z",
+    "62fc3b75-04f2-4ddc-adf6-1cf7269400c1": "2026-11-12T12:02:03.761Z",
+    "2965fe2b-6ebb-4547-929c-e70112337fda": "2026-11-12T15:47:07.572Z"
   },
   "kickDropIgnoredRewards": [
     {
@@ -1722,12 +1953,13 @@
       "messageIds": [
         "1570094705734324258"
       ],
-      "messageFormatVersion": 2
+      "messageFormatVersion": 2,
+      "renewalBaselineEndAt": "2026-11-23T00:00:00.000Z"
     },
     "01M4FJM2JJQJBYSYWN23TEYFBR:01M4FJ8KVH3ZTHJ4N4J63X4GJD": {
       "status": "started",
       "startAt": "2026-10-10T13:00:00.000Z",
-      "endAt": "2026-11-14T17:00:00.000Z",
+      "endAt": "2026-11-28T17:00:00.000Z",
       "reward": {
         "key": "01M4FJM2JJQJBYSYWN23TEYFBR:01M4FJ8KVH3ZTHJ4N4J63X4GJD",
         "campaignId": "01M4FJM2JJQJBYSYWN23TEYFBR",
@@ -1743,7 +1975,7 @@
         "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m4fj8kvh3zthj4n4j63x4gjd-01m4fj8kw3jj5d24v8wn6ncqa6.png",
         "minutes": 60,
         "campaignStart": "2026-10-10T13:00:00.000Z",
-        "campaignEnd": "2026-11-14T17:00:00.000Z",
+        "campaignEnd": "2026-11-28T17:00:00.000Z",
         "gameName": "Just Chatting",
         "campaignUrl": "https://kick.com/eddie",
         "categoryUrl": "https://kick.com/category/just-chatting/drops"
@@ -1753,12 +1985,14 @@
         "1570094707529351330"
       ],
       "messageFormatVersion": 2,
-      "renewalBaselineEndAt": "2026-11-07T17:00:00.000Z"
+      "renewalBaselineEndAt": "2026-11-28T17:00:00.000Z",
+      "lastRenewalNotifiedEndAt": "2026-11-28T17:00:00.000Z",
+      "lastRenewalNotifiedAt": "2026-11-13T11:58:28.816Z"
     },
     "01M4FJM2JJQJBYSYWN23TEYFBR:01M4FJ8KYBM5G0TY4B4KAMWJKW": {
       "status": "started",
       "startAt": "2026-10-10T13:00:00.000Z",
-      "endAt": "2026-11-14T17:00:00.000Z",
+      "endAt": "2026-11-28T17:00:00.000Z",
       "reward": {
         "key": "01M4FJM2JJQJBYSYWN23TEYFBR:01M4FJ8KYBM5G0TY4B4KAMWJKW",
         "campaignId": "01M4FJM2JJQJBYSYWN23TEYFBR",
@@ -1774,7 +2008,7 @@
         "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m4fj8kybm5g0ty4b4kamwjkw-01m4fj99ymj67qfcs32tec5qvn.png",
         "minutes": 120,
         "campaignStart": "2026-10-10T13:00:00.000Z",
-        "campaignEnd": "2026-11-14T17:00:00.000Z",
+        "campaignEnd": "2026-11-28T17:00:00.000Z",
         "gameName": "Just Chatting",
         "campaignUrl": "https://kick.com/eddie",
         "categoryUrl": "https://kick.com/category/just-chatting/drops"
@@ -1784,10 +2018,12 @@
         "1570094709257273365"
       ],
       "messageFormatVersion": 2,
-      "renewalBaselineEndAt": "2026-11-07T17:00:00.000Z"
+      "renewalBaselineEndAt": "2026-11-28T17:00:00.000Z",
+      "lastRenewalNotifiedEndAt": "2026-11-28T17:00:00.000Z",
+      "lastRenewalNotifiedAt": "2026-11-13T11:58:30.285Z"
     },
     "01M4VW169236GHGNK090F8NA8T:01M4VVGB0CH1ECVDZ3J39KTJEJ": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-11-07T08:00:00.000Z",
       "endAt": "2026-11-13T08:00:00.000Z",
       "reward": {
@@ -1809,7 +2045,8 @@
       "messageIds": [
         "1570094710477824042"
       ],
-      "messageFormatVersion": 2
+      "messageFormatVersion": 2,
+      "renewalBaselineEndAt": "2026-11-13T08:00:00.000Z"
     },
     "01M71B4D4VA0G9N3Q0QXH73Q78:01M6ZQDZDEW41YP42GR71MEH6P": {
       "status": "started",
@@ -1834,7 +2071,8 @@
       "messageIds": [
         "1570094711665070252"
       ],
-      "messageFormatVersion": 2
+      "messageFormatVersion": 2,
+      "renewalBaselineEndAt": "2026-11-18T00:00:00.000Z"
     },
     "01M71B4D4VA0G9N3Q0QXH73Q78:01M71AA5SGZNSAH86EAC4M5X7E": {
       "status": "started",
@@ -1859,7 +2097,8 @@
       "messageIds": [
         "1570094712768167988"
       ],
-      "messageFormatVersion": 2
+      "messageFormatVersion": 2,
+      "renewalBaselineEndAt": "2026-11-18T00:00:00.000Z"
     },
     "01M71B4D4VA0G9N3Q0QXH73Q78:01M71ABGRGN18DV0WF2D3PVH2M": {
       "status": "started",
@@ -1884,10 +2123,11 @@
       "messageIds": [
         "1570094733026394145"
       ],
-      "messageFormatVersion": 2
+      "messageFormatVersion": 2,
+      "renewalBaselineEndAt": "2026-11-18T00:00:00.000Z"
     },
     "01M73SZYH8PT7WT3ED9VF0MN0A:01M73SMRECY9D3YRH94C1MZ6SJ": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-11-10T23:00:00.000Z",
       "endAt": "2026-11-12T20:00:00.000Z",
       "reward": {
@@ -1946,10 +2186,11 @@
       "messageIds": [
         "1570094734683414643"
       ],
-      "messageFormatVersion": 2
+      "messageFormatVersion": 2,
+      "renewalBaselineEndAt": "2026-11-12T20:00:00.000Z"
     },
     "01M73SZYH8PT7WT3ED9VF0MN0A:01M73SNDC0BPC0921DKBHTYHC6": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-11-10T23:00:00.000Z",
       "endAt": "2026-11-12T20:00:00.000Z",
       "reward": {
@@ -2008,10 +2249,11 @@
       "messageIds": [
         "1570094736289702009"
       ],
-      "messageFormatVersion": 2
+      "messageFormatVersion": 2,
+      "renewalBaselineEndAt": "2026-11-12T20:00:00.000Z"
     },
     "01M73SZYH8PT7WT3ED9VF0MN0A:01M73SQ3CQSHBWY96C91MFE0CF": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-11-10T23:00:00.000Z",
       "endAt": "2026-11-12T20:00:00.000Z",
       "reward": {
@@ -2070,12 +2312,13 @@
       "messageIds": [
         "1570094737698988257"
       ],
-      "messageFormatVersion": 2
+      "messageFormatVersion": 2,
+      "renewalBaselineEndAt": "2026-11-12T20:00:00.000Z"
     },
     "01M4FJM2JJQJBYSYWN23TEYFBR:01M4FJGJZWHJA1VPTSAMWV3T19": {
       "status": "started",
       "startAt": "2026-10-10T13:00:00.000Z",
-      "endAt": "2026-11-14T17:00:00.000Z",
+      "endAt": "2026-11-28T17:00:00.000Z",
       "reward": {
         "key": "01M4FJM2JJQJBYSYWN23TEYFBR:01M4FJGJZWHJA1VPTSAMWV3T19",
         "campaignId": "01M4FJM2JJQJBYSYWN23TEYFBR",
@@ -2091,7 +2334,7 @@
         "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m4fjgjzwhja1vptsamwv3t19-01m4fjgk0acf3t8c51nahw4948.png",
         "minutes": 180,
         "campaignStart": "2026-10-10T13:00:00.000Z",
-        "campaignEnd": "2026-11-14T17:00:00.000Z",
+        "campaignEnd": "2026-11-28T17:00:00.000Z",
         "gameName": "Just Chatting",
         "campaignUrl": "https://kick.com/eddie",
         "categoryUrl": "https://kick.com/category/just-chatting/drops"
@@ -2101,7 +2344,35 @@
         "1570095986351542364"
       ],
       "messageFormatVersion": 2,
-      "renewalBaselineEndAt": "2026-11-07T17:00:00.000Z"
+      "renewalBaselineEndAt": "2026-11-28T17:00:00.000Z",
+      "lastRenewalNotifiedEndAt": "2026-11-28T17:00:00.000Z",
+      "lastRenewalNotifiedAt": "2026-11-13T11:58:31.076Z"
+    },
+    "01M4VW84ZP8MR2EBKKBDJ7KC9X:01M4VVN9513TJ1X3P16GVXVZBC": {
+      "status": "started",
+      "startAt": "2026-11-13T08:00:00.000Z",
+      "endAt": "2026-11-15T08:00:00.000Z",
+      "renewalBaselineEndAt": "2026-11-15T08:00:00.000Z",
+      "reward": {
+        "key": "01M4VW84ZP8MR2EBKKBDJ7KC9X:01M4VVN9513TJ1X3P16GVXVZBC",
+        "campaignId": "01M4VW84ZP8MR2EBKKBDJ7KC9X",
+        "campaignName": "Chat Emote - K/DA",
+        "campaignChannels": [],
+        "name": "Chat Emote - K/DA",
+        "type": "EMOTE",
+        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m4vvn9513tj1x3p16gvxvzbc-01m4vvn95g9a4dexj2jangwa47.png",
+        "minutes": 30,
+        "campaignStart": "2026-11-13T08:00:00.000Z",
+        "campaignEnd": "2026-11-15T08:00:00.000Z",
+        "gameName": "League of Legends",
+        "campaignUrl": "https://kick.com/category/league-of-legends/drops",
+        "categoryUrl": "https://kick.com/category/league-of-legends/drops"
+      },
+      "messageId": "1570725080470659097",
+      "messageIds": [
+        "1570725080470659097"
+      ],
+      "messageFormatVersion": 2
     }
   },
   "indiegalaBundleExpiries": {
@@ -2119,11 +2390,17 @@
     },
     "https://www.indiegala.com/bundle/hentai-balloons2": {
       "endAt": "2026-11-04T22:44:07.062Z"
+    },
+    "https://www.indiegala.com/bundle/lusty-lab-bundle": {
+      "endAt": "2026-11-14T14:33:43.767Z"
     }
   },
   "indiegalaRenewalCursor": 0,
   "digiphileCollectionExpiries": {},
   "digiphileRenewalCursor": 0,
   "gmgBundleExpiries": {},
-  "gmgBundleRenewalCursor": 0
+  "gmgBundleRenewalCursor": 0,
+  "fanaticalAnnouncementRepairSlugs": [
+    "platinum-collection-build-your-own-bundle"
+  ]
 }

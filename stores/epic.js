@@ -369,6 +369,13 @@ function isKnown(aliases, known) {
   return false;
 }
 
+function hasKnownOfficialTitle(title, known) {
+  const normalized = normalizeTitle(title);
+  if (!normalized) return false;
+  const prefix = `epic:title:${normalized}:`;
+  return [...known].some(key => String(key).startsWith(prefix));
+}
+
 function saveKnown(savedData, known, saveData) {
   savedData.epicGames = [...known].slice(-MAX_SAVED_KEYS);
   saveData();
@@ -523,7 +530,7 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
     const known = new Set(savedData.epicGames.map(String));
     const now = new Date();
     const candidates = [];
-    const officialActiveTitles = new Set();
+    const officialFeedTitles = new Set();
     const skipReasons = {};
     const skippedTitles = {};
     const stats = {
@@ -535,6 +542,8 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
 
     for (const game of elements) {
       try {
+        const officialTitle = normalizeTitle(game?.title);
+        if (officialTitle) officialFeedTitles.add(officialTitle);
         const result = inspectGame(game, now);
 
         if (result.skip) {
@@ -550,8 +559,6 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
         }
 
         stats.activeFree++;
-        officialActiveTitles.add(normalizeTitle(result.title));
-
         const slug = getSlug(game);
         const aliases = getAliases(game, slug, result.activePromo);
 
@@ -575,6 +582,9 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
       }
     }
 
+    // Only query the supplemental source after the official Epic feed has
+    // been fully scanned. Epic remains authoritative when a third party keeps
+    // reporting a stale end date for an already announced offer.
     let gamerPowerCount = 0;
     try {
       const giveaways = await fetchGamerPowerGiveaways(options.signal);
@@ -592,6 +602,15 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
             return;
           }
 
+          const supplementalTitle = normalizeTitle(cleanGiveawayTitle(item.title));
+          if (
+            officialFeedTitles.has(supplementalTitle) ||
+            hasKnownOfficialTitle(supplementalTitle, known)
+          ) {
+            stats.known++;
+            return;
+          }
+
           const claimUrl = await resolveClaimUrl(item);
           const slug = getSlugFromUrl(claimUrl);
           const candidate = makeGamerPowerCandidate(item, slug, claimUrl);
@@ -599,7 +618,7 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
           // Epic's own promotion feed is authoritative for its dates. A second
           // source can report a later or stale end time for the same product;
           // never let that create another announcement when Epic already lists it.
-          if (officialActiveTitles.has(normalizeTitle(candidate.game.title))) {
+          if (officialFeedTitles.has(normalizeTitle(candidate.game.title))) {
             stats.known++;
             return;
           }
@@ -689,9 +708,11 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
 };
 
 module.exports.getActiveFreePromo = getActiveFreePromo;
+module.exports.isEpicGameGiveaway = isEpicGameGiveaway;
 module.exports.isPromoFree = isPromoFree;
 module.exports.getAliases = getAliases;
 module.exports.isKnown = isKnown;
+module.exports.hasKnownOfficialTitle = hasKnownOfficialTitle;
 module.exports.mergeCandidates = mergeCandidates;
 module.exports.formatDate = formatDate;
 module.exports.formatPromoWindow = formatPromoWindow;
