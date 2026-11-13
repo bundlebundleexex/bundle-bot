@@ -86,21 +86,200 @@ function extractLowestPrice(product) {
     }
   }
 
+  for (const tier of product.tiers || []) {
+    const amount = Number(tier?.price?.amount);
+    const currency = String(tier?.price?.currencyCode || "");
+    if (Number.isFinite(amount) && currency) {
+      prices.push({ raw: `${currency === "EUR" ? "€" : currency === "USD" ? "$" : currency === "GBP" ? "£" : `${currency} `}${amount}`, currency, value: amount });
+    }
+  }
+
   if (!prices.length) return "Brak danych";
 
   // Humble can include several regional prices in the same tile. Choose the
   // euro amount for our Polish audience instead of comparing unlike currencies.
-  const euroPrices = prices.filter(price => price.currency === "€");
+  const euroPrices = prices.filter(price => price.currency === "€" || price.currency === "EUR");
   const relevantPrices = euroPrices.length ? euroPrices : prices;
   relevantPrices.sort((a, b) => a.value - b.value);
   return relevantPrices[0].raw;
 }
 
 function getGameBundleLink(product) {
-  if (product.category !== "bundle") return null;
-  if (!product.product_url?.startsWith("/games/")) return null;
+  const rawUrl = product?.product_url || product?.url || product?.human_url ||
+    (product?.slug && String(product.bundleType || "").toLowerCase() === "games"
+      ? `/games/${product.slug}`
+      : null);
+  if (!rawUrl) return null;
+  try {
+    const url = new URL(rawUrl, "https://www.humblebundle.com");
+    if (!/(^|\.)humblebundle\.com$/i.test(url.hostname) || !url.pathname.startsWith("/games/")) return null;
+    url.search = "";
+    url.hash = "";
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    return null;
+  }
+}
 
-  return `https://www.humblebundle.com${product.product_url}`;
+function getProductTitle(product) {
+  return product?.tile_name || product?.human_name || product?.name || product?.title || null;
+}
+
+function getJsonScripts(html) {
+  const $ = cheerio.load(html || "");
+  const scripts = [];
+  $("script").each((_, element) => {
+    const node = $(element);
+    const type = String(node.attr("type") || "").toLowerCase();
+    const id = String(node.attr("id") || "").toLowerCase();
+    const content = node.html()?.trim();
+    if (!content) return;
+    if (type.includes("json") || /landingpage-json-data|webpack-bundle-page-data/.test(id) || /^[{[]/.test(content)) {
+      scripts.push(content);
+    }
+  });
+  return [...new Set(scripts)];
+}
+
+function parseJsonScripts(html) {
+  const payloads = [];
+  for (const script of getJsonScripts(html)) {
+    try { payloads.push(JSON.parse(script)); } catch {}
+  }
+  payloads.push(...extractNextFlightBundlePages(html));
+  return payloads;
+}
+
+function parseBalancedJsonAt(text, start) {
+  let index = start;
+  while (/\s/.test(text[index] || "")) index++;
+  if (text[index] !== "{" && text[index] !== "[") return null;
+  const stack = [];
+  let quoted = false;
+  let escaped = false;
+  for (let cursor = index; cursor < text.length; cursor++) {
+    const char = text[cursor];
+    if (quoted) {
+      if (escaped) escaped = false;
+      else if (char === "\\") escaped = true;
+      else if (char === '"') quoted = false;
+      continue;
+    }
+    if (char === '"') { quoted = true; continue; }
+    if (char === "{" || char === "[") stack.push(char);
+    else if (char === "}" || char === "]") {
+      const open = stack.pop();
+      if ((open === "{" && char !== "}") || (open === "[" && char !== "]")) return null;
+      if (!stack.length) {
+        try { return JSON.parse(text.slice(index, cursor + 1)); } catch { return null; }
+      }
+    }
+  }
+  return null;
+}
+
+function extractNextFlightBundlePages(html) {
+  const $ = cheerio.load(html || "");
+  const bundles = [];
+  const prefix = "self.__next_f.push(";
+  $("script").each((_, element) => {
+    const script = $(element).html() || "";
+    if (!script.startsWith(prefix)) return;
+    let chunks;
+    try { chunks = JSON.parse(script.slice(prefix.length, script.lastIndexOf(")"))); } catch { return; }
+    const flight = typeof chunks?.[1] === "string" ? chunks[1] : "";
+    let position = 0;
+    while ((position = flight.indexOf('"bundlePage":', position)) !== -1) {
+      const bundle = parseBalancedJsonAt(flight, position + '"bundlePage":'.length);
+      if (bundle && typeof bundle === "object" && !Array.isArray(bundle) && bundle.slug && bundle.bundleType) {
+        bundles.push(bundle);
+      }
+      position += '"bundlePage":'.length;
+    }
+  });
+  return bundles;
+}
+
+function extractGameBundles(html) {
+  const bundles = new Map();
+  const visit = (value, depth = 0) => {
+    if (!value || typeof value !== "object" || depth > 24) return;
+    if (Array.isArray(value)) {
+      for (const child of value) visit(child, depth + 1);
+      return;
+    }
+    const link = getGameBundleLink(value);
+    if (link) {
+      const title = getProductTitle(value);
+      if (title) bundles.set(normalizeBundleLink(link), { ...value, tile_name: title, product_url: link });
+    }
+    for (const child of Object.values(value)) visit(child, depth + 1);
+  };
+  for (const payload of parseJsonScripts(html)) visit(payload);
+
+  // The redesigned landing page may render the listing as regular links
+  // before it exposes bundle metadata in its embedded JSON.
+  const $ = cheerio.load(html || "");
+  $("a[href]").each((_, element) => {
+    const anchor = $(element);
+    const link = getGameBundleLink({ product_url: anchor.attr("href") });
+    if (!link || bundles.has(normalizeBundleLink(link))) return;
+    const slug = new URL(link).pathname.split("/").filter(Boolean).pop() || "Humble Bundle";
+    const card = anchor.closest('[data-testid="product-card"]');
+    const title = card.find('[data-testid="product-card-footer"] [data-testid="product-link"]').first().text().replace(/\s+/g, " ").trim() ||
+      anchor.attr("title") || anchor.attr("aria-label") || anchor.text().replace(/\s+/g, " ").trim() ||
+      slug.replace(/[-_]+/g, " ").replace(/\b\w/g, char => char.toUpperCase());
+    const hoverDescription = card.find('[data-testid="bundle-hover-titles"]').first().text().replace(/\s+/g, " ").trim();
+    const image = card.find('[data-testid="product-thumbnail"] img').first().attr("src") ||
+      card.find("img").first().attr("data-src") || null;
+    bundles.set(normalizeBundleLink(link), {
+      category: "bundle",
+      product_url: link,
+      tile_name: title,
+      short_marketing_blurb: hoverDescription,
+      tile_image: image
+    });
+  });
+  return [...bundles.values()];
+}
+
+function findNestedValue(payloads, predicate) {
+  const seen = new Set();
+  const visit = (value, depth = 0) => {
+    if (!value || typeof value !== "object" || depth > 24 || seen.has(value)) return null;
+    seen.add(value);
+    if (!Array.isArray(value) && predicate(value)) return value;
+    for (const child of Array.isArray(value) ? value : Object.values(value)) {
+      const match = visit(child, depth + 1);
+      if (match) return match;
+    }
+    return null;
+  };
+  for (const payload of payloads) {
+    const match = visit(payload);
+    if (match) return match;
+  }
+  return null;
+}
+
+function getChoicePageInfo(html) {
+  const $ = cheerio.load(html || "");
+  const description = $("meta[name='description']").attr("content") || $("meta[property='og:description']").attr("content") || "";
+  const pageText = `${description} ${$("body").text().replace(/\s+/g, " ")}`;
+  const match = pageText.match(/\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})\s+Humble Choice\b/i);
+  if (!match) return null;
+  const month = match[1][0].toUpperCase() + match[1].slice(1).toLowerCase();
+  const year = match[2];
+  const priceMatch = pageText.match(/for only\s*([€$£])\s*(\d+(?:[.,]\d+)?)/i);
+  const price = priceMatch
+    ? { amount: Number(priceMatch[2].replace(",", ".")), currency: priceMatch[1] === "€" ? "EUR" : priceMatch[1] === "$" ? "USD" : "GBP" }
+    : null;
+  return {
+    machineName: `${month.toLowerCase()}_${year}_choice`,
+    humanName: `${month} ${year} Humble Choice`,
+    price,
+    endDate: null
+  };
 }
 
 function normalizeBundleName(value) {
@@ -190,27 +369,55 @@ function getBundleEndDate(product) {
     : null;
 }
 
-async function getBundleEndDateFromPage(url) {
+async function getBundleDetailsFromPage(url) {
   try {
     const { data: html } = await axios.get(url, {
       timeout: 12000,
       headers: { "User-Agent": "Mozilla/5.0" }
     });
-    const scripts = [...String(html).matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)];
-    for (const [, content] of scripts) {
-      const source = content.trim();
-      if (!source.startsWith("{") && !source.startsWith("[")) continue;
-      try {
-        const endDate = getBundleEndDate(JSON.parse(source));
-        if (endDate) return endDate;
-      } catch {
-        // Ignore non-JSON script blocks and continue through the page data.
-      }
-    }
+    const $ = cheerio.load(html || "");
+    const slug = new URL(url).pathname.split("/").filter(Boolean).pop();
+    const bundlePage = parseJsonScripts(html).find(value =>
+      value?.slug === slug && String(value?.bundleType || "").toLowerCase() === "games"
+    );
+    const pageTitle = $("meta[property='og:title']").attr("content")?.replace(/\s*\|\s*Humble Bundle\s*$/i, "") || $("h1").first().text().trim();
+    const image = $("meta[property='og:image']").attr("content") || null;
+    return bundlePage
+      ? {
+          ...bundlePage,
+          tile_name: bundlePage.title || pageTitle,
+          product_url: url,
+          short_marketing_blurb: bundlePage.headline || $("meta[property='og:description']").attr("content") || "",
+          tile_image: bundlePage.thumbnailImageUrl || image,
+          end_date: bundlePage.endDate,
+          start_date: bundlePage.startDate
+        }
+      : pageTitle
+        ? { tile_name: pageTitle, product_url: url, tile_image: image }
+        : null;
   } catch (error) {
-    console.log("Humble: nie udało się odczytać terminu ze strony bundle:", error.message);
+    console.log("Humble: nie udało się pobrać szczegółów bundle:", error.message);
+    return null;
   }
-  return null;
+}
+
+async function getBundleEndDateFromPage(url) {
+  const details = await getBundleDetailsFromPage(url);
+  return getBundleEndDate(details);
+}
+
+function normalizeHumbleImage(value) {
+  if (!value) return null;
+  try {
+    const url = new URL(value, "https://www.humblebundle.com");
+    if (url.pathname === "/_next/image") {
+      const original = url.searchParams.get("url");
+      if (original) return original;
+    }
+    return url.toString();
+  } catch {
+    return value;
+  }
 }
 
 function isBundleExtension(previousEndDate, currentEndDate) {
@@ -255,38 +462,16 @@ module.exports.check = async (client, savedData, saveData) => {
       { headers: { "User-Agent": "Mozilla/5.0" } }
     );
 
-    const scripts = [
-      ...gamesHtml.matchAll(
-        /<script[^>]*application\/json[^>]*>(.*?)<\/script>/gs
-      )
-    ];
-
-    if (scripts[1]) {
-      const json = JSON.parse(scripts[1][1]);
-      const mosaic = json?.data?.games?.mosaic || [];
-      const currentLinks = [];
-
-      for (const section of mosaic) {
-        if (!section.products) continue;
-
-        for (const product of section.products) {
-          const link = getGameBundleLink(product);
-
-          if (link) currentLinks.push(link);
-        }
-      }
+    const gameBundles = extractGameBundles(gamesHtml);
+    if (gameBundles.length) {
+      const currentLinks = gameBundles.map(getGameBundleLink).filter(Boolean);
 
       pruneInactiveHumbleBundles(savedData, currentLinks, saveData);
 
-      for (const section of mosaic) {
-        if (!section.products) continue;
-
-        for (const product of section.products) {
+      for (const product of gameBundles) {
           const link = getGameBundleLink(product);
 
-          if (!link) continue;
-
-          const title = product.tile_name;
+          const title = getProductTitle(product);
           const normalizedLink = normalizeBundleLink(link);
           const wasActive = savedData.humbleBundles.some(
             existing => normalizeBundleLink(existing) === normalizedLink
@@ -298,11 +483,16 @@ module.exports.check = async (client, savedData, saveData) => {
           // A renewal must be the same listing; a similar title can be a new bundle.
           const renewalRecord = previousRecord;
           let endDate = getBundleEndDate(product);
-          if (!endDate) endDate = await getBundleEndDateFromPage(link);
+          let pageDetails = null;
+          if (!endDate) {
+            pageDetails = await getBundleDetailsFromPage(link);
+            endDate = getBundleEndDate(pageDetails);
+          }
           const extension = isBundleExtension(renewalRecord?.expiresAt, endDate);
           if ((wasActive || previousRecord) && !extension) continue;
 
           const description =
+            pageDetails?.short_marketing_blurb ||
             product.short_marketing_blurb ||
             product.marketing_blurb ||
             "";
@@ -310,9 +500,10 @@ module.exports.check = async (client, savedData, saveData) => {
           const image =
             product.high_res_tile_image ||
             product.tile_image ||
+            pageDetails?.tile_image ||
             null;
 
-          const price = extractLowestPrice(product);
+          const price = extractLowestPrice(pageDetails ? { ...product, ...pageDetails } : product);
 
           const embed = new EmbedBuilder()
             .setTitle(`🔥 ${title}`)
@@ -342,7 +533,7 @@ module.exports.check = async (client, savedData, saveData) => {
             });
           }
 
-          if (image) embed.setImage(image);
+          if (image) embed.setImage(normalizeHumbleImage(image));
 
           await channel.send({
             content: extension
@@ -373,10 +564,9 @@ module.exports.check = async (client, savedData, saveData) => {
           saveData();
 
           console.log("🚀 Humble GAME wysłany:", title);
-        }
       }
     } else {
-      console.log("❌ Humble Games: brak JSON");
+      console.log("❌ Humble Games: nie znaleziono bundle w danych strony ani w linkach HTML");
     }
 
     /* =========================
@@ -388,25 +578,21 @@ module.exports.check = async (client, savedData, saveData) => {
       { headers: { "User-Agent": "Mozilla/5.0" } }
     );
 
-    const membershipScripts = [
-      ...membershipHtml.matchAll(
-        /<script[^>]*application\/json[^>]*>(.*?)<\/script>/gs
-      )
-    ];
-
-    if (!membershipScripts[1]) {
-      console.log("❌ Humble Choice: brak JSON");
+    const membershipJson = findNestedValue(parseJsonScripts(membershipHtml), value =>
+      Boolean(value.activeContentMachineName || value.navbarOptions?.productHumanName)
+    );
+    const choicePageInfo = getChoicePageInfo(membershipHtml);
+    if (!membershipJson && !choicePageInfo) {
+      console.log("❌ Humble Choice: nie znaleziono nazwy edycji w danych strony");
       return;
     }
 
-    const membershipJson = JSON.parse(membershipScripts[1][1]);
-
-    const machineName = membershipJson.activeContentMachineName;
-    const humanName = membershipJson.navbarOptions?.productHumanName;
+    const machineName = membershipJson?.activeContentMachineName || choicePageInfo.machineName;
+    const humanName = membershipJson?.navbarOptions?.productHumanName || choicePageInfo.humanName;
     const endDateRaw =
-      membershipJson.navbarOptions?.["activeContentEndDate|datetime"];
-    const priceObj = membershipJson["baseSubscriptionPrice|money"];
-    const choiceImage = findChoiceImage(membershipJson, membershipHtml);
+      membershipJson?.navbarOptions?.["activeContentEndDate|datetime"] || choicePageInfo?.endDate;
+    const priceObj = membershipJson?.["baseSubscriptionPrice|money"] || choicePageInfo?.price;
+    const choiceImage = findChoiceImage(membershipJson || {}, membershipHtml);
 
     if (!machineName) {
       console.log("❌ Humble Choice: brak machineName");
@@ -458,4 +644,13 @@ module.exports.check = async (client, savedData, saveData) => {
 module.exports.isBundleExtension = isBundleExtension;
 module.exports.extractLowestPrice = extractLowestPrice;
 module.exports.getBundleEndDate = getBundleEndDate;
+module.exports.formatDate = formatDate;
+module.exports.getGameBundleLink = getGameBundleLink;
+module.exports.getJsonScripts = getJsonScripts;
+module.exports.parseJsonScripts = parseJsonScripts;
+module.exports.extractGameBundles = extractGameBundles;
+module.exports.extractNextFlightBundlePages = extractNextFlightBundlePages;
+module.exports.getBundleDetailsFromPage = getBundleDetailsFromPage;
+module.exports.getBundleEndDateFromPage = getBundleEndDateFromPage;
+module.exports.getChoicePageInfo = getChoicePageInfo;
 module.exports.getBundleEndDateFromPage = getBundleEndDateFromPage;
