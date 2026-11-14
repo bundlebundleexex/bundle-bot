@@ -7,6 +7,7 @@ const API_URL = "https://web.kick.com/api/v1/drops/campaigns";
 const IMAGE_ORIGIN = "https://ext.cdn.kick.com/";
 const CHANNEL_ID = process.env.KICK_BADGE_CHANNEL_ID?.trim() || "1545521319284838602";
 const RENEWAL_MIN_EXTENSION_MS = 20 * 60 * 60 * 1000;
+const SCHEDULED_ANNOUNCEMENT_LEAD_MS = 12 * 60 * 60 * 1000;
 const HISTORY_MAX_PAGES = 15;
 const HISTORY_LOOKBACK_MS = 45 * 24 * 60 * 60 * 1000;
 
@@ -34,6 +35,13 @@ function getCampaignEnd(campaign) {
   return asDate(firstValue(campaign.ends_at, campaign.end_at, campaign.endsAt, campaign.end));
 }
 
+function getRewardPhase(startAt, now = Date.now()) {
+  const start = Date.parse(startAt || "");
+  if (!Number.isFinite(start)) return null;
+  if (start <= now) return "started";
+  return start - now >= SCHEDULED_ANNOUNCEMENT_LEAD_MS ? "scheduled" : null;
+}
+
 function getRewardMinutes(reward, campaign) {
   const direct = Number(firstValue(
     reward.required_minutes_watched,
@@ -50,7 +58,7 @@ function getRewardMinutes(reward, campaign) {
   return match ? Number(match[1]) : 0;
 }
 
-function getRewardType(reward, name, typeOverride) {
+function getRewardType(reward, name, typeOverride, campaign) {
   if (typeOverride?.type === "EMOTE" || typeOverride?.type === "BADGE") return typeOverride.type;
 
   // The Kick campaign endpoint does not currently expose a consistent type
@@ -72,7 +80,19 @@ function getRewardType(reward, name, typeOverride) {
   visit(reward);
   const rawType = typeValues.join(" ").toLowerCase();
   const text = `${name || ""} ${reward.description || ""} ${reward.rule_name || ""} ${reward.drop?.description || ""} ${reward.drop?.rule_name || ""} ${reward.display_type || ""} ${rawType}`.toLowerCase();
-  if (/emote|emoticon|chat\s*emote|chat\s*emoji/.test(text)) return "EMOTE";
+  const isExplicitChatEmote = /chat\s*(?:emote|emoji|emoticon)/.test(text);
+  const hasEmoteLabel = /emote|emoticon/.test(text);
+  if (isExplicitChatEmote) return "EMOTE";
+  if (hasEmoteLabel) {
+    const organization = String(campaign?.organization?.name || campaign?.organization?.display_name || "")
+      .trim()
+      .toLowerCase();
+    // A publisher's game reward called "Emote" is not necessarily a Kick
+    // chat emote. For generic names, require Kick as the organizer unless the
+    // payload explicitly identifies a chat emote or a verified override exists.
+    if (organization !== "kick") return null;
+    return "EMOTE";
+  }
   if (/badge/.test(text)) return "BADGE";
   return null;
 }
@@ -179,7 +199,7 @@ function normalizeCampaign(campaign, ignoredRewards = [], rewardTypeOverrides = 
       String(item?.campaignId || "") === id &&
       String(item?.name || "").trim().toLowerCase() === String(name || "").trim().toLowerCase()
     );
-    const rewardType = getRewardType(reward, name, typeOverride);
+    const rewardType = getRewardType(reward, name, typeOverride, campaign);
     const isEmote = rewardType === "EMOTE";
     const isBadge = rewardType === "BADGE";
     if (!name || (!isEmote && !isBadge)) continue;
@@ -496,7 +516,7 @@ module.exports.check = async (client, savedData, saveData) => {
               String(entry?.campaignId || "") === getCampaignId(campaign) &&
               String(entry?.name || "").trim().toLowerCase() === String(name).trim().toLowerCase()
             );
-            if (!getRewardType(item, name, override)) {
+            if (!getRewardType(item, name, override, campaign)) {
               unclassifiedRewards.push(`${firstValue(campaign.name, campaign.title, "Kick")}: ${name}`);
             }
           }
@@ -515,15 +535,41 @@ module.exports.check = async (client, savedData, saveData) => {
           expiredRewards++;
           continue;
         }
-        const phase = start > now ? "scheduled" : "started";
+        const phase = getRewardPhase(reward.campaignStart, now);
+        if (!phase) {
+          // Don't publish an "upcoming" post less than 12 hours before start.
+          // If we already announced it earlier, keep that post and refresh its
+          // dates while preserving its scheduled heading.
+          if (existing?.status === "scheduled" &&
+              (existing.messagePhase !== "scheduled" ||
+               JSON.stringify(existing.reward || {}) !== JSON.stringify(reward))) {
+            if (await refreshRewardMessage(channel, existing, reward, "scheduled")) {
+              existing.messagePhase = "scheduled";
+              saveData();
+            }
+          }
+          continue;
+        }
         if (existing?.status === phase) {
           alreadyKnown++;
           const previousEnd = existing.endAt || existing.reward?.campaignEnd;
-          if (existing.messageFormatVersion !== 2 ||
+          if (existing.messagePhase !== phase ||
+              existing.messageFormatVersion !== 2 ||
               JSON.stringify(existing.reward || {}) !== JSON.stringify(reward)) {
-            if (await refreshRewardMessage(channel, existing, reward)) saveData();
+            if (await refreshRewardMessage(channel, existing, reward, phase)) {
+              existing.messagePhase = phase;
+              saveData();
+            }
           }
           await notifyRewardRenewal(channel, existing, reward, previousEnd, saveData);
+          continue;
+        }
+        if (existing?.status === "started" && phase === "scheduled") {
+          if (await refreshRewardMessage(channel, existing, reward, phase)) {
+            existing.status = phase;
+            existing.messagePhase = phase;
+            saveData();
+          }
           continue;
         }
         // A campaign can be extended after a scan already marked it expired.
@@ -534,6 +580,7 @@ module.exports.check = async (client, savedData, saveData) => {
           const previousEnd = existing.endAt || existing.reward?.campaignEnd;
           if (await refreshRewardMessage(channel, existing, reward, "started")) {
             existing.status = "started";
+            existing.messagePhase = "started";
             saveData();
           }
           await notifyRewardRenewal(channel, existing, reward, previousEnd, saveData);
@@ -572,6 +619,7 @@ module.exports.check = async (client, savedData, saveData) => {
               reward: { ...reward, campaignEnd: previousEnd },
               messageId: priorMessage.id,
               messageIds: [priorMessage.id],
+              messagePhase: phase,
               messageFormatVersion: 2
             };
             if (await refreshRewardMessage(channel, recovered, reward, phase)) {
@@ -593,6 +641,7 @@ module.exports.check = async (client, savedData, saveData) => {
             reward,
             messageId: message?.id || null,
             messageIds: message?.id ? [message.id] : [],
+            messagePhase: phase,
             messageFormatVersion: 2
           };
           recentRewardMessages?.set(rewardFingerprint(reward), {
@@ -621,6 +670,7 @@ module.exports.check = async (client, savedData, saveData) => {
         state.status = "started";
         state.messageId = message?.id || null;
         state.messageIds = message?.id ? [message.id] : [];
+        state.messagePhase = "started";
         state.messageFormatVersion = 2;
         saveData();
         sent++;
@@ -644,3 +694,4 @@ module.exports.refreshRewardMessage = refreshRewardMessage;
 module.exports.slugifyCategory = slugifyCategory;
 module.exports.getKickCategoryUrl = getKickCategoryUrl;
 module.exports.getCampaigns = getCampaigns;
+module.exports.getRewardPhase = getRewardPhase;

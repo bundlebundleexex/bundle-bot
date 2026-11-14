@@ -74,11 +74,18 @@ const DATA_PATH = fs.existsSync("/data")
   ? "/data/data.json"
   : path.join(__dirname, "data.json");
 
+// Suppress this already-reviewed Humble offer even when Railway loads an
+// older data.json from its persistent /data volume.
+const DEFAULT_HUMBLE_BUNDLE_URLS = [
+  "https://www.humblebundle.com/games/seriously-unserious-collection"
+];
+
 const DEFAULT_KICK_DROP_IGNORED_REWARDS = [
   { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick Beanie", reason: "Przedmiot kosmetyczny do gry" },
   { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick eye patch", reason: "Przedmiot kosmetyczny do gry" },
   { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick Offroader", reason: "Przedmiot kosmetyczny do gry" },
-  { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick X Rotk Helmet", reason: "Przedmiot kosmetyczny do gry" }
+  { campaignId: "01M6M59P444368ND3HPV9TZD97", name: "Kick X Rotk Helmet", reason: "Przedmiot kosmetyczny do gry" },
+  { campaignId: "01M6S5C78Y1ZA0RN2VF6GHFECC", name: "Murkwolf, Shmurkwolf Emote", reason: "Emotka do Teamfight Tactics, nie emotka czatu Kick" }
 ];
 
 const DEFAULT_KICK_DROP_REWARD_TYPE_OVERRIDES = [
@@ -534,6 +541,20 @@ function ensureDataShape() {
     savedData.kickDropIgnoredRewards = [];
     changed = true;
   }
+
+  if (!Array.isArray(savedData.humbleBundles)) {
+    savedData.humbleBundles = [];
+    changed = true;
+  }
+  const knownHumbleBundles = new Set(savedData.humbleBundles.map(String));
+  for (const url of DEFAULT_HUMBLE_BUNDLE_URLS) {
+    if (!knownHumbleBundles.has(url)) {
+      savedData.humbleBundles.push(url);
+      knownHumbleBundles.add(url);
+      changed = true;
+    }
+  }
+
   const ignoredRewards = savedData.kickDropIgnoredRewards;
   const chatEmoteNames = new Set(DEFAULT_KICK_DROP_REWARD_TYPE_OVERRIDES.map(item =>
     `${item.campaignId}:${item.name.toLowerCase()}`

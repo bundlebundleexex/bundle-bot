@@ -3,8 +3,6 @@
     "https://www.humblebundle.com/games/15th-anniversary-scifi-exposure",
     "https://www.humblebundle.com/games/marmalade-games-ultimate-digital-game-night",
     "https://www.humblebundle.com/games/flat2vr-bundle",
-    "https://www.humblebundle.com/games/puzzlers-to-puzzle-you",
-    "https://www.humblebundle.com/games/phunkier-physics",
     "https://www.humblebundle.com/games/tactical-mindset-bundle",
     "https://www.humblebundle.com/games/horror-trifectas",
     "https://www.humblebundle.com/games/crimes-and-curiosity-bundle-s2-games",
@@ -14,7 +12,8 @@
     "https://www.humblebundle.com/games/unhinged-unsettling-visual-novels",
     "https://www.humblebundle.com/games/generation-zero-complete-bundle-2026",
     "https://www.humblebundle.com/games/non-non-nonograms",
-    "https://www.humblebundle.com/games/beholder-10th-anniversary-alawar-collection"
+    "https://www.humblebundle.com/games/beholder-10th-anniversary-alawar-collection",
+    "https://www.humblebundle.com/games/seriously-unserious-collection"
   ],
   "humbleBundleHistory": [
     {
@@ -212,6 +211,13 @@
       "firstSeenAt": "2026-11-13T20:31:02.848Z",
       "lastSeenAt": "2026-11-13T20:31:02.848Z",
       "expiresAt": "2026-12-01T05:00:00.000Z"
+    },
+    {
+      "title": "Seriously Unserious Collection",
+      "url": "https://www.humblebundle.com/games/seriously-unserious-collection",
+      "firstSeenAt": "2026-11-14T12:24:22.546Z",
+      "lastSeenAt": "2026-11-14T12:24:22.546Z",
+      "expiresAt": "2026-12-05T05:00:00.000Z"
     }
   ],
   "humbleChoice": "november_2026_choice",
@@ -328,7 +334,7 @@
   ],
   "runtime": {
     "lastStoreRunAt": {
-      "Amazon": 1794601887107
+      "Amazon": 1794659379918
     }
   },
   "digiphileEndedCollections": [
@@ -1855,7 +1861,6 @@
     "2cc95940-886e-42a2-9dee-23269cabfa47": "2026-10-29T06:02:13.122Z",
     "3fbad26b-3224-4246-ad9d-0a2c56e39d2b": "2026-10-28T15:01:38.672Z",
     "d6a79a3e-fd63-43ed-906d-3a8443cd8184": "2026-10-27T19:44:52.672Z",
-    "b42d9f22-e860-4f26-bdd8-bd0a6b8a4b9f": "2026-10-23T12:54:49.461Z",
     "2519eaa5-981e-4861-8b03-361dd002cfa4": "2026-10-22T17:11:45.258Z",
     "2592aee8-8a94-469d-8731-db914c197367": "2026-10-22T10:01:34.072Z",
     "a9c2f298-5a53-439a-9a8c-41b4d88937e1": "2026-10-22T10:01:34.297Z",
@@ -1882,7 +1887,6 @@
     "f2d96e03-08ba-40b3-a0e6-05e02ce1c039": "2026-11-10T16:01:58.103Z",
     "9e51208e-329c-46a7-9109-a6262743a055": "2026-11-10T15:02:27.687Z",
     "c67997fb-e0e5-4678-afe7-aea6528bc126": "2026-11-10T12:01:55.240Z",
-    "b48884ce-bb67-4d72-99cb-0e800492f721": "2026-11-10T11:02:24.783Z",
     "6c9d7437-f6a9-4949-8b46-b2cb5b0d34cc": "2026-11-10T02:01:30.889Z",
     "e35e85d5-d647-4906-a3df-5a4d0620a58b": "2026-11-10T02:01:31.653Z",
     "ce1d6b04-a088-4e28-8bcf-a6db477b8a7b": "2026-11-09T21:01:50.446Z",
@@ -1895,8 +1899,6 @@
     "2c567f66-9717-480b-b451-c7f9e80c16fe": "2026-11-09T08:02:08.565Z",
     "b1f5b0fc-ed53-41c5-86b8-067b3a0a11b2": "2026-11-09T04:02:11.399Z",
     "fe0929b2-3be3-4bec-b970-9df72b2982ab": "2026-11-09T00:02:10.120Z",
-    "f8f01b79-8d12-4d05-99c4-dabee7759897": "2026-11-07T11:01:55.380Z",
-    "968791a4-0188-4af8-8edc-8d6e92b941bb": "2026-11-07T07:01:59.567Z",
     "53c80198-fa33-485d-9cc7-2af5c4771602": "2026-11-06T18:01:59.786Z",
     "df576175-0f22-467e-8ba7-955603a16567": "2026-11-06T16:31:46.452Z",
     "7fd0b5de-69c5-4f30-924e-59adaa29a362": "2026-11-06T12:02:12.893Z",
@@ -1919,14 +1921,9 @@
     "ae1677a9-1c2c-4e62-8009-33d57583ee4f": "2026-11-03T13:32:01.715Z",
     "96bdfce5-e774-457f-aa8f-f693144ee50f": "2026-11-03T10:02:16.504Z",
     "a013ca5d-a41b-4ead-a282-c78f6c2c3183": "2026-11-06T10:17:17.110Z",
-    "62dd594c-cfac-4892-8078-0939ac798bc5": "2026-11-13T11:02:12.522Z",
-    "13c7c040-e40b-40c8-b041-3ddb14098683": "2026-11-13T11:02:12.091Z",
     "5895dfbc-6083-4d01-a4cc-5217bc02dfe8": "2026-11-13T11:02:12.226Z",
-    "1f68edff-b53c-4030-a8d4-daa700db50da": "2026-11-13T10:01:40.038Z",
-    "3692aff1-55ba-49f9-aa8a-db9ec32eb1e9": "2026-11-13T10:01:40.409Z",
     "7755dd9f-b2aa-4745-8250-b76587881383": "2026-11-13T02:02:26.595Z",
     "9e7de515-966f-4965-8fc5-70aa2c91131b": "2026-11-13T00:31:31.968Z",
-    "27edc93c-a3ff-459f-9c17-7d5cd175c2fd": "2026-11-13T00:01:17.207Z",
     "b8b6ea03-90ad-4426-a095-87283d6b8b2e": "2026-11-12T17:01:45.489Z",
     "2965fe2b-6ebb-4547-929c-e70112337fda": "2026-11-12T15:47:07.572Z",
     "0c95e10b-4ab2-4777-b7db-1d5617035dc8": "2026-11-13T20:01:34.725Z",
@@ -1940,9 +1937,7 @@
     "c0f8da20-52fa-4c61-80b4-d48ff28cf306": "2026-11-13T17:01:57.403Z",
     "671c1ec5-a1fe-4fe4-9581-fc1b02ebf276": "2026-11-13T17:01:57.341Z",
     "77f1b5a5-b1f1-4973-b252-65beb58b6693": "2026-11-13T16:31:43.725Z",
-    "db15c44a-da52-4294-8d02-81091d08a3de": "2026-11-13T16:31:43.847Z",
     "e634fbd7-bc8e-42b4-b960-d1a89d99965d": "2026-11-13T16:01:30.202Z",
-    "89928a5f-910f-4be9-b46c-f652d60df981": "2026-11-13T16:01:29.376Z",
     "0abec32e-4bfc-46f8-b3ca-90703658639a": "2026-11-13T16:01:29.068Z",
     "abbf79f8-49a8-401a-b2eb-13389d7ebf52": "2026-11-13T16:01:29.566Z",
     "e0813b21-25d6-42e9-85e7-e64761e9159e": "2026-11-13T16:01:29.902Z",
@@ -1955,14 +1950,26 @@
     "291dd3a3-5876-482e-a594-923b4a55f935": "2026-11-13T15:02:10.132Z",
     "18bbdb90-e83b-4a8e-9587-417442c88880": "2026-11-13T15:02:09.391Z",
     "29085353-6c0f-46f2-a1f8-79894a5d7f67": "2026-11-13T15:02:09.876Z",
-    "4ec976cc-62e2-4ba6-b10f-6a69313e09cb": "2026-11-13T15:02:10.422Z",
     "166beece-c0b2-4241-b955-0926eccf8af2": "2026-11-13T14:01:30.271Z",
     "f2bf1aeb-5833-4fe9-a330-dba1f4248eb3": "2026-11-13T14:01:30.537Z",
-    "d5832a25-01fa-4bae-bc3d-f669dfdc55e5": "2026-11-13T12:01:38.887Z",
-    "3e87f645-f151-4292-8a2b-9f0817e8e58a": "2026-11-13T12:01:38.521Z",
     "06d7e4d2-74a8-45f2-8a46-428186ed6560": "2026-11-13T12:01:38.144Z",
     "6a7a897d-616f-4226-ae75-91846afbe2b3": "2026-11-13T12:16:42.834Z",
-    "35d08416-f37d-40f1-b2d3-87dbe8059a75": "2026-11-13T17:01:56.610Z"
+    "35d08416-f37d-40f1-b2d3-87dbe8059a75": "2026-11-13T17:01:56.610Z",
+    "e2e62852-a98a-420f-a984-52a0f15ca55e": "2026-11-14T12:01:47.181Z",
+    "5942fa86-b357-498c-b8ee-61a9848ad29d": "2026-11-14T12:01:46.892Z",
+    "95734b3f-f2bf-4a27-a42f-a43464ea7484": "2026-11-14T12:01:47.005Z",
+    "97008006-0e00-4be0-bc75-fd37f92e4880": "2026-11-14T11:02:15.798Z",
+    "e62191e6-7839-40cb-969c-e76b6593bd0b": "2026-11-14T11:02:16.432Z",
+    "a830d9b0-8a46-47bd-aa8a-b836bf4fc11f": "2026-11-14T11:02:16.122Z",
+    "4e25f6ab-2d77-4e27-b583-d7d71e002452": "2026-11-14T11:02:15.535Z",
+    "10ecb7d6-ce1c-401e-b2ec-ee2b4ef3437f": "2026-11-14T10:01:41.080Z",
+    "81e203ab-56a6-44be-b56c-b6af6a58b61a": "2026-11-14T10:01:42.111Z",
+    "1930244b-2ce0-474c-8b7a-d1341049ca3b": "2026-11-14T10:01:41.437Z",
+    "21b0184c-ff47-4e37-8c99-e0183389e3be": "2026-11-14T10:01:41.776Z",
+    "199b7b47-c236-4efe-a146-5a974a7f60bc": "2026-11-14T05:02:19.109Z",
+    "a8202fdf-11e9-4834-a629-d79fb20f2481": "2026-11-14T03:02:20.799Z",
+    "c4eaae4f-1da6-49c7-a307-36067416a6c8": "2026-11-14T03:02:21.220Z",
+    "32d9f384-1cf8-490c-ade3-b614db397a23": "2026-11-14T00:01:35.508Z"
   },
   "kickDropIgnoredRewards": [
     {
@@ -1984,6 +1991,11 @@
       "campaignId": "01M6M59P444368ND3HPV9TZD97",
       "name": "Kick X Rotk Helmet",
       "reason": "Przedmiot kosmetyczny do gry"
+    },
+    {
+      "campaignId": "01M6S5C78Y1ZA0RN2VF6GHFECC",
+      "name": "Murkwolf, Shmurkwolf Emote",
+      "reason": "Emotka do Teamfight Tactics, nie emotka czatu Kick"
     }
   ],
   "kickDropRewardTypeOverrides": [
@@ -2083,7 +2095,8 @@
       "messageFormatVersion": 2,
       "renewalBaselineEndAt": "2026-11-28T17:00:00.000Z",
       "lastRenewalNotifiedEndAt": "2026-11-28T17:00:00.000Z",
-      "lastRenewalNotifiedAt": "2026-11-13T11:58:28.816Z"
+      "lastRenewalNotifiedAt": "2026-11-13T11:58:28.816Z",
+      "messagePhase": "started"
     },
     "01M4FJM2JJQJBYSYWN23TEYFBR:01M4FJ8KYBM5G0TY4B4KAMWJKW": {
       "status": "started",
@@ -2116,7 +2129,8 @@
       "messageFormatVersion": 2,
       "renewalBaselineEndAt": "2026-11-28T17:00:00.000Z",
       "lastRenewalNotifiedEndAt": "2026-11-28T17:00:00.000Z",
-      "lastRenewalNotifiedAt": "2026-11-13T11:58:30.285Z"
+      "lastRenewalNotifiedAt": "2026-11-13T11:58:30.285Z",
+      "messagePhase": "started"
     },
     "01M4VW169236GHGNK090F8NA8T:01M4VVGB0CH1ECVDZ3J39KTJEJ": {
       "status": "expired",
@@ -2442,7 +2456,8 @@
       "messageFormatVersion": 2,
       "renewalBaselineEndAt": "2026-11-28T17:00:00.000Z",
       "lastRenewalNotifiedEndAt": "2026-11-28T17:00:00.000Z",
-      "lastRenewalNotifiedAt": "2026-11-13T11:58:31.076Z"
+      "lastRenewalNotifiedAt": "2026-11-13T11:58:31.076Z",
+      "messagePhase": "started"
     },
     "01M4VW84ZP8MR2EBKKBDJ7KC9X:01M4VVN9513TJ1X3P16GVXVZBC": {
       "status": "started",
@@ -2468,25 +2483,238 @@
       "messageIds": [
         "1570725080470659097"
       ],
-      "messageFormatVersion": 2
+      "messageFormatVersion": 2,
+      "messagePhase": "started"
     },
     "01M79FMH9B7APWQSHNETBDK3D8:01M79FGGJFQSNX6SFTZNTWYAVC": {
       "status": "started",
       "startAt": "2026-11-13T20:00:00.000Z",
       "endAt": "2026-11-18T16:00:00.000Z",
-      "renewalBaselineEndAt": null,
+      "renewalBaselineEndAt": "2026-11-18T16:00:00.000Z",
       "reward": {
         "key": "01M79FMH9B7APWQSHNETBDK3D8:01M79FGGJFQSNX6SFTZNTWYAVC",
         "campaignId": "01M79FMH9B7APWQSHNETBDK3D8",
         "campaignName": "Safezone Miami",
         "campaignChannels": [
           {
-            "name": "iceposeidon",
-            "url": "https://kick.com/iceposeidon2"
+            "name": "dariusirl",
+            "url": "https://kick.com/dariusirl"
           },
           {
-            "name": "Magnaboy",
-            "url": "https://kick.com/magnaboy"
+            "name": "MexicanAndy",
+            "url": "https://kick.com/mexicanandy"
+          },
+          {
+            "name": "peteyplastic",
+            "url": "https://kick.com/peteyplastic"
+          },
+          {
+            "name": "blurri",
+            "url": "https://kick.com/blurri"
+          },
+          {
+            "name": "Loulz",
+            "url": "https://kick.com/loulz"
+          },
+          {
+            "name": "Ice Poseidon",
+            "url": "https://kick.com/iceposeidon"
+          },
+          {
+            "name": "carldo",
+            "url": "https://kick.com/carldo"
+          },
+          {
+            "name": "ChickenAndy",
+            "url": "https://kick.com/chickenandy"
+          },
+          {
+            "name": "Eli",
+            "url": "https://kick.com/eli"
+          },
+          {
+            "name": "Elsa",
+            "url": "https://kick.com/elsa"
+          },
+          {
+            "name": "Ac7ionMan",
+            "url": "https://kick.com/ac7ionman"
+          },
+          {
+            "name": "SprayitupJay",
+            "url": "https://kick.com/sprayitupjay"
+          },
+          {
+            "name": "CostaKid",
+            "url": "https://kick.com/costakid"
+          },
+          {
+            "name": "kangjoel",
+            "url": "https://kick.com/kangjoel"
+          },
+          {
+            "name": "homelessbieber",
+            "url": "https://kick.com/homelessbieber"
+          },
+          {
+            "name": "ToneIRL",
+            "url": "https://kick.com/toneirl"
+          },
+          {
+            "name": "dtanmanb",
+            "url": "https://kick.com/dtanmanb"
+          },
+          {
+            "name": "ozemi",
+            "url": "https://kick.com/ozemi"
+          },
+          {
+            "name": "BinxBasilisk",
+            "url": "https://kick.com/binxbasilisk"
+          },
+          {
+            "name": "DOUGLAS_SKATES",
+            "url": "https://kick.com/douglas_skates"
+          },
+          {
+            "name": "BIGSIIX",
+            "url": "https://kick.com/bigsiix"
+          },
+          {
+            "name": "AsianNoah",
+            "url": "https://kick.com/asiannoah"
+          },
+          {
+            "name": "bycaseylee",
+            "url": "https://kick.com/bycaseylee"
+          },
+          {
+            "name": "FloridaBoy",
+            "url": "https://kick.com/floridaboy"
+          },
+          {
+            "name": "Arrav",
+            "url": "https://kick.com/arrav"
+          },
+          {
+            "name": "Juanersss",
+            "url": "https://kick.com/juanersss"
+          },
+          {
+            "name": "TieDyez",
+            "url": "https://kick.com/tiedyez"
+          },
+          {
+            "name": "SoulTravels",
+            "url": "https://kick.com/soultravels"
+          },
+          {
+            "name": "peyx",
+            "url": "https://kick.com/peyx"
+          },
+          {
+            "name": "Blame",
+            "url": "https://kick.com/blame"
+          },
+          {
+            "name": "OnlyOmi",
+            "url": "https://kick.com/onlyomi"
+          },
+          {
+            "name": "shoovy",
+            "url": "https://kick.com/shoovy"
+          },
+          {
+            "name": "IMTHEJ4",
+            "url": "https://kick.com/imthej4"
+          },
+          {
+            "name": "CobbruvsJim",
+            "url": "https://kick.com/cobbruvsjim"
+          },
+          {
+            "name": "Tommyloo",
+            "url": "https://kick.com/tommyloo"
+          },
+          {
+            "name": "SimianMonke",
+            "url": "https://kick.com/simianmonke"
+          },
+          {
+            "name": "Sharpfart",
+            "url": "https://kick.com/sharpfart"
+          },
+          {
+            "name": "vimp",
+            "url": "https://kick.com/vimp"
+          },
+          {
+            "name": "Vangard",
+            "url": "https://kick.com/vangard"
+          },
+          {
+            "name": "Kalkalaka",
+            "url": "https://kick.com/kalkalaka"
+          },
+          {
+            "name": "Twigggs",
+            "url": "https://kick.com/twigggs"
+          },
+          {
+            "name": "Frankyok",
+            "url": "https://kick.com/frankyok"
+          },
+          {
+            "name": "vampireliquor",
+            "url": "https://kick.com/vampireliquor"
+          },
+          {
+            "name": "JollyIRL",
+            "url": "https://kick.com/jollyirl"
+          },
+          {
+            "name": "drago",
+            "url": "https://kick.com/drago"
+          },
+          {
+            "name": "jaycartwrightusa",
+            "url": "https://kick.com/jaycartwrightusa"
+          },
+          {
+            "name": "zachwaslive",
+            "url": "https://kick.com/zachwaslive"
+          },
+          {
+            "name": "bellxyn",
+            "url": "https://kick.com/bellxyn"
+          },
+          {
+            "name": "BADPAPPY",
+            "url": "https://kick.com/badpappy"
+          },
+          {
+            "name": "sabrinabatemann",
+            "url": "https://kick.com/sabrinabatemann"
+          },
+          {
+            "name": "BillyBetz",
+            "url": "https://kick.com/billybetz"
+          },
+          {
+            "name": "greatwhitemike",
+            "url": "https://kick.com/greatwhitemike"
+          },
+          {
+            "name": "AmoAndOM",
+            "url": "https://kick.com/amoandom"
+          },
+          {
+            "name": "SafeZone",
+            "url": "https://kick.com/safezone"
+          },
+          {
+            "name": "jomommaIRL",
+            "url": "https://kick.com/jomommairl"
           }
         ],
         "name": "Safezone Greed Cx",
@@ -2503,7 +2731,8 @@
       "messageIds": [
         "1570898939144839269"
       ],
-      "messageFormatVersion": 2
+      "messageFormatVersion": 2,
+      "messagePhase": "started"
     }
   },
   "indiegalaBundleExpiries": {

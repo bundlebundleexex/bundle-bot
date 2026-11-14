@@ -2,12 +2,13 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const axios = require("axios");
 const botData = require("../data.json");
-const { normalizeCampaign, makeRewardEmbed, sendReward, getKickCategoryUrl, refreshRewardMessage, getCampaigns, check } = require("../kick-badges");
+const { normalizeCampaign, makeRewardEmbed, sendReward, getKickCategoryUrl, refreshRewardMessage, getCampaigns, getRewardPhase, check } = require("../kick-badges");
 
 function fixture() {
   return {
     kick_id: "campaign-1",
     name: "Chat Emote - True Damage",
+    organization: { name: "KICK" },
     starts_at: "2026-10-28T08:00:00Z",
     ends_at: "2026-11-07T08:00:00Z",
     category: { id: 5, name: "League of Legends", slug: "league-of-legends" },
@@ -124,6 +125,51 @@ test("labels badge rewards separately and uses matching scheduled wording", asyn
   assert.doesNotMatch(sent[0].content, /EMOTKA KICK/);
 });
 
+test("only announces scheduled Kick drops at least 12 hours before start", () => {
+  const now = Date.now();
+  assert.equal(getRewardPhase(new Date(now + 12 * 60 * 60 * 1000).toISOString(), now), "scheduled");
+  assert.equal(getRewardPhase(new Date(now + 12 * 60 * 60 * 1000 - 1).toISOString(), now), null);
+  assert.equal(getRewardPhase(new Date(now - 1).toISOString(), now), "started");
+});
+
+test("corrects an old upcoming heading when the Kick drop is already active", async t => {
+  const campaign = {
+    kick_id: "stale-scheduled-campaign",
+    name: "Started Campaign",
+    organization: { name: "KICK" },
+    starts_at: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+    ends_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    category: { name: "IRL", slug: "irl" },
+    rewards: [{ id: "active-emote", name: "SF5 Emote", required_units: 300 }]
+  };
+  t.mock.method(axios, "get", async () => ({ data: [campaign] }));
+  const [reward] = normalizeCampaign(campaign);
+  const state = {
+    status: "started",
+    startAt: reward.campaignStart,
+    endAt: reward.campaignEnd,
+    reward,
+    messageId: "stale-upcoming-post",
+    messageIds: ["stale-upcoming-post"],
+    messageFormatVersion: 2
+  };
+  let editPayload;
+  const sent = [];
+  const channel = {
+    send: async payload => { sent.push(payload); return { id: "unexpected-new-post" }; },
+    messages: { fetch: async () => ({ edit: async payload => { editPayload = payload; }, delete: async () => {} }) }
+  };
+
+  await check({ channels: { fetch: async () => channel } }, {
+    kickDropRewardStates: { [reward.key]: state }
+  }, () => {});
+
+  assert.equal(sent.length, 0);
+  assert.match(editPayload.content, /EMOTKA KICK/);
+  assert.doesNotMatch(editPayload.content, /NADCHODZĄCA/);
+  assert.equal(state.messagePhase, "started");
+});
+
 test("refreshes an existing Kick post with full campaign and channel data without reposting", async () => {
   const [reward] = normalizeCampaign(fixture());
   let editPayload;
@@ -187,6 +233,7 @@ test("recognizes named Kick badge/emote rewards and the verified Eddie VS Ethan 
     {
       kick_id: "moon-campaign",
       name: "MOON Trading",
+      organization: { name: "KICK" },
       starts_at: "2026-10-13T13:30:00Z",
       ends_at: "2026-11-03T12:30:00Z",
       category: { name: "Crypto & Trading", slug: "crypto-and-trading" },
@@ -199,6 +246,7 @@ test("recognizes named Kick badge/emote rewards and the verified Eddie VS Ethan 
     {
       kick_id: "01M4FJM2JJQJBYSYWN23TEYFBR",
       name: "KICK Talk Ed VS Ethan",
+      organization: { name: "KICK" },
       starts_at: "2026-10-10T13:00:00Z",
       ends_at: "2026-11-14T17:00:00Z",
       category: { name: "Just Chatting", slug: "just-chatting" },
@@ -238,6 +286,7 @@ test("classifies current Kick examples and excludes non-badge campaign rewards",
     {
       kick_id: "01M4FJM2JJQJBYSYWN23TEYFBR",
       name: "KICK Talk Ed VS Ethan",
+      organization: { name: "KICK" },
       starts_at: "2026-10-10T13:00:00Z",
       ends_at: "2026-11-14T17:00:00Z",
       category: { name: "Just Chatting", slug: "just-chatting" },
@@ -312,7 +361,7 @@ test("classifies current Kick examples and excludes non-badge campaign rewards",
 });
 
 test("honors the persistent Kick ignore list for non-badge campaign rewards", () => {
-  assert.equal(botData.kickDropIgnoredRewards.length, 4);
+  assert.equal(botData.kickDropIgnoredRewards.length, 5);
   for (const ignored of botData.kickDropIgnoredRewards) {
     const campaign = {
       kick_id: ignored.campaignId,
@@ -325,6 +374,25 @@ test("honors the persistent Kick ignore list for non-badge campaign rewards", ()
     assert.deepEqual(normalizeCampaign(campaign, botData.kickDropIgnoredRewards), [], ignored.name);
   }
   assert.equal(botData.kickDropRewardTypeOverrides.length, 5);
+});
+
+test("does not mistake a publisher's in-game emote for a Kick chat emote", () => {
+  const campaign = {
+    id: "01M6S5C78Y1ZA0RN2VF6GHFECC",
+    name: "Enchanted Wilds Tactician's Crown",
+    starts_at: "2026-11-14T12:00:00Z",
+    ends_at: "2026-11-15T23:00:00Z",
+    organization: { name: "Riot Games" },
+    category: { name: "Teamfight Tactics", slug: "teamfight-tactics" },
+    rewards: [{
+      id: "01M6S4ZPWX3JPSFAEY7EE0EVH1",
+      name: "Murkwolf, Shmurkwolf Emote",
+      required_units: 30
+    }]
+  };
+  assert.deepEqual(normalizeCampaign(campaign), []);
+  assert.deepEqual(normalizeCampaign(campaign, botData.kickDropIgnoredRewards), []);
+  assert.deepEqual(normalizeCampaign({ ...campaign, organization: undefined }), []);
 });
 
 test("classifies the Safezone Miami watch reward as a Kick chat emote", () => {
@@ -357,6 +425,7 @@ test("updates extended Kick campaigns in their existing posts without reposting"
   const campaign = {
     kick_id: "talk-campaign",
     name: "KICK Talk Ed VS Ethan",
+    organization: { name: "KICK" },
     starts_at: "2026-10-10T13:00:00Z",
     ends_at: "2026-11-14T17:00:00Z",
     category: { name: "Just Chatting", slug: "just-chatting" },
@@ -401,6 +470,7 @@ test("reactivated expired Kick reward refreshes its old post instead of duplicat
   const campaign = {
     kick_id: "extended-campaign",
     name: "Extended Drop",
+    organization: { name: "KICK" },
     starts_at: "2026-10-10T13:00:00Z",
     ends_at: new Date(Date.now() + 86_400_000).toISOString(),
     category: { name: "Just Chatting", slug: "just-chatting" },
@@ -442,6 +512,7 @@ test("posts one no-ping Kick renewal notice only when the end moves by at least 
   const campaign = {
     kick_id: "renewal-campaign",
     name: "Renewed Emote Campaign",
+    organization: { name: "KICK" },
     starts_at: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
     ends_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
     category: { name: "Just Chatting", slug: "just-chatting" },
@@ -488,6 +559,7 @@ test("recovers an existing Kick post from channel history when saved state is mi
   const campaign = {
     kick_id: "history-campaign",
     name: "History Campaign",
+    organization: { name: "KICK" },
     starts_at: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
     ends_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     category: { name: "Just Chatting", slug: "just-chatting" },
@@ -545,7 +617,7 @@ test("scans every campaign reward and posts each badge/emote separately", async 
     { kick_id: "mw4", name: "Modern Warfare 4", starts_at: futureStart, ends_at: futureEnd,
       category: { name: "Call of Duty: Modern Warfare 4", slug: "call-of-duty-modern-warfare-4" },
       rewards: [{ id: "mw4-1", name: "MW4 Ghost Badge", required_units: 3000 }] },
-    { kick_id: "moon", name: "MOON Trading", starts_at: futureStart, ends_at: futureEnd,
+    { kick_id: "moon", name: "MOON Trading", organization: { name: "KICK" }, starts_at: futureStart, ends_at: futureEnd,
       category: { name: "Crypto & Trading", slug: "crypto-and-trading" },
       channels: Array.from({ length: 240 }, (_, index) => ({ slug: `moon-${index}`, user: { username: `Moon${index}` } })),
       rewards: [
@@ -553,7 +625,7 @@ test("scans every campaign reward and posts each badge/emote separately", async 
         { id: "moon-2", name: "God Candle Emote", required_units: 120 },
         { id: "moon-3", name: "TJR To The Moon Emote", required_units: 300 }
       ] },
-    { kick_id: "01M4FJM2JJQJBYSYWN23TEYFBR", name: "KICK Talk Ed VS Ethan", starts_at: futureStart, ends_at: futureEnd,
+    { kick_id: "01M4FJM2JJQJBYSYWN23TEYFBR", name: "KICK Talk Ed VS Ethan", organization: { name: "KICK" }, starts_at: futureStart, ends_at: futureEnd,
       category: { name: "Just Chatting", slug: "just-chatting" },
       rewards: [
         { id: "talk-1", name: "Ethan Emote", required_units: 60 },
