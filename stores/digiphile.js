@@ -51,7 +51,7 @@ async function fetchWithRetry(url, tries = 3, signal) {
   throw lastErr;
 }
 
-function normalizeUrl(href) {
+function normalizeUrl(href, allowShortCollectionRoute = false) {
   if (!href) {
     return null;
   }
@@ -70,8 +70,11 @@ function normalizeUrl(href) {
 
     const segments = url.pathname.split("/").filter(Boolean);
     const isCollectionRoute =
-      segments[0] === "collections" && segments.length >= 2;
-    const reservedRoutes = new Set([
+      segments[0] === "collections" &&
+      segments.length === 2 &&
+      !segments[1].toLowerCase().startsWith("page-");
+    const reservedShortRoutes = new Set([
+      "collections",
       "exchange",
       "creators",
       "blog",
@@ -79,7 +82,9 @@ function normalizeUrl(href) {
       "support",
       "terms",
       "privacy",
+      "privacy-policy",
       "cookies",
+      "data-deletion",
       "account",
       "login",
       "logout",
@@ -88,7 +93,10 @@ function normalizeUrl(href) {
       "api"
     ]);
     const isShortCollectionRoute =
-      segments.length === 1 && !reservedRoutes.has(segments[0].toLowerCase());
+      allowShortCollectionRoute &&
+      segments.length === 1 &&
+      !reservedShortRoutes.has(segments[0].toLowerCase()) &&
+      !segments[0].toLowerCase().startsWith("page-");
 
     if (!isCollectionRoute && !isShortCollectionRoute) {
       return null;
@@ -129,18 +137,34 @@ function extractCollectionLinks(html) {
   const $ = cheerio.load(html, null, false);
 
   try {
-    const links = $("a[href]")
-      .map((_, el) => normalizeUrl($(el).attr("href")))
-      .get()
-      .filter(Boolean);
+    const links = [];
 
-    // The page renders only one pagination page, but Next.js also serializes
-    // the complete collection list into its response. Read those routes too
-    // so offers on later pages are not missed.
+    $("a[href]").each((_, element) => {
+      const href = $(element).attr("href");
+      let card = $(element);
+
+      // A collection card has its own heading and an explicit collection
+      // type. Walk only a few ancestors so page navigation or footer links
+      // cannot inherit labels from the whole page.
+      for (let depth = 0; depth < 7 && card.length; depth++, card = card.parent()) {
+        const cardText = card.text().replace(/\s+/g, " ").trim();
+        const heading = card.find("h1, h2, h3, h4").first().text().trim();
+        if (cardText.length > 1800) break;
+
+        if (/\bSteam Game Collection\b/i.test(cardText) && heading) {
+          const url = normalizeUrl(href, true);
+          if (url) links.push(url);
+          break;
+        }
+      }
+    });
+
+    // Next.js includes routes for the rest of the paginated collection list
+    // in its serialized response. Accept only real /collections/<slug> paths;
+    // the detail-page type check below filters out book collections.
     const serializedRoutes = String(html || "").match(
       /(?:https?:\\?\/\\?\/(?:www\\?\.)?digiphile\\?\.co)?\\?\/collections\\?\/[a-z0-9-]+/gi
     ) || [];
-
     for (const route of serializedRoutes) {
       const normalized = normalizeUrl(route.replace(/\\\//g, "/"));
       if (normalized) links.push(normalized);
@@ -171,8 +195,8 @@ function getCollectionKind($, html) {
     .replace(/\\u0026/g, "&")
     .replace(/\\"/g, '"');
 
-  if (/Steam\s+Game\s+Collection/i.test(pageText)) return "games";
   if (/Book\s+Collection/i.test(pageText)) return "non-game";
+  if (/Steam\s+Game\s+Collection/i.test(pageText)) return "games";
   return "unknown";
 }
 
