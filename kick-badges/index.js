@@ -121,7 +121,9 @@ function getKickCategoryUrl(category, name, slug) {
 
 function getKickCategoryDropsUrl(categoryUrl) {
   if (!categoryUrl) return null;
-  return categoryUrl.replace(/\/+$/, "").replace(/\/drops$/i, "") + "/drops";
+  // Category /drops routes can resolve to Kick's not-found screen. Keep every
+  // category link on its stable public category page instead.
+  return categoryUrl.replace(/\/+$/, "").replace(/\/drops$/i, "");
 }
 
 function getCampaignChannels(campaign) {

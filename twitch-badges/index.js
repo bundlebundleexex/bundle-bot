@@ -7,7 +7,7 @@ const API_ORIGIN = "https://ttvdrops.lovinator.space";
 const CHANNEL_ID = "1545521319284838602";
 const FREE_ROLE_ID = process.env.TWITCH_BADGE_FREE_ROLE_ID?.trim() || "1545400230504046602";
 const PAID_ROLE_ID = process.env.TWITCH_BADGE_PAID_ROLE_ID?.trim() || "1545511812148236378";
-const REWARD_MESSAGE_FORMAT_VERSION = 5;
+const REWARD_MESSAGE_FORMAT_VERSION = 6;
 const PAGE_SIZE = 500;
 const DETAIL_CONCURRENCY = 10;
 const TARGET_TYPES = new Set(["BADGE", "EMOTE"]);
@@ -76,9 +76,6 @@ function validateCampaignSnapshot(summary, campaign, now = Date.now()) {
 
 function flattenCampaignBenefits(campaign) {
   const rewards = [];
-  const allowedChannels = Array.isArray(campaign.allowed_channels)
-    ? campaign.allowed_channels
-    : [];
 
   for (const drop of campaign.drops || []) {
     const minutes = Number(drop.required_minutes_watched);
@@ -101,6 +98,11 @@ function flattenCampaignBenefits(campaign) {
     for (const benefit of drop.benefits || []) {
       const type = String(benefit?.distribution_type || "OTHER").toUpperCase();
       if (!benefit?.twitch_id || !benefit?.name) continue;
+      const allowedChannels = [
+        benefit.allowed_channels,
+        drop.allowed_channels,
+        campaign.allowed_channels
+      ].find(Array.isArray) || [];
       rewards.push({
         key: `${campaign.twitch_id}:${drop.twitch_id}:${benefit.twitch_id}`,
         type,
@@ -251,10 +253,15 @@ function makeRewardEmbed(reward) {
     .setTimestamp();
 
   if (reward.imageUrl) embed.setThumbnail(reward.imageUrl);
-  const channelLinks = getAllowedChannelLinks(reward).slice(0, 25);
+  const channelLinks = getAllowedChannelLinks(reward);
   const categoryUrl = getTwitchCategoryDropsUrl(reward);
+  const categoryLabel = channelLinks.length
+    ? reward.gameName
+    : categoryUrl
+      ? `[${reward.gameName}](${categoryUrl})`
+      : reward.gameName;
   const details = [
-    `**Kategoria:** ${categoryUrl ? `[${reward.gameName}](${categoryUrl})` : reward.gameName}`,
+    `**Kategoria:** ${categoryLabel}`,
     getAccessLine(reward),
     `**Start:** ${formatDate(reward.campaignStart)}`,
     `**Koniec:** ${formatDate(reward.campaignEnd)}`,
@@ -276,11 +283,39 @@ function makeRewardEmbed(reward) {
     details.push(`**Dodatkowo dla tej kategorii:**\n${related.join("\n")}${extraDrops.length > 5 ? `\n…i jeszcze ${extraDrops.length - 5}` : ""}`);
   }
 
-  if (channelLinks.length) {
+  if (channelLinks.length > 0 && channelLinks.length <= 9) {
+    // A short campaign-specific allowlist is more useful than a generic
+    // category directory and avoids implying that unrelated drops qualify.
     details.push(`**Kanały biorące udział:** ${channelLinks.join(", ")}`);
-    if (categoryUrl) {
-      details.push(`[Zobacz streamerów nadających z aktywnymi dropami](${categoryUrl})`);
+  } else if (channelLinks.length > 9) {
+    const header = "**Kanały biorące udział:** ";
+    const directoryLink = categoryUrl
+      ? `[Zobacz transmisje z aktywnymi dropami w tej kategorii](${categoryUrl})`
+      : null;
+    const baseDescription = details.join("\n");
+    const visibleLinks = [];
+
+    for (const link of channelLinks) {
+      const candidateLinks = [...visibleLinks, link];
+      const remaining = channelLinks.length - candidateLinks.length;
+      const suffix = [
+        remaining > 0 ? `… i jeszcze ${remaining} kanałów.` : null,
+        directoryLink
+      ].filter(Boolean).join("\n");
+      const candidateDescription = [
+        baseDescription,
+        `${header}${candidateLinks.join(", ")}`,
+        suffix
+      ].filter(Boolean).join("\n");
+
+      if (candidateDescription.length > 4096) break;
+      visibleLinks.push(link);
     }
+
+    const remaining = channelLinks.length - visibleLinks.length;
+    details.push(`${header}${visibleLinks.join(", ")}`);
+    if (remaining > 0) details.push(`… i jeszcze ${remaining} kanałów.`);
+    if (directoryLink) details.push(directoryLink);
   }
   embed.setDescription(details.join("\n"));
   return embed;

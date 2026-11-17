@@ -33,10 +33,10 @@ test("extracts only Kick badge/emote drops and watch duration", () => {
   assert.equal(rewards[0].minutes, 30);
   assert.equal(rewards[0].gameName, "League of Legends");
   const embedData = makeRewardEmbed(rewards[0]).data;
-  assert.equal(embedData.url, "https://kick.com/category/league-of-legends/drops");
+  assert.equal(embedData.url, "https://kick.com/category/league-of-legends");
   const description = embedData.description;
   assert.match(description, /\*\*Kampania:\*\* Chat Emote - True Damage/);
-  assert.match(description, /\*\*Kategoria:\*\* \[League of Legends\]\(https:\/\/kick\.com\/category\/league-of-legends\/drops\)/);
+  assert.match(description, /\*\*Kategoria:\*\* \[League of Legends\]\(https:\/\/kick\.com\/category\/league-of-legends\)/);
   assert.match(description, /Darmowy — za oglądanie przez 30 min/);
   assert.match(embedData.description, /Dostępne dropy/);
   assert.equal(rewards[0].imageUrl, "https://ext.cdn.kick.com/drops/reward-image/emote.png");
@@ -59,22 +59,22 @@ test("links Kick rewards to the category page listing available drops", () => {
   campaign.channels = [{ slug: "eddie", user: { username: "Eddie" } }];
   const [reward] = normalizeCampaign(campaign);
   assert.equal(reward.campaignUrl, "https://kick.com/eddie");
-  assert.equal(makeRewardEmbed(reward).data.url, "https://kick.com/category/league-of-legends/drops");
-  assert.match(makeRewardEmbed(reward).data.description, /https:\/\/kick\.com\/category\/league-of-legends\/drops/);
+  assert.equal(makeRewardEmbed(reward).data.url, "https://kick.com/category/league-of-legends");
+  assert.match(makeRewardEmbed(reward).data.description, /https:\/\/kick\.com\/category\/league-of-legends/);
 });
 
 test("links category-wide drops to the Kick page listing available rewards", () => {
   const emoteCampaign = fixture();
   emoteCampaign.channels = [];
   const [emote] = normalizeCampaign(emoteCampaign);
-  assert.equal(makeRewardEmbed(emote).data.url, "https://kick.com/category/league-of-legends/drops");
+  assert.equal(makeRewardEmbed(emote).data.url, "https://kick.com/category/league-of-legends");
   assert.match(makeRewardEmbed(emote).data.description, /\*\*Dostępne dropy:\*\* \[Zobacz na Kicku\]/);
 
   const badgeCampaign = fixture();
   badgeCampaign.channels = [];
   badgeCampaign.rewards = [{ id: "badge-1", name: "MW4 Ghost Badge", required_units: 50 }];
   const [badge] = normalizeCampaign(badgeCampaign);
-  assert.equal(makeRewardEmbed(badge).data.url, "https://kick.com/category/league-of-legends/drops");
+  assert.equal(makeRewardEmbed(badge).data.url, "https://kick.com/category/league-of-legends");
 });
 
 test("posts Kick messages without role pings and uses nonce duplicate protection", async () => {
@@ -107,7 +107,7 @@ test("keeps Kick posts to one short message with a link to available drops", asy
   assert.equal(sent.length, 1);
   assert.match(sent[0].content, /EMOTKA KICK/);
   assert.equal(sent[0].embeds.length, 1);
-  assert.equal(sent[0].embeds[0].data.url, "https://kick.com/category/league-of-legends/drops");
+  assert.equal(sent[0].embeds[0].data.url, "https://kick.com/category/league-of-legends");
   assert.match(sent[0].embeds[0].data.description, /Dostępne dropy/);
   assert.ok(sent[0].embeds[0].data.description.length < 1000);
 });

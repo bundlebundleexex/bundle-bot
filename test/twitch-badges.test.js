@@ -152,7 +152,7 @@ test("includes other active and scheduled rewards of the same category as a curi
   }];
   const description = makeRewardContent(emote, "started").embed.data.description;
   assert.doesNotMatch(description, /\*\*Kampania:\*\*/);
-  assert.match(description, /\*\*Kategoria:\*\* \[Test Game\]\(https:\/\/www\.twitch\.tv\/directory\/category\/test-game\?filter=drops\)/);
+  assert.match(description, /\*\*Kategoria:\*\* Test Game/);
   assert.match(description, /Dodatkowo dla tej kategorii/);
   assert.match(description, /Upcoming skin/);
   assert.match(description, /przedmiot do gry/);
@@ -175,6 +175,7 @@ test("links specific channels by name and category-wide drops to the Twitch cate
 test("builds a Twitch category Drops link from its name when the API omits the slug", () => {
   const campaign = campaignFixture();
   campaign.game = { twitch_id: "game-vault", display_name: "Vaultbreakers" };
+  campaign.allowed_channels = [];
   const [reward] = flattenCampaignRewards(campaign);
   const { embed } = makeRewardContent(reward, "started");
   assert.equal(reward.gameSlug, "vaultbreakers");
@@ -213,7 +214,20 @@ test("uses stable phase-specific Discord nonces for duplicate-send protection", 
   assert.equal(payloads[0].enforceNonce, true);
 });
 
-test("shows 25 linked channels in the reward card and links to the active-drop directory", async () => {
+test("shows every specific channel for short lists without a misleading category link", () => {
+  const [reward] = flattenCampaignRewards(campaignFixture());
+  reward.channels = Array.from({ length: 9 }, (_, index) => ({
+    name: `channelname${index + 1}`,
+    display_name: `Channel Name ${index + 1}`
+  }));
+  const description = makeRewardEmbed(reward).data.description;
+  assert.equal((description.match(/\]\(https:\/\/twitch\.tv\//g) || []).length, 9);
+  assert.ok(description.includes("[Channel Name 9](https://twitch.tv/channelname9)"));
+  assert.doesNotMatch(description, /Zobacz transmisje z aktywnymi dropami/);
+  assert.doesNotMatch(description, /twitch\.tv\/directory\/category/);
+});
+
+test("fits as many linked channels as possible and adds the category active-drop directory", async () => {
   const [reward] = flattenCampaignRewards(campaignFixture());
   reward.channels = Array.from({ length: 138 }, (_, index) => ({
     name: `channelname${index + 1}`,
@@ -236,19 +250,19 @@ test("shows 25 linked channels in the reward card and links to the active-drop d
   assert.match(embed.description, /\*\*Start:\*\*/);
   assert.match(embed.description, /\*\*Koniec:\*\*/);
   const channelDescription = embed.description || "";
-  for (let index = 1; index <= 25; index++) {
-    assert.ok(channelDescription.includes(
-      `[Channel Name ${index}](https://twitch.tv/channelname${index})`
-    ));
-  }
-  assert.doesNotMatch(channelDescription, /Channel Name 26/);
-  assert.match(channelDescription, /\[Zobacz streamerów nadających z aktywnymi dropami\]\(https:\/\/www\.twitch\.tv\/directory\/category\/test-game\?filter=drops\)/);
+  const visibleChannels = [...channelDescription.matchAll(/\[Channel Name (\d+)\]\(https:\/\/twitch\.tv\/channelname\d+\)/g)]
+    .map(match => Number(match[1]));
+  assert.ok(visibleChannels.length > 9);
+  assert.deepEqual(visibleChannels, Array.from({ length: visibleChannels.length }, (_, index) => index + 1));
+  assert.match(channelDescription, /… i jeszcze \d+ kanałów\./);
+  assert.match(channelDescription, /\[Zobacz transmisje z aktywnymi dropami w tej kategorii\]\(https:\/\/www\.twitch\.tv\/directory\/category\/test-game\?filter=drops\)/);
   assert.equal(payloads.filter(payload => payload.content.includes("<@&")).length, 1);
   assert.equal((embed.fields || []).length, 0);
   assert.ok(payloads[0].content.length <= 2000);
   const embedLength = (embed.title || "").length + (embed.description || "").length +
     (embed.footer?.text || "").length + (embed.fields || []).reduce((total, field) => total + field.name.length + field.value.length, 0);
   assert.ok(embedLength <= 6000, `embed length ${embedLength} is under Discord's 6000 character limit`);
+  assert.ok(channelDescription.length <= 4096, "embed description fits Discord's description limit");
 });
 
 test("uses the requested medal icon and edits expired posts without pinging", async () => {

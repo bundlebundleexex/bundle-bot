@@ -16,6 +16,13 @@ const ROLE_ID =
 const BUNDLE_BASE_URL =
   "https://www.greenmangamingbundles.com";
 
+const LISTING_URLS = [
+  "https://www.greenmangaming.com/bundles/",
+  "https://www.greenmangaming.com/es/bundles/",
+  "https://www.greenmangaming.com/en/bundles/",
+  `${BUNDLE_BASE_URL}/bundles/`
+];
+
 function normalizeBundleUrl(rawUrl) {
   try {
     const url =
@@ -29,6 +36,13 @@ function normalizeBundleUrl(rawUrl) {
 
     url.hash =
       "";
+
+    if (
+      url.hostname === "greenmangamingbundles.com" ||
+      url.hostname.endsWith(".greenmangamingbundles.com")
+    ) {
+      url.hostname = "www.greenmangamingbundles.com";
+    }
 
     url.pathname =
       url.pathname.replace(
@@ -51,6 +65,49 @@ function normalizeBundleUrl(rawUrl) {
         ""
       );
   }
+}
+
+function extractBundleUrls($, baseUrl) {
+  const urls = new Set();
+
+  $("a[href]").each((_, element) => {
+    const raw = $(element).attr("href");
+    if (!raw) return;
+
+    try {
+      const parsed = new URL(raw, baseUrl);
+      const host = parsed.hostname.toLowerCase();
+      const isGMGHost =
+        host === "greenmangaming.com" ||
+        host.endsWith(".greenmangaming.com") ||
+        host === "greenmangamingbundles.com" ||
+        host.endsWith(".greenmangamingbundles.com");
+      const segments = parsed.pathname.split("/").filter(Boolean);
+
+      if (
+        !isGMGHost ||
+        segments[0]?.toLowerCase() !== "bundles" ||
+        segments.length < 2 ||
+        segments[1]?.toLowerCase() === "expired"
+      ) {
+        return;
+      }
+
+      // Bundle detail pages can be hosted on either official GMG domain.
+      parsed.protocol = "https:";
+      parsed.hostname = "www.greenmangamingbundles.com";
+      parsed.port = "";
+      parsed.pathname = `/${segments.join("/")}`;
+      parsed.search = "";
+      parsed.hash = "";
+      const normalized = normalizeBundleUrl(parsed.toString());
+      if (normalized !== `${BUNDLE_BASE_URL}/bundles`) urls.add(normalized);
+    } catch {
+      // Ignore malformed/unrelated links.
+    }
+  });
+
+  return [...urls];
 }
 
 function getKnownBundleUrls(
@@ -294,6 +351,16 @@ function isExpiredBundle(
 }
 
 function getOfferRemainingMs(bodyText) {
+  const endTimestamp = String(bodyText || "").match(
+    /offer ends\s+(\d{10,13})\b/i
+  )?.[1];
+  if (endTimestamp) {
+    const numeric = Number(endTimestamp);
+    const endAt = endTimestamp.length === 10 ? numeric * 1000 : numeric;
+    const remaining = endAt - Date.now();
+    if (Number.isFinite(remaining) && remaining > 0) return remaining;
+  }
+
   const match = String(bodyText || "").match(
     /offer ends\s*(?:(\d+)\s*d)?\s*(?:(\d+)\s*h)?\s*(?:(\d+)\s*m)?\s*(?:(\d+)\s*s)?/i
   );
@@ -542,47 +609,34 @@ module.exports.check =
         "🔎 GMG: sprawdzam bundles..."
       );
 
-      const {
-        data: html
-      } = await axios.get(
-        "https://www.greenmangaming.com/bundles/",
-
-        {
-          headers: {
-            "User-Agent":
-              "Mozilla/5.0",
-
-            Accept:
-              "text/html"
-          },
-
-          timeout: 20000
-        }
+      const listingPages = await Promise.all(
+        LISTING_URLS.map(async (listingUrl) => {
+          try {
+            const { data: html } = await axios.get(listingUrl, {
+              headers: {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0.0.0 Safari/537.36",
+                Accept: "text/html,application/xhtml+xml"
+              },
+              timeout: 20000
+            });
+            const $ = cheerio.load(html);
+            const text = $("body").text().replace(/\s+/g, " ").toLowerCase();
+            const urls = extractBundleUrls($, listingUrl);
+            const challenge = /client challenge|just a moment|verify you are human/.test(text);
+            return { listingUrl, $, urls, challenge };
+          } catch (error) {
+            console.log(`⚠️ GMG listing niedostępny (${listingUrl}): ${error.message}`);
+            return { listingUrl, $: cheerio.load(""), urls: [], challenge: true };
+          }
+        })
       );
 
-      const $ =
-        cheerio.load(html);
-
-      let links = $(
-        "a[href*='greenmangamingbundles.com/bundles']"
-      )
-        .map((i, el) =>
-          $(el).attr("href")
-        )
-        .get();
-
-      links = [
-        ...new Set(
-          links
-            .map(normalizeBundleUrl)
-            .filter(Boolean)
-        )
-      ];
-
-      const listingPrices =
-        getListingPrices(
-          $
-        );
+      const usableListings = listingPages.filter(page => !page.challenge && page.urls.length);
+      let links = [...new Set(usableListings.flatMap(page => page.urls))];
+      const listingPrices = new Map();
+      for (const page of usableListings) {
+        for (const [url, price] of getListingPrices(page.$)) listingPrices.set(url, price);
+      }
 
       console.log(
         "🔗 GMG znalezione:",
@@ -590,14 +644,8 @@ module.exports.check =
       );
 
       if (!links.length) {
-        return;
+        console.log("⚠️ GMG: listing nie zwrócił linków; sprawdzam zapisane bundle, bez czyszczenia bazy.");
       }
-
-      pruneInactiveBundleUrls(
-        savedData,
-        links,
-        saveData
-      );
 
       const channel =
         await client.channels.fetch(
@@ -611,7 +659,8 @@ module.exports.check =
         );
       savedData.gmgBundleExpiries ??= {};
       const newUrls = links.filter(url => !known.has(url));
-      const knownUrls = links.filter(url => known.has(url));
+      // Rotate through the saved URLs even if every listing URL is challenged.
+      const knownUrls = [...known];
       const renewalLimit = Math.max(1, Number(process.env.GMG_RENEWAL_CHECK_LIMIT || 5));
       const renewalCursor = Number(savedData.gmgBundleRenewalCursor || 0) % Math.max(knownUrls.length, 1);
       const checkedKnown = knownUrls.length
@@ -620,9 +669,12 @@ module.exports.check =
       savedData.gmgBundleRenewalCursor = knownUrls.length
         ? (renewalCursor + checkedKnown.length) % knownUrls.length
         : 0;
+      saveData();
       const urlsToCheck = [...newUrls, ...checkedKnown];
+      const queuedUrls = new Set(urlsToCheck);
 
-      for (const url of urlsToCheck) {
+      for (let queueIndex = 0; queueIndex < urlsToCheck.length && queueIndex < 120; queueIndex += 1) {
+        const url = urlsToCheck[queueIndex];
         try {
           const {
             data: bundleHtml
@@ -644,6 +696,15 @@ module.exports.check =
             cheerio.load(
               bundleHtml
             );
+
+          // Detail pages link to other live bundles. Use those official links as
+          // a fallback discovery graph when GMG's main listing is incomplete.
+          for (const discoveredUrl of extractBundleUrls($$, url)) {
+            if (!queuedUrls.has(discoveredUrl) && urlsToCheck.length < 120) {
+              queuedUrls.add(discoveredUrl);
+              urlsToCheck.push(discoveredUrl);
+            }
+          }
 
           const bodyText =
             $$("body")

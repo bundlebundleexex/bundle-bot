@@ -13,7 +13,8 @@
     "https://www.humblebundle.com/games/generation-zero-complete-bundle-2026",
     "https://www.humblebundle.com/games/non-non-nonograms",
     "https://www.humblebundle.com/games/beholder-10th-anniversary-alawar-collection",
-    "https://www.humblebundle.com/games/seriously-unserious-collection"
+    "https://www.humblebundle.com/games/seriously-unserious-collection",
+    "https://www.humblebundle.com/games/survival-fittest"
   ],
   "humbleBundleHistory": [
     {
@@ -218,6 +219,13 @@
       "firstSeenAt": "2026-11-14T12:24:22.546Z",
       "lastSeenAt": "2026-11-14T12:24:22.546Z",
       "expiresAt": "2026-12-05T05:00:00.000Z"
+    },
+    {
+      "title": "Humble 15th Anniversary - Survival of the Fittest",
+      "url": "https://www.humblebundle.com/games/survival-fittest",
+      "firstSeenAt": "2026-11-17T14:50:24.401Z",
+      "lastSeenAt": "2026-11-17T14:50:24.401Z",
+      "expiresAt": "2026-12-08T05:00:00.000Z"
     }
   ],
   "humbleChoice": "november_2026_choice",
@@ -255,13 +263,15 @@
     "build-your-own-birthday-bonanza-bundle:2026-11-06T14:00:00Z:2026-12-11T08:00:00Z",
     "platinum-collection-build-your-own-bundle:2026-11-05T14:00:00Z:2026-12-03T13:59:00Z",
     "build-your-own-idler-bundle:2026-11-12T14:00:00Z:2026-12-17T08:00:00Z",
-    "build-your-own-play-on-the-go-elite-collection:2026-11-13T14:00:00Z:2026-12-18T08:00:00Z"
+    "build-your-own-play-on-the-go-elite-collection:2026-11-13T14:00:00Z:2026-12-18T08:00:00Z",
+    "movember-charity-bundle-2026:2026-11-16T11:00:00Z:2026-12-31T08:00:00Z"
   ],
   "gmgBundles": [
     "https://www.greenmangamingbundles.com/bundles/lego-dc-vs-marvel-collection-bundle",
     "https://www.greenmangamingbundles.com/bundles/hidden-gems-bundle",
     "https://www.greenmangamingbundles.com/bundles/girls-just-wanna-have-guns-bundle",
-    "https://www.greenmangamingbundles.com/bundles/masterful-remasters-bundle-volume-ii"
+    "https://www.greenmangamingbundles.com/bundles/masterful-remasters-bundle-volume-ii",
+    "https://www.greenmangamingbundles.com/bundles/tripwire-interactive-mayhem-combat-bundle"
   ],
   "indiegalaBundles": [
     "https://www.indiegala.com/bundle/wicked-stardust-bundle",
@@ -312,7 +322,11 @@
     "epic:slug:knightica-3be45c:2026-11-19T16:00:00.000Z",
     "epic:id:9975548b6d404a94b8a9bdb34cad49e9:2026-11-19T16:00:00.000Z",
     "epic:namespace:02d659f31e1c43a78c43fd9fd9edc089:2026-11-19T16:00:00.000Z",
-    "9975548b6d404a94b8a9bdb34cad49e9_2026-11-12T16:00:00.000Z_2026-11-19T16:00:00.000Z"
+    "9975548b6d404a94b8a9bdb34cad49e9_2026-11-12T16:00:00.000Z_2026-11-19T16:00:00.000Z",
+    "epic:title:contractor the clean up part 2:2026-12-02T23:59:00.000Z",
+    "epic:id:gamerpower-3852:2026-12-02T23:59:00.000Z",
+    "gamerpower-3852_null_2026-12-02T23:59:00.000Z",
+    "epic:gamerpower:3852:2026-12-02T23:59:00.000Z"
   ],
   "epicDeals": [],
   "freeDeals": [],
@@ -2758,7 +2772,12 @@
   "indiegalaRenewalCursor": 0,
   "digiphileCollectionExpiries": {},
   "digiphileRenewalCursor": 0,
-  "gmgBundleExpiries": {},
+  "gmgBundleExpiries": {
+    "https://www.greenmangamingbundles.com/bundles/tripwire-interactive-mayhem-combat-bundle": {
+      "endAt": "2026-12-08T18:00:00.000Z",
+      "updatedAt": "2026-11-17T14:42:41.799Z"
+    }
+  },
   "gmgBundleRenewalCursor": 0,
   "fanaticalAnnouncementRepairSlugs": [
     "platinum-collection-build-your-own-bundle"
