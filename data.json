@@ -385,6 +385,22 @@
     "3e27da93-de21-4977-91db-e889991c7ff1:b205eb5c-d24f-11f1-a440-0a58a9feac02:e0cbe407-d6ea-11f1-96c0-0a58a9feac02",
     "0abec32e-4bfc-46f8-b3ca-90703658639a:bc94a189-c7fc-11f1-a43c-0a58a9feac02:cfcf41a0-c7fc-11f1-9701-0a58a9feac02"
   ],
+  "twitchDropImportedRewards": [
+    {
+      "fingerprint": "5acbe8a4-35f3-45c8-afaa-3f0483fd17bb:24522887-da1d-11f1-9a1f-0a58a9feac02",
+      "campaignName": "DOOM: The Dark Ages Badge",
+      "rewardName": "DOOM: The Dark Ages Badge",
+      "startAt": "2026-11-16T17:00:00.000Z",
+      "endAt": "2026-12-11T16:59:59.999Z"
+    },
+    {
+      "fingerprint": "a1fbeb48-f98d-49d4-845c-9591328aae55:0985d318-da1d-11f1-8087-0a58a9feac02",
+      "campaignName": "Gallica Badge",
+      "rewardName": "Gallica Badge",
+      "startAt": "2026-11-14T18:00:00.000Z",
+      "endAt": "2026-12-12T17:59:59.999Z"
+    }
+  ],
   "twitchDropRewardStates": {
     "882ccb61-0d4c-4fe6-a5c5-3156e8a033ab:1d75c3ef-d482-11f1-99dc-0a58a9feac02:698115f0-d487-11f1-8281-0a58a9feac02": {
       "status": "started",
@@ -2747,6 +2763,36 @@
       ],
       "messageFormatVersion": 2,
       "messagePhase": "started"
+    },
+    "01M76J2GEP3G3YA8D01FC0YZH3:01M76HX9378GBQ2FFMP6J3ZW65": {
+      "status": "expired",
+      "startAt": "2026-11-14T21:00:00.000Z",
+      "endAt": "2026-11-15T07:00:00.000Z",
+      "reward": {
+        "key": "01M76J2GEP3G3YA8D01FC0YZH3:01M76HX9378GBQ2FFMP6J3ZW65",
+        "campaignId": "01M76J2GEP3G3YA8D01FC0YZH3",
+        "campaignName": "Stream Fighters 5",
+        "campaignChannels": [
+          {
+            "name": "Westcol",
+            "url": "https://kick.com/westcol"
+          }
+        ],
+        "name": "SF5 Emote",
+        "type": "EMOTE",
+        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m76hx9378gbq2ffmp6j3zw65-01m76hx93h4trn40sw4gwrbxcf.png",
+        "minutes": 300,
+        "campaignStart": "2026-11-14T21:00:00.000Z",
+        "campaignEnd": "2026-11-15T07:00:00.000Z",
+        "gameName": "Special Events",
+        "campaignUrl": "https://kick.com/westcol",
+        "categoryUrl": "https://kick.com/category/special-events/drops"
+      },
+      "messageId": null,
+      "messageIds": [],
+      "messageFormatVersion": 2,
+      "messagePhase": "scheduled",
+      "announcementImported": true
     }
   },
   "indiegalaBundleExpiries": {

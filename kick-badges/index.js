@@ -533,6 +533,16 @@ module.exports.check = async (client, savedData, saveData) => {
         const now = Date.now();
         const start = Date.parse(reward.campaignStart);
         const end = Date.parse(reward.campaignEnd);
+        if (existing?.announcementImported) {
+          const phase = getRewardPhase(reward.campaignStart, now);
+          existing.startAt = reward.campaignStart;
+          existing.endAt = reward.campaignEnd;
+          existing.reward = reward;
+          existing.status = end <= now ? "expired" : phase || existing.status;
+          saveData();
+          alreadyKnown++;
+          continue;
+        }
         if (end <= now) {
           expiredRewards++;
           continue;

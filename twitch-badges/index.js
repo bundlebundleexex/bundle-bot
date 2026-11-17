@@ -529,11 +529,37 @@ module.exports.check = async (client, savedData, saveData) => {
           const end = Date.parse(item.campaignEnd || "");
           return Number.isFinite(start) && Number.isFinite(end) && end > now;
         });
-        const existing = rewardStates[reward.key];
         const startAt = Date.parse(reward.campaignStart || "");
         const endAt = Date.parse(reward.campaignEnd || "");
         const startsLater = Number.isFinite(startAt) && startAt > Date.now();
         const isExpired = Number.isFinite(endAt) && endAt <= Date.now();
+        let existing = rewardStates[reward.key];
+
+        const benefitId = reward.key.split(":").at(-1);
+        const importedFingerprint = `${reward.campaignId}:${benefitId}`;
+        const importedRewards = Array.isArray(savedData.twitchDropImportedRewards)
+          ? savedData.twitchDropImportedRewards
+          : [];
+        const wasImportedAsAnnounced = importedRewards
+          .some(item => item.fingerprint === importedFingerprint);
+        if (wasImportedAsAnnounced && !existing) {
+          existing = rewardStates[reward.key] = {
+            status: startsLater ? "scheduled" : "started",
+            startAt: reward.campaignStart,
+            endAt: reward.campaignEnd,
+            reward,
+            messageId: null,
+            messageIds: [],
+            messageFormatVersion: REWARD_MESSAGE_FORMAT_VERSION,
+            announcementImported: true
+          };
+          if (!savedData.twitchDropRewardIds.includes(reward.key)) {
+            savedData.twitchDropRewardIds.push(reward.key);
+          }
+          saveData();
+          alreadyAnnouncedCount++;
+          continue;
+        }
 
         if (isExpired) {
           continue;

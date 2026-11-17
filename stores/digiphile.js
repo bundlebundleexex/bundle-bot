@@ -58,15 +58,39 @@ function normalizeUrl(href) {
 
   try {
     const url = new URL(href, BASE_URL);
+    const host = url.hostname.toLowerCase();
 
-    url.hash = "";
-    url.search = "";
-
-    if (!url.pathname.startsWith("/collections/")) {
+    if (host !== "digiphile.co" && host !== "www.digiphile.co") {
       return null;
     }
 
-    if (url.pathname === "/collections") {
+    url.hash = "";
+    url.search = "";
+    url.hostname = "www.digiphile.co";
+
+    const segments = url.pathname.split("/").filter(Boolean);
+    const isCollectionRoute =
+      segments[0] === "collections" && segments.length >= 2;
+    const reservedRoutes = new Set([
+      "exchange",
+      "creators",
+      "blog",
+      "changelog",
+      "support",
+      "terms",
+      "privacy",
+      "cookies",
+      "account",
+      "login",
+      "logout",
+      "register",
+      "settings",
+      "api"
+    ]);
+    const isShortCollectionRoute =
+      segments.length === 1 && !reservedRoutes.has(segments[0].toLowerCase());
+
+    if (!isCollectionRoute && !isShortCollectionRoute) {
       return null;
     }
 
@@ -97,53 +121,6 @@ function trimData(savedData) {
   ].slice(-200);
 }
 
-function keepVisibleUrls(urls, currentUrlSet) {
-  return [
-    ...new Set(
-      (urls || [])
-        .map(normalizeUrl)
-        .filter(url => url && currentUrlSet.has(url))
-    )
-  ];
-}
-
-function pruneMissingCollections(savedData, currentUrls) {
-  if (!currentUrls.length) {
-    return {
-      changed: false,
-      removed: 0
-    };
-  }
-
-  const currentUrlSet = new Set(currentUrls);
-  let removed = 0;
-  let changed = false;
-
-  for (const key of [
-    "digiphileCollections",
-    "digiphileEndedCollections",
-    "digiphileInvalidCollections"
-  ]) {
-    const previous = savedData[key] || [];
-    const next = keepVisibleUrls(previous, currentUrlSet);
-
-    removed += previous.length - next.length;
-
-    if (
-      previous.length !== next.length ||
-      previous.some((url, index) => url !== next[index])
-    ) {
-      savedData[key] = next;
-      changed = true;
-    }
-  }
-
-  return {
-    changed,
-    removed
-  };
-}
-
 function isKnown(savedData, url) {
   return savedData.digiphileCollections.includes(url);
 }
@@ -152,14 +129,24 @@ function extractCollectionLinks(html) {
   const $ = cheerio.load(html, null, false);
 
   try {
-    return [
-      ...new Set(
-        $("a[href]")
-          .map((_, el) => normalizeUrl($(el).attr("href")))
-          .get()
-          .filter(Boolean)
-      )
-    ];
+    const links = $("a[href]")
+      .map((_, el) => normalizeUrl($(el).attr("href")))
+      .get()
+      .filter(Boolean);
+
+    // The page renders only one pagination page, but Next.js also serializes
+    // the complete collection list into its response. Read those routes too
+    // so offers on later pages are not missed.
+    const serializedRoutes = String(html || "").match(
+      /(?:https?:\\?\/\\?\/(?:www\\?\.)?digiphile\\?\.co)?\\?\/collections\\?\/[a-z0-9-]+/gi
+    ) || [];
+
+    for (const route of serializedRoutes) {
+      const normalized = normalizeUrl(route.replace(/\\\//g, "/"));
+      if (normalized) links.push(normalized);
+    }
+
+    return [...new Set(links)];
   } finally {
     $.root().empty();
   }
@@ -179,6 +166,16 @@ function isErrorTitle(title) {
   );
 }
 
+function getCollectionKind($, html) {
+  const pageText = `${$("body").text()} ${String(html || "")}`
+    .replace(/\\u0026/g, "&")
+    .replace(/\\"/g, '"');
+
+  if (/Steam\s+Game\s+Collection/i.test(pageText)) return "games";
+  if (/Book\s+Collection/i.test(pageText)) return "non-game";
+  return "unknown";
+}
+
 function isEndedCollection($, html) {
   const bodyText = $("body").text();
 
@@ -191,9 +188,23 @@ function isEndedCollection($, html) {
 function getCollectionEndDate($, html) {
   const text = `${$("body").text()} ${String(html || "")}`.replace(/\s+/g, " ");
   const match = text.match(/This collection (?:ends|ended) on\s+([A-Za-z]{3,9}\s+\d{1,2},?\s+\d{4}\s+at\s+\d{1,2}:\d{2}\s*(?:AM|PM))/i);
-  if (!match) return null;
-  const timestamp = Date.parse(match[1].replace(/\s+at\s+/i, " "));
-  return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : null;
+  if (match) {
+    const timestamp = Date.parse(match[1].replace(/\s+at\s+/i, " "));
+    if (Number.isFinite(timestamp)) return new Date(timestamp).toISOString();
+  }
+
+  // The newer Digiphile pages render their countdown from serialized
+  // collection data instead of the old human-readable "Ends on" sentence.
+  const serializedHtml = String(html || "").replace(/\\"/g, '"');
+  const endValues = serializedHtml.matchAll(
+    /"(?:endsAt|ends_at|endDate|end_date|sellTo|sell_to)"\s*:\s*"([^"\\]+)"/gi
+  );
+  for (const endValue of endValues) {
+    const timestamp = Date.parse(endValue[1]);
+    if (Number.isFinite(timestamp)) return new Date(timestamp).toISOString();
+  }
+
+  return null;
 }
 
 function isExtendedEndDate(previousEndDate, currentEndDate) {
@@ -270,18 +281,11 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
 
     const html = await fetchWithRetry(COLLECTIONS_URL, 3, options.signal);
     const uniqueLinks = extractCollectionLinks(html);
-    const cleanup = pruneMissingCollections(savedData, uniqueLinks);
-
-    if (cleanup.changed) {
-      trimData(savedData);
-      saveData();
-
-      console.log(
-        `🧹 Digiphile: wyczyszczono nieaktywne kolekcje=${cleanup.removed}`
-      );
-    }
-
-    const newLinks = uniqueLinks.filter(url => !isKnown(savedData, url));
+    const newLinks = uniqueLinks.filter(
+      url =>
+        !isKnown(savedData, url) &&
+        !savedData.digiphileInvalidCollections.includes(url)
+    );
     const knownLinks = uniqueLinks.filter(url => isKnown(savedData, url));
     const newBatch = newLinks.slice(0, MAX_COLLECTIONS_PER_RUN);
     const knownCapacity = Math.max(0, MAX_COLLECTIONS_PER_RUN - newBatch.length);
@@ -329,6 +333,19 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
           trimData(savedData);
           saveData();
 
+          continue;
+        }
+
+        const collectionKind = getCollectionKind($, pageHtml);
+        if (collectionKind === "non-game") {
+          console.log("📚 Digiphile: pomijam kolekcję bez gier:", title);
+          savedData.digiphileInvalidCollections.push(url);
+          trimData(savedData);
+          saveData();
+          continue;
+        }
+        if (collectionKind !== "games") {
+          console.log("❔ Digiphile: niepotwierdzony typ kolekcji, pomijam:", url);
           continue;
         }
 
