@@ -435,6 +435,61 @@ function isBundleExtension(previousEndDate, currentEndDate) {
   return isSignificantExtension(previousEndDate, currentEndDate);
 }
 
+function parseHumblePostedDate(value) {
+  const match = String(value || "").match(/(\d{1,2})\.(\d{1,2})\.(\d{4}),?\s*(\d{1,2}):(\d{2})/);
+  if (!match) return null;
+
+  const [, day, month, year, hour, minute] = match;
+  const localAsUtc = Date.UTC(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute));
+  const offsetLabel = new Intl.DateTimeFormat("en", {
+    timeZone: "Europe/Warsaw",
+    timeZoneName: "shortOffset"
+  }).formatToParts(new Date(localAsUtc)).find(part => part.type === "timeZoneName")?.value || "GMT+0";
+  const offset = offsetLabel.match(/GMT([+-])(\d{1,2})(?::(\d{2}))?/);
+  const offsetMinutes = offset
+    ? (offset[1] === "+" ? 1 : -1) * (Number(offset[2]) * 60 + Number(offset[3] || 0))
+    : 0;
+  const timestamp = localAsUtc - offsetMinutes * 60 * 1000;
+  return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : null;
+}
+
+async function getRecentHumbleAnnouncements(channel) {
+  const announcements = new Map();
+  if (!channel.messages?.fetch) return announcements;
+
+  try {
+    const messages = await channel.messages.fetch({ limit: 100 });
+    for (const message of messages.values()) {
+      for (const embed of message.embeds || []) {
+        const footer = String(embed.footer?.text || "");
+        if (!footer.startsWith("Humble Game Bundle")) continue;
+        const link = getGameBundleLink({ product_url: embed.url });
+        if (!link) continue;
+
+        const key = normalizeBundleLink(link);
+        const current = announcements.get(key);
+        if (current && current.createdAt >= message.createdAt.toISOString()) continue;
+
+        const endField = (embed.fields || []).find(field =>
+          /^(?:⏳\s*)?Dostępne do$|^Nowy termin$/i.test(String(field.name || "").trim())
+        );
+        announcements.set(key, {
+          title: String(embed.title || "Humble Game Bundle").replace(/^🔥\s*/, ""),
+          url: link,
+          firstSeenAt: message.createdAt.toISOString(),
+          lastSeenAt: message.createdAt.toISOString(),
+          expiresAt: parseHumblePostedDate(endField?.value),
+          createdAt: message.createdAt.toISOString()
+        });
+      }
+    }
+  } catch (error) {
+    console.log("Humble: nie udało się sprawdzić wcześniejszych postów:", error.message);
+  }
+
+  return announcements;
+}
+
 function pruneInactiveHumbleBundles(savedData, currentLinks, saveData) {
   if (!currentLinks.length) return;
 
@@ -467,6 +522,7 @@ module.exports.check = async (client, savedData, saveData) => {
 
     if (!savedData.humbleBundles) savedData.humbleBundles = [];
     if (!Array.isArray(savedData.humbleBundleHistory)) savedData.humbleBundleHistory = [];
+    const recentAnnouncements = await getRecentHumbleAnnouncements(channel);
 
     const { data: bundlesHtml } = await axios.get(
       "https://www.humblebundle.com/bundles",
@@ -502,9 +558,27 @@ module.exports.check = async (client, savedData, saveData) => {
             existing => normalizeBundleLink(existing) === normalizedLink
           );
           const similarBundle = findSimilarBundle(savedData.humbleBundleHistory, title);
-          const previousRecord = [...savedData.humbleBundleHistory]
+          let previousRecord = [...savedData.humbleBundleHistory]
             .reverse()
             .find(entry => normalizeBundleLink(entry.url) === normalizedLink);
+          let recoveredFromDiscord = false;
+          if (!previousRecord) {
+            const postedRecord = recentAnnouncements.get(normalizedLink);
+            if (postedRecord) {
+              previousRecord = { ...postedRecord };
+              delete previousRecord.createdAt;
+              savedData.humbleBundleHistory.push(previousRecord);
+              savedData.humbleBundleHistory = savedData.humbleBundleHistory.slice(-500);
+              recoveredFromDiscord = true;
+              console.log("Humble: odtworzono historię z wcześniejszego posta:", title);
+            }
+          }
+          if (recentAnnouncements.has(normalizedLink) && !wasActive) {
+            savedData.humbleBundles.push(link);
+            savedData.humbleBundles = [...new Set(savedData.humbleBundles)].slice(-100);
+            recoveredFromDiscord = true;
+          }
+          if (recoveredFromDiscord) saveData();
           // A renewal must be the same listing; a similar title can be a new bundle.
           const renewalRecord = previousRecord;
           let endDate = getBundleEndDate(product);
@@ -568,7 +642,7 @@ module.exports.check = async (client, savedData, saveData) => {
             embeds: [embed]
           });
 
-          if (!wasActive) savedData.humbleBundles.push(link);
+          if (!wasActive && !recentAnnouncements.has(normalizedLink)) savedData.humbleBundles.push(link);
           savedData.humbleBundles =
             [...new Set(savedData.humbleBundles)].slice(-100);
 
