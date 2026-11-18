@@ -11,11 +11,11 @@ const REWARD_SOURCE_CACHE_MS = 5 * 60 * 1000 + 15 * 1000;
 const CHANNEL_ID = "1545521319284838602";
 const FREE_ROLE_ID = process.env.TWITCH_BADGE_FREE_ROLE_ID?.trim() || "1545400230504046602";
 const PAID_ROLE_ID = process.env.TWITCH_BADGE_PAID_ROLE_ID?.trim() || "1545511812148236378";
-const REWARD_MESSAGE_FORMAT_VERSION = 8;
+const REWARD_MESSAGE_FORMAT_VERSION = 9;
 const PAGE_SIZE = 500;
 const DETAIL_CONCURRENCY = 10;
 const GAME_ITEM_TYPES = new Set(["DIRECT_ENTITLEMENT", "IN_GAME_ITEM", "GAME_ITEM", "SKIN", "LOOT"]);
-const TWITCH_REWARD_SOURCE_CACHE_VERSION = 4;
+const TWITCH_REWARD_SOURCE_CACHE_VERSION = 5;
 const EXTRA_GAME_REWARD_TYPES = new Set([
   "SKIN",
   "IN_GAME_ITEM",
@@ -171,6 +171,7 @@ function flattenCampaignBenefits(campaign) {
         randomSubCollectionSize: benefit.random_sub_collection_size || drop.randomSubCollectionSize || null,
         evolutionFrom: benefit.evolution_from || null,
         evolutionInfo: benefit.evolution_info || null,
+        collectionInfo: benefit.collection_info || drop.collectionInfo || null,
         dropName: drop.name,
         campaignName: campaign.name,
         campaignId: campaign.twitch_id,
@@ -311,15 +312,27 @@ function normalizeGlobalBadgeCampaigns(badges, now = Date.now()) {
     const startMs = Date.parse(startAt || "");
     const endMs = Date.parse(endAt || "");
     if (![startMs, endMs].every(Number.isFinite) || endMs <= now || startMs >= endMs) continue;
-    if (requirement.collection?.completeAll) continue;
-
     const minutes = Number(requirement.requiredMinutes ?? requirement.required_minutes ?? 0);
     let subs = Number(requirement.requiredSubs ?? requirement.required_subs ?? 0);
-    if (!Number.isFinite(minutes) || !Number.isFinite(subs) ||
-        minutes < 0 || minutes > 100000 || subs < 0 || subs > 100 ||
-        (minutes <= 0 && subs <= 0)) continue;
-
     const title = String(badge.title || badge.name || "").trim();
+    const isCollectionCompletion = Boolean(requirement.collection?.completeAll) ||
+      /golden iguana/i.test(title);
+    const collectionInfo = isCollectionCompletion ? {
+      requiresFree: true,
+      requiresPaid: true,
+      freeBadgeCount: 6,
+      paidBadgeCount: 6,
+      paidEmoteCount: 6,
+      paidSubscriptionCount: 3,
+      watchMinutes: 60,
+      watchDays: Number(requirement.repeat?.times) || 6
+    } : null;
+    const requiredMinutes = isCollectionCompletion ? (minutes || 60) : minutes;
+    if (isCollectionCompletion && subs <= 0) subs = 3;
+    if (!Number.isFinite(requiredMinutes) || !Number.isFinite(subs) ||
+        requiredMinutes < 0 || requiredMinutes > 100000 || subs < 0 || subs > 100 ||
+        (requiredMinutes <= 0 && subs <= 0)) continue;
+
     const badgeDescription = String(badge.description || "");
     const setId = String(badge.setId || badge.set_id || "");
     const versionId = String(badge.versionId || badge.version_id || badge.twitch_id || "");
@@ -354,7 +367,7 @@ function normalizeGlobalBadgeCampaigns(badges, now = Date.now()) {
       categories: POKEMON_EVOLUTION_CATEGORIES
     } : null;
     const collectionSize = Number(requirement.collection?.chestSize || 0);
-    const isGtaSixSubCollection = gameName.toLowerCase() === "grand theft auto vi" && subs === 3;
+    const isGtaSixSubCollection = !isCollectionCompletion && gameName.toLowerCase() === "grand theft auto vi" && subs === 3;
     const isRandomSubCollection = (subs > 1 && collectionSize === subs && collectionSize > 1) ||
       isGtaSixSubCollection;
     const randomSubCount = isGtaSixSubCollection ? 3 : collectionSize;
@@ -393,11 +406,12 @@ function normalizeGlobalBadgeCampaigns(badges, now = Date.now()) {
     campaign.drops.push({
       twitch_id: `global-badge:${rewardId}`,
       name: campaignName,
-      required_minutes_watched: minutes,
+      required_minutes_watched: requiredMinutes,
       required_subs: isRandomSubCollection ? 1 : subs,
       repeat: requirement.repeat || null,
       specificDay: dayNumber,
       randomSubCollectionSize: isRandomSubCollection ? randomSubCount : null,
+      collectionInfo,
       start_at: startAt,
       end_at: endAt,
       benefits: [{
@@ -409,6 +423,7 @@ function normalizeGlobalBadgeCampaigns(badges, now = Date.now()) {
         random_sub_collection_size: isRandomSubCollection ? randomSubCount : null,
         evolution_from: evolutionFrom,
         evolution_info: evolutionInfo,
+        collection_info: collectionInfo,
         image_url: badge.imageUrl4x || badge.imageUrl2x || badge.imageUrl1x || null
       }],
       allowed_channels: channels,
@@ -590,6 +605,15 @@ function getAccessLine(reward) {
     : categoryUrl
       ? `w kategorii: [${reward.gameName}](${categoryUrl})`
       : `w kategorii: ${reward.gameName}`;
+  if (reward.collectionInfo) {
+    const info = reward.collectionInfo;
+    const category = categoryUrl ? `[${reward.gameName}](${categoryUrl})` : reward.gameName;
+    return [
+      `**Część darmowa:** oglądaj ${info.watchMinutes} min dziennie przez ${info.watchDays} różnych dni, aby zdobyć ${info.freeBadgeCount} badge’y Bling.`,
+      `**Część płatna:** ${info.paidSubscriptionCount} nowe subskrypcje w kategorii ${category} odblokowują ${info.paidBadgeCount} badge’y i ${info.paidEmoteCount} emotek Heist. Suby Prime się nie liczą.`,
+      "**Golden Iguana:** odblokuje się po zdobyciu wszystkich badge’y i emotek z kolekcji GTAVI Launch Celebration."
+    ].join("\n");
+  }
   if (reward.subs > 0) {
     if (reward.randomSubCollectionSize > 1) {
       const wholeCollection = reward.randomSubCollectionSize === 3
@@ -660,7 +684,7 @@ function makeRewardEmbed(reward) {
     getAccessLine(reward),
     `**Start:** ${formatDate(reward.campaignStart)}`,
     `**Koniec:** ${formatDate(reward.campaignEnd)}`,
-    reward.subs > 0 ? "**Sub z Prime się nie liczy.**" : null
+    reward.subs > 0 && !reward.collectionInfo ? "**Sub z Prime się nie liczy.**" : null
   ].filter(Boolean);
 
   const extraDrops = (reward.relatedDrops || [])
@@ -739,7 +763,9 @@ function makeRewardContent(reward, phase) {
 
 function getRewardRoleIds(reward) {
   const roleIds = [];
+  if (reward.collectionInfo?.requiresPaid) roleIds.push(PAID_ROLE_ID);
   if (reward.subs > 0 || reward.evolutionInfo?.basePaid) roleIds.push(PAID_ROLE_ID);
+  if (reward.collectionInfo?.requiresFree) roleIds.push(FREE_ROLE_ID);
   if (reward.subs === 0 || reward.evolutionInfo) roleIds.push(FREE_ROLE_ID);
   return [...new Set(roleIds)];
 }

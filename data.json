@@ -13,7 +13,8 @@
     "https://www.humblebundle.com/games/non-non-nonograms",
     "https://www.humblebundle.com/games/beholder-10th-anniversary-alawar-collection",
     "https://www.humblebundle.com/games/seriously-unserious-collection",
-    "https://www.humblebundle.com/games/survival-fittest"
+    "https://www.humblebundle.com/games/survival-fittest",
+    "https://www.humblebundle.com/games/better-with-friends-co-op-buddy-packs"
   ],
   "humbleBundleHistory": [
     {
@@ -225,6 +226,13 @@
       "firstSeenAt": "2026-11-17T14:50:24.401Z",
       "lastSeenAt": "2026-11-17T14:50:24.401Z",
       "expiresAt": "2026-12-08T05:00:00.000Z"
+    },
+    {
+      "title": "Better With Friends: Co-Op Buddy Packs",
+      "url": "https://www.humblebundle.com/games/better-with-friends-co-op-buddy-packs",
+      "firstSeenAt": "2026-11-18T20:20:42.752Z",
+      "lastSeenAt": "2026-11-18T20:20:42.752Z",
+      "expiresAt": "2026-12-10T05:00:00.000Z"
     }
   ],
   "humbleChoice": "november_2026_choice",
@@ -405,15 +413,16 @@
     "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-59150027f43dc7d6f2b4:global-59150027f43dc7d6f2b4",
     "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-4aa753a7106a9e21bad4:global-4aa753a7106a9e21bad4",
     "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-b83aa395b83b3fdbca7c:global-b83aa395b83b3fdbca7c",
-    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-be7d62469bb39278bf0a:global-be7d62469bb39278bf0a",
-    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-bcc91d6cfac786790627:global-bcc91d6cfac786790627",
-    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-313a601cddc3d277c027:global-313a601cddc3d277c027",
-    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-6f72f74b94f054be0ae7:global-6f72f74b94f054be0ae7",
-    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-2578c6e0cf361412c6e3:global-2578c6e0cf361412c6e3",
     "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-60370c97d1be6bc3b6b2:global-60370c97d1be6bc3b6b2",
-    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-30aaf2f7c72a0481daec:global-30aaf2f7c72a0481daec",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-bcc91d6cfac786790627:global-bcc91d6cfac786790627",
     "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-530ad273093a86a32ed1:global-530ad273093a86a32ed1",
-    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-976559407180f309160f:global-976559407180f309160f"
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-6f72f74b94f054be0ae7:global-6f72f74b94f054be0ae7",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-313a601cddc3d277c027:global-313a601cddc3d277c027",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-2578c6e0cf361412c6e3:global-2578c6e0cf361412c6e3",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-be7d62469bb39278bf0a:global-be7d62469bb39278bf0a",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-30aaf2f7c72a0481daec:global-30aaf2f7c72a0481daec",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-976559407180f309160f:global-976559407180f309160f",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-bb1d33b919112811bf32:global-bb1d33b919112811bf32"
   ],
   "twitchDropImportedRewards": [
     {
@@ -2578,6 +2587,7 @@
         "specificDay": null,
         "randomSubCollectionSize": 3,
         "evolutionFrom": null,
+        "evolutionInfo": null,
         "dropName": "GTAVI Launch Celebration",
         "campaignName": "GTAVI Launch Celebration",
         "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
@@ -2589,14 +2599,14 @@
         "channels": [],
         "isGlobalTwitchEmote": false,
         "repeat": null,
-        "description": "",
-        "relatedDrops": []
+        "description": ""
       },
-      "messageId": "1572626576980316313",
+      "messageId": "1572634294608855114",
       "messageIds": [
-        "1572626576980316313"
+        "1572634294608855114"
       ],
-      "messageFormatVersion": 7
+      "previewMessageIds": [],
+      "messageFormatVersion": 8
     },
     "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-bcc91d6cfac786790627:global-bcc91d6cfac786790627": {
       "status": "started",
@@ -2612,6 +2622,7 @@
         "specificDay": 2,
         "randomSubCollectionSize": null,
         "evolutionFrom": null,
+        "evolutionInfo": null,
         "dropName": "GTAVI Launch Celebration",
         "campaignName": "GTAVI Launch Celebration",
         "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
@@ -2626,14 +2637,14 @@
           "everyHours": 24,
           "times": 6
         },
-        "description": "",
-        "relatedDrops": []
+        "description": ""
       },
-      "messageId": "1572626578565767343",
+      "messageId": "1572634263260631191",
       "messageIds": [
-        "1572626578565767343"
+        "1572634263260631191"
       ],
-      "messageFormatVersion": 7
+      "previewMessageIds": [],
+      "messageFormatVersion": 8
     },
     "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-313a601cddc3d277c027:global-313a601cddc3d277c027": {
       "status": "started",
@@ -2649,6 +2660,7 @@
         "specificDay": 5,
         "randomSubCollectionSize": null,
         "evolutionFrom": null,
+        "evolutionInfo": null,
         "dropName": "GTAVI Launch Celebration",
         "campaignName": "GTAVI Launch Celebration",
         "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
@@ -2663,14 +2675,14 @@
           "everyHours": 24,
           "times": 6
         },
-        "description": "",
-        "relatedDrops": []
+        "description": ""
       },
-      "messageId": "1572626580172439704",
+      "messageId": "1572634280750874725",
       "messageIds": [
-        "1572626580172439704"
+        "1572634280750874725"
       ],
-      "messageFormatVersion": 7
+      "previewMessageIds": [],
+      "messageFormatVersion": 8
     },
     "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-6f72f74b94f054be0ae7:global-6f72f74b94f054be0ae7": {
       "status": "started",
@@ -2686,6 +2698,7 @@
         "specificDay": 4,
         "randomSubCollectionSize": null,
         "evolutionFrom": null,
+        "evolutionInfo": null,
         "dropName": "GTAVI Launch Celebration",
         "campaignName": "GTAVI Launch Celebration",
         "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
@@ -2700,14 +2713,14 @@
           "everyHours": 24,
           "times": 6
         },
-        "description": "",
-        "relatedDrops": []
+        "description": ""
       },
-      "messageId": "1572626584517607465",
+      "messageId": "1572634275688480930",
       "messageIds": [
-        "1572626584517607465"
+        "1572634275688480930"
       ],
-      "messageFormatVersion": 7
+      "previewMessageIds": [],
+      "messageFormatVersion": 8
     },
     "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-2578c6e0cf361412c6e3:global-2578c6e0cf361412c6e3": {
       "status": "started",
@@ -2723,6 +2736,7 @@
         "specificDay": 6,
         "randomSubCollectionSize": null,
         "evolutionFrom": null,
+        "evolutionInfo": null,
         "dropName": "GTAVI Launch Celebration",
         "campaignName": "GTAVI Launch Celebration",
         "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
@@ -2737,14 +2751,14 @@
           "everyHours": 24,
           "times": 6
         },
-        "description": "",
-        "relatedDrops": []
+        "description": ""
       },
-      "messageId": "1572626586010652694",
+      "messageId": "1572634285817602181",
       "messageIds": [
-        "1572626586010652694"
+        "1572634285817602181"
       ],
-      "messageFormatVersion": 7
+      "previewMessageIds": [],
+      "messageFormatVersion": 8
     },
     "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-60370c97d1be6bc3b6b2:global-60370c97d1be6bc3b6b2": {
       "status": "started",
@@ -2760,6 +2774,7 @@
         "specificDay": 1,
         "randomSubCollectionSize": null,
         "evolutionFrom": null,
+        "evolutionInfo": null,
         "dropName": "GTAVI Launch Celebration",
         "campaignName": "GTAVI Launch Celebration",
         "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
@@ -2774,14 +2789,14 @@
           "everyHours": 24,
           "times": 6
         },
-        "description": "",
-        "relatedDrops": []
+        "description": ""
       },
-      "messageId": "1572626599445274680",
+      "messageId": "1572634258126803015",
       "messageIds": [
-        "1572626599445274680"
+        "1572634258126803015"
       ],
-      "messageFormatVersion": 7
+      "previewMessageIds": [],
+      "messageFormatVersion": 8
     },
     "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-30aaf2f7c72a0481daec:global-30aaf2f7c72a0481daec": {
       "status": "started",
@@ -2797,6 +2812,7 @@
         "specificDay": null,
         "randomSubCollectionSize": 3,
         "evolutionFrom": null,
+        "evolutionInfo": null,
         "dropName": "GTAVI Launch Celebration",
         "campaignName": "GTAVI Launch Celebration",
         "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
@@ -2808,14 +2824,14 @@
         "channels": [],
         "isGlobalTwitchEmote": false,
         "repeat": null,
-        "description": "",
-        "relatedDrops": []
+        "description": ""
       },
-      "messageId": "1572626601294700706",
+      "messageId": "1572634307825246312",
       "messageIds": [
-        "1572626601294700706"
+        "1572634307825246312"
       ],
-      "messageFormatVersion": 7
+      "previewMessageIds": [],
+      "messageFormatVersion": 8
     },
     "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-530ad273093a86a32ed1:global-530ad273093a86a32ed1": {
       "status": "started",
@@ -2831,6 +2847,7 @@
         "specificDay": 3,
         "randomSubCollectionSize": null,
         "evolutionFrom": null,
+        "evolutionInfo": null,
         "dropName": "GTAVI Launch Celebration",
         "campaignName": "GTAVI Launch Celebration",
         "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
@@ -2845,14 +2862,14 @@
           "everyHours": 24,
           "times": 6
         },
-        "description": "",
-        "relatedDrops": []
+        "description": ""
       },
-      "messageId": "1572626603488579625",
+      "messageId": "1572634269350764565",
       "messageIds": [
-        "1572626603488579625"
+        "1572634269350764565"
       ],
-      "messageFormatVersion": 7
+      "previewMessageIds": [],
+      "messageFormatVersion": 8
     },
     "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-976559407180f309160f:global-976559407180f309160f": {
       "status": "started",
@@ -2868,6 +2885,7 @@
         "specificDay": null,
         "randomSubCollectionSize": 3,
         "evolutionFrom": null,
+        "evolutionInfo": null,
         "dropName": "GTAVI Launch Celebration",
         "campaignName": "GTAVI Launch Celebration",
         "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
@@ -2879,14 +2897,62 @@
         "channels": [],
         "isGlobalTwitchEmote": false,
         "repeat": null,
-        "description": "",
-        "relatedDrops": []
+        "description": ""
       },
-      "messageId": "1572626606110019587",
+      "messageId": "1572634313122652271",
       "messageIds": [
-        "1572626606110019587"
+        "1572634313122652271"
       ],
-      "messageFormatVersion": 7
+      "previewMessageIds": [],
+      "messageFormatVersion": 8
+    },
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-bb1d33b919112811bf32:global-bb1d33b919112811bf32": {
+      "status": "started",
+      "startAt": "2026-11-18T11:00:00.000Z",
+      "endAt": "2026-12-01T07:59:59.999Z",
+      "reward": {
+        "key": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-bb1d33b919112811bf32:global-bb1d33b919112811bf32",
+        "type": "BADGE",
+        "name": "Golden Iguana",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/62c3816a-87d6-4ca0-bce0-fca6bcfa719f/3",
+        "minutes": 60,
+        "subs": 3,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": null,
+        "evolutionInfo": null,
+        "collectionInfo": {
+          "requiresFree": true,
+          "requiresPaid": true,
+          "freeBadgeCount": 6,
+          "paidBadgeCount": 6,
+          "paidEmoteCount": 6,
+          "paidSubscriptionCount": 3,
+          "watchMinutes": 60,
+          "watchDays": 6
+        },
+        "dropName": "GTAVI Launch Celebration",
+        "campaignName": "GTAVI Launch Celebration",
+        "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "campaignStart": "2026-11-18T11:00:00.000Z",
+        "campaignEnd": "2026-12-01T07:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "gameName": "Grand Theft Auto VI",
+        "gameSlug": "grand-theft-auto-vi",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 6
+        },
+        "description": ""
+      },
+      "messageId": "1572635376156278815",
+      "messageIds": [
+        "1572635376156278815"
+      ],
+      "previewMessageIds": [],
+      "messageFormatVersion": 9
     }
   },
   "twitchDropCampaignVersions": {

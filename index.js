@@ -77,7 +77,8 @@ const DATA_PATH = fs.existsSync("/data")
 // Suppress this already-reviewed Humble offer even when Railway loads an
 // older data.json from its persistent /data volume.
 const DEFAULT_HUMBLE_BUNDLE_URLS = [
-  "https://www.humblebundle.com/games/seriously-unserious-collection"
+  "https://www.humblebundle.com/games/seriously-unserious-collection",
+  "https://www.humblebundle.com/games/better-with-friends-co-op-buddy-packs"
 ];
 
 const DEFAULT_KICK_DROP_IGNORED_REWARDS = [

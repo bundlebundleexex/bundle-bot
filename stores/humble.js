@@ -105,8 +105,11 @@ function extractLowestPrice(product) {
 }
 
 function getGameBundleLink(product) {
+  const bundleType = String(product?.bundleType || "").trim().toLowerCase();
+  if (bundleType && bundleType !== "games") return null;
+
   const rawUrl = product?.product_url || product?.url || product?.human_url ||
-    (product?.slug && String(product.bundleType || "").toLowerCase() === "games"
+    (product?.slug && bundleType === "games"
       ? `/games/${product.slug}`
       : null);
   if (!rawUrl) return null;
@@ -215,11 +218,19 @@ function extractGameBundles(html) {
     }
     for (const child of Object.values(value)) visit(child, depth + 1);
   };
-  for (const payload of parseJsonScripts(html)) visit(payload);
+  if (html && typeof html === "object") {
+    visit(html);
+  } else if (typeof html === "string") {
+    const trimmed = html.trim();
+    if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+      try { visit(JSON.parse(trimmed)); } catch {}
+    }
+    for (const payload of parseJsonScripts(html)) visit(payload);
+  }
 
   // The redesigned landing page may render the listing as regular links
   // before it exposes bundle metadata in its embedded JSON.
-  const $ = cheerio.load(html || "");
+  const $ = cheerio.load(typeof html === "string" ? html : "");
   $("a[href]").each((_, element) => {
     const anchor = $(element);
     const link = getGameBundleLink({ product_url: anchor.attr("href") });
@@ -457,12 +468,26 @@ module.exports.check = async (client, savedData, saveData) => {
     if (!savedData.humbleBundles) savedData.humbleBundles = [];
     if (!Array.isArray(savedData.humbleBundleHistory)) savedData.humbleBundleHistory = [];
 
-    const { data: gamesHtml } = await axios.get(
-      "https://www.humblebundle.com/games",
+    const { data: bundlesHtml } = await axios.get(
+      "https://www.humblebundle.com/bundles",
       { headers: { "User-Agent": "Mozilla/5.0" } }
     );
 
-    const gameBundles = extractGameBundles(gamesHtml);
+    const listingBundles = extractGameBundles(bundlesHtml);
+    const discoveredBundles = new Map(
+      listingBundles
+        .map(bundle => [getGameBundleLink(bundle), bundle])
+        .filter(([link]) => Boolean(link))
+        .map(([link, bundle]) => [normalizeBundleLink(link), bundle])
+    );
+
+    // /bundles is the actual bundle catalog. /games is the game storefront,
+    // so it mostly contains individual store products rather than bundles.
+    // getGameBundleLink keeps only /games/ bundle pages and excludes /books/
+    // and /software/ entries from the mixed catalog.
+
+    const gameBundles = [...discoveredBundles.values()];
+    console.log(`Humble: katalog bundle=${listingBundles.length}, pakiety gier=${gameBundles.length}`);
     if (gameBundles.length) {
       const currentLinks = gameBundles.map(getGameBundleLink).filter(Boolean);
 
