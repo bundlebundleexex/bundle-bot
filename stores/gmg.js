@@ -1181,7 +1181,7 @@ module.exports.check =
 
           await channel.send({
             content: extension
-              ? "🔁 **PAKIET PRZEDŁUŻONY — GREEN MAN GAMING**"
+              ? "🔁 **PAKIET PRZEDŁUŻONY - GREEN MAN GAMING**"
               : `🟢 **NOWY GREEN MAN GAMING BUNDLE!** <@&${ROLE_ID}>`,
             allowedMentions: extension ? { parse: [] } : { parse: [], roles: [ROLE_ID] },
             embeds: [embed]

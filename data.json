@@ -2,7 +2,6 @@
   "humbleBundles": [
     "https://www.humblebundle.com/games/15th-anniversary-scifi-exposure",
     "https://www.humblebundle.com/games/marmalade-games-ultimate-digital-game-night",
-    "https://www.humblebundle.com/games/flat2vr-bundle",
     "https://www.humblebundle.com/games/tactical-mindset-bundle",
     "https://www.humblebundle.com/games/horror-trifectas",
     "https://www.humblebundle.com/games/crimes-and-curiosity-bundle-s2-games",
@@ -279,7 +278,8 @@
     "https://www.indiegala.com/bundle/witches-and-candy-bundle",
     "https://www.indiegala.com/bundle/hentai-balloons2",
     "https://www.indiegala.com/bundle/pixel-traditions5-bundle",
-    "https://www.indiegala.com/bundle/lusty-lab-bundle"
+    "https://www.indiegala.com/bundle/lusty-lab-bundle",
+    "https://www.indiegala.com/bundle/cursed-gate-bundle"
   ],
   "digiphileCollections": [
     "https://www.digiphile.co/collections/orcatober-aquatic-horrors",
@@ -349,7 +349,7 @@
   ],
   "runtime": {
     "lastStoreRunAt": {
-      "Amazon": 1794659379918
+      "Amazon": 1795010866762
     }
   },
   "digiphileEndedCollections": [
@@ -363,7 +363,9 @@
     "https://www.digiphile.co/collections/orcatober-aquatic-horrors",
     "https://www.digiphile.co/collections/social-multiplayer-games-collection-digiphile"
   ],
-  "digiphileInvalidCollections": [],
+  "digiphileInvalidCollections": [
+    "https://www.digiphile.co/collections/before-absolute-creator-owned-image-comics"
+  ],
   "twitchDropRewardIds": [
     "882ccb61-0d4c-4fe6-a5c5-3156e8a033ab:1d75c3ef-d482-11f1-99dc-0a58a9feac02:698115f0-d487-11f1-8281-0a58a9feac02",
     "f7f57488-112f-40c8-b63a-0f3cac98f2c6:e56b422d-d239-11f1-b116-0a58a9feac02:532e15b0-d239-11f1-b8aa-0a58a9feac02",
@@ -384,7 +386,34 @@
     "7fd0b5de-69c5-4f30-924e-59adaa29a362:e877a3d9-d794-11f1-9b23-0a58a9feac02:bc4eee5a-d794-11f1-9111-0a58a9feac02",
     "3e27da93-de21-4977-91db-e889991c7ff1:b205eb5c-d24f-11f1-a440-0a58a9feac02:3a6ee97e-d6eb-11f1-a83f-0a58a9feac02",
     "3e27da93-de21-4977-91db-e889991c7ff1:b205eb5c-d24f-11f1-a440-0a58a9feac02:e0cbe407-d6ea-11f1-96c0-0a58a9feac02",
-    "0abec32e-4bfc-46f8-b3ca-90703658639a:bc94a189-c7fc-11f1-a43c-0a58a9feac02:cfcf41a0-c7fc-11f1-9701-0a58a9feac02"
+    "0abec32e-4bfc-46f8-b3ca-90703658639a:bc94a189-c7fc-11f1-a43c-0a58a9feac02:cfcf41a0-c7fc-11f1-9701-0a58a9feac02",
+    "5acbe8a4-35f3-45c8-afaa-3f0483fd17bb:777e341a-da16-11f1-bee1-0a58a9feac02:24522887-da1d-11f1-9a1f-0a58a9feac02",
+    "a1fbeb48-f98d-49d4-845c-9591328aae55:538fe442-da17-11f1-b822-0a58a9feac02:0985d318-da1d-11f1-8087-0a58a9feac02",
+    "1f04121b-9c6b-4ae8-bdd5-9833c96a64ae:global-badge:global-677208a260298e661129:global-677208a260298e661129",
+    "5acbe8a4-35f3-45c8-afaa-3f0483fd17bb:global-badge:global-501a72767eaebea85401:global-501a72767eaebea85401",
+    "a1fbeb48-f98d-49d4-845c-9591328aae55:global-badge:global-222e607df14965dff24f:global-222e607df14965dff24f",
+    "3e27da93-de21-4977-91db-e889991c7ff1:global-badge:global-5186db6ab7c65075dcad:global-5186db6ab7c65075dcad",
+    "3e27da93-de21-4977-91db-e889991c7ff1:global-badge:global-54d662fa6110fd0798a2:global-54d662fa6110fd0798a2",
+    "26547ffd-3b53-474c-b9ba-766fe4dfca83:global-badge:global-9fc709c42e54ea608a85:global-9fc709c42e54ea608a85",
+    "a8ce1281-5c82-4fbe-9a18-3e7d02e1e7b6:global-badge:global-64b15b8b88f50cd4a51f:global-64b15b8b88f50cd4a51f",
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-2c6a038ddc4c33196a28:global-2c6a038ddc4c33196a28",
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-339801579210f2478df9:global-339801579210f2478df9",
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-7052bd5069448960683f:global-7052bd5069448960683f",
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-191d0e9ede008253eb43:global-191d0e9ede008253eb43",
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-558f22c6b5055b529f79:global-558f22c6b5055b529f79",
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-d998cef6220a0c6b00d9:global-d998cef6220a0c6b00d9",
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-59150027f43dc7d6f2b4:global-59150027f43dc7d6f2b4",
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-4aa753a7106a9e21bad4:global-4aa753a7106a9e21bad4",
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-b83aa395b83b3fdbca7c:global-b83aa395b83b3fdbca7c",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-be7d62469bb39278bf0a:global-be7d62469bb39278bf0a",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-bcc91d6cfac786790627:global-bcc91d6cfac786790627",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-313a601cddc3d277c027:global-313a601cddc3d277c027",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-6f72f74b94f054be0ae7:global-6f72f74b94f054be0ae7",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-2578c6e0cf361412c6e3:global-2578c6e0cf361412c6e3",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-60370c97d1be6bc3b6b2:global-60370c97d1be6bc3b6b2",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-30aaf2f7c72a0481daec:global-30aaf2f7c72a0481daec",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-530ad273093a86a32ed1:global-530ad273093a86a32ed1",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-976559407180f309160f:global-976559407180f309160f"
   ],
   "twitchDropImportedRewards": [
     {
@@ -408,21 +437,26 @@
       "startAt": "2026-11-02T07:00:00Z",
       "endAt": "2026-11-30T06:59:59.999Z",
       "reward": {
-        "key": "882ccb61-0d4c-4fe6-a5c5-3156e8a033ab:1d75c3ef-d482-11f1-99dc-0a58a9feac02:698115f0-d487-11f1-8281-0a58a9feac02",
+        "key": "882ccb61-0d4c-4fe6-a5c5-3156e8a033ab:global-badge:global-62e52182481603ea7122:global-62e52182481603ea7122",
         "type": "BADGE",
         "name": "Warrior Jar Alexander",
-        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/698115f0-d487-11f1-8281-0a58a9feac02.png",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/a080167b-6264-404b-b9b1-e5a68348299f/3",
         "minutes": 0,
         "subs": 1,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": null,
         "dropName": "Warrior Jar Alexander",
         "campaignName": "Warrior Jar Alexander",
         "campaignId": "882ccb61-0d4c-4fe6-a5c5-3156e8a033ab",
-        "campaignStart": "2026-11-02T07:00:00Z",
+        "campaignStart": "2026-11-02T07:00:00.000Z",
         "campaignEnd": "2026-11-30T06:59:59.999Z",
         "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=882ccb61-0d4c-4fe6-a5c5-3156e8a033ab",
         "gameName": "ELDEN RING",
         "gameSlug": "elden-ring",
         "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": null,
         "description": "This badge was earned by subscribing or gifting a sub to a streamer in the ELDEN RING category.",
         "relatedDrops": []
       },
@@ -430,7 +464,7 @@
       "messageIds": [
         "1566900816928051241"
       ],
-      "messageFormatVersion": 5
+      "messageFormatVersion": 7
     },
     "f7f57488-112f-40c8-b63a-0f3cac98f2c6:e56b422d-d239-11f1-b116-0a58a9feac02:532e15b0-d239-11f1-b8aa-0a58a9feac02": {
       "status": "expired",
@@ -820,14 +854,13 @@
         "description": "Subscribe to any channel streaming Cyberpunk 2077 to get The Mox Chat Badge!",
         "relatedDrops": []
       },
-      "messageId": "1566900850641735831",
-      "messageIds": [
-        "1566900850641735831"
-      ],
-      "messageFormatVersion": 5
+      "messageId": null,
+      "messageIds": [],
+      "messageFormatVersion": 6,
+      "messageMissing": true
     },
     "3ed1adc1-8f12-4d18-82ac-fd543f08722d:5ef9661a-ccb9-11f1-b47a-0a58a9feac02:afc9b0fe-1e6b-11f1-8cf7-9a121026d2ee": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-10-21T13:00:00Z",
       "endAt": "2026-11-18T12:59:59.999Z",
       "reward": {
@@ -872,7 +905,7 @@
       "messageFormatVersion": 5
     },
     "b66c6ae7-42bc-4e67-b0ad-8ab0d9897d26:26fee398-c759-11f1-a917-0a58a9feac02:37ea3450-c759-11f1-9665-0a58a9feac02": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-10-14T19:00:00Z",
       "endAt": "2026-11-15T18:59:59.999Z",
       "reward": {
@@ -1701,11 +1734,10 @@
         "description": "The PAYDAY gang is back again! Support your favorite PAYDAY 3 creators and grab yourself some exclusive chat badges featuring Joy, Pearl, Clover, and the KawaiiDozer. Gift a sub to unlock the KawaiiDozer, or keep watching the streams to get the rest of the crew!",
         "relatedDrops": []
       },
-      "messageId": "1570400833978241104",
-      "messageIds": [
-        "1570400833978241104"
-      ],
-      "messageFormatVersion": 5
+      "messageId": null,
+      "messageIds": [],
+      "messageFormatVersion": 6,
+      "messageMissing": true
     },
     "7fd0b5de-69c5-4f30-924e-59adaa29a362:cf606881-d794-11f1-997e-0a58a9feac02:9cbe9657-d794-11f1-a900-0a58a9feac02": {
       "status": "started",
@@ -1730,11 +1762,10 @@
         "description": "The PAYDAY gang is back again! Support your favorite PAYDAY 3 creators and grab yourself some exclusive chat badges featuring Joy, Pearl, Clover, and the KawaiiDozer. Gift a sub to unlock the KawaiiDozer, or keep watching the streams to get the rest of the crew!",
         "relatedDrops": []
       },
-      "messageId": "1570400835366690877",
-      "messageIds": [
-        "1570400835366690877"
-      ],
-      "messageFormatVersion": 5
+      "messageId": null,
+      "messageIds": [],
+      "messageFormatVersion": 6,
+      "messageMissing": true
     },
     "7fd0b5de-69c5-4f30-924e-59adaa29a362:dcb2efcc-d794-11f1-8521-0a58a9feac02:ad06772c-d794-11f1-b6f6-0a58a9feac02": {
       "status": "started",
@@ -1759,11 +1790,10 @@
         "description": "The PAYDAY gang is back again! Support your favorite PAYDAY 3 creators and grab yourself some exclusive chat badges featuring Joy, Pearl, Clover, and the KawaiiDozer. Gift a sub to unlock the KawaiiDozer, or keep watching the streams to get the rest of the crew!",
         "relatedDrops": []
       },
-      "messageId": "1570400836683694131",
-      "messageIds": [
-        "1570400836683694131"
-      ],
-      "messageFormatVersion": 5
+      "messageId": null,
+      "messageIds": [],
+      "messageFormatVersion": 6,
+      "messageMissing": true
     },
     "7fd0b5de-69c5-4f30-924e-59adaa29a362:e877a3d9-d794-11f1-9b23-0a58a9feac02:bc4eee5a-d794-11f1-9111-0a58a9feac02": {
       "status": "started",
@@ -1788,11 +1818,10 @@
         "description": "The PAYDAY gang is back again! Support your favorite PAYDAY 3 creators and grab yourself some exclusive chat badges featuring Joy, Pearl, Clover, and the KawaiiDozer. Gift a sub to unlock the KawaiiDozer, or keep watching the streams to get the rest of the crew!",
         "relatedDrops": []
       },
-      "messageId": "1570400838139252767",
-      "messageIds": [
-        "1570400838139252767"
-      ],
-      "messageFormatVersion": 5
+      "messageId": null,
+      "messageIds": [],
+      "messageFormatVersion": 6,
+      "messageMissing": true
     },
     "3e27da93-de21-4977-91db-e889991c7ff1:b205eb5c-d24f-11f1-a440-0a58a9feac02:3a6ee97e-d6eb-11f1-a83f-0a58a9feac02": {
       "status": "started",
@@ -1817,11 +1846,10 @@
         "description": "Subscribe or Gift a Sub to a World of Warcraft streamer during the launch of WoW: Forever to earn the Horde and Alliance chat badges!",
         "relatedDrops": []
       },
-      "messageId": "1570400840567754814",
-      "messageIds": [
-        "1570400840567754814"
-      ],
-      "messageFormatVersion": 5
+      "messageId": null,
+      "messageIds": [],
+      "messageFormatVersion": 6,
+      "messageMissing": true
     },
     "3e27da93-de21-4977-91db-e889991c7ff1:b205eb5c-d24f-11f1-a440-0a58a9feac02:e0cbe407-d6ea-11f1-96c0-0a58a9feac02": {
       "status": "started",
@@ -1846,14 +1874,13 @@
         "description": "Subscribe or Gift a Sub to a World of Warcraft streamer during the launch of WoW: Forever to earn the Horde and Alliance chat badges!",
         "relatedDrops": []
       },
-      "messageId": "1570400841742159873",
-      "messageIds": [
-        "1570400841742159873"
-      ],
-      "messageFormatVersion": 5
+      "messageId": null,
+      "messageIds": [],
+      "messageFormatVersion": 6,
+      "messageMissing": true
     },
     "0abec32e-4bfc-46f8-b3ca-90703658639a:bc94a189-c7fc-11f1-a43c-0a58a9feac02:cfcf41a0-c7fc-11f1-9701-0a58a9feac02": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-11-13T16:00:00Z",
       "endAt": "2026-11-15T15:59:59.999Z",
       "reward": {
@@ -1880,27 +1907,1001 @@
         "1570898924795990077"
       ],
       "messageFormatVersion": 5
+    },
+    "5acbe8a4-35f3-45c8-afaa-3f0483fd17bb:777e341a-da16-11f1-bee1-0a58a9feac02:24522887-da1d-11f1-9a1f-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-11-16T17:00:00Z",
+      "endAt": "2026-12-11T16:59:59.999Z",
+      "reward": {
+        "key": "5acbe8a4-35f3-45c8-afaa-3f0483fd17bb:777e341a-da16-11f1-bee1-0a58a9feac02:24522887-da1d-11f1-9a1f-0a58a9feac02",
+        "type": "BADGE",
+        "name": "DOOM: The Dark Ages Badge",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/24522887-da1d-11f1-9a1f-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "DOOM: the Dark Ages Badge",
+        "campaignName": "DOOM: The Dark Ages Badge",
+        "campaignId": "5acbe8a4-35f3-45c8-afaa-3f0483fd17bb",
+        "campaignStart": "2026-11-16T17:00:00Z",
+        "campaignEnd": "2026-12-11T16:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=5acbe8a4-35f3-45c8-afaa-3f0483fd17bb",
+        "gameName": "DOOM: The Dark Ages",
+        "gameSlug": "doom-the-dark-ages",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "description": "Subscribe or Gift a Sub to a DOOM: The Dark Ages streamer during the launch of Slaughter Mode to earn the DOOM: The Dark Ages chat badge!",
+        "relatedDrops": []
+      },
+      "messageId": null,
+      "messageIds": [],
+      "messageFormatVersion": 6,
+      "announcementImported": true
+    },
+    "a1fbeb48-f98d-49d4-845c-9591328aae55:538fe442-da17-11f1-b822-0a58a9feac02:0985d318-da1d-11f1-8087-0a58a9feac02": {
+      "status": "started",
+      "startAt": "2026-11-14T18:00:00Z",
+      "endAt": "2026-12-12T17:59:59.999Z",
+      "reward": {
+        "key": "a1fbeb48-f98d-49d4-845c-9591328aae55:538fe442-da17-11f1-b822-0a58a9feac02:0985d318-da1d-11f1-8087-0a58a9feac02",
+        "type": "BADGE",
+        "name": "Gallica Badge",
+        "imageUrl": "https://ttvdrops.lovinator.space/media/benefits/images/0985d318-da1d-11f1-8087-0a58a9feac02.png",
+        "minutes": 0,
+        "subs": 1,
+        "dropName": "Gallica Badge",
+        "campaignName": "Gallica Badge",
+        "campaignId": "a1fbeb48-f98d-49d4-845c-9591328aae55",
+        "campaignStart": "2026-11-14T18:00:00Z",
+        "campaignEnd": "2026-12-12T17:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=a1fbeb48-f98d-49d4-845c-9591328aae55",
+        "gameName": "Metaphor: ReFantazio",
+        "gameSlug": "metaphor-refantazio",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "description": "Subscribe or Gift a Sub to a Metaphor: ReFantazio streamer to earn the Gallica chat badge!",
+        "relatedDrops": []
+      },
+      "messageId": null,
+      "messageIds": [],
+      "messageFormatVersion": 6,
+      "announcementImported": true
+    },
+    "1f04121b-9c6b-4ae8-bdd5-9833c96a64ae:global-badge:global-677208a260298e661129:global-677208a260298e661129": {
+      "status": "started",
+      "startAt": "2026-11-18T13:04:32.000Z",
+      "endAt": "2026-11-30T23:59:59.999Z",
+      "reward": {
+        "key": "1f04121b-9c6b-4ae8-bdd5-9833c96a64ae:global-badge:global-677208a260298e661129:global-677208a260298e661129",
+        "type": "BADGE",
+        "name": "RuneScape Gnome Plush",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/8b5bf6d2-3f89-4c24-a6c2-c5eda04ce1e6/3",
+        "minutes": 0,
+        "subs": 1,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": null,
+        "dropName": "OSRS Hardcore Worlds",
+        "campaignName": "OSRS Hardcore Worlds",
+        "campaignId": "1f04121b-9c6b-4ae8-bdd5-9833c96a64ae",
+        "campaignStart": "2026-11-18T13:04:32.000Z",
+        "campaignEnd": "2026-11-30T23:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=1f04121b-9c6b-4ae8-bdd5-9833c96a64ae",
+        "gameName": "Old School RuneScape",
+        "gameSlug": "old-school-runescape",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": null,
+        "description": "This badge was earned by subscribing or gifting a sub to any Old School RuneScape broadcast in 2026 during the release of Hardcore Worlds.",
+        "relatedDrops": []
+      },
+      "messageId": "1572618432308977807",
+      "messageIds": [
+        "1572618432308977807"
+      ],
+      "messageFormatVersion": 7
+    },
+    "5acbe8a4-35f3-45c8-afaa-3f0483fd17bb:global-badge:global-501a72767eaebea85401:global-501a72767eaebea85401": {
+      "status": "started",
+      "startAt": "2026-11-16T17:00:00.000Z",
+      "endAt": "2026-12-11T16:59:59.999Z",
+      "reward": {
+        "key": "5acbe8a4-35f3-45c8-afaa-3f0483fd17bb:global-badge:global-501a72767eaebea85401:global-501a72767eaebea85401",
+        "type": "BADGE",
+        "name": "DOOM: The Dark Ages",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/80e404b7-673b-4ca8-ab69-1779f9685eec/3",
+        "minutes": 0,
+        "subs": 1,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": null,
+        "dropName": "DOOM: The Dark Ages Badge",
+        "campaignName": "DOOM: The Dark Ages Badge",
+        "campaignId": "5acbe8a4-35f3-45c8-afaa-3f0483fd17bb",
+        "campaignStart": "2026-11-16T17:00:00.000Z",
+        "campaignEnd": "2026-12-11T16:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=5acbe8a4-35f3-45c8-afaa-3f0483fd17bb",
+        "gameName": "DOOM: The Dark Ages",
+        "gameSlug": "doom-the-dark-ages",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": null,
+        "description": "Subscribe or Gift a Sub to a DOOM: The Dark Ages streamer during the launch of Slaughter Mode to earn the DOOM: The Dark Ages chat badge!",
+        "relatedDrops": []
+      },
+      "messageId": "1572618434016059564",
+      "messageIds": [
+        "1572618434016059564"
+      ],
+      "messageFormatVersion": 7
+    },
+    "a1fbeb48-f98d-49d4-845c-9591328aae55:global-badge:global-222e607df14965dff24f:global-222e607df14965dff24f": {
+      "status": "started",
+      "startAt": "2026-11-14T18:00:00.000Z",
+      "endAt": "2026-12-12T17:59:59.999Z",
+      "reward": {
+        "key": "a1fbeb48-f98d-49d4-845c-9591328aae55:global-badge:global-222e607df14965dff24f:global-222e607df14965dff24f",
+        "type": "BADGE",
+        "name": "Gallica",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/d2adf631-2045-4246-9c34-201487e809ae/3",
+        "minutes": 0,
+        "subs": 1,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": null,
+        "dropName": "Gallica Badge",
+        "campaignName": "Gallica Badge",
+        "campaignId": "a1fbeb48-f98d-49d4-845c-9591328aae55",
+        "campaignStart": "2026-11-14T18:00:00.000Z",
+        "campaignEnd": "2026-12-12T17:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=a1fbeb48-f98d-49d4-845c-9591328aae55",
+        "gameName": "Metaphor: ReFantazio",
+        "gameSlug": "metaphor-refantazio",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": null,
+        "description": "Subscribe or Gift a Sub to a Metaphor: ReFantazio streamer to earn the Gallica chat badge!",
+        "relatedDrops": []
+      },
+      "messageId": "1572618435202916405",
+      "messageIds": [
+        "1572618435202916405"
+      ],
+      "messageFormatVersion": 7
+    },
+    "3e27da93-de21-4977-91db-e889991c7ff1:global-badge:global-5186db6ab7c65075dcad:global-5186db6ab7c65075dcad": {
+      "status": "started",
+      "startAt": "2026-11-04T16:00:00.000Z",
+      "endAt": "2026-12-01T07:58:59.999Z",
+      "reward": {
+        "key": "3e27da93-de21-4977-91db-e889991c7ff1:global-badge:global-5186db6ab7c65075dcad:global-5186db6ab7c65075dcad",
+        "type": "BADGE",
+        "name": "Alliance",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/59d5bb2e-0d62-4116-a6bc-79cd5afe9246/3",
+        "minutes": 0,
+        "subs": 1,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": null,
+        "dropName": "Horde and Alliance Badges",
+        "campaignName": "Horde and Alliance Badges",
+        "campaignId": "3e27da93-de21-4977-91db-e889991c7ff1",
+        "campaignStart": "2026-11-04T16:00:00.000Z",
+        "campaignEnd": "2026-12-01T07:58:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=3e27da93-de21-4977-91db-e889991c7ff1",
+        "gameName": "World of Warcraft",
+        "gameSlug": "world-of-warcraft",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": null,
+        "description": "Subscribe or Gift a Sub to a World of Warcraft streamer during the launch of WoW: Forever to earn the Horde and Alliance chat badges!",
+        "relatedDrops": []
+      },
+      "messageId": "1572618440848576593",
+      "messageIds": [
+        "1572618440848576593"
+      ],
+      "messageFormatVersion": 7
+    },
+    "3e27da93-de21-4977-91db-e889991c7ff1:global-badge:global-54d662fa6110fd0798a2:global-54d662fa6110fd0798a2": {
+      "status": "started",
+      "startAt": "2026-11-04T16:00:00.000Z",
+      "endAt": "2026-12-01T07:58:59.999Z",
+      "reward": {
+        "key": "3e27da93-de21-4977-91db-e889991c7ff1:global-badge:global-54d662fa6110fd0798a2:global-54d662fa6110fd0798a2",
+        "type": "BADGE",
+        "name": "Horde",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/8dfb6f30-1ec1-497a-91e4-028a704b4f57/3",
+        "minutes": 0,
+        "subs": 1,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": null,
+        "dropName": "Horde and Alliance Badges",
+        "campaignName": "Horde and Alliance Badges",
+        "campaignId": "3e27da93-de21-4977-91db-e889991c7ff1",
+        "campaignStart": "2026-11-04T16:00:00.000Z",
+        "campaignEnd": "2026-12-01T07:58:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=3e27da93-de21-4977-91db-e889991c7ff1",
+        "gameName": "World of Warcraft",
+        "gameSlug": "world-of-warcraft",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": null,
+        "description": "Subscribe or Gift a Sub to a World of Warcraft streamer during the launch of WoW: Forever to earn the Horde and Alliance chat badges!",
+        "relatedDrops": []
+      },
+      "messageId": "1572618443218485269",
+      "messageIds": [
+        "1572618443218485269"
+      ],
+      "messageFormatVersion": 7
+    },
+    "26547ffd-3b53-474c-b9ba-766fe4dfca83:global-badge:global-9fc709c42e54ea608a85:global-9fc709c42e54ea608a85": {
+      "status": "started",
+      "startAt": "2026-10-16T17:00:00.000Z",
+      "endAt": "2026-11-23T22:59:59.999Z",
+      "reward": {
+        "key": "26547ffd-3b53-474c-b9ba-766fe4dfca83:global-badge:global-9fc709c42e54ea608a85:global-9fc709c42e54ea608a85",
+        "type": "BADGE",
+        "name": "Gastly",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/602335f3-4d73-40f9-b8e2-5c5e25f32d62/3",
+        "minutes": 20,
+        "subs": 0,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": null,
+        "dropName": "Pokémon Night Out Campaign",
+        "campaignName": "Pokémon Night Out Campaign",
+        "campaignId": "26547ffd-3b53-474c-b9ba-766fe4dfca83",
+        "campaignStart": "2026-10-16T17:00:00.000Z",
+        "campaignEnd": "2026-11-23T22:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=26547ffd-3b53-474c-b9ba-766fe4dfca83",
+        "gameName": "Pokémon FireRed/LeafGreen",
+        "gameSlug": "pokemon-firered-leafgreen",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 3
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572618530757681165",
+      "messageIds": [
+        "1572618530757681165"
+      ],
+      "messageFormatVersion": 7
+    },
+    "a8ce1281-5c82-4fbe-9a18-3e7d02e1e7b6:global-badge:global-64b15b8b88f50cd4a51f:global-64b15b8b88f50cd4a51f": {
+      "status": "started",
+      "startAt": "2026-11-18T13:06:33.000Z",
+      "endAt": "2026-11-30T23:59:59.999Z",
+      "reward": {
+        "key": "a8ce1281-5c82-4fbe-9a18-3e7d02e1e7b6:global-badge:global-64b15b8b88f50cd4a51f:global-64b15b8b88f50cd4a51f",
+        "type": "BADGE",
+        "name": "RuneScape Bones",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/95507c79-f87e-4a0d-9940-92af830b3b36/3",
+        "minutes": 60,
+        "subs": 0,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": null,
+        "dropName": "OSRS Hardcore Worlds",
+        "campaignName": "OSRS Hardcore Worlds",
+        "campaignId": "a8ce1281-5c82-4fbe-9a18-3e7d02e1e7b6",
+        "campaignStart": "2026-11-18T13:06:33.000Z",
+        "campaignEnd": "2026-11-30T23:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=a8ce1281-5c82-4fbe-9a18-3e7d02e1e7b6",
+        "gameName": "Old School RuneScape",
+        "gameSlug": "old-school-runescape",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": null,
+        "description": "This badge was awarded to people who viewed any eligible channel in the Old School RuneScape category for one hour.",
+        "relatedDrops": []
+      },
+      "messageId": "1572622476427399199",
+      "messageIds": [
+        "1572622476427399199"
+      ],
+      "messageFormatVersion": 7
+    },
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-2c6a038ddc4c33196a28:global-2c6a038ddc4c33196a28": {
+      "status": "started",
+      "startAt": "2026-10-16T17:00:00.000Z",
+      "endAt": "2027-01-30T22:59:59.999Z",
+      "reward": {
+        "key": "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-2c6a038ddc4c33196a28:global-2c6a038ddc4c33196a28",
+        "type": "BADGE",
+        "name": "Blastoise",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/2b975e12-fd49-4e54-85c4-6cc042453dbb/3",
+        "minutes": 20,
+        "subs": 0,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": "Wartortle",
+        "dropName": "Pokemon Evolutions",
+        "campaignName": "Pokemon Evolutions",
+        "campaignId": "3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "campaignStart": "2026-10-16T17:00:00.000Z",
+        "campaignEnd": "2027-01-30T22:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "gameName": "Pokémon FireRed/LeafGreen",
+        "gameSlug": "pokemon-firered-leafgreen",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 3
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572622497185144985",
+      "messageIds": [
+        "1572622497185144985"
+      ],
+      "messageFormatVersion": 7
+    },
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-339801579210f2478df9:global-339801579210f2478df9": {
+      "status": "started",
+      "startAt": "2026-10-16T17:00:00.000Z",
+      "endAt": "2027-01-30T22:59:59.999Z",
+      "reward": {
+        "key": "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-339801579210f2478df9:global-339801579210f2478df9",
+        "type": "BADGE",
+        "name": "Charizard",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/ac097350-add0-44c4-b405-e70aa746389b/3",
+        "minutes": 20,
+        "subs": 0,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": "Charmeleon",
+        "dropName": "Pokemon Evolutions",
+        "campaignName": "Pokemon Evolutions",
+        "campaignId": "3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "campaignStart": "2026-10-16T17:00:00.000Z",
+        "campaignEnd": "2027-01-30T22:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "gameName": "Pokémon FireRed/LeafGreen",
+        "gameSlug": "pokemon-firered-leafgreen",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 3
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572622499022114857",
+      "messageIds": [
+        "1572622499022114857"
+      ],
+      "messageFormatVersion": 7,
+      "previewMessageIds": [
+        "1572627715004170282"
+      ]
+    },
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-7052bd5069448960683f:global-7052bd5069448960683f": {
+      "status": "started",
+      "startAt": "2026-10-16T17:00:00.000Z",
+      "endAt": "2027-01-30T22:59:59.999Z",
+      "reward": {
+        "key": "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-7052bd5069448960683f:global-7052bd5069448960683f",
+        "type": "BADGE",
+        "name": "Charmeleon",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/d9698627-aff7-434c-8002-1351b2c59984/3",
+        "minutes": 20,
+        "subs": 0,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": "Charmander",
+        "dropName": "Pokemon Evolutions",
+        "campaignName": "Pokemon Evolutions",
+        "campaignId": "3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "campaignStart": "2026-10-16T17:00:00.000Z",
+        "campaignEnd": "2027-01-30T22:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "gameName": "Pokémon FireRed/LeafGreen",
+        "gameSlug": "pokemon-firered-leafgreen",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 3
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572622500893036598",
+      "messageIds": [
+        "1572622500893036598"
+      ],
+      "messageFormatVersion": 7,
+      "previewMessageIds": [
+        "1572627719487881461"
+      ]
+    },
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-191d0e9ede008253eb43:global-191d0e9ede008253eb43": {
+      "status": "started",
+      "startAt": "2026-10-16T17:00:00.000Z",
+      "endAt": "2027-01-30T22:59:59.999Z",
+      "reward": {
+        "key": "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-191d0e9ede008253eb43:global-191d0e9ede008253eb43",
+        "type": "BADGE",
+        "name": "Gengar",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/21c5d89c-bea4-4682-8080-96b22770d0f4/3",
+        "minutes": 20,
+        "subs": 0,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": "Haunter",
+        "dropName": "Pokemon Evolutions",
+        "campaignName": "Pokemon Evolutions",
+        "campaignId": "3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "campaignStart": "2026-10-16T17:00:00.000Z",
+        "campaignEnd": "2027-01-30T22:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "gameName": "Pokémon FireRed/LeafGreen",
+        "gameSlug": "pokemon-firered-leafgreen",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 3
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572622502918881432",
+      "messageIds": [
+        "1572622502918881432"
+      ],
+      "messageFormatVersion": 7,
+      "previewMessageIds": [
+        "1572627724709924935"
+      ]
+    },
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-558f22c6b5055b529f79:global-558f22c6b5055b529f79": {
+      "status": "started",
+      "startAt": "2026-10-16T17:00:00.000Z",
+      "endAt": "2027-01-30T22:59:59.999Z",
+      "reward": {
+        "key": "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-558f22c6b5055b529f79:global-558f22c6b5055b529f79",
+        "type": "BADGE",
+        "name": "Haunter",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/ddfbf317-aa77-482e-a99d-eb975deb2fe7/3",
+        "minutes": 20,
+        "subs": 0,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": "Gastly",
+        "dropName": "Pokemon Evolutions",
+        "campaignName": "Pokemon Evolutions",
+        "campaignId": "3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "campaignStart": "2026-10-16T17:00:00.000Z",
+        "campaignEnd": "2027-01-30T22:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "gameName": "Pokémon FireRed/LeafGreen",
+        "gameSlug": "pokemon-firered-leafgreen",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 3
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572622504478904371",
+      "messageIds": [
+        "1572622504478904371"
+      ],
+      "messageFormatVersion": 7,
+      "previewMessageIds": [
+        "1572627729562599465"
+      ]
+    },
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-d998cef6220a0c6b00d9:global-d998cef6220a0c6b00d9": {
+      "status": "started",
+      "startAt": "2026-10-16T17:00:00.000Z",
+      "endAt": "2027-01-30T22:59:59.999Z",
+      "reward": {
+        "key": "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-d998cef6220a0c6b00d9:global-d998cef6220a0c6b00d9",
+        "type": "BADGE",
+        "name": "Ivysaur",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/6de326e8-643f-4043-beb6-3ad135385708/3",
+        "minutes": 20,
+        "subs": 0,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": "Bulbasaur",
+        "dropName": "Pokemon Evolutions",
+        "campaignName": "Pokemon Evolutions",
+        "campaignId": "3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "campaignStart": "2026-10-16T17:00:00.000Z",
+        "campaignEnd": "2027-01-30T22:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "gameName": "Pokémon FireRed/LeafGreen",
+        "gameSlug": "pokemon-firered-leafgreen",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 3
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572622506458877965",
+      "messageIds": [
+        "1572622506458877965"
+      ],
+      "messageFormatVersion": 7,
+      "previewMessageIds": [
+        "1572627734281195661"
+      ]
+    },
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-59150027f43dc7d6f2b4:global-59150027f43dc7d6f2b4": {
+      "status": "started",
+      "startAt": "2026-10-16T17:00:00.000Z",
+      "endAt": "2027-01-30T22:59:59.999Z",
+      "reward": {
+        "key": "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-59150027f43dc7d6f2b4:global-59150027f43dc7d6f2b4",
+        "type": "BADGE",
+        "name": "Pikachu",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/b9dd6905-474f-45d1-a4ff-8ba138208afc/3",
+        "minutes": 20,
+        "subs": 0,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": "Pichu",
+        "dropName": "Pokemon Evolutions",
+        "campaignName": "Pokemon Evolutions",
+        "campaignId": "3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "campaignStart": "2026-10-16T17:00:00.000Z",
+        "campaignEnd": "2027-01-30T22:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "gameName": "Pokémon FireRed/LeafGreen",
+        "gameSlug": "pokemon-firered-leafgreen",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 3
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572622508698632293",
+      "messageIds": [
+        "1572622508698632293"
+      ],
+      "messageFormatVersion": 7,
+      "previewMessageIds": [
+        "1572627739259703367"
+      ]
+    },
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-4aa753a7106a9e21bad4:global-4aa753a7106a9e21bad4": {
+      "status": "started",
+      "startAt": "2026-10-16T17:00:00.000Z",
+      "endAt": "2027-01-30T22:59:59.999Z",
+      "reward": {
+        "key": "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-4aa753a7106a9e21bad4:global-4aa753a7106a9e21bad4",
+        "type": "BADGE",
+        "name": "Venusaur",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/ad14f7e4-1ca6-476b-acaf-250da22388ec/3",
+        "minutes": 20,
+        "subs": 0,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": "Ivysaur",
+        "dropName": "Pokemon Evolutions",
+        "campaignName": "Pokemon Evolutions",
+        "campaignId": "3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "campaignStart": "2026-10-16T17:00:00.000Z",
+        "campaignEnd": "2027-01-30T22:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "gameName": "Pokémon FireRed/LeafGreen",
+        "gameSlug": "pokemon-firered-leafgreen",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 3
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572622528667713609",
+      "messageIds": [
+        "1572622528667713609"
+      ],
+      "messageFormatVersion": 7,
+      "previewMessageIds": [
+        "1572627743793746034"
+      ]
+    },
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-b83aa395b83b3fdbca7c:global-b83aa395b83b3fdbca7c": {
+      "status": "started",
+      "startAt": "2026-10-16T17:00:00.000Z",
+      "endAt": "2027-01-30T22:59:59.999Z",
+      "reward": {
+        "key": "3e7f0c98-893c-47a7-9044-1c61173b8f94:global-badge:global-b83aa395b83b3fdbca7c:global-b83aa395b83b3fdbca7c",
+        "type": "BADGE",
+        "name": "Wartortle",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/15a0db5d-bef1-49bb-8594-e3925e1ec248/3",
+        "minutes": 20,
+        "subs": 0,
+        "specificDay": null,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": "Squirtle",
+        "dropName": "Pokemon Evolutions",
+        "campaignName": "Pokemon Evolutions",
+        "campaignId": "3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "campaignStart": "2026-10-16T17:00:00.000Z",
+        "campaignEnd": "2027-01-30T22:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "gameName": "Pokémon FireRed/LeafGreen",
+        "gameSlug": "pokemon-firered-leafgreen",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 3
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572622531016396802",
+      "messageIds": [
+        "1572622531016396802"
+      ],
+      "messageFormatVersion": 7,
+      "previewMessageIds": [
+        "1572627757920166050"
+      ]
+    },
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-be7d62469bb39278bf0a:global-be7d62469bb39278bf0a": {
+      "status": "started",
+      "startAt": "2026-11-18T11:00:00.000Z",
+      "endAt": "2026-12-01T07:59:59.999Z",
+      "reward": {
+        "key": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-be7d62469bb39278bf0a:global-be7d62469bb39278bf0a",
+        "type": "BADGE",
+        "name": "Bleed Miami",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/c7b8fc7d-7ebd-46e1-8f57-cc58ce51a9d1/3",
+        "minutes": 0,
+        "subs": 1,
+        "specificDay": null,
+        "randomSubCollectionSize": 3,
+        "evolutionFrom": null,
+        "dropName": "GTAVI Launch Celebration",
+        "campaignName": "GTAVI Launch Celebration",
+        "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "campaignStart": "2026-11-18T11:00:00.000Z",
+        "campaignEnd": "2026-12-01T07:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "gameName": "Grand Theft Auto VI",
+        "gameSlug": "grand-theft-auto-vi",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": null,
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572626576980316313",
+      "messageIds": [
+        "1572626576980316313"
+      ],
+      "messageFormatVersion": 7
+    },
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-bcc91d6cfac786790627:global-bcc91d6cfac786790627": {
+      "status": "started",
+      "startAt": "2026-11-18T11:00:00.000Z",
+      "endAt": "2026-12-01T07:59:59.999Z",
+      "reward": {
+        "key": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-bcc91d6cfac786790627:global-bcc91d6cfac786790627",
+        "type": "BADGE",
+        "name": "Bronze Chain",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/2e7cf17d-12ba-41cd-8f9d-4d96c5f69d45/3",
+        "minutes": 60,
+        "subs": 0,
+        "specificDay": 2,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": null,
+        "dropName": "GTAVI Launch Celebration",
+        "campaignName": "GTAVI Launch Celebration",
+        "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "campaignStart": "2026-11-18T11:00:00.000Z",
+        "campaignEnd": "2026-12-01T07:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "gameName": "Grand Theft Auto VI",
+        "gameSlug": "grand-theft-auto-vi",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 6
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572626578565767343",
+      "messageIds": [
+        "1572626578565767343"
+      ],
+      "messageFormatVersion": 7
+    },
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-313a601cddc3d277c027:global-313a601cddc3d277c027": {
+      "status": "started",
+      "startAt": "2026-11-18T11:00:00.000Z",
+      "endAt": "2026-12-01T07:59:59.999Z",
+      "reward": {
+        "key": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-313a601cddc3d277c027:global-313a601cddc3d277c027",
+        "type": "BADGE",
+        "name": "Diamond Chain",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/7498db8a-8085-4262-ac9c-b2d13591b75f/3",
+        "minutes": 60,
+        "subs": 0,
+        "specificDay": 5,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": null,
+        "dropName": "GTAVI Launch Celebration",
+        "campaignName": "GTAVI Launch Celebration",
+        "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "campaignStart": "2026-11-18T11:00:00.000Z",
+        "campaignEnd": "2026-12-01T07:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "gameName": "Grand Theft Auto VI",
+        "gameSlug": "grand-theft-auto-vi",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 6
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572626580172439704",
+      "messageIds": [
+        "1572626580172439704"
+      ],
+      "messageFormatVersion": 7
+    },
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-6f72f74b94f054be0ae7:global-6f72f74b94f054be0ae7": {
+      "status": "started",
+      "startAt": "2026-11-18T11:00:00.000Z",
+      "endAt": "2026-12-01T07:59:59.999Z",
+      "reward": {
+        "key": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-6f72f74b94f054be0ae7:global-6f72f74b94f054be0ae7",
+        "type": "BADGE",
+        "name": "Gold Chain",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/b7974da7-9af4-4ff6-8029-a9ca95b8b037/3",
+        "minutes": 60,
+        "subs": 0,
+        "specificDay": 4,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": null,
+        "dropName": "GTAVI Launch Celebration",
+        "campaignName": "GTAVI Launch Celebration",
+        "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "campaignStart": "2026-11-18T11:00:00.000Z",
+        "campaignEnd": "2026-12-01T07:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "gameName": "Grand Theft Auto VI",
+        "gameSlug": "grand-theft-auto-vi",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 6
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572626584517607465",
+      "messageIds": [
+        "1572626584517607465"
+      ],
+      "messageFormatVersion": 7
+    },
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-2578c6e0cf361412c6e3:global-2578c6e0cf361412c6e3": {
+      "status": "started",
+      "startAt": "2026-11-18T11:00:00.000Z",
+      "endAt": "2026-12-01T07:59:59.999Z",
+      "reward": {
+        "key": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-2578c6e0cf361412c6e3:global-2578c6e0cf361412c6e3",
+        "type": "BADGE",
+        "name": "Miami Chain",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/015f3db0-1a3f-4e4a-970d-bea3adb3a331/3",
+        "minutes": 60,
+        "subs": 0,
+        "specificDay": 6,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": null,
+        "dropName": "GTAVI Launch Celebration",
+        "campaignName": "GTAVI Launch Celebration",
+        "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "campaignStart": "2026-11-18T11:00:00.000Z",
+        "campaignEnd": "2026-12-01T07:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "gameName": "Grand Theft Auto VI",
+        "gameSlug": "grand-theft-auto-vi",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 6
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572626586010652694",
+      "messageIds": [
+        "1572626586010652694"
+      ],
+      "messageFormatVersion": 7
+    },
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-60370c97d1be6bc3b6b2:global-60370c97d1be6bc3b6b2": {
+      "status": "started",
+      "startAt": "2026-11-18T11:00:00.000Z",
+      "endAt": "2026-12-01T07:59:59.999Z",
+      "reward": {
+        "key": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-60370c97d1be6bc3b6b2:global-60370c97d1be6bc3b6b2",
+        "type": "BADGE",
+        "name": "Purple Chain",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/07fdf1d1-f160-4415-821e-391a90852db6/3",
+        "minutes": 60,
+        "subs": 0,
+        "specificDay": 1,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": null,
+        "dropName": "GTAVI Launch Celebration",
+        "campaignName": "GTAVI Launch Celebration",
+        "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "campaignStart": "2026-11-18T11:00:00.000Z",
+        "campaignEnd": "2026-12-01T07:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "gameName": "Grand Theft Auto VI",
+        "gameSlug": "grand-theft-auto-vi",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 6
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572626599445274680",
+      "messageIds": [
+        "1572626599445274680"
+      ],
+      "messageFormatVersion": 7
+    },
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-30aaf2f7c72a0481daec:global-30aaf2f7c72a0481daec": {
+      "status": "started",
+      "startAt": "2026-11-18T11:00:00.000Z",
+      "endAt": "2026-12-01T07:59:59.999Z",
+      "reward": {
+        "key": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-30aaf2f7c72a0481daec:global-30aaf2f7c72a0481daec",
+        "type": "BADGE",
+        "name": "Scored Big",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/2acfc5b8-7907-4b05-9b30-e211a93ffc63/3",
+        "minutes": 0,
+        "subs": 1,
+        "specificDay": null,
+        "randomSubCollectionSize": 3,
+        "evolutionFrom": null,
+        "dropName": "GTAVI Launch Celebration",
+        "campaignName": "GTAVI Launch Celebration",
+        "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "campaignStart": "2026-11-18T11:00:00.000Z",
+        "campaignEnd": "2026-12-01T07:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "gameName": "Grand Theft Auto VI",
+        "gameSlug": "grand-theft-auto-vi",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": null,
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572626601294700706",
+      "messageIds": [
+        "1572626601294700706"
+      ],
+      "messageFormatVersion": 7
+    },
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-530ad273093a86a32ed1:global-530ad273093a86a32ed1": {
+      "status": "started",
+      "startAt": "2026-11-18T11:00:00.000Z",
+      "endAt": "2026-12-01T07:59:59.999Z",
+      "reward": {
+        "key": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-530ad273093a86a32ed1:global-530ad273093a86a32ed1",
+        "type": "BADGE",
+        "name": "Silver Chain",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/b8b5b601-d707-41c9-9fb6-9610280285e6/3",
+        "minutes": 60,
+        "subs": 0,
+        "specificDay": 3,
+        "randomSubCollectionSize": null,
+        "evolutionFrom": null,
+        "dropName": "GTAVI Launch Celebration",
+        "campaignName": "GTAVI Launch Celebration",
+        "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "campaignStart": "2026-11-18T11:00:00.000Z",
+        "campaignEnd": "2026-12-01T07:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "gameName": "Grand Theft Auto VI",
+        "gameSlug": "grand-theft-auto-vi",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": {
+          "everyHours": 24,
+          "times": 6
+        },
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572626603488579625",
+      "messageIds": [
+        "1572626603488579625"
+      ],
+      "messageFormatVersion": 7
+    },
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-976559407180f309160f:global-976559407180f309160f": {
+      "status": "started",
+      "startAt": "2026-11-18T11:00:00.000Z",
+      "endAt": "2026-12-01T07:59:59.999Z",
+      "reward": {
+        "key": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0:global-badge:global-976559407180f309160f:global-976559407180f309160f",
+        "type": "BADGE",
+        "name": "Welcome 2 Miami",
+        "imageUrl": "https://static-cdn.jtvnw.net/badges/v1/1c51d343-754e-4fee-a717-ec95cafb5482/3",
+        "minutes": 0,
+        "subs": 1,
+        "specificDay": null,
+        "randomSubCollectionSize": 3,
+        "evolutionFrom": null,
+        "dropName": "GTAVI Launch Celebration",
+        "campaignName": "GTAVI Launch Celebration",
+        "campaignId": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "campaignStart": "2026-11-18T11:00:00.000Z",
+        "campaignEnd": "2026-12-01T07:59:59.999Z",
+        "campaignUrl": "https://dashboard.twitch.tv/viewer-rewards/drops?id=b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "gameName": "Grand Theft Auto VI",
+        "gameSlug": "grand-theft-auto-vi",
+        "channels": [],
+        "isGlobalTwitchEmote": false,
+        "repeat": null,
+        "description": "",
+        "relatedDrops": []
+      },
+      "messageId": "1572626606110019587",
+      "messageIds": [
+        "1572626606110019587"
+      ],
+      "messageFormatVersion": 7
     }
   },
   "twitchDropCampaignVersions": {
-    "882ccb61-0d4c-4fe6-a5c5-3156e8a033ab": "2026-11-02T07:01:36.718Z",
-    "bb7b5e2e-8e95-4dc0-adda-95ac84afe2f7": "2026-11-01T06:01:32.063Z",
+    "882ccb61-0d4c-4fe6-a5c5-3156e8a033ab": "7b2c8b6f3108d049dee8530efc68affa8da76c15ccc7a32acd3fbd5ef75dd592",
     "73d9b4ef-a628-432d-8d1d-198d9ce15350": "2026-10-30T16:02:08.850Z",
     "e5de4c1a-c015-4b69-b1fd-d07786986c25": "2026-10-30T14:02:17.487Z",
     "5f277031-448e-4eb2-8817-45f56779633c": "2026-10-30T07:01:48.862Z",
     "be794431-8dd5-4b79-bf11-53bb600711cb": "2026-10-29T14:02:16.186Z",
     "2cc95940-886e-42a2-9dee-23269cabfa47": "2026-10-29T06:02:13.122Z",
     "3fbad26b-3224-4246-ad9d-0a2c56e39d2b": "2026-10-28T15:01:38.672Z",
-    "d6a79a3e-fd63-43ed-906d-3a8443cd8184": "2026-10-27T19:44:52.672Z",
     "2519eaa5-981e-4861-8b03-361dd002cfa4": "2026-10-22T17:11:45.258Z",
     "2592aee8-8a94-469d-8731-db914c197367": "2026-10-22T10:01:34.072Z",
-    "a9c2f298-5a53-439a-9a8c-41b4d88937e1": "2026-10-22T10:01:34.297Z",
+    "a9c2f298-5a53-439a-9a8c-41b4d88937e1": "2b399423d992ca279fc343f5967b7f250d4d747bef630fd4d456c6341cc46fb8",
     "17de3088-e3f3-423d-aa84-101002ac41df": "2026-10-22T10:01:33.885Z",
-    "4b249954-342f-4a19-bfa1-0421ecf735a4": "2026-10-22T02:01:58.456Z",
     "69f32da3-7abf-4716-b051-085a879cb112": "2026-10-22T00:01:46.186Z",
-    "3ed1adc1-8f12-4d18-82ac-fd543f08722d": "2026-10-21T21:01:41.534Z",
-    "90273492-0fd5-46d0-b1cf-60084d901adf": "2026-10-18T15:02:03.427Z",
-    "b66c6ae7-42bc-4e67-b0ad-8ab0d9897d26": "2026-10-14T19:01:26.782Z",
     "64bc1f39-ec81-4066-969a-4297a0afff67": "2026-11-12T10:31:19.787Z",
     "b9049836-9e19-4695-b099-650ac9c736bf": "2026-11-12T09:01:35.804Z",
     "21cf91ef-20d7-11f0-ac3d-0a58a9feac02": "2026-11-12T03:01:41.387Z",
@@ -1908,99 +2909,83 @@
     "6af2bd14-ca96-46a9-a492-41dac025c409": "2026-11-11T23:01:44.622Z",
     "6f160a57-3752-47a3-84d6-a0032195f978": "2026-11-11T17:01:41.417Z",
     "2c5e5162-f8bb-478a-a78a-610f7036f729": "2026-11-11T16:02:10.730Z",
-    "105f31ff-4815-45a7-9bce-71695fcdc21c": "2026-11-11T15:01:40.366Z",
-    "c81e1c5b-b7b1-4308-9098-5505cec75f69": "2026-11-11T08:02:08.611Z",
-    "c4ce70e7-0f5e-48e6-9cc0-e71272244966": "2026-11-11T08:02:08.263Z",
     "3dd46351-a277-4276-8702-01f02882dbcc": "2026-11-11T02:01:57.857Z",
     "a0a98fc0-ccc4-435c-bff4-877b5dc33902": "2026-11-11T01:01:27.521Z",
-    "f625d3b1-7daf-4fb2-9e52-102e4ff97f9e": "2026-11-10T21:31:46.240Z",
     "4eeaa002-6d1c-4a43-a195-a1b3de88b3c4": "2026-11-10T18:02:00.298Z",
-    "f2d96e03-08ba-40b3-a0e6-05e02ce1c039": "2026-11-10T16:01:58.103Z",
-    "9e51208e-329c-46a7-9109-a6262743a055": "2026-11-10T15:02:27.687Z",
-    "c67997fb-e0e5-4678-afe7-aea6528bc126": "2026-11-10T12:01:55.240Z",
     "6c9d7437-f6a9-4949-8b46-b2cb5b0d34cc": "2026-11-10T02:01:30.889Z",
     "e35e85d5-d647-4906-a3df-5a4d0620a58b": "2026-11-10T02:01:31.653Z",
-    "ce1d6b04-a088-4e28-8bcf-a6db477b8a7b": "2026-11-09T21:01:50.446Z",
-    "e34ea037-2edd-4cd0-bf72-2cf6a1799ae0": "2026-11-09T16:02:11.163Z",
-    "9205d5a4-acdb-47ad-84e0-756fe28aa515": "2026-11-09T15:01:48.620Z",
-    "c43c3164-ed55-43b4-97bb-74285cce4bbd": "2026-11-09T14:02:19.367Z",
-    "0ffa233a-60b9-41e2-b284-2a1c4fb47cb2": "2026-11-09T14:46:39.253Z",
-    "f4b471b4-9ab9-4c69-83cc-93ca52cd2663": "2026-11-09T11:31:56.493Z",
-    "f126a55c-acae-4369-ae75-69278bc6a724": "2026-11-09T13:47:11.575Z",
-    "2c567f66-9717-480b-b451-c7f9e80c16fe": "2026-11-09T08:02:08.565Z",
-    "b1f5b0fc-ed53-41c5-86b8-067b3a0a11b2": "2026-11-09T04:02:11.399Z",
-    "fe0929b2-3be3-4bec-b970-9df72b2982ab": "2026-11-09T00:02:10.120Z",
     "53c80198-fa33-485d-9cc7-2af5c4771602": "2026-11-06T18:01:59.786Z",
-    "df576175-0f22-467e-8ba7-955603a16567": "2026-11-06T16:31:46.452Z",
-    "7fd0b5de-69c5-4f30-924e-59adaa29a362": "2026-11-06T12:02:12.893Z",
-    "55e0b074-0393-4be3-8586-3fb8b65b80e0": "2026-11-06T08:02:07.466Z",
+    "7fd0b5de-69c5-4f30-924e-59adaa29a362": "45ff9ab4e825718c19e1c604adc81d31332d225c37eafae9700f8ff4fc458297",
     "d31f0a01-c61e-4170-bf68-60c9132efaaf": "2026-11-06T06:02:01.038Z",
     "a0e134ff-e391-46bc-9ac6-0b1b2c826795": "2026-11-06T05:01:29.334Z",
     "eb9156b6-649e-4e03-9cd1-989d9a89717e": "2026-11-05T13:01:33.906Z",
     "94263f50-6ae7-45a8-bd72-5f612c5b1243": "2026-11-05T12:32:16.508Z",
     "7dc538f3-cfb6-4346-850c-058b900b9777": "2026-11-05T08:17:09.094Z",
     "171c990c-5259-4670-93d0-58fd6e167342": "2026-11-05T02:47:07.811Z",
-    "3e27da93-de21-4977-91db-e889991c7ff1": "2026-11-04T16:01:40.778Z",
-    "fab904fd-96c0-4b4c-8775-d2cb829f4563": "2026-11-04T14:01:39.973Z",
+    "3e27da93-de21-4977-91db-e889991c7ff1": "f97124f01273443285d4102fc8cfd80af6f27595dc2f70f9e870eefeeb1c8d7e",
     "e8c223e0-ea31-4313-ac42-f4fa3d589bc1": "2026-11-04T11:02:06.577Z",
     "9844bbb4-2a3f-4525-80a6-e1b7c314d50c": "2026-11-04T03:01:49.051Z",
     "c1b9bd2e-98cd-4ffe-b748-c2b3e48c5ecf": "2026-11-04T23:46:37.618Z",
     "e3a69270-1546-4966-8bcf-2af97c5a0a0b": "2026-11-03T19:01:51.608Z",
-    "bc94afa2-12e9-47aa-8200-6b860fd49c9b": "2026-11-05T20:17:07.985Z",
     "83430dc1-1cf2-4da0-b645-3aa07dbbf406": "2026-11-03T16:02:13.833Z",
-    "20ad1ac0-78f4-4e4f-aadf-e59d8840b295": "2026-11-03T14:03:16.426Z",
     "ae1677a9-1c2c-4e62-8009-33d57583ee4f": "2026-11-03T13:32:01.715Z",
-    "96bdfce5-e774-457f-aa8f-f693144ee50f": "2026-11-03T10:02:16.504Z",
     "a013ca5d-a41b-4ead-a282-c78f6c2c3183": "2026-11-06T10:17:17.110Z",
     "5895dfbc-6083-4d01-a4cc-5217bc02dfe8": "2026-11-13T11:02:12.226Z",
     "7755dd9f-b2aa-4745-8250-b76587881383": "2026-11-13T02:02:26.595Z",
-    "9e7de515-966f-4965-8fc5-70aa2c91131b": "2026-11-13T00:31:31.968Z",
     "b8b6ea03-90ad-4426-a095-87283d6b8b2e": "2026-11-12T17:01:45.489Z",
     "2965fe2b-6ebb-4547-929c-e70112337fda": "2026-11-12T15:47:07.572Z",
-    "0c95e10b-4ab2-4777-b7db-1d5617035dc8": "2026-11-13T20:01:34.725Z",
     "9fb013a1-3155-4a30-858c-dc8f75e25b94": "2026-11-13T19:02:03.177Z",
     "0cadcb05-0cc3-4da2-a440-8d6b595fb5e6": "2026-11-13T18:01:37.013Z",
-    "ab64eaf2-50c4-4c75-a229-b22d70b6a4c4": "2026-11-13T18:01:37.346Z",
-    "adefb716-9f04-4a58-b782-23277f13d87c": "2026-11-13T18:01:37.673Z",
-    "0b252c3c-83bc-42fd-b01c-4c70f8ce8bd9": "2026-11-13T18:01:36.794Z",
-    "1a0b9038-7c83-4949-b559-4f64011e315e": "2026-11-13T17:32:15.213Z",
     "651e805b-40c4-405a-a0f8-f0134217f046": "2026-11-13T17:01:56.982Z",
     "c0f8da20-52fa-4c61-80b4-d48ff28cf306": "2026-11-13T17:01:57.403Z",
-    "671c1ec5-a1fe-4fe4-9581-fc1b02ebf276": "2026-11-13T17:01:57.341Z",
     "77f1b5a5-b1f1-4973-b252-65beb58b6693": "2026-11-13T16:31:43.725Z",
-    "e634fbd7-bc8e-42b4-b960-d1a89d99965d": "2026-11-13T16:01:30.202Z",
-    "0abec32e-4bfc-46f8-b3ca-90703658639a": "2026-11-13T16:01:29.068Z",
-    "abbf79f8-49a8-401a-b2eb-13389d7ebf52": "2026-11-13T16:01:29.566Z",
-    "e0813b21-25d6-42e9-85e7-e64761e9159e": "2026-11-13T16:01:29.902Z",
     "b3b7f221-9897-4f39-be29-9b58fbea4806": "2026-11-13T15:32:18.154Z",
     "903bdd2c-ec10-4bfb-b55a-7614349e2a7f": "2026-11-13T15:02:11.126Z",
     "55fd2e54-b491-41e8-acb9-0c7f503d5aa3": "2026-11-13T15:32:17.894Z",
-    "17398ab2-8f44-4199-a177-cc862fb24ab2": "2026-11-13T15:02:09.105Z",
-    "5e0a0cab-2650-4eea-baed-e84fa2a70da2": "2026-11-13T15:02:10.722Z",
     "288b218b-6e89-469a-bcf1-0176b1006af5": "2026-11-13T15:02:09.741Z",
     "291dd3a3-5876-482e-a594-923b4a55f935": "2026-11-13T15:02:10.132Z",
     "18bbdb90-e83b-4a8e-9587-417442c88880": "2026-11-13T15:02:09.391Z",
     "29085353-6c0f-46f2-a1f8-79894a5d7f67": "2026-11-13T15:02:09.876Z",
-    "166beece-c0b2-4241-b955-0926eccf8af2": "2026-11-13T14:01:30.271Z",
     "f2bf1aeb-5833-4fe9-a330-dba1f4248eb3": "2026-11-13T14:01:30.537Z",
     "06d7e4d2-74a8-45f2-8a46-428186ed6560": "2026-11-13T12:01:38.144Z",
     "6a7a897d-616f-4226-ae75-91846afbe2b3": "2026-11-13T12:16:42.834Z",
     "35d08416-f37d-40f1-b2d3-87dbe8059a75": "2026-11-13T17:01:56.610Z",
-    "e2e62852-a98a-420f-a984-52a0f15ca55e": "2026-11-14T12:01:47.181Z",
-    "5942fa86-b357-498c-b8ee-61a9848ad29d": "2026-11-14T12:01:46.892Z",
-    "95734b3f-f2bf-4a27-a42f-a43464ea7484": "2026-11-14T12:01:47.005Z",
     "97008006-0e00-4be0-bc75-fd37f92e4880": "2026-11-14T11:02:15.798Z",
-    "e62191e6-7839-40cb-969c-e76b6593bd0b": "2026-11-14T11:02:16.432Z",
-    "a830d9b0-8a46-47bd-aa8a-b836bf4fc11f": "2026-11-14T11:02:16.122Z",
-    "4e25f6ab-2d77-4e27-b583-d7d71e002452": "2026-11-14T11:02:15.535Z",
-    "10ecb7d6-ce1c-401e-b2ec-ee2b4ef3437f": "2026-11-14T10:01:41.080Z",
-    "81e203ab-56a6-44be-b56c-b6af6a58b61a": "2026-11-14T10:01:42.111Z",
-    "1930244b-2ce0-474c-8b7a-d1341049ca3b": "2026-11-14T10:01:41.437Z",
-    "21b0184c-ff47-4e37-8c99-e0183389e3be": "2026-11-14T10:01:41.776Z",
-    "199b7b47-c236-4efe-a146-5a974a7f60bc": "2026-11-14T05:02:19.109Z",
-    "a8202fdf-11e9-4834-a629-d79fb20f2481": "2026-11-14T03:02:20.799Z",
-    "c4eaae4f-1da6-49c7-a307-36067416a6c8": "2026-11-14T03:02:21.220Z",
-    "32d9f384-1cf8-490c-ade3-b614db397a23": "2026-11-14T00:01:35.508Z"
+    "7ff32cbb-45b1-42c3-95a4-ff18bd42277b": "2026-11-18T14:02:02.092Z",
+    "73603262-18b0-491f-bbf5-3a61b008e917": "2026-11-18T12:47:22.847Z",
+    "fc1f2b5b-db22-433d-a545-a5f19ba319a7": "2026-11-18T12:01:53.843Z",
+    "07958242-3e68-4552-8133-ffec41b7647d": "2026-11-18T11:10:34.307Z",
+    "19dca767-724a-4117-ab36-c04f05018a80": "2026-11-18T11:10:34.683Z",
+    "d6bcd23c-c0b5-41e3-af62-a74fce88a140": "2026-11-18T10:01:58.379Z",
+    "101c5286-f541-4183-bfa7-dd8eea691ed9": "2026-11-18T05:01:23.471Z",
+    "c49a89cb-0414-46d0-8335-61f6a2c50e89": "2026-11-18T00:01:48.387Z",
+    "dac9ae29-4844-4d8d-a515-791d55adb897": "2026-11-18T00:01:48.758Z",
+    "cdaac4b7-a2fe-4b54-9aff-7f55a6309bc2": "2026-11-17T20:01:41.986Z",
+    "2bcc99ba-006e-4f02-8eda-bd61eec96b76": "2026-11-17T21:02:15.251Z",
+    "8c826ea3-6c70-49e7-a9db-1ca537e2857e": "2026-11-17T20:47:05.641Z",
+    "51d79d4f-fa56-4dff-9ff2-b133ebde6566": "2026-11-17T15:02:10.323Z",
+    "e6954b55-eec1-4331-bd5f-1d595d39e8e0": "2026-11-17T15:02:10.702Z",
+    "fb4fdeef-7147-48df-8e71-54fbb07bcc5f": "2026-11-17T08:01:50.303Z",
+    "449b7d20-6674-46bd-930f-a8116d3e1024": "2026-11-17T08:01:49.910Z",
+    "60db69f2-75b5-45c6-8edd-28721d8a038e": "2026-11-17T11:02:13.508Z",
+    "11454e48-7e2c-4aac-9c18-dd8c811c15ce": "2026-11-16T21:01:55.217Z",
+    "5acbe8a4-35f3-45c8-afaa-3f0483fd17bb": "f508b81fa571af9c5284a2387e492bd70d1b4784ac4eb80403aad3b9493793c5",
+    "ebd5cbea-eeaf-4589-ac3f-10bb141bf2e9": "2026-11-16T16:01:24.517Z",
+    "35e2271a-c7df-4ac8-872e-080dfb7d6779": "2026-11-16T15:01:53.492Z",
+    "ab9c695d-dc4a-482e-be9a-ddc933984c53": "2026-11-16T14:01:22.564Z",
+    "0437a509-0322-4126-ae95-b860f5360364": "2026-11-16T14:01:22.341Z",
+    "e9058a21-33e0-44c1-8d56-8ab9a5f2be92": "2026-11-16T08:01:23.294Z",
+    "53320415-7aab-41eb-84cd-f59a9e448cef": "2026-11-16T04:01:19.139Z",
+    "f4a93507-95a8-40b3-8671-db13af2b0519": "2026-11-16T00:02:04.508Z",
+    "67d2e841-2419-48ec-876e-de8dfe2b1e1f": "2026-11-16T00:02:04.064Z",
+    "e20804a8-9281-471c-93fb-3057cc2054de": "2026-11-16T16:46:42.148Z",
+    "a1fbeb48-f98d-49d4-845c-9591328aae55": "70af09e52db8f2088a5fb6f018604bbe76c97299318154f58b3030702dd62bc2",
+    "904ca319-27f6-4e7b-87c2-fece8381f91e": "2026-11-14T16:01:54.380Z",
+    "26547ffd-3b53-474c-b9ba-766fe4dfca83": "5fb5c1f45f6f3978198deb6c22826336a8290bb5f79b42aebf0917fce73fdae3",
+    "a8ce1281-5c82-4fbe-9a18-3e7d02e1e7b6": "34c5982b5bd3ce45dc7862f28bbe1b4d0773d29864c2268e72e4256d2e4b9a31",
+    "1f04121b-9c6b-4ae8-bdd5-9833c96a64ae": "89e2f6686d386acc47e41dbe2196a548de3f55d0d5a669e004ef804c58ddfbc5",
+    "3e7f0c98-893c-47a7-9044-1c61173b8f94": "7b06903e7f8dac2c2877472f3dad69eccacfa6e08a8d96a8fa50e98277855984",
+    "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0": "bd9d21713b0d3f95cdec000b0ccdb2b3bb5c28082f51e1a5a16b31c82b053016"
   },
   "kickDropIgnoredRewards": [
     {
@@ -2088,12 +3073,12 @@
         "campaignUrl": "https://kick.com/category/call-of-duty-modern-warfare-4/drops",
         "categoryUrl": "https://kick.com/category/call-of-duty-modern-warfare-4/drops"
       },
-      "messageId": "1570094705734324258",
-      "messageIds": [
-        "1570094705734324258"
-      ],
+      "messageId": null,
+      "messageIds": [],
       "messageFormatVersion": 2,
-      "renewalBaselineEndAt": "2026-11-23T00:00:00.000Z"
+      "renewalBaselineEndAt": "2026-11-23T00:00:00.000Z",
+      "messageMissing": true,
+      "messagePhase": "started"
     },
     "01M4FJM2JJQJBYSYWN23TEYFBR:01M4FJ8KVH3ZTHJ4N4J63X4GJD": {
       "status": "started",
@@ -2117,7 +3102,7 @@
         "campaignEnd": "2026-11-28T17:00:00.000Z",
         "gameName": "Just Chatting",
         "campaignUrl": "https://kick.com/eddie",
-        "categoryUrl": "https://kick.com/category/just-chatting/drops"
+        "categoryUrl": "https://kick.com/category/just-chatting"
       },
       "messageId": "1570094707529351330",
       "messageIds": [
@@ -2151,7 +3136,7 @@
         "campaignEnd": "2026-11-28T17:00:00.000Z",
         "gameName": "Just Chatting",
         "campaignUrl": "https://kick.com/eddie",
-        "categoryUrl": "https://kick.com/category/just-chatting/drops"
+        "categoryUrl": "https://kick.com/category/just-chatting"
       },
       "messageId": "1570094709257273365",
       "messageIds": [
@@ -2190,7 +3175,7 @@
       "renewalBaselineEndAt": "2026-11-13T08:00:00.000Z"
     },
     "01M71B4D4VA0G9N3Q0QXH73Q78:01M6ZQDZDEW41YP42GR71MEH6P": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-11-10T00:00:00.000Z",
       "endAt": "2026-11-18T00:00:00.000Z",
       "reward": {
@@ -2216,7 +3201,7 @@
       "renewalBaselineEndAt": "2026-11-18T00:00:00.000Z"
     },
     "01M71B4D4VA0G9N3Q0QXH73Q78:01M71AA5SGZNSAH86EAC4M5X7E": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-11-10T00:00:00.000Z",
       "endAt": "2026-11-18T00:00:00.000Z",
       "reward": {
@@ -2242,7 +3227,7 @@
       "renewalBaselineEndAt": "2026-11-18T00:00:00.000Z"
     },
     "01M71B4D4VA0G9N3Q0QXH73Q78:01M71ABGRGN18DV0WF2D3PVH2M": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-11-10T00:00:00.000Z",
       "endAt": "2026-11-18T00:00:00.000Z",
       "reward": {
@@ -2478,7 +3463,7 @@
         "campaignEnd": "2026-11-28T17:00:00.000Z",
         "gameName": "Just Chatting",
         "campaignUrl": "https://kick.com/eddie",
-        "categoryUrl": "https://kick.com/category/just-chatting/drops"
+        "categoryUrl": "https://kick.com/category/just-chatting"
       },
       "messageId": "1570095986351542364",
       "messageIds": [
@@ -2491,7 +3476,7 @@
       "messagePhase": "started"
     },
     "01M4VW84ZP8MR2EBKKBDJ7KC9X:01M4VVN9513TJ1X3P16GVXVZBC": {
-      "status": "started",
+      "status": "expired",
       "startAt": "2026-11-13T08:00:00.000Z",
       "endAt": "2026-11-15T08:00:00.000Z",
       "renewalBaselineEndAt": "2026-11-15T08:00:00.000Z",
@@ -2794,6 +3779,33 @@
       "messageFormatVersion": 2,
       "messagePhase": "scheduled",
       "announcementImported": true
+    },
+    "01M7NSNCG7V3T2W54EHBWD1J3W:01M7NS7WFPJJ7FSSE92S00DCGF": {
+      "status": "started",
+      "startAt": "2026-11-18T11:00:00.000Z",
+      "endAt": "2027-01-01T00:00:00.000Z",
+      "renewalBaselineEndAt": "2027-01-01T00:00:00.000Z",
+      "reward": {
+        "key": "01M7NSNCG7V3T2W54EHBWD1J3W:01M7NS7WFPJJ7FSSE92S00DCGF",
+        "campaignId": "01M7NSNCG7V3T2W54EHBWD1J3W",
+        "campaignName": "Sunset Drop",
+        "campaignChannels": [],
+        "name": "SunsetK Badge",
+        "type": "BADGE",
+        "imageUrl": "https://ext.cdn.kick.com/drops/reward-image/01m7ns7wfpjj7fsse92s00dcgf-01m7ns7wg08mcw6tprgcbxff6e.png",
+        "minutes": 15000,
+        "campaignStart": "2026-11-18T11:00:00.000Z",
+        "campaignEnd": "2027-01-01T00:00:00.000Z",
+        "gameName": "Grand Theft Auto VI (GTA)",
+        "campaignUrl": "https://kick.com/category/grand-theft-auto-vi",
+        "categoryUrl": "https://kick.com/category/grand-theft-auto-vi"
+      },
+      "messageId": "1572568911256489985",
+      "messageIds": [
+        "1572568911256489985"
+      ],
+      "messagePhase": "started",
+      "messageFormatVersion": 2
     }
   },
   "indiegalaBundleExpiries": {
@@ -2814,19 +3826,1247 @@
     },
     "https://www.indiegala.com/bundle/lusty-lab-bundle": {
       "endAt": "2026-11-14T14:33:43.767Z"
+    },
+    "https://www.indiegala.com/bundle/cursed-gate-bundle": {
+      "endAt": "2026-11-21T17:07:31.681Z"
     }
   },
   "indiegalaRenewalCursor": 0,
-  "digiphileCollectionExpiries": {},
+  "digiphileCollectionExpiries": {
+    "https://www.digiphile.co/collections/vr-games-showcase-the-new-essentials": {
+      "endAt": "2026-09-24T01:00:00.000Z"
+    },
+    "https://www.digiphile.co/collections/rts-renaissance": {
+      "endAt": "2026-09-03T01:00:00.000Z"
+    },
+    "https://www.digiphile.co/collections/landfall-aggro-crab-showcase": {
+      "endAt": "2026-05-13T01:00:00.000Z"
+    },
+    "https://www.digiphile.co/collections/planet-coaster-free-game-plus": {
+      "endAt": "2026-03-11T00:14:07.120Z"
+    },
+    "https://www.digiphile.co/collections/indie-boomer-shooters": {
+      "endAt": "2026-03-12T01:00:00.000Z"
+    },
+    "https://www.digiphile.co/collections/social-multiplayer-games-collection-digiphile": {
+      "endAt": "2026-11-04T16:00:00.000Z"
+    },
+    "https://www.digiphile.co/collections/orcatober-aquatic-horrors": {
+      "endAt": "2026-10-30T15:00:00.000Z"
+    }
+  },
   "digiphileRenewalCursor": 0,
   "gmgBundleExpiries": {
     "https://www.greenmangamingbundles.com/bundles/tripwire-interactive-mayhem-combat-bundle": {
       "endAt": "2026-12-08T18:00:00.000Z",
       "updatedAt": "2026-11-17T14:42:41.799Z"
+    },
+    "https://www.greenmangamingbundles.com/bundles/girls-just-wanna-have-guns-bundle": {
+      "endAt": "2026-12-01T18:00:00.000Z",
+      "updatedAt": "2026-11-18T14:08:38.344Z"
+    },
+    "https://www.greenmangamingbundles.com/bundles/masterful-remasters-bundle-volume-ii": {
+      "endAt": "2026-12-04T18:00:00.000Z",
+      "updatedAt": "2026-11-18T14:08:38.871Z"
     }
   },
   "gmgBundleRenewalCursor": 0,
   "fanaticalAnnouncementRepairSlugs": [
     "platinum-collection-build-your-own-bundle"
-  ]
+  ],
+  "twitchRewardCampaignCache": {
+    "version": 3,
+    "fetchedAt": "2026-11-18T14:56:20.073Z",
+    "refreshedAt": "2026-11-18T14:29:03.584Z",
+    "campaigns": [],
+    "badgeCampaigns": [
+      {
+        "twitch_id": "3e27da93-de21-4977-91db-e889991c7ff1",
+        "name": "Horde and Alliance Badges",
+        "description": "",
+        "status": "active",
+        "start_at": "2026-11-04T16:00:00.000Z",
+        "end_at": "2026-12-01T07:58:59.999Z",
+        "is_fully_imported": true,
+        "source": "sunkwi-global-badges",
+        "game": {
+          "twitch_id": "18122",
+          "display_name": "World of Warcraft",
+          "name": "World of Warcraft",
+          "slug": "world-of-warcraft"
+        },
+        "drops": [
+          {
+            "twitch_id": "global-badge:global-5186db6ab7c65075dcad",
+            "name": "Horde and Alliance Badges",
+            "required_minutes_watched": 0,
+            "required_subs": 1,
+            "repeat": null,
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-04T16:00:00.000Z",
+            "end_at": "2026-12-01T07:58:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-5186db6ab7c65075dcad",
+                "name": "Alliance",
+                "distribution_type": "BADGE",
+                "description": "FOR THE ALLIANCE! This badge was unlocked by subscribing or gifting a sub to a streamer during the launch of WoW: Forever.",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/59d5bb2e-0d62-4116-a6bc-79cd5afe9246/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "18122",
+              "display_name": "World of Warcraft",
+              "name": "World of Warcraft",
+              "slug": "world-of-warcraft"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-54d662fa6110fd0798a2",
+            "name": "Horde and Alliance Badges",
+            "required_minutes_watched": 0,
+            "required_subs": 1,
+            "repeat": null,
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-04T16:00:00.000Z",
+            "end_at": "2026-12-01T07:58:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-54d662fa6110fd0798a2",
+                "name": "Horde",
+                "distribution_type": "BADGE",
+                "description": "FOR THE HORDE! This badge was unlocked by subscribing or gifting a sub to a streamer during the launch of WoW: Forever.",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/8dfb6f30-1ec1-497a-91e4-028a704b4f57/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "18122",
+              "display_name": "World of Warcraft",
+              "name": "World of Warcraft",
+              "slug": "world-of-warcraft"
+            }
+          }
+        ],
+        "updated_at": "42e2d00a4665c1f954216e2671681932d15649f9c35f96d7cd85fe6d19d3b32d"
+      },
+      {
+        "twitch_id": "3e7f0c98-893c-47a7-9044-1c61173b8f94",
+        "name": "Pokemon Evolutions",
+        "description": "",
+        "status": "active",
+        "start_at": "2026-10-16T17:00:00.000Z",
+        "end_at": "2027-01-30T22:59:59.999Z",
+        "is_fully_imported": true,
+        "source": "sunkwi-global-badges",
+        "game": {
+          "twitch_id": "13332",
+          "display_name": "Pokémon FireRed/LeafGreen",
+          "name": "Pokémon FireRed/LeafGreen",
+          "slug": "pokemon-firered-leafgreen"
+        },
+        "drops": [
+          {
+            "twitch_id": "global-badge:global-2c6a038ddc4c33196a28",
+            "name": "Pokemon Evolutions",
+            "required_minutes_watched": 20,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 3
+            },
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-10-16T17:00:00.000Z",
+            "end_at": "2027-01-30T22:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-2c6a038ddc4c33196a28",
+                "name": "Blastoise",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by evolving a badge from the Pokémon First Partners Collection campaign.",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": "Wartortle",
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/2b975e12-fd49-4e54-85c4-6cc042453dbb/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "13332",
+              "display_name": "Pokémon FireRed/LeafGreen",
+              "name": "Pokémon FireRed/LeafGreen",
+              "slug": "pokemon-firered-leafgreen"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-339801579210f2478df9",
+            "name": "Pokemon Evolutions",
+            "required_minutes_watched": 20,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 3
+            },
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-10-16T17:00:00.000Z",
+            "end_at": "2027-01-30T22:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-339801579210f2478df9",
+                "name": "Charizard",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by evolving a badge from the Pokémon First Partners Collection campaign.",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": "Charmeleon",
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/ac097350-add0-44c4-b405-e70aa746389b/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "13332",
+              "display_name": "Pokémon FireRed/LeafGreen",
+              "name": "Pokémon FireRed/LeafGreen",
+              "slug": "pokemon-firered-leafgreen"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-7052bd5069448960683f",
+            "name": "Pokemon Evolutions",
+            "required_minutes_watched": 20,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 3
+            },
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-10-16T17:00:00.000Z",
+            "end_at": "2027-01-30T22:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-7052bd5069448960683f",
+                "name": "Charmeleon",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by evolving a badge from the Pokémon First Partners Collection campaign.",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": "Charmander",
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/d9698627-aff7-434c-8002-1351b2c59984/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "13332",
+              "display_name": "Pokémon FireRed/LeafGreen",
+              "name": "Pokémon FireRed/LeafGreen",
+              "slug": "pokemon-firered-leafgreen"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-191d0e9ede008253eb43",
+            "name": "Pokemon Evolutions",
+            "required_minutes_watched": 20,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 3
+            },
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-10-16T17:00:00.000Z",
+            "end_at": "2027-01-30T22:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-191d0e9ede008253eb43",
+                "name": "Gengar",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by evolving the Night Out 2026 Haunter badge.",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": "Haunter",
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/21c5d89c-bea4-4682-8080-96b22770d0f4/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "13332",
+              "display_name": "Pokémon FireRed/LeafGreen",
+              "name": "Pokémon FireRed/LeafGreen",
+              "slug": "pokemon-firered-leafgreen"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-558f22c6b5055b529f79",
+            "name": "Pokemon Evolutions",
+            "required_minutes_watched": 20,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 3
+            },
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-10-16T17:00:00.000Z",
+            "end_at": "2027-01-30T22:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-558f22c6b5055b529f79",
+                "name": "Haunter",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by evolving the Night Out 2026 Gastly badge.",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": "Gastly",
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/ddfbf317-aa77-482e-a99d-eb975deb2fe7/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "13332",
+              "display_name": "Pokémon FireRed/LeafGreen",
+              "name": "Pokémon FireRed/LeafGreen",
+              "slug": "pokemon-firered-leafgreen"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-d998cef6220a0c6b00d9",
+            "name": "Pokemon Evolutions",
+            "required_minutes_watched": 20,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 3
+            },
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-10-16T17:00:00.000Z",
+            "end_at": "2027-01-30T22:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-d998cef6220a0c6b00d9",
+                "name": "Ivysaur",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by evolving a badge from the Pokémon First Partners Collection campaign.",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": "Bulbasaur",
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/6de326e8-643f-4043-beb6-3ad135385708/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "13332",
+              "display_name": "Pokémon FireRed/LeafGreen",
+              "name": "Pokémon FireRed/LeafGreen",
+              "slug": "pokemon-firered-leafgreen"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-59150027f43dc7d6f2b4",
+            "name": "Pokemon Evolutions",
+            "required_minutes_watched": 20,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 3
+            },
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-10-16T17:00:00.000Z",
+            "end_at": "2027-01-30T22:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-59150027f43dc7d6f2b4",
+                "name": "Pikachu",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by evolving a badge from the Pokémon First Partners Collection campaign.",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": "Pichu",
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/b9dd6905-474f-45d1-a4ff-8ba138208afc/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "13332",
+              "display_name": "Pokémon FireRed/LeafGreen",
+              "name": "Pokémon FireRed/LeafGreen",
+              "slug": "pokemon-firered-leafgreen"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-4aa753a7106a9e21bad4",
+            "name": "Pokemon Evolutions",
+            "required_minutes_watched": 20,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 3
+            },
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-10-16T17:00:00.000Z",
+            "end_at": "2027-01-30T22:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-4aa753a7106a9e21bad4",
+                "name": "Venusaur",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by evolving a badge from the Pokémon First Partners Collection campaign.",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": "Ivysaur",
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/ad14f7e4-1ca6-476b-acaf-250da22388ec/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "13332",
+              "display_name": "Pokémon FireRed/LeafGreen",
+              "name": "Pokémon FireRed/LeafGreen",
+              "slug": "pokemon-firered-leafgreen"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-b83aa395b83b3fdbca7c",
+            "name": "Pokemon Evolutions",
+            "required_minutes_watched": 20,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 3
+            },
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-10-16T17:00:00.000Z",
+            "end_at": "2027-01-30T22:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-b83aa395b83b3fdbca7c",
+                "name": "Wartortle",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by evolving a badge from the Pokémon First Partners Collection campaign.",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": "Squirtle",
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/15a0db5d-bef1-49bb-8594-e3925e1ec248/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "13332",
+              "display_name": "Pokémon FireRed/LeafGreen",
+              "name": "Pokémon FireRed/LeafGreen",
+              "slug": "pokemon-firered-leafgreen"
+            }
+          }
+        ],
+        "updated_at": "2ca56f4eb4c28cf56428b1d94718902473ae8c5e412a96383d5e5a494446bd38"
+      },
+      {
+        "twitch_id": "b7669f9e-c69c-4a9b-a3b2-36266c1bdfc0",
+        "name": "GTAVI Launch Celebration",
+        "description": "",
+        "status": "active",
+        "start_at": "2026-11-18T11:00:00.000Z",
+        "end_at": "2026-12-01T07:59:59.999Z",
+        "is_fully_imported": true,
+        "source": "sunkwi-global-badges",
+        "game": {
+          "twitch_id": "1867279146",
+          "display_name": "Grand Theft Auto VI",
+          "name": "Grand Theft Auto VI",
+          "slug": "grand-theft-auto-vi"
+        },
+        "drops": [
+          {
+            "twitch_id": "global-badge:global-be7d62469bb39278bf0a",
+            "name": "GTAVI Launch Celebration",
+            "required_minutes_watched": 0,
+            "required_subs": 1,
+            "repeat": null,
+            "specificDay": null,
+            "randomSubCollectionSize": 3,
+            "start_at": "2026-11-18T11:00:00.000Z",
+            "end_at": "2026-12-01T07:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-be7d62469bb39278bf0a",
+                "name": "Bleed Miami",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by subbing to a GTAVI streamer during launch.",
+                "specific_day": null,
+                "random_sub_collection_size": 3,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/c7b8fc7d-7ebd-46e1-8f57-cc58ce51a9d1/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "1867279146",
+              "display_name": "Grand Theft Auto VI",
+              "name": "Grand Theft Auto VI",
+              "slug": "grand-theft-auto-vi"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-bcc91d6cfac786790627",
+            "name": "GTAVI Launch Celebration",
+            "required_minutes_watched": 60,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 6
+            },
+            "specificDay": 2,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-18T11:00:00.000Z",
+            "end_at": "2026-12-01T07:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-bcc91d6cfac786790627",
+                "name": "Bronze Chain",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned for watching 2 days of GTAVI during launch week.",
+                "specific_day": 2,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/2e7cf17d-12ba-41cd-8f9d-4d96c5f69d45/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "1867279146",
+              "display_name": "Grand Theft Auto VI",
+              "name": "Grand Theft Auto VI",
+              "slug": "grand-theft-auto-vi"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-313a601cddc3d277c027",
+            "name": "GTAVI Launch Celebration",
+            "required_minutes_watched": 60,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 6
+            },
+            "specificDay": 5,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-18T11:00:00.000Z",
+            "end_at": "2026-12-01T07:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-313a601cddc3d277c027",
+                "name": "Diamond Chain",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned for watching 5 days of GTAVI during launch week.",
+                "specific_day": 5,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/7498db8a-8085-4262-ac9c-b2d13591b75f/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "1867279146",
+              "display_name": "Grand Theft Auto VI",
+              "name": "Grand Theft Auto VI",
+              "slug": "grand-theft-auto-vi"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-6f72f74b94f054be0ae7",
+            "name": "GTAVI Launch Celebration",
+            "required_minutes_watched": 60,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 6
+            },
+            "specificDay": 4,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-18T11:00:00.000Z",
+            "end_at": "2026-12-01T07:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-6f72f74b94f054be0ae7",
+                "name": "Gold Chain",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned for watching 4 days of GTAVI during launch week.",
+                "specific_day": 4,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/b7974da7-9af4-4ff6-8029-a9ca95b8b037/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "1867279146",
+              "display_name": "Grand Theft Auto VI",
+              "name": "Grand Theft Auto VI",
+              "slug": "grand-theft-auto-vi"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-2578c6e0cf361412c6e3",
+            "name": "GTAVI Launch Celebration",
+            "required_minutes_watched": 60,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 6
+            },
+            "specificDay": 6,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-18T11:00:00.000Z",
+            "end_at": "2026-12-01T07:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-2578c6e0cf361412c6e3",
+                "name": "Miami Chain",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned for watching 6 days of GTAVI during launch week.",
+                "specific_day": 6,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/015f3db0-1a3f-4e4a-970d-bea3adb3a331/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "1867279146",
+              "display_name": "Grand Theft Auto VI",
+              "name": "Grand Theft Auto VI",
+              "slug": "grand-theft-auto-vi"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-60370c97d1be6bc3b6b2",
+            "name": "GTAVI Launch Celebration",
+            "required_minutes_watched": 60,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 6
+            },
+            "specificDay": 1,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-18T11:00:00.000Z",
+            "end_at": "2026-12-01T07:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-60370c97d1be6bc3b6b2",
+                "name": "Purple Chain",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned for watching 1 day of GTAVI during launch week.",
+                "specific_day": 1,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/07fdf1d1-f160-4415-821e-391a90852db6/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "1867279146",
+              "display_name": "Grand Theft Auto VI",
+              "name": "Grand Theft Auto VI",
+              "slug": "grand-theft-auto-vi"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-30aaf2f7c72a0481daec",
+            "name": "GTAVI Launch Celebration",
+            "required_minutes_watched": 0,
+            "required_subs": 1,
+            "repeat": null,
+            "specificDay": null,
+            "randomSubCollectionSize": 3,
+            "start_at": "2026-11-18T11:00:00.000Z",
+            "end_at": "2026-12-01T07:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-30aaf2f7c72a0481daec",
+                "name": "Scored Big",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by subbing to a GTAVI streamer during launch.",
+                "specific_day": null,
+                "random_sub_collection_size": 3,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/2acfc5b8-7907-4b05-9b30-e211a93ffc63/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "1867279146",
+              "display_name": "Grand Theft Auto VI",
+              "name": "Grand Theft Auto VI",
+              "slug": "grand-theft-auto-vi"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-530ad273093a86a32ed1",
+            "name": "GTAVI Launch Celebration",
+            "required_minutes_watched": 60,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 6
+            },
+            "specificDay": 3,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-18T11:00:00.000Z",
+            "end_at": "2026-12-01T07:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-530ad273093a86a32ed1",
+                "name": "Silver Chain",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned for watching 3 days of GTAVI during launch week.",
+                "specific_day": 3,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/b8b5b601-d707-41c9-9fb6-9610280285e6/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "1867279146",
+              "display_name": "Grand Theft Auto VI",
+              "name": "Grand Theft Auto VI",
+              "slug": "grand-theft-auto-vi"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-976559407180f309160f",
+            "name": "GTAVI Launch Celebration",
+            "required_minutes_watched": 0,
+            "required_subs": 1,
+            "repeat": null,
+            "specificDay": null,
+            "randomSubCollectionSize": 3,
+            "start_at": "2026-11-18T11:00:00.000Z",
+            "end_at": "2026-12-01T07:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-976559407180f309160f",
+                "name": "Welcome 2 Miami",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by subbing to a GTAVI streamer during launch.",
+                "specific_day": null,
+                "random_sub_collection_size": 3,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/1c51d343-754e-4fee-a717-ec95cafb5482/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "1867279146",
+              "display_name": "Grand Theft Auto VI",
+              "name": "Grand Theft Auto VI",
+              "slug": "grand-theft-auto-vi"
+            }
+          }
+        ],
+        "updated_at": "828f21a64459c28dfdfe1af7631b6f92bcd10359d54239725067b0e326b6ae4f"
+      },
+      {
+        "twitch_id": "7fd0b5de-69c5-4f30-924e-59adaa29a362",
+        "name": "Payday 3 update",
+        "description": "",
+        "status": "active",
+        "start_at": "2026-11-06T12:00:00.000Z",
+        "end_at": "2026-11-27T11:59:59.999Z",
+        "is_fully_imported": true,
+        "source": "sunkwi-global-badges",
+        "game": {
+          "twitch_id": "2113043143",
+          "display_name": "PAYDAY 3",
+          "name": "PAYDAY 3",
+          "slug": "payday-3"
+        },
+        "drops": [
+          {
+            "twitch_id": "global-badge:global-059b71286f4f874573a5",
+            "name": "Payday 3 update",
+            "required_minutes_watched": 30,
+            "required_subs": 0,
+            "repeat": null,
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-06T12:00:00.000Z",
+            "end_at": "2026-11-27T11:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-059b71286f4f874573a5",
+                "name": "Clover",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by watching a streamer in the Payday 3 category for 30 minutes",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/1495822f-a2a6-46f7-8e0b-48db278621d9/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "2113043143",
+              "display_name": "PAYDAY 3",
+              "name": "PAYDAY 3",
+              "slug": "payday-3"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-3f199ed301237bcb5f65",
+            "name": "Payday 3 update",
+            "required_minutes_watched": 90,
+            "required_subs": 0,
+            "repeat": null,
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-06T12:00:00.000Z",
+            "end_at": "2026-11-27T11:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-3f199ed301237bcb5f65",
+                "name": "Joy",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by watching a streamer in the Payday 3 category for 90 minutes",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/e8ff781d-a445-4ed3-9790-9514a2eb45f0/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "2113043143",
+              "display_name": "PAYDAY 3",
+              "name": "PAYDAY 3",
+              "slug": "payday-3"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-2932c496a5658c875249",
+            "name": "Payday 3 update",
+            "required_minutes_watched": 0,
+            "required_subs": 1,
+            "repeat": null,
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-06T12:00:00.000Z",
+            "end_at": "2026-11-27T11:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-2932c496a5658c875249",
+                "name": "KawaiiDozer",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by subscribing or gifting a sub to a streamer in the Payday 3 category",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/a1bf84a7-cebc-496b-acf2-411938b18d9f/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "2113043143",
+              "display_name": "PAYDAY 3",
+              "name": "PAYDAY 3",
+              "slug": "payday-3"
+            }
+          },
+          {
+            "twitch_id": "global-badge:global-2a2304e7947becbbe6b3",
+            "name": "Payday 3 update",
+            "required_minutes_watched": 60,
+            "required_subs": 0,
+            "repeat": null,
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-06T12:00:00.000Z",
+            "end_at": "2026-11-27T11:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-2a2304e7947becbbe6b3",
+                "name": "Pearl",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by watching a streamer in the Payday 3 category for 60 minutes",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/8346da26-6494-4edb-945d-63a50a6e416b/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "2113043143",
+              "display_name": "PAYDAY 3",
+              "name": "PAYDAY 3",
+              "slug": "payday-3"
+            }
+          }
+        ],
+        "updated_at": "df41b91736268d7b19bbfc360a519d14a893f7ec62b33177c1a9f1aeff06f4dd"
+      },
+      {
+        "twitch_id": "5acbe8a4-35f3-45c8-afaa-3f0483fd17bb",
+        "name": "DOOM: The Dark Ages Badge",
+        "description": "",
+        "status": "active",
+        "start_at": "2026-11-16T17:00:00.000Z",
+        "end_at": "2026-12-11T16:59:59.999Z",
+        "is_fully_imported": true,
+        "source": "sunkwi-global-badges",
+        "game": {
+          "twitch_id": "936822813",
+          "display_name": "DOOM: The Dark Ages",
+          "name": "DOOM: The Dark Ages",
+          "slug": "doom-the-dark-ages"
+        },
+        "drops": [
+          {
+            "twitch_id": "global-badge:global-501a72767eaebea85401",
+            "name": "DOOM: The Dark Ages Badge",
+            "required_minutes_watched": 0,
+            "required_subs": 1,
+            "repeat": null,
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-16T17:00:00.000Z",
+            "end_at": "2026-12-11T16:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-501a72767eaebea85401",
+                "name": "DOOM: The Dark Ages",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by subscribing or gifting a sub to a streamer in the DOOM: The Dark Ages category during the launch of Slaughter Mode!",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/80e404b7-673b-4ca8-ab69-1779f9685eec/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "936822813",
+              "display_name": "DOOM: The Dark Ages",
+              "name": "DOOM: The Dark Ages",
+              "slug": "doom-the-dark-ages"
+            }
+          }
+        ],
+        "updated_at": "af1122625f7503125967b9de9359491e81f52b74b36ff8ed1cfc8f4210d26f5d"
+      },
+      {
+        "twitch_id": "a1fbeb48-f98d-49d4-845c-9591328aae55",
+        "name": "Gallica Badge",
+        "description": "",
+        "status": "active",
+        "start_at": "2026-11-14T18:00:00.000Z",
+        "end_at": "2026-12-12T17:59:59.999Z",
+        "is_fully_imported": true,
+        "source": "sunkwi-global-badges",
+        "game": {
+          "twitch_id": "494806",
+          "display_name": "Metaphor: ReFantazio",
+          "name": "Metaphor: ReFantazio",
+          "slug": "metaphor-refantazio"
+        },
+        "drops": [
+          {
+            "twitch_id": "global-badge:global-222e607df14965dff24f",
+            "name": "Gallica Badge",
+            "required_minutes_watched": 0,
+            "required_subs": 1,
+            "repeat": null,
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-14T18:00:00.000Z",
+            "end_at": "2026-12-12T17:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-222e607df14965dff24f",
+                "name": "Gallica",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by subscribing or gifting a sub to a streamer in the Metaphor: ReFantazio category during the Switch 2 launch!",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/d2adf631-2045-4246-9c34-201487e809ae/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "494806",
+              "display_name": "Metaphor: ReFantazio",
+              "name": "Metaphor: ReFantazio",
+              "slug": "metaphor-refantazio"
+            }
+          }
+        ],
+        "updated_at": "ec06011493de98965e26e8e9bca99d1cc8bfb90bada65ca0160bf427d632646d"
+      },
+      {
+        "twitch_id": "26547ffd-3b53-474c-b9ba-766fe4dfca83",
+        "name": "Pokémon Night Out Campaign",
+        "description": "",
+        "status": "active",
+        "start_at": "2026-10-16T17:00:00.000Z",
+        "end_at": "2026-11-23T22:59:59.999Z",
+        "is_fully_imported": true,
+        "source": "sunkwi-global-badges",
+        "game": {
+          "twitch_id": "13332",
+          "display_name": "Pokémon FireRed/LeafGreen",
+          "name": "Pokémon FireRed/LeafGreen",
+          "slug": "pokemon-firered-leafgreen"
+        },
+        "drops": [
+          {
+            "twitch_id": "global-badge:global-9fc709c42e54ea608a85",
+            "name": "Pokémon Night Out Campaign",
+            "required_minutes_watched": 20,
+            "required_subs": 0,
+            "repeat": {
+              "everyHours": 24,
+              "times": 3
+            },
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-10-16T17:00:00.000Z",
+            "end_at": "2026-11-23T22:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-9fc709c42e54ea608a85",
+                "name": "Gastly",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned during Pokémon Night Out 2026.",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/602335f3-4d73-40f9-b8e2-5c5e25f32d62/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "13332",
+              "display_name": "Pokémon FireRed/LeafGreen",
+              "name": "Pokémon FireRed/LeafGreen",
+              "slug": "pokemon-firered-leafgreen"
+            }
+          }
+        ],
+        "updated_at": "05359b5d8ab61a8bea155c6ac00c3cefe340bdbae42cf0c6ddd831edc7b044c9"
+      },
+      {
+        "twitch_id": "a8ce1281-5c82-4fbe-9a18-3e7d02e1e7b6",
+        "name": "OSRS Hardcore Worlds",
+        "description": "",
+        "status": "active",
+        "start_at": "2026-11-18T13:06:33.000Z",
+        "end_at": "2026-11-30T23:59:59.999Z",
+        "is_fully_imported": true,
+        "source": "sunkwi-global-badges",
+        "game": {
+          "twitch_id": "459931",
+          "display_name": "Old School RuneScape",
+          "name": "Old School RuneScape",
+          "slug": "old-school-runescape"
+        },
+        "drops": [
+          {
+            "twitch_id": "global-badge:global-64b15b8b88f50cd4a51f",
+            "name": "OSRS Hardcore Worlds",
+            "required_minutes_watched": 60,
+            "required_subs": 0,
+            "repeat": null,
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-18T13:06:33.000Z",
+            "end_at": "2026-11-30T23:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-64b15b8b88f50cd4a51f",
+                "name": "RuneScape Bones",
+                "distribution_type": "BADGE",
+                "description": "Watch 60 minutes of any channel streaming in the Old School RuneScape category.",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/95507c79-f87e-4a0d-9940-92af830b3b36/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "459931",
+              "display_name": "Old School RuneScape",
+              "name": "Old School RuneScape",
+              "slug": "old-school-runescape"
+            }
+          }
+        ],
+        "updated_at": "4fbc8d740a7309f2008e14b6c902c854b43a9408b09d43b9623ef2b3c8e6a404"
+      },
+      {
+        "twitch_id": "1f04121b-9c6b-4ae8-bdd5-9833c96a64ae",
+        "name": "OSRS Hardcore Worlds",
+        "description": "",
+        "status": "active",
+        "start_at": "2026-11-18T13:04:32.000Z",
+        "end_at": "2026-11-30T23:59:59.999Z",
+        "is_fully_imported": true,
+        "source": "sunkwi-global-badges",
+        "game": {
+          "twitch_id": "459931",
+          "display_name": "Old School RuneScape",
+          "name": "Old School RuneScape",
+          "slug": "old-school-runescape"
+        },
+        "drops": [
+          {
+            "twitch_id": "global-badge:global-677208a260298e661129",
+            "name": "OSRS Hardcore Worlds",
+            "required_minutes_watched": 0,
+            "required_subs": 1,
+            "repeat": null,
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-18T13:04:32.000Z",
+            "end_at": "2026-11-30T23:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-677208a260298e661129",
+                "name": "RuneScape Gnome Plush",
+                "distribution_type": "BADGE",
+                "description": "Subscribe or Gift 1 sub to any channel streaming in the Old School RuneScape category.",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/8b5bf6d2-3f89-4c24-a6c2-c5eda04ce1e6/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "459931",
+              "display_name": "Old School RuneScape",
+              "name": "Old School RuneScape",
+              "slug": "old-school-runescape"
+            }
+          }
+        ],
+        "updated_at": "0754899b4ddda8f20734e4fe1c6857f874e4ab520b098e5fc8b4b86b781b1210"
+      },
+      {
+        "twitch_id": "a9c2f298-5a53-439a-9a8c-41b4d88937e1",
+        "name": "Cyberpunk 2077 Chat Badge",
+        "description": "",
+        "status": "active",
+        "start_at": "2026-10-22T10:00:00.000Z",
+        "end_at": "2026-11-19T09:59:59.999Z",
+        "is_fully_imported": true,
+        "source": "sunkwi-global-badges",
+        "game": {
+          "twitch_id": "65876",
+          "display_name": "Cyberpunk 2077",
+          "name": "Cyberpunk 2077",
+          "slug": "cyberpunk-2077"
+        },
+        "drops": [
+          {
+            "twitch_id": "global-badge:global-06b2627eb5d22536ee6f",
+            "name": "Cyberpunk 2077 Chat Badge",
+            "required_minutes_watched": 0,
+            "required_subs": 1,
+            "repeat": null,
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-10-22T10:00:00.000Z",
+            "end_at": "2026-11-19T09:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-06b2627eb5d22536ee6f",
+                "name": "The Mox",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by subscribing or gifting a sub to a streamer in the Cyberpunk 2077 category",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/1b9b6fbf-9100-4b2c-9bdf-8be0f1456ff9/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "65876",
+              "display_name": "Cyberpunk 2077",
+              "name": "Cyberpunk 2077",
+              "slug": "cyberpunk-2077"
+            }
+          }
+        ],
+        "updated_at": "6902367cd6a4d827b2a0db3015226ca92d03c3f46b48c5335d6f3df55cf92525"
+      },
+      {
+        "twitch_id": "882ccb61-0d4c-4fe6-a5c5-3156e8a033ab",
+        "name": "Warrior Jar Alexander",
+        "description": "",
+        "status": "active",
+        "start_at": "2026-11-02T07:00:00.000Z",
+        "end_at": "2026-11-30T06:59:59.999Z",
+        "is_fully_imported": true,
+        "source": "sunkwi-global-badges",
+        "game": {
+          "twitch_id": "512953",
+          "display_name": "ELDEN RING",
+          "name": "ELDEN RING",
+          "slug": "elden-ring"
+        },
+        "drops": [
+          {
+            "twitch_id": "global-badge:global-62e52182481603ea7122",
+            "name": "Warrior Jar Alexander",
+            "required_minutes_watched": 0,
+            "required_subs": 1,
+            "repeat": null,
+            "specificDay": null,
+            "randomSubCollectionSize": null,
+            "start_at": "2026-11-02T07:00:00.000Z",
+            "end_at": "2026-11-30T06:59:59.999Z",
+            "benefits": [
+              {
+                "twitch_id": "global-62e52182481603ea7122",
+                "name": "Warrior Jar Alexander",
+                "distribution_type": "BADGE",
+                "description": "This badge was earned by subscribing or gifting a sub to a streamer in the ELDEN RING category.",
+                "specific_day": null,
+                "random_sub_collection_size": null,
+                "evolution_from": null,
+                "image_url": "https://static-cdn.jtvnw.net/badges/v1/a080167b-6264-404b-b9b1-e5a68348299f/3"
+              }
+            ],
+            "allowed_channels": [],
+            "game": {
+              "twitch_id": "512953",
+              "display_name": "ELDEN RING",
+              "name": "ELDEN RING",
+              "slug": "elden-ring"
+            }
+          }
+        ],
+        "updated_at": "851755cf0d77d0308869e267b37a857d1f42a2a106d221ff14794ee34597f777"
+      }
+    ]
+  }
 }

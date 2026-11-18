@@ -244,7 +244,7 @@ function makeRewardEmbed(reward) {
     .setDescription([
       `**Kampania:** ${reward.campaignName}`,
       `**Kategoria:** ${reward.categoryUrl ? `[${reward.gameName}](${reward.categoryUrl})` : reward.gameName}`,
-      `**Dostęp:** Darmowy — za oglądanie przez ${reward.minutes} min na Kick`,
+      `**Dostęp:** Darmowy: za oglądanie przez ${reward.minutes} min na Kick`,
       `**Start:** ${formatDate(reward.campaignStart)}`,
       `**Koniec:** ${formatDate(reward.campaignEnd)}`,
       reward.categoryUrl ? `**Dostępne dropy:** [Zobacz na Kicku](${reward.categoryUrl})` : null
@@ -437,6 +437,13 @@ async function refreshRewardMessage(channel, state, reward, phase = null) {
     state.messageFormatVersion = 2;
     return true;
   } catch (err) {
+    if (Number(err.code) === 10008 || /unknown message/i.test(err.message || "")) {
+      state.messageId = null;
+      state.messageIds = [];
+      state.messageMissing = true;
+      state.messageFormatVersion = 2;
+      return true;
+    }
     console.log(`Kick Drops: nie udało się odświeżyć wiadomości ${reward.name}: ${err.message}`);
     return false;
   }

@@ -37,7 +37,7 @@ test("extracts only Kick badge/emote drops and watch duration", () => {
   const description = embedData.description;
   assert.match(description, /\*\*Kampania:\*\* Chat Emote - True Damage/);
   assert.match(description, /\*\*Kategoria:\*\* \[League of Legends\]\(https:\/\/kick\.com\/category\/league-of-legends\)/);
-  assert.match(description, /Darmowy — za oglądanie przez 30 min/);
+  assert.match(description, /Darmowy: za oglądanie przez 30 min/);
   assert.match(embedData.description, /Dostępne dropy/);
   assert.equal(rewards[0].imageUrl, "https://ext.cdn.kick.com/drops/reward-image/emote.png");
   assert.equal(makeRewardEmbed(rewards[0]).data.footer.text, "Kick Emotka");

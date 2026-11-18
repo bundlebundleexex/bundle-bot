@@ -437,7 +437,7 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
 
         await channel.send({
           content: extension
-            ? "🔁 **KOLEKCJA PRZEDŁUŻONA — DIGIPHILE**"
+            ? "🔁 **KOLEKCJA PRZEDŁUŻONA - DIGIPHILE**"
             : `🔥 **NOWA KOLEKCJA DIGIPHILE!** <@&${ROLE_ID}>`,
           allowedMentions: extension ? { parse: [] } : { parse: [], roles: [ROLE_ID] },
           embeds: [embed]

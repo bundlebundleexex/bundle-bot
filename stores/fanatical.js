@@ -414,7 +414,7 @@ module.exports.check = async (client, savedData, saveData, options = {}) => {
 
         await channel.send({
           content: isRenewal
-            ? "🔁 **PAKIET PRZEDŁUŻONY — FANATICAL**"
+            ? "🔁 **PAKIET PRZEDŁUŻONY - FANATICAL**"
             : `🔥 **NOWY FANATICAL BUNDLE!** <@&${ROLE_ID}>`,
           allowedMentions: isRenewal ? { parse: [] } : { parse: [], roles: [ROLE_ID] },
           embeds: [embed]

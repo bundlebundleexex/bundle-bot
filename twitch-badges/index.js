@@ -4,19 +4,52 @@ const { EmbedBuilder } = require("discord.js");
 
 const API_URL = "https://ttvdrops.lovinator.space/api/v1/twitch/campaigns/";
 const API_ORIGIN = "https://ttvdrops.lovinator.space";
+const REWARD_CAMPAIGNS_URL = "https://drops.sunkwi.com/api/twitch/rewards";
+const GLOBAL_BADGES_URL = "https://drops.sunkwi.com/api/twitch/badges";
+// Sunkwi's anonymous API limit is one request per route per five minutes.
+const REWARD_SOURCE_CACHE_MS = 5 * 60 * 1000 + 15 * 1000;
 const CHANNEL_ID = "1545521319284838602";
 const FREE_ROLE_ID = process.env.TWITCH_BADGE_FREE_ROLE_ID?.trim() || "1545400230504046602";
 const PAID_ROLE_ID = process.env.TWITCH_BADGE_PAID_ROLE_ID?.trim() || "1545511812148236378";
-const REWARD_MESSAGE_FORMAT_VERSION = 6;
+const REWARD_MESSAGE_FORMAT_VERSION = 8;
 const PAGE_SIZE = 500;
 const DETAIL_CONCURRENCY = 10;
-const TARGET_TYPES = new Set(["BADGE", "EMOTE"]);
+const GAME_ITEM_TYPES = new Set(["DIRECT_ENTITLEMENT", "IN_GAME_ITEM", "GAME_ITEM", "SKIN", "LOOT"]);
+const TWITCH_REWARD_SOURCE_CACHE_VERSION = 4;
 const EXTRA_GAME_REWARD_TYPES = new Set([
   "SKIN",
   "IN_GAME_ITEM",
   "GAME_ITEM",
   "LOOT"
 ]);
+const POKEMON_EVOLUTION_PARENTS = new Map([
+  ["pikachu", "Pichu"],
+  ["ivysaur", "Bulbasaur"], ["venusaur", "Ivysaur"],
+  ["wartortle", "Squirtle"], ["blastoise", "Wartortle"],
+  ["charmeleon", "Charmander"], ["charizard", "Charmeleon"],
+  ["haunter", "Gastly"], ["gengar", "Haunter"]
+]);
+const POKEMON_EVOLUTION_ROOTS = new Map([
+  ["pikachu", "Pichu"],
+  ["ivysaur", "Bulbasaur"], ["venusaur", "Bulbasaur"],
+  ["wartortle", "Squirtle"], ["blastoise", "Squirtle"],
+  ["charmeleon", "Charmander"], ["charizard", "Charmander"],
+  ["haunter", "Gastly"], ["gengar", "Gastly"]
+]);
+const POKEMON_BASE_FALLBACKS = new Map([
+  ["pichu", { paid: false, endAt: "2026-11-02T08:59:59+01:00" }],
+  ["bulbasaur", { paid: true, endAt: "2026-10-02T08:59:59+02:00" }],
+  ["charmander", { paid: true, endAt: "2026-10-02T08:59:59+02:00" }],
+  ["squirtle", { paid: true, endAt: "2026-10-02T08:59:59+02:00" }],
+  ["gastly", { paid: true, endAt: "2026-10-25T08:59:59+02:00", claimUntil: "23 lis 2026", progressRequired: true }]
+]);
+const POKEMON_EVOLUTION_CATEGORIES = [
+  "Pokémon FireRed/LeafGreen", "Pokémon Pokopia", "Pokémon UNITE", "Pokémon Champions",
+  "Pokémon GO", "Pokémon Legends: Z-A", "Pokémon Scarlet/Violet",
+  "Pokémon Trading Card Game Pocket", "Pokémon Trading Card Game", "Pokémon Trading Card Game Live",
+  "Just Chatting", "DJs", "Art", "Special Events", "Sports", "Music",
+  "Talk Shows & Podcasts", "Animals, Aquariums, and Zoos", "Co-working & Studying", "Makers & Crafting"
+];
 
 function slugifyGameCategory(value) {
   return String(value || "")
@@ -44,6 +77,27 @@ function validateCampaignSnapshot(summary, campaign, now = Date.now()) {
     return "campaign id mismatch";
   }
   if (!campaign.is_fully_imported) return "campaign details incomplete";
+
+  if (campaign.source === "sunkwi-reward-campaigns") {
+    const startAt = Date.parse(campaign.start_at || "");
+    const endAt = Date.parse(campaign.end_at || "");
+    if (![startAt, endAt].every(Number.isFinite)) return "reward campaign dates missing or invalid";
+    if (startAt >= endAt) return "invalid reward campaign date range";
+    if (!new Set(["active", "upcoming"]).has(String(campaign.status).toLowerCase())) {
+      return "reward campaign is not active/upcoming";
+    }
+    return null;
+  }
+  if (campaign.source === "sunkwi-global-badges") {
+    const startAt = Date.parse(campaign.start_at || "");
+    const endAt = Date.parse(campaign.end_at || "");
+    if (![startAt, endAt].every(Number.isFinite)) return "badge campaign dates missing or invalid";
+    if (startAt >= endAt) return "invalid badge campaign date range";
+    if (!new Set(["active", "upcoming"]).has(String(campaign.status).toLowerCase())) {
+      return "badge campaign is not active/upcoming";
+    }
+    return null;
+  }
 
   const operations = new Set(campaign.operation_names || []);
   if (!operations.has("ViewerDropsDashboard") || !operations.has("DropCampaignDetails")) {
@@ -76,6 +130,7 @@ function validateCampaignSnapshot(summary, campaign, now = Date.now()) {
 
 function flattenCampaignBenefits(campaign) {
   const rewards = [];
+  if (!campaign || typeof campaign !== "object") return rewards;
 
   for (const drop of campaign.drops || []) {
     const minutes = Number(drop.required_minutes_watched);
@@ -112,18 +167,25 @@ function flattenCampaignBenefits(campaign) {
           : null,
         minutes,
         subs,
+        specificDay: benefit.specific_day || drop.specificDay || null,
+        randomSubCollectionSize: benefit.random_sub_collection_size || drop.randomSubCollectionSize || null,
+        evolutionFrom: benefit.evolution_from || null,
+        evolutionInfo: benefit.evolution_info || null,
         dropName: drop.name,
         campaignName: campaign.name,
         campaignId: campaign.twitch_id,
         campaignStart: drop.start_at || campaign.start_at,
         campaignEnd: drop.end_at || campaign.end_at,
         campaignUrl: `https://dashboard.twitch.tv/viewer-rewards/drops?id=${campaign.twitch_id}`,
-        gameName: campaign.game?.display_name || campaign.game?.name || "Twitch",
+        gameName: drop.game?.display_name || drop.game?.name || campaign.game?.display_name || campaign.game?.name || "Twitch",
         gameSlug: slugifyGameCategory(
-          campaign.game?.slug || campaign.game?.category_slug ||
+          drop.game?.slug || drop.game?.category_slug || campaign.game?.slug || campaign.game?.category_slug ||
           campaign.game?.name || campaign.game?.display_name
         ),
         channels: allowedChannels,
+        isGlobalTwitchEmote: type === "EMOTE" && benefit.is_global_twitch_emote !== false &&
+          !benefit.channel_id && !benefit.channelId && !benefit.channel,
+        repeat: drop.repeat || benefit.repeat || null,
         description: campaign.description || ""
       });
     }
@@ -132,8 +194,298 @@ function flattenCampaignBenefits(campaign) {
   return rewards;
 }
 
+function imageUrlFromRewardImage(image) {
+  if (typeof image === "string") return image;
+  return image?.image1xURL || image?.url || null;
+}
+
+function normalizeRewardCampaign(campaign) {
+  if (!campaign?.id || !campaign?.name) return null;
+  const startsAt = campaign.startsAt || campaign.starts_at;
+  const endsAt = campaign.endsAt || campaign.ends_at;
+  const status = String(campaign.status || "").toLowerCase();
+  if (!startsAt || !endsAt || !["active", "upcoming"].includes(status)) return null;
+
+  const groupRows = Array.isArray(campaign.rewardGroups) && campaign.rewardGroups.length
+    ? campaign.rewardGroups
+    : [{ id: `${campaign.id}:all`, unlockRequirements: campaign.unlockRequirements, rewards: campaign.rewards }];
+  const campaignGame = campaign.game || groupRows.flatMap(group => group.categories || [])[0] || null;
+  const seenRewardIds = new Set();
+  const drops = [];
+  for (let groupIndex = 0; groupIndex < groupRows.length; groupIndex++) {
+    const group = groupRows[groupIndex];
+    const requirements = group.unlockRequirements || campaign.unlockRequirements || {};
+    const minutes = Number(requirements.minuteWatchedGoal ?? requirements.requiredMinutesWatched ?? 0);
+    const subs = Number(requirements.subsGoal ?? requirements.requiredSubs ?? 0);
+    if (!Number.isFinite(minutes) || !Number.isFinite(subs) || minutes < 0 || subs < 0 ||
+        minutes > 100000 || subs > 100) continue;
+
+    const categories = Array.isArray(group.categories) ? group.categories : [];
+    const game = categories[0] || campaign.game || null;
+    const groupRewards = Array.isArray(group.rewards) ? group.rewards : [];
+    const benefits = [];
+    for (const reward of groupRewards) {
+      const rewardName = String(reward?.name || "").trim();
+      if (!reward?.id || !rewardName) continue;
+      if (/\bchest\b/i.test(rewardName)) continue;
+      const rewardId = String(reward.id);
+      if (seenRewardIds.has(rewardId)) continue;
+      const sourceType = String(reward.distributionType || reward.distribution_type || reward.type || "").toUpperCase();
+      const isGameItem = GAME_ITEM_TYPES.has(sourceType);
+      const hasChannelScope = Boolean(reward.channel_id || reward.channelId || reward.channel);
+      const type = !isGameItem && !hasChannelScope &&
+        (/EMOTE/.test(sourceType) || /emote/i.test(rewardName))
+        ? "EMOTE"
+        : null;
+      // RewardCampaigns also include game rewards. This source supplements
+      // global badges with explicitly identified emotes; badges come from the
+      // dedicated Twitch global-badge requirements feed below.
+      if (!type) continue;
+      seenRewardIds.add(rewardId);
+      benefits.push({
+        twitch_id: rewardId,
+        name: rewardName,
+        distribution_type: type,
+        is_global_twitch_emote: type === "EMOTE" && subs === 0 &&
+          !reward.channel_id && !reward.channelId && !reward.channel,
+        image_url: imageUrlFromRewardImage(reward.thumbnailImage) ||
+          imageUrlFromRewardImage(reward.bannerImage) || reward.image_url || null
+      });
+    }
+    if (!benefits.length) continue;
+    drops.push({
+      twitch_id: String(group.id || `${campaign.id}:${groupIndex}`),
+      name: campaign.name,
+      required_minutes_watched: minutes,
+      required_subs: subs,
+      start_at: startsAt,
+      end_at: endsAt,
+      benefits,
+      allowed_channels: [],
+      categories,
+      game: game ? {
+        twitch_id: String(game.id || game.twitch_id || ""),
+        display_name: game.displayName || game.display_name || game.name || "Twitch",
+        name: game.displayName || game.display_name || game.name || "Twitch",
+        slug: game.slug || game.category_slug || ""
+      } : null
+    });
+  }
+  if (!drops.length) return null;
+
+  const fingerprint = crypto.createHash("sha256").update(JSON.stringify({
+    id: campaign.id, startsAt, endsAt, status, game: campaignGame, drops
+  })).digest("hex");
+  const normalized = {
+    twitch_id: String(campaign.id),
+    name: campaign.name,
+    description: campaign.summary || campaign.instructions || "",
+    status,
+    start_at: startsAt,
+    end_at: endsAt,
+    updated_at: fingerprint,
+    is_fully_imported: true,
+    source: "sunkwi-reward-campaigns",
+    game: campaignGame ? {
+      twitch_id: String(campaignGame.id || campaignGame.twitch_id || ""),
+      display_name: campaignGame.displayName || campaignGame.display_name || campaignGame.name || "Twitch",
+      name: campaignGame.displayName || campaignGame.display_name || campaignGame.name || "Twitch",
+      slug: campaignGame.slug || campaignGame.category_slug || ""
+    } : null,
+    drops
+  };
+  return normalized;
+}
+
+function normalizeGlobalBadgeCampaigns(badges, now = Date.now()) {
+  const groups = new Map();
+  const badgeByTitle = new Map((badges || []).map(badge => [
+    String(badge?.title || badge?.name || "").trim().toLowerCase(), badge
+  ]).filter(([title]) => title));
+  for (const badge of badges || []) {
+    const requirement = badge?.requirement;
+    const campaignId = String(requirement?.campaignId || requirement?.campaign_id || "");
+    if (!campaignId || String(requirement?.source || "").toUpperCase() !== "DROPS") continue;
+    const startAt = requirement.startAt || requirement.start_at;
+    const endAt = requirement.endAt || requirement.end_at;
+    const startMs = Date.parse(startAt || "");
+    const endMs = Date.parse(endAt || "");
+    if (![startMs, endMs].every(Number.isFinite) || endMs <= now || startMs >= endMs) continue;
+    if (requirement.collection?.completeAll) continue;
+
+    const minutes = Number(requirement.requiredMinutes ?? requirement.required_minutes ?? 0);
+    let subs = Number(requirement.requiredSubs ?? requirement.required_subs ?? 0);
+    if (!Number.isFinite(minutes) || !Number.isFinite(subs) ||
+        minutes < 0 || minutes > 100000 || subs < 0 || subs > 100 ||
+        (minutes <= 0 && subs <= 0)) continue;
+
+    const title = String(badge.title || badge.name || "").trim();
+    const badgeDescription = String(badge.description || "");
+    const setId = String(badge.setId || badge.set_id || "");
+    const versionId = String(badge.versionId || badge.version_id || badge.twitch_id || "");
+    if (!title || !setId || !versionId) continue;
+    const categories = Array.isArray(requirement.categories) ? requirement.categories : [];
+    const category = categories[0] || null;
+    const gameName = category?.name || category?.displayName || requirement.gameName || "Twitch";
+    const game = category || (gameName !== "Twitch" ? { name: gameName } : null);
+    const campaignName = requirement.campaignName || requirement.campaign_name || "Twitch Drops";
+    const dayMatch = badgeDescription.match(/watching\s+(\d+)\s+day\b/i);
+    const dayByName = new Map([
+      ["purple chain", 1], ["bronze chain", 2], ["silver chain", 3],
+      ["gold chain", 4], ["diamond chain", 5], ["miami chain", 6]
+    ]).get(title.toLowerCase());
+    const dayNumber = dayMatch ? Number(dayMatch[1]) : dayByName || null;
+    const isEvolution = /evolv(?:e|ed|ing)/i.test(badgeDescription);
+    const evolutionFrom = isEvolution ? POKEMON_EVOLUTION_PARENTS.get(title.toLowerCase()) || null : null;
+    const evolutionRoot = isEvolution ? POKEMON_EVOLUTION_ROOTS.get(title.toLowerCase()) || null : null;
+    const rootBadge = evolutionRoot ? badgeByTitle.get(evolutionRoot.toLowerCase()) : null;
+    const rootRequirement = rootBadge?.requirement || {};
+    const fallbackRoot = evolutionRoot ? POKEMON_BASE_FALLBACKS.get(evolutionRoot.toLowerCase()) : null;
+    const rootEndAt = rootRequirement.endAt || rootRequirement.end_at || fallbackRoot?.endAt || null;
+    const rootSubs = Number(rootRequirement.requiredSubs ?? rootRequirement.required_subs ?? (fallbackRoot?.paid ? 1 : 0));
+    const evolutionInfo = isEvolution ? {
+      parent: evolutionFrom,
+      rootBadge: evolutionRoot,
+      basePaid: rootSubs > 0 || Boolean(fallbackRoot?.paid),
+      baseEndAt: rootEndAt,
+      baseEnded: rootEndAt ? Date.parse(rootEndAt) <= now : null,
+      claimUntil: fallbackRoot?.claimUntil || null,
+      progressRequired: Boolean(fallbackRoot?.progressRequired),
+      categories: POKEMON_EVOLUTION_CATEGORIES
+    } : null;
+    const collectionSize = Number(requirement.collection?.chestSize || 0);
+    const isGtaSixSubCollection = gameName.toLowerCase() === "grand theft auto vi" && subs === 3;
+    const isRandomSubCollection = (subs > 1 && collectionSize === subs && collectionSize > 1) ||
+      isGtaSixSubCollection;
+    const randomSubCount = isGtaSixSubCollection ? 3 : collectionSize;
+    const key = campaignId;
+    if (!groups.has(key)) {
+      groups.set(key, {
+        twitch_id: campaignId,
+        name: campaignName,
+        description: "",
+        status: startMs > now ? "upcoming" : "active",
+        start_at: startAt,
+        end_at: endAt,
+        is_fully_imported: true,
+        source: "sunkwi-global-badges",
+        game: game ? {
+          twitch_id: String(game.id || game.twitch_id || ""),
+          display_name: game.displayName || game.display_name || game.name || gameName,
+          name: game.displayName || game.display_name || game.name || gameName,
+          slug: game.slug || game.category_slug || slugifyGameCategory(gameName)
+        } : null,
+        drops: []
+      });
+    }
+
+    const campaign = groups.get(key);
+    campaign.start_at = new Date(Math.min(Date.parse(campaign.start_at), startMs)).toISOString();
+    campaign.end_at = new Date(Math.max(Date.parse(campaign.end_at), endMs)).toISOString();
+    const listedChannels = Array.isArray(requirement.channels) ? requirement.channels : [];
+    const channelCount = Number(requirement.channelCount ?? requirement.channel_count ?? listedChannels.length);
+    const channels = Number.isFinite(channelCount) && channelCount > listedChannels.length
+      ? []
+      : listedChannels.map(channel => typeof channel === "string"
+        ? { name: channel, display_name: channel }
+        : channel);
+    const rewardId = `global-${crypto.createHash("sha256").update(`${setId}:${versionId}`).digest("hex").slice(0, 20)}`;
+    campaign.drops.push({
+      twitch_id: `global-badge:${rewardId}`,
+      name: campaignName,
+      required_minutes_watched: minutes,
+      required_subs: isRandomSubCollection ? 1 : subs,
+      repeat: requirement.repeat || null,
+      specificDay: dayNumber,
+      randomSubCollectionSize: isRandomSubCollection ? randomSubCount : null,
+      start_at: startAt,
+      end_at: endAt,
+      benefits: [{
+        twitch_id: rewardId,
+        name: title,
+        distribution_type: "BADGE",
+        description: badgeDescription,
+        specific_day: dayNumber,
+        random_sub_collection_size: isRandomSubCollection ? randomSubCount : null,
+        evolution_from: evolutionFrom,
+        evolution_info: evolutionInfo,
+        image_url: badge.imageUrl4x || badge.imageUrl2x || badge.imageUrl1x || null
+      }],
+      allowed_channels: channels,
+      game: game ? {
+        twitch_id: String(game.id || game.twitch_id || ""),
+        display_name: game.displayName || game.display_name || game.name || gameName,
+        name: game.displayName || game.display_name || game.name || gameName,
+        slug: game.slug || game.category_slug || slugifyGameCategory(gameName)
+      } : null
+    });
+  }
+
+  for (const campaign of groups.values()) {
+    campaign.status = Date.parse(campaign.start_at) > now ? "upcoming" : "active";
+    campaign.updated_at = crypto.createHash("sha256").update(JSON.stringify(campaign.drops)).digest("hex");
+  }
+  return [...groups.values()];
+}
+
+async function getRewardCampaignSnapshots(savedData, saveData) {
+  const previous = savedData.twitchRewardCampaignCache;
+  if (Date.parse(previous?.retryAt || "") > Date.now()) {
+    return {
+      campaigns: Array.isArray(previous?.campaigns) ? previous.campaigns : [],
+      badgeCampaigns: Array.isArray(previous?.badgeCampaigns) ? previous.badgeCampaigns : []
+    };
+  }
+  const cacheIsFresh = previous?.version === TWITCH_REWARD_SOURCE_CACHE_VERSION &&
+    Date.now() - Date.parse(previous.fetchedAt || "") < REWARD_SOURCE_CACHE_MS;
+  if (cacheIsFresh) {
+    return { campaigns: previous.campaigns || [], badgeCampaigns: previous.badgeCampaigns || [] };
+  }
+
+  const headers = process.env.TWITCH_DROPS_API_KEY
+    ? { "X-API-Key": process.env.TWITCH_DROPS_API_KEY.trim() }
+    : undefined;
+  try {
+    const [campaignResponse, badgeResponse] = await Promise.all([
+      axios.get(REWARD_CAMPAIGNS_URL, { timeout: 20000, headers }),
+      axios.get(GLOBAL_BADGES_URL, { timeout: 20000, headers })
+    ]);
+    const badgeRows = Array.isArray(badgeResponse.data?.badges) ? badgeResponse.data.badges : [];
+    const badgeCampaigns = normalizeGlobalBadgeCampaigns(badgeRows);
+    const campaignRows = Array.isArray(campaignResponse.data?.campaigns)
+      ? campaignResponse.data.campaigns
+      : [];
+    const campaigns = campaignRows
+      .map(item => normalizeRewardCampaign(item))
+      .filter(Boolean);
+    savedData.twitchRewardCampaignCache = {
+      version: TWITCH_REWARD_SOURCE_CACHE_VERSION,
+      fetchedAt: new Date().toISOString(),
+      refreshedAt: campaignResponse.data?.refreshedAt || null,
+      campaigns,
+      badgeCampaigns
+    };
+    saveData();
+    return { campaigns, badgeCampaigns };
+  } catch (err) {
+    console.log(`Twitch reward campaigns: źródło nagród chwilowo niedostępne (${err.response?.status || err.code || err.message})`);
+    savedData.twitchRewardCampaignCache = {
+      ...(previous || {}),
+      retryAt: new Date(Date.now() + REWARD_SOURCE_CACHE_MS).toISOString()
+    };
+    saveData();
+    return {
+      campaigns: Array.isArray(previous?.campaigns) ? previous.campaigns : [],
+      badgeCampaigns: Array.isArray(previous?.badgeCampaigns) ? previous.badgeCampaigns : []
+    };
+  }
+}
+
 function flattenCampaignRewards(campaign) {
-  return flattenCampaignBenefits(campaign).filter(reward => TARGET_TYPES.has(reward.type));
+  return flattenCampaignBenefits(campaign).filter(reward =>
+    (reward.type === "BADGE" && !/\bchest\b/i.test(reward.name)) ||
+    (reward.type === "EMOTE" && reward.subs === 0 && reward.isGlobalTwitchEmote)
+  );
 }
 
 function getRewardTypeLabel(type) {
@@ -152,6 +504,9 @@ function getRewardTypeLabel(type) {
 
 function getAccessDescription(reward) {
   const location = getWhereToWatch(reward);
+  if (reward.evolutionFrom && reward.subs === 0) {
+    return getPokemonEvolutionAccess(reward);
+  }
   if (reward.subs > 0) {
     const subs = reward.subs === 1
       ? "zakup subskrypcji"
@@ -159,10 +514,10 @@ function getAccessDescription(reward) {
     const extraWatch = reward.minutes > 0
       ? ` oraz oglądanie przez ${reward.minutes} min`
       : "";
-    return `**Dostęp:** Płatny — za ${subs}${extraWatch} ${location}`;
+    return `**Dostęp:** Płatny: za ${subs}${extraWatch} ${location}`;
   }
 
-  return `**Dostęp:** Darmowy — za oglądanie przez ${reward.minutes} min ${location}`;
+  return `**Dostęp:** Darmowy: za oglądanie przez ${reward.minutes} min ${location}`;
 }
 
 function getWhereToWatch(reward) {
@@ -205,6 +560,28 @@ function getAllowedChannelNames(reward) {
     .map(channel => String(channel.display_name || channel.name).replace(/[\r\n,]/g, " "));
 }
 
+function getPokemonEvolutionAccess(reward) {
+  const info = reward.evolutionInfo || {};
+  const rootName = info.rootBadge || reward.evolutionFrom;
+  const baseKind = info.basePaid ? "Płatny" : "Darmowy";
+  let baseStatus = "";
+  if (info.baseEnded && info.progressRequired && info.claimUntil) {
+    baseStatus = ` Kampania subskrypcyjna zakończona; nagrodę można jeszcze odblokować do ${info.claimUntil}, jeśli rozpoczęto wymagany postęp w czasie kampanii.`;
+  } else if (info.baseEnded && info.baseEndAt) {
+    baseStatus = ` Kampania bazowego badge’a zakończona ${formatDate(info.baseEndAt)}; nowi odbiorcy nie mogą już rozpocząć zdobywania.`;
+  } else if (info.baseEndAt) {
+    baseStatus = ` Dostępny do ${formatDate(info.baseEndAt)}.`;
+  }
+  const base = `**Badge bazowy:** ${baseKind}: ${rootName}${info.basePaid ? " (wymagał nowej subskrypcji; Prime się nie liczy)." : "."}${baseStatus}`;
+  const repeat = reward.repeat;
+  const days = Number(repeat?.times) > 1 ? ` dziennie przez ${repeat.times} dni` : "";
+  const evolution = `**Ewolucja:** Darmowa: załóż badge ${reward.evolutionFrom} i oglądaj przez ${reward.minutes} min${days} w kwalifikującej się kategorii poniżej.`;
+  const categories = (info.categories || POKEMON_EVOLUTION_CATEGORIES).map(name =>
+    `[${name}](https://www.twitch.tv/directory/category/${encodeURIComponent(slugifyGameCategory(name))}?filter=drops)`
+  );
+  return [base, evolution, `**Kategorie do ewolucji:** ${categories.join(", ")}`].join("\n");
+}
+
 function getAccessLine(reward) {
   const categoryUrl = getTwitchCategoryDropsUrl(reward);
   const channelCount = getAllowedChannelNames(reward).length;
@@ -214,11 +591,29 @@ function getAccessLine(reward) {
       ? `w kategorii: [${reward.gameName}](${categoryUrl})`
       : `w kategorii: ${reward.gameName}`;
   if (reward.subs > 0) {
+    if (reward.randomSubCollectionSize > 1) {
+      const wholeCollection = reward.randomSubCollectionSize === 3
+        ? "3 nowe subskrypcje odblokowują cały komplet"
+        : `${reward.randomSubCollectionSize} nowych subskrypcji odblokowuje cały komplet`;
+      return `**Dostęp:** Płatny: 1 nowa subskrypcja ${location} daje losową parę badge + emotka; ${wholeCollection}.`;
+    }
     const subs = reward.subs === 1 ? "zakup subskrypcji" : `zakup ${reward.subs} subskrypcji`;
     const extraWatch = reward.minutes > 0 ? ` oraz oglądanie przez ${reward.minutes} min` : "";
-    return `**Dostęp:** Płatny — za ${subs}${extraWatch} ${location}`;
+    return `**Dostęp:** Płatny: za ${subs}${extraWatch} ${location}`;
   }
-  return `**Dostęp:** Darmowy — za oglądanie przez ${reward.minutes} min ${location}`;
+  const repeat = reward.repeat;
+  if (reward.evolutionFrom) {
+    return getPokemonEvolutionAccess(reward);
+  }
+  if (reward.specificDay > 0) {
+    return `**Dostęp:** Darmowy: za oglądanie przez ${reward.minutes} min w ${reward.specificDay}. dniu kampanii ${location}`;
+  }
+  const viewing = repeat && Number(repeat.times) > 1
+    ? Number(repeat.everyHours) === 24
+      ? `oglądanie przez ${reward.minutes} min dziennie przez ${repeat.times} dni`
+      : `oglądanie przez ${reward.minutes} min (${repeat.times} razy${repeat.everyHours ? ` co ${repeat.everyHours} godz.` : ""})`
+    : `oglądanie przez ${reward.minutes} min`;
+  return `**Dostęp:** Darmowy: za ${viewing} ${location}`;
 }
 
 function getAllowedChannelLinks(reward) {
@@ -277,7 +672,7 @@ function makeRewardEmbed(reward) {
     const requirement = item.subs > 0
       ? `sub${item.subs > 1 ? ` x${item.subs}` : ""}${item.minutes > 0 ? ` + ${item.minutes} min oglądania` : ""}`
       : `${item.minutes} min oglądania`;
-    return `• **${item.name}** (${getRewardTypeLabel(item.type)}) — ${timing}${requirement}`;
+    return `• **${item.name}** (${getRewardTypeLabel(item.type)}): ${timing}${requirement}`;
   });
   if (related.length) {
     details.push(`**Dodatkowo dla tej kategorii:**\n${related.join("\n")}${extraDrops.length > 5 ? `\n…i jeszcze ${extraDrops.length - 5}` : ""}`);
@@ -323,7 +718,7 @@ function makeRewardEmbed(reward) {
 
 function makeRewardContent(reward, phase) {
   const isScheduled = phase === "scheduled";
-  const roleId = reward.subs > 0 ? PAID_ROLE_ID : FREE_ROLE_ID;
+  const roleIds = getRewardRoleIds(reward);
   const scheduledHeadline = reward.type === "EMOTE"
     ? "NADCHODZĄCA EMOTKA TWITCH"
     : "NADCHODZĄCY BADGE TWITCH";
@@ -332,7 +727,7 @@ function makeRewardContent(reward, phase) {
     : "BADGE TWITCH DOSTĘPNY DO ZDOBYCIA!";
   const headline = isScheduled
     ? `🕒 **${scheduledHeadline}**`
-    : `${reward.type === "EMOTE" ? "😀" : "🎖️"} **${liveHeadline}** <@&${roleId}>`;
+    : `${reward.type === "EMOTE" ? "😀" : "🎖️"} **${liveHeadline}** ${roleIds.map(id => `<@&${id}>`).join(" ")}`;
   const content = headline;
 
   const embed = makeRewardEmbed(reward);
@@ -342,9 +737,16 @@ function makeRewardContent(reward, phase) {
   return { content, embed };
 }
 
+function getRewardRoleIds(reward) {
+  const roleIds = [];
+  if (reward.subs > 0 || reward.evolutionInfo?.basePaid) roleIds.push(PAID_ROLE_ID);
+  if (reward.subs === 0 || reward.evolutionInfo) roleIds.push(FREE_ROLE_ID);
+  return [...new Set(roleIds)];
+}
+
 async function sendReward(channel, reward, phase) {
   const isScheduled = phase === "scheduled";
-  const roleId = reward.subs > 0 ? PAID_ROLE_ID : FREE_ROLE_ID;
+  const roleIds = getRewardRoleIds(reward);
   const nonce = crypto
     .createHash("sha256")
     .update(`${reward.key}:${phase}`)
@@ -361,7 +763,7 @@ async function sendReward(channel, reward, phase) {
     enforceNonce: true,
     allowedMentions: {
       parse: [],
-      roles: !isScheduled ? [roleId] : []
+      roles: !isScheduled ? roleIds : []
     }
   });
 }
@@ -372,6 +774,16 @@ async function refreshRewardMessage(channel, state, reward) {
     const message = await channel.messages.fetch(state.messageId);
     const { content, embed } = makeRewardContent(reward, state.status);
     await message.edit({ content, embeds: [embed], allowedMentions: { parse: [] } });
+    for (const id of new Set(state.previewMessageIds || [])) {
+      try {
+        const preview = await channel.messages.fetch(id);
+        await preview.edit({ content, embeds: [embed], allowedMentions: { parse: [] } });
+      } catch (err) {
+        if (Number(err.code) !== 10008 && !/unknown message/i.test(err.message || "")) {
+          console.log(`Twitch Drops: nie udało się odświeżyć podglądu ${id}: ${err.message}`);
+        }
+      }
+    }
     for (const id of new Set(state.messageIds || [])) {
       if (!id || id === state.messageId) continue;
       try {
@@ -386,23 +798,36 @@ async function refreshRewardMessage(channel, state, reward) {
     state.messageFormatVersion = REWARD_MESSAGE_FORMAT_VERSION;
     return true;
   } catch (err) {
+    if (Number(err.code) === 10008 || /unknown message/i.test(err.message || "")) {
+      state.messageId = null;
+      state.messageIds = [];
+      state.messageMissing = true;
+      state.messageFormatVersion = REWARD_MESSAGE_FORMAT_VERSION;
+      return true;
+    }
     console.log(`Twitch Drops: nie udało się skrócić wiadomości ${reward.name}: ${err.message}`);
     return false;
   }
 }
 
 async function editExpiredReward(channel, state, platform = "TWITCH") {
-  const messageIds = [...new Set([...(state?.messageIds || []), state?.messageId].filter(Boolean))];
+  const messageIds = [...new Set([...(state?.messageIds || []), ...(state?.previewMessageIds || []), state?.messageId].filter(Boolean))];
   if (!messageIds.length || !channel?.messages?.fetch) return false;
   try {
     const messages = await Promise.all(messageIds.map(id => channel.messages.fetch(id)));
     const label = state.reward?.type === "EMOTE" ? "EMOTKA" : "BADGE";
     await Promise.all(messages.map((message, index) => message.edit({
-      content: index === 0 ? `🏁 **${label} ${platform} — ZAKOŃCZONE**` : "🏁 **Kampania zakończona**",
+      content: index === 0 ? `🏁 **${label} ${platform} - ZAKOŃCZONE**` : "🏁 **Kampania zakończona**",
       allowedMentions: { parse: [] }
     })));
     return true;
   } catch (err) {
+    if (Number(err.code) === 10008 || /unknown message/i.test(err.message || "")) {
+      state.messageId = null;
+      state.messageIds = [];
+      state.messageMissing = true;
+      return true;
+    }
     console.log(`${platform} Drops: nie udało się oznaczyć zakończonej wiadomości: ${err.message}`);
     return false;
   }
@@ -438,9 +863,105 @@ async function getCampaignSummaries() {
   return [...new Map(pages.flat().map(campaign => [campaign.twitch_id, campaign])).values()];
 }
 
+function mergeTwitchCampaignSources(primary, rewardCampaign, badgeCampaign) {
+  const canonicalBadges = badgeCampaign?.drops || [];
+  const emoteSources = [primary, rewardCampaign].filter(Boolean);
+  const emoteDrops = [];
+  const seenEmotes = new Set();
+  for (const source of emoteSources) {
+    for (const drop of source.drops || []) {
+      if (Number(drop.required_subs || 0) > 0) continue;
+      const emoteBenefits = (drop.benefits || []).filter(benefit => {
+        const type = String(benefit?.distribution_type || "").toUpperCase();
+        const channelScope = benefit?.channel_id || benefit?.channelId || benefit?.channel;
+        return type === "EMOTE" && !GAME_ITEM_TYPES.has(type) && !channelScope;
+      });
+      if (!emoteBenefits.length) continue;
+      const uniqueBenefits = emoteBenefits.filter(benefit => {
+        const id = String(benefit.twitch_id || benefit.name || "").toLowerCase();
+        if (seenEmotes.has(id)) return false;
+        seenEmotes.add(id);
+        return true;
+      });
+      if (uniqueBenefits.length) emoteDrops.push({ ...drop, benefits: uniqueBenefits });
+    }
+  }
+
+  const sources = [primary, rewardCampaign, badgeCampaign].filter(Boolean);
+  if (!sources.length) return null;
+  const drops = [...canonicalBadges, ...emoteDrops];
+  const allStarts = drops.map(drop => Date.parse(drop.start_at || "")).filter(Number.isFinite);
+  const allEnds = drops.map(drop => Date.parse(drop.end_at || "")).filter(Number.isFinite);
+  const startAt = allStarts.length ? new Date(Math.min(...allStarts)).toISOString() : sources[0].start_at;
+  const endAt = allEnds.length ? new Date(Math.max(...allEnds)).toISOString() : sources[0].end_at;
+  const preferred = primary || badgeCampaign || rewardCampaign;
+  const merged = {
+    ...preferred,
+    twitch_id: preferred.twitch_id,
+    name: preferred.name || sources.find(item => item.name)?.name || "Twitch Drops",
+    description: primary?.description || rewardCampaign?.description || "",
+    start_at: startAt,
+    end_at: endAt,
+    game: primary?.game || rewardCampaign?.game || badgeCampaign?.game || null,
+    drops
+  };
+  if (!primary) merged.source = badgeCampaign ? "sunkwi-global-badges" : "sunkwi-reward-campaigns";
+  merged.updated_at = crypto.createHash("sha256").update(JSON.stringify({
+    primary: primary?.updated_at,
+    rewards: rewardCampaign?.updated_at,
+    badges: badgeCampaign?.updated_at,
+    drops
+  })).digest("hex");
+  return merged;
+}
+
 module.exports.check = async (client, savedData, saveData) => {
   try {
-    const summaries = await getCampaignSummaries();
+    let primarySourceSummaries = [];
+    try {
+      primarySourceSummaries = await getCampaignSummaries();
+    } catch (err) {
+      console.log(`Twitch Drops: główne źródło kampanii niedostępne (${err.response?.status || err.code || err.message}); sprawdzam źródło kampanii nagród`);
+    }
+    const { campaigns: rewardCampaigns, badgeCampaigns } = await getRewardCampaignSnapshots(savedData, saveData);
+    const rewardById = new Map(rewardCampaigns.map(item => [item.twitch_id, item]));
+    const badgesById = new Map(badgeCampaigns.map(item => [item.twitch_id, item]));
+    const primaryIds = new Set(primarySourceSummaries.map(campaign => campaign.twitch_id));
+    const primarySummaries = primarySourceSummaries.map(summary => {
+      const rewardDetails = rewardById.get(summary.twitch_id);
+      const badgeDetails = badgesById.get(summary.twitch_id);
+      if (!rewardDetails && !badgeDetails) return summary;
+      const combinedVersion = crypto.createHash("sha256").update(JSON.stringify({
+        primary: summary.updated_at,
+        reward: rewardDetails?.updated_at,
+        badge: badgeDetails?.updated_at
+      })).digest("hex");
+      return {
+        ...summary,
+        updated_at: combinedVersion,
+        _rewardCampaignDetails: rewardDetails || null,
+        _badgeCampaignDetails: badgeDetails || null
+      };
+    });
+    const fallbackIds = new Set([...rewardById.keys(), ...badgesById.keys()]);
+    const fallbackSummaries = [...fallbackIds]
+      .filter(id => !primaryIds.has(id))
+      .map(id => {
+        const campaign = mergeTwitchCampaignSources(null, rewardById.get(id), badgesById.get(id));
+        return {
+          twitch_id: campaign.twitch_id,
+          name: campaign.name,
+          status: campaign.status,
+          start_at: campaign.start_at,
+          end_at: campaign.end_at,
+          updated_at: campaign.updated_at,
+          is_fully_imported: true,
+          source: campaign.source,
+          _campaignDetails: campaign,
+          game: campaign.game
+        };
+      });
+    const summaries = [...primarySummaries, ...fallbackSummaries];
     if (!summaries.length) {
       console.log("Twitch Drops: brak aktywnych/nadchodzących kampanii — sprawdzam zapisane kampanie");
     }
@@ -463,6 +984,7 @@ module.exports.check = async (client, savedData, saveData) => {
     );
 
     const details = await mapWithConcurrency(changed, DETAIL_CONCURRENCY, async summary => {
+      if (summary._campaignDetails) return summary._campaignDetails;
       try {
         const response = await axios.get(
           `${API_URL}${encodeURIComponent(summary.twitch_id)}/`,
@@ -477,6 +999,7 @@ module.exports.check = async (client, savedData, saveData) => {
 
     const detailsById = new Map(changed.map((summary, index) => [summary.twitch_id, details[index]]));
     const getDetails = async summary => {
+      if (summary._campaignDetails) return summary._campaignDetails;
       if (detailsById.has(summary.twitch_id)) return detailsById.get(summary.twitch_id);
       try {
         const response = await axios.get(
@@ -498,8 +1021,15 @@ module.exports.check = async (client, savedData, saveData) => {
     let alreadyAnnouncedCount = 0;
 
     for (let index = 0; index < changed.length; index++) {
-      const campaign = details[index];
+      let campaign = details[index] || changed[index]._campaignDetails;
       if (!campaign) continue;
+      if (changed[index]._rewardCampaignDetails || changed[index]._badgeCampaignDetails) {
+        campaign = mergeTwitchCampaignSources(
+          campaign,
+          changed[index]._rewardCampaignDetails,
+          changed[index]._badgeCampaignDetails
+        );
+      }
       const validationError = validateCampaignSnapshot(changed[index], campaign);
       if (validationError) {
         console.log(`Twitch Drops: pomijam ${campaign.name || changed[index].name}: ${validationError}`);
@@ -534,6 +1064,14 @@ module.exports.check = async (client, savedData, saveData) => {
         const startsLater = Number.isFinite(startAt) && startAt > Date.now();
         const isExpired = Number.isFinite(endAt) && endAt <= Date.now();
         let existing = rewardStates[reward.key];
+        if (!existing) {
+          const normalizedName = String(reward.name || "").trim().toLocaleLowerCase();
+          existing = Object.values(rewardStates).find(state =>
+            ["started", "scheduled"].includes(state?.status) &&
+            state.reward?.campaignId === reward.campaignId &&
+            String(state.reward?.name || "").trim().toLocaleLowerCase() === normalizedName
+          );
+        }
 
         const benefitId = reward.key.split(":").at(-1);
         const importedFingerprint = `${reward.campaignId}:${benefitId}`;
@@ -693,6 +1231,9 @@ module.exports.check = async (client, savedData, saveData) => {
 
 module.exports.flattenCampaignRewards = flattenCampaignRewards;
 module.exports.flattenCampaignBenefits = flattenCampaignBenefits;
+module.exports.normalizeRewardCampaign = normalizeRewardCampaign;
+module.exports.normalizeGlobalBadgeCampaigns = normalizeGlobalBadgeCampaigns;
+module.exports.mergeTwitchCampaignSources = mergeTwitchCampaignSources;
 module.exports.getAccessDescription = getAccessDescription;
 module.exports.getWhereToWatch = getWhereToWatch;
 module.exports.makeRewardContent = makeRewardContent;

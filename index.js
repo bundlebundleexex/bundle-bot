@@ -89,7 +89,7 @@ const DEFAULT_KICK_DROP_IGNORED_REWARDS = [
 ];
 
 const DEFAULT_KICK_DROP_REWARD_TYPE_OVERRIDES = [
-  { campaignId: "01M4FJM2JJQJBYSYWN23TEYFBR", name: "Eddie VS Ethan", type: "EMOTE", reason: "Emotka czatu Kick — potwierdzona w weryfikacji nagrody" },
+  { campaignId: "01M4FJM2JJQJBYSYWN23TEYFBR", name: "Eddie VS Ethan", type: "EMOTE", reason: "Emotka czatu Kick: potwierdzona w weryfikacji nagrody" },
   { campaignId: "01M71B4D4VA0G9N3Q0QXH73Q78", name: "Chest Potion", type: "EMOTE", reason: "Emotka czatu Kick według weryfikacji użytkownika" },
   { campaignId: "01M71B4D4VA0G9N3Q0QXH73Q78", name: "Chest Bomb", type: "EMOTE", reason: "Emotka czatu Kick według weryfikacji użytkownika" },
   { campaignId: "01M71B4D4VA0G9N3Q0QXH73Q78", name: "Chest Golden K", type: "EMOTE", reason: "Emotka czatu Kick według weryfikacji użytkownika" }
@@ -149,11 +149,11 @@ function getWarsawTimeParts() {
   };
 }
 
-// sleep mode 00:00 -> 10:00
+// sleep mode 02:00 -> 08:00 Europe/Warsaw
 function isSleepMode() {
   const { hour } = getWarsawTimeParts();
 
-  return hour >= 0 && hour < 10;
+  return hour >= 2 && hour < 8;
 }
 
 function msUntilWakeModeEnds() {
@@ -162,11 +162,22 @@ function msUntilWakeModeEnds() {
   }
 
   const { hour, minute, second } = getWarsawTimeParts();
-  const wakeAtSeconds = 10 * 60 * 60;
+  const wakeAtSeconds = 8 * 60 * 60;
   const currentSeconds = hour * 60 * 60 + minute * 60 + second;
   const secondsLeft = wakeAtSeconds - currentSeconds;
 
-  return Math.max((secondsLeft + 5) * 1000, 60 * 1000);
+  return Math.max(secondsLeft * 1000, 1000);
+}
+
+function msUntilNextScanWindow() {
+  if (isSleepMode()) return msUntilWakeModeEnds();
+
+  const { hour, minute, second } = getWarsawTimeParts();
+  const currentSeconds = hour * 60 * 60 + minute * 60 + second;
+  let secondsUntilSleep = 2 * 60 * 60 - currentSeconds;
+  if (secondsUntilSleep <= 0) secondsUntilSleep += 24 * 60 * 60;
+
+  return Math.min(CHECK_INTERVAL, secondsUntilSleep * 1000);
 }
 
 function getTime() {
@@ -403,10 +414,15 @@ function scheduleNextRun(delayMs) {
   checkTimer = setTimeout(async () => {
     checkTimer = null;
 
+    if (isSleepMode()) {
+      scheduleNextRun(msUntilWakeModeEnds());
+      return;
+    }
+
     await runChecks();
 
     if (!isShuttingDown) {
-      scheduleNextRun(isSleepMode() ? msUntilWakeModeEnds() : CHECK_INTERVAL);
+      scheduleNextRun(msUntilNextScanWindow());
     }
   }, safeDelay);
 }
@@ -1036,7 +1052,7 @@ function runParentScanCycle() {
     console.log(`Parent: sleep mode (${getTime()})`);
 
     memoryCleanup("parent sleep mode").finally(() => {
-      scheduleNextParentScan(Math.min(msUntilWakeModeEnds(), CHECK_INTERVAL));
+      scheduleNextParentScan(msUntilWakeModeEnds());
     });
 
     return;
@@ -1085,7 +1101,7 @@ function runParentScanCycle() {
 
     memoryCleanup("parent post-worker").finally(() => {
       logMemory("parent after worker");
-      scheduleNextParentScan(isSleepMode() ? msUntilWakeModeEnds() : CHECK_INTERVAL);
+      scheduleNextParentScan(msUntilNextScanWindow());
     });
   });
 }
@@ -1160,10 +1176,12 @@ client.once("clientReady", async () => {
     gcNoticeShown = true;
   }
 
-  let firstDelay = isSleepMode() ? msUntilWakeModeEnds() : CHECK_INTERVAL;
+  let firstDelay = msUntilNextScanWindow();
   const restartCooldownLeft = getMemoryRestartCooldownLeft();
 
-  if (shouldSkipFirstRunAfterMemoryRestart()) {
+  if (isSleepMode()) {
+    firstDelay = msUntilWakeModeEnds();
+  } else if (shouldSkipFirstRunAfterMemoryRestart()) {
     firstDelay = isSleepMode()
       ? msUntilWakeModeEnds()
       : Math.max(restartCooldownLeft, CHECK_INTERVAL);

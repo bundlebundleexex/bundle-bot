@@ -97,9 +97,9 @@ test("keeps only badge/emote rewards with a watch or sub requirement", () => {
 
 test("formats watch and paid-sub requirements clearly", () => {
   const [emote, badge] = flattenCampaignRewards(campaignFixture());
-  assert.match(getAccessDescription(emote), /Darmowy — za oglądanie przez 30 min/);
+  assert.match(getAccessDescription(emote), /Darmowy: za oglądanie przez 30 min/);
   assert.equal(emote.subs, 0, "zero required subs is treated as a free watch reward");
-  assert.match(getAccessDescription(badge), /Płatny — za zakup subskrypcji/);
+  assert.match(getAccessDescription(badge), /Płatny: za zakup subskrypcji/);
   assert.doesNotMatch(getAccessDescription(badge), /Prime/);
   badge.relatedDrops = [];
   assert.match(makeRewardContent(badge, "started").embed.data.description, /\*\*Sub z Prime się nie liczy\.\*\*/);
@@ -288,7 +288,7 @@ test("marks all channel-list continuation posts as ended", async () => {
     reward: { type: "EMOTE" }
   }), true);
   assert.equal(edited.length, 3);
-  assert.match(edited[0][1].content, /EMOTKA TWITCH — ZAKOŃCZONE/);
+  assert.match(edited[0][1].content, /EMOTKA TWITCH - ZAKOŃCZONE/);
   assert.match(edited[2][1].content, /Kampania zakończona/);
 });
 
@@ -352,7 +352,7 @@ test("sends each qualifying badge/emote as a separate message and deduplicates",
   assert.match(sent[1].content, /NADCHODZĄCY BADGE TWITCH/);
   assert.deepEqual(sent[0].allowedMentions.roles, []);
   assert.match(sent[1].embeds[0].data.description, /Sub z Prime się nie liczy/);
-  assert.match(sent[1].embeds[0].data.description, /Płatny — za zakup subskrypcji na kanale biorącym udział/);
+  assert.match(sent[1].embeds[0].data.description, /Płatny: za zakup subskrypcji na kanale biorącym udział/);
   const firstEmbed = sent[0].embeds[0].data;
   const firstRewardLinks = `${sent[0].content}\n${firstEmbed.description || ""}\n${(firstEmbed.fields || []).map(field => field.value).join("\n")}`;
   assert.ok(firstRewardLinks.includes("[ChannelOne](https://twitch.tv/channelone)"));
